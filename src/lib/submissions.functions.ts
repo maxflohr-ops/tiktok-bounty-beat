@@ -179,7 +179,7 @@ export const updateViewCount = createServerFn({ method: "POST" })
   });
 
 const SUB_COLS =
-  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at";
+  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,paypal_email,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at";
 
 export const listMyClaims = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
