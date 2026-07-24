@@ -588,7 +588,7 @@ function DisputesPanel() {
 
   const [drafts, setDrafts] = useState<Record<string, { note: string; corrected: string }>>({});
   const upd = (id: string, patch: Partial<{ note: string; corrected: string }>) =>
-    setDrafts((s) => ({ ...s, [id]: { note: "", corrected: "", ...s[id], ...patch } }));
+    setDrafts((s) => ({ ...s, [id]: { note: s[id]?.note ?? "", corrected: s[id]?.corrected ?? "", ...patch } }));
 
   const act = async (
     id: string,
