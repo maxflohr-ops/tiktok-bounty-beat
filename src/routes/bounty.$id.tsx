@@ -70,9 +70,12 @@ function BountyDetail() {
   const take = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) { navigate({ to: "/auth" }); return; }
+    const { validateClaimFields } = await import("@/lib/claim-validation");
+    const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal });
+    if (!check.ok) { toast.error(check.message); return; }
     setBusy(true);
     try {
-      await claimFn({ data: { bounty_id: id, tiktok_handle: handle, paypal_email: paypal } });
+      await claimFn({ data: { bounty_id: id, tiktok_handle: check.data.tiktok_handle, paypal_email: check.data.paypal_email } });
       toast.success("Contract taken. Deliver proof before the deadline.");
       refetchClaims(); refetchBounties();
     } catch (err) {
