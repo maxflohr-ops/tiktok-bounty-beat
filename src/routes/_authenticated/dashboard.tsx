@@ -87,10 +87,24 @@ function Dashboard() {
           ) : (
             <ul className="mt-6 space-y-3">
               {claims.map((c) => (
-                <ClaimRow key={c.id} claim={c} onSaveViews={async (v) => {
-                  try { await viewsFn({ data: { submission_id: c.id, view_count: v } }); toast.success("Views logged."); refetch(); }
-                  catch (err) { toast.error(err instanceof Error ? err.message : "Failed."); }
-                }} />
+                <ClaimRow
+                  key={c.id}
+                  claim={c}
+                  disputes={disputesBySub[c.id] ?? []}
+                  onSaveViews={async (v) => {
+                    try { await viewsFn({ data: { submission_id: c.id, view_count: v } }); toast.success("Views logged."); refetch(); }
+                    catch (err) { toast.error(err instanceof Error ? err.message : "Failed."); }
+                  }}
+                  onFileDispute={async (payload) => {
+                    try {
+                      await fileFn({ data: { submission_id: c.id, ...payload } });
+                      toast.success("Dispute filed — the harbormaster will review.");
+                      refetchDisputes();
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : "Failed.");
+                    }
+                  }}
+                />
               ))}
             </ul>
           )}
