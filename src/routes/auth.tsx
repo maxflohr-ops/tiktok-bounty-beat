@@ -73,8 +73,10 @@ function AuthPage() {
   };
 
   return (
-    <div className="grid min-h-screen md:grid-cols-2">
-      <aside className="hidden flex-col justify-between border-r border-[var(--iron)] bg-[var(--wall-2)] p-10 md:flex">
+    <div className="relative grid min-h-screen md:grid-cols-2">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
+      <aside className="relative z-10 hidden flex-col justify-between border-r border-[var(--iron)] bg-[var(--wall-2)] p-10 md:flex">
         <Link to="/" className="font-display text-2xl text-bone">
           THE BOARD
         </Link>
