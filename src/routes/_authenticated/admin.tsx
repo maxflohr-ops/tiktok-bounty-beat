@@ -65,6 +65,7 @@ function Admin() {
           <SubmissionsPanel />
         </div>
         <PayoutApprovalsPanel />
+        <DisputesPanel />
         <Ledger />
       </div>
     </div>
