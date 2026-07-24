@@ -4,11 +4,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { listMyClaims, updateViewCount } from "@/lib/submissions.functions";
 import { getMe, updateMyProfile } from "@/lib/me.functions";
 import { getMyPayoutMethod, connectStripeAccount, refreshConnectStatus } from "@/lib/stripe.functions";
+import { fileDispute, listMyDisputes } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { ExternalLink, CheckCircle2, Link2 } from "lucide-react";
+import { ExternalLink, CheckCircle2, Link2, Flag } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
