@@ -115,15 +115,23 @@ function BountyDetail() {
         : `${bounty.reward_points} pts per approved clip`;
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
       <SiteHeader />
-      <div className="container-board py-8">
-        <Link to="/" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
-          <ArrowLeft className="h-3.5 w-3.5" /> back to the board
-        </Link>
+      <div className="container-board relative z-10 py-8">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
+            <ArrowLeft className="h-3.5 w-3.5" /> back to the board
+          </Link>
+          <div className="system-bar">
+            <span className="status-dot" />
+            contract view · active
+          </div>
+        </div>
 
         <div className="mt-6 grid gap-8 md:grid-cols-[1.35fr_1fr]">
-          <article className="contract contract-nail relative">
+          <article className="contract contract-nail holo-glow relative">
             <span className="water-stain" style={{ top: 60, left: -20, width: 160, height: 120 }} />
 
             <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
@@ -197,8 +205,15 @@ function BountyDetail() {
             </p>
           </article>
 
-          <aside className="board-frame p-5 md:p-6">
-            <h2 className="font-display text-2xl text-bone">The take</h2>
+          <aside className="board-frame relative p-5 md:p-6">
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-display text-2xl text-bone">The take</h2>
+              <span className="terminal text-[10px] text-bone-soft">ID: #{pad(bounty.contract_no)}</span>
+            </div>
             {!user ? (
               <>
                 <p className="mt-3 text-bone-soft">
@@ -233,9 +248,12 @@ function BountyDetail() {
               <div className="mt-4 space-y-4">
                 <div className="border border-[var(--border)] p-3 text-sm">
                   <div className="label-cap text-bone-soft">status</div>
-                  <div className="mt-1 font-display text-lg text-bone">{prettyStatus(myClaim.status)}</div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="status-dot" />
+                    <span className="digital-badge">{prettyStatus(myClaim.status)}</span>
+                  </div>
                   {myClaim.review_notes ? (
-                    <p className="mt-1 italic text-bone-soft">“{myClaim.review_notes}”</p>
+                    <p className="mt-2 italic text-bone-soft">“{myClaim.review_notes}”</p>
                   ) : null}
                 </div>
 

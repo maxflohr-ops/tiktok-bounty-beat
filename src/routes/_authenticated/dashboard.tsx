@@ -68,12 +68,22 @@ function Dashboard() {
   const pointsEarned = ledger.reduce((s, c) => s + (c.awarded_points || 0), 0);
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
       <SiteHeader />
-      <div className="container-board grid gap-8 py-8 md:grid-cols-[1fr_320px]">
+      <div className="container-board relative z-10 grid gap-8 py-8 md:grid-cols-[1fr_320px]">
         <section>
-          <h1 className="font-display text-4xl text-bone">Your contracts</h1>
-          <p className="script-note text-xl text-bone-soft">The board remembers.</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-display text-4xl text-bone">Your contracts</h1>
+              <p className="script-note text-xl text-bone-soft">The board remembers.</p>
+            </div>
+            <div className="system-bar">
+              <span className="status-dot" />
+              editor link · connected
+            </div>
+          </div>
 
           <PaymentSetup />
 
@@ -111,7 +121,11 @@ function Dashboard() {
         </section>
 
         <aside className="space-y-6">
-          <div className="board-frame p-5">
+          <div className="board-frame relative p-5">
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
             <h2 className="font-display text-2xl text-bone">Editor's mark</h2>
             <form onSubmit={save} className="mt-3 space-y-4">
               <label className="block">
@@ -129,7 +143,11 @@ function Dashboard() {
             </form>
           </div>
 
-          <div className="board-frame p-5">
+          <div className="board-frame relative p-5">
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
             <h2 className="label-cap silver text-center">Paid in crowns</h2>
             <div className="mt-3 grid grid-cols-2 gap-4 text-center">
               <Metric label="approved" value={money(silverEarned)} />
@@ -179,14 +197,18 @@ function PaymentSetup() {
   };
 
   return (
-    <div className="mt-6 board-frame p-5">
+    <div className="mt-6 board-frame relative p-5">
+      <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+      <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+      <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+      <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
       <h2 className="font-display text-2xl text-bone">Payment setup</h2>
       {isLoading ? (
         <p className="mt-2 italic text-bone-soft">Consulting the harbor bank…</p>
       ) : status === "enabled" ? (
         <div className="mt-3 flex items-center gap-2">
-          <CheckCircle2 className="h-4 w-4 silver" />
-          <span className="label-cap silver">Payouts connected</span>
+          <span className="status-dot" />
+          <span className="digital-badge">Payouts connected</span>
         </div>
       ) : status === "pending" ? (
         <div className="mt-3 space-y-3">
@@ -279,11 +301,15 @@ function ClaimRow({
         </div>
         <div className="text-right">
           {(claim as any).paid_cash_cents > 0 ? (
-            <div className="label-cap silver border border-[var(--gold)]/40 inline-block px-2 py-1">
+            <div className="digital-badge">
+              <span className="status-dot" />
               Paid: <Money cents={(claim as any).paid_cash_cents} currency={b?.currency ?? "USD"} />
             </div>
           ) : (
-            <div className="label-cap silver">{prettyStatus(claim.status)}</div>
+            <div className="flex items-center justify-end gap-2">
+              <span className="status-dot-amber" />
+              <span className="digital-badge-amber">{prettyStatus(claim.status)}</span>
+            </div>
           )}
           {claim.awarded_cash_cents > 0 ? (
             <div className="mt-1 font-display text-lg silver">{money(claim.awarded_cash_cents, b?.currency ?? "USD")}</div>

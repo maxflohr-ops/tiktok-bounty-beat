@@ -4,8 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * THE BOARD — Witcher notice-board edition.
- * Weathered wood, parchment contracts, iron nails, wax seals.
+ * THE BOARD — Neon medieval terminal edition.
+ * Weathered wood, parchment contracts, iron nails, wax seals…
+ * …overlaid with a faint cyberpunk glow: cyan HUD accents, scanlines,
+ * holographic card underglow, and terminal type for status and IDs.
  */
 
 @theme inline {
@@ -47,13 +49,13 @@
   --font-display: "Cinzel Decorative", "Cinzel", "Trajan Pro", serif;
   --font-body: "Almendra", "EB Garamond", Georgia, serif;
   --font-script: "MedievalSharp", "Cinzel", cursive;
-  --font-terminal: "MedievalSharp", "Share Tech Mono", monospace;
+  --font-terminal: "Space Mono", "Share Tech Mono", "JetBrains Mono", monospace;
 }
 
 :root {
-  --wall: #0d0905;
-  --wall-2: #1a1108;
-  --background: #0d0905;
+  --wall: #0a0905;
+  --wall-2: #1a0f08;
+  --background: #0a0905;
   --foreground: #d9c5b2;
 
   /* parchment — aged paper for contract cards */
@@ -75,6 +77,12 @@
   --wax-red: #8b0000;
   --wax-dark: #630000;
   --iron: #4a3a2a;
+
+  /* neon accents — cyberpunk undercurrent */
+  --neon-cyan: #22d3ee;
+  --neon-magenta: #ff2e88;
+  --neon-amber: #f0ab00;
+  --neon-purple: #a855f7;
 
   --rule: rgba(193, 154, 107, 0.35);
   --border: rgba(193, 154, 107, 0.25);
@@ -148,6 +156,13 @@
   color: var(--gold);
 }
 
+@utility terminal {
+  font-family: var(--font-terminal);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+}
+
 @utility rule-double {
   border-top: 1px solid currentColor;
   box-shadow: 0 3px 0 -1px currentColor;
@@ -158,6 +173,41 @@
   border-bottom: 1px solid currentColor;
   box-shadow: 0 -3px 0 -1px currentColor inset;
   padding-bottom: 3px;
+}
+
+@utility scanlines {
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+@utility status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@utility status-dot-amber {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--neon-amber);
+  box-shadow: 0 0 8px var(--neon-amber);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@utility status-dot-magenta {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--neon-magenta);
+  box-shadow: 0 0 8px var(--neon-magenta);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* THE PANEL — parchment contract card pinned to the board */
@@ -189,8 +239,49 @@
     background: radial-gradient(circle at 30% 30%, #7a5a3a, #2a1b0c 70%);
     box-shadow:
       inset 0 -2px 2px rgba(0,0,0,0.5),
-      0 2px 3px rgba(0,0,0,0.35);
+      0 2px 3px rgba(0,0,0,0.35),
+      0 0 8px rgba(34, 211, 238, 0.25);
     z-index: 2;
+  }
+}
+
+@utility holo-glow {
+  position: relative;
+  z-index: 1;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+    opacity: 0;
+    filter: blur(16px);
+    z-index: -1;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+  }
+  &:hover::after,
+  &:focus-within::after {
+    opacity: 0.22;
+  }
+}
+
+@utility holo-glow-amber {
+  position: relative;
+  z-index: 1;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    background: linear-gradient(135deg, var(--neon-amber), var(--neon-purple));
+    opacity: 0;
+    filter: blur(16px);
+    z-index: -1;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+  }
+  &:hover::after,
+  &:focus-within::after {
+    opacity: 0.22;
   }
 }
 
@@ -237,13 +328,60 @@
   font-size: 0.72rem;
   min-height: 44px;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 120ms ease;
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.06);
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
   &:hover:not(:disabled) {
     background: var(--gold-bright);
     border-color: var(--gold-bright);
     color: var(--wall);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.12);
   }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+@utility digital-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--wall);
+  color: var(--neon-cyan);
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  padding: 0.25rem 0.6rem;
+  font-family: var(--font-terminal);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: skewX(-10deg);
+}
+
+@utility digital-badge-amber {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--wall);
+  color: var(--neon-amber);
+  border: 1px solid rgba(240, 171, 0, 0.35);
+  padding: 0.25rem 0.6rem;
+  font-family: var(--font-terminal);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: skewX(-10deg);
+}
+
+@utility digital-badge-magenta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--wall);
+  color: var(--neon-magenta);
+  border: 1px solid rgba(255, 46, 136, 0.35);
+  padding: 0.25rem 0.6rem;
+  font-family: var(--font-terminal);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transform: skewX(-10deg);
 }
 
 @utility bone-input {
@@ -269,7 +407,7 @@
   font-family: var(--font-body);
   font-size: 0.95rem;
   outline: none;
-  &:focus { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+  &:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 1px var(--neon-cyan); }
   &::placeholder { color: rgba(142, 115, 85, 0.55); }
 }
 
@@ -285,7 +423,8 @@
     radial-gradient(circle at 35% 35%, rgba(139, 0, 0, 0.9), #8b0000 60%, #630000 100%);
   box-shadow:
     inset 0 0 8px rgba(0,0,0,0.5),
-    0 3px 6px rgba(0,0,0,0.35);
+    0 3px 6px rgba(0,0,0,0.35),
+    0 0 18px rgba(255, 46, 136, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,8 +461,10 @@
   border: 12px solid #1a1108;
   box-shadow:
     0 0 0 2px var(--iron),
+    0 0 0 3px rgba(34, 211, 238, 0.15),
     0 40px 100px rgba(0,0,0,0.75),
-    inset 0 0 80px rgba(0,0,0,0.55);
+    inset 0 0 80px rgba(0,0,0,0.55),
+    inset 0 0 120px rgba(34, 211, 238, 0.04);
 }
 
 @utility filter-chip {
@@ -331,20 +472,50 @@
   border: 2px solid var(--iron);
   background: transparent;
   color: var(--bone-soft);
-  font-family: var(--font-script);
-  font-size: 0.85rem;
+  font-family: var(--font-terminal);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all 120ms ease;
   &:hover, &[aria-pressed="true"] {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(193, 154, 107, 0.08);
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    background: rgba(34, 211, 238, 0.08);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.12);
   }
   &[aria-pressed="true"] {
-    background: var(--gold);
+    background: var(--neon-cyan);
     color: var(--wall);
-    border-color: var(--gold);
+    border-color: var(--neon-cyan);
   }
+}
+
+@utility system-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--wall-2);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  color: var(--neon-cyan);
+  padding: 0.35rem 0.9rem;
+  font-family: var(--font-terminal);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.12);
+}
+
+@utility corner-bracket {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(34, 211, 238, 0.35);
+}
+
+@utility vignette {
+  box-shadow: inset 0 0 200px rgba(0,0,0,0.85);
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
