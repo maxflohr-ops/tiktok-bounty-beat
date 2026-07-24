@@ -139,6 +139,62 @@ export type Database = {
           },
         ]
       }
+      payout_approvals: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string | null
+          error: string | null
+          id: string
+          requested_by: string
+          status: Database["public"]["Enums"]["payout_approval_status"]
+          stripe_transfer_id: string | null
+          submission_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          error?: string | null
+          id?: string
+          requested_by: string
+          status?: Database["public"]["Enums"]["payout_approval_status"]
+          stripe_transfer_id?: string | null
+          submission_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          error?: string | null
+          id?: string
+          requested_by?: string
+          status?: Database["public"]["Enums"]["payout_approval_status"]
+          stripe_transfer_id?: string | null
+          submission_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_approvals_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payout_methods: {
         Row: {
           created_at: string
@@ -336,6 +392,12 @@ export type Database = {
         | "in_review"
         | "fulfilled"
         | "expired"
+      payout_approval_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "sent"
+        | "failed"
       payout_type: "flat" | "per_1k_views"
       platform_target: "tiktok" | "reels" | "shorts"
       submission_status:
@@ -481,6 +543,13 @@ export const Constants = {
         "in_review",
         "fulfilled",
         "expired",
+      ],
+      payout_approval_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "sent",
+        "failed",
       ],
       payout_type: ["flat", "per_1k_views"],
       platform_target: ["tiktok", "reels", "shorts"],
