@@ -2,6 +2,7 @@ import { isStaff } from "@/lib/authz.server";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { notifyAsync } from "@/lib/notify.server";
 
 const TIKTOK_URL = /^https?:\/\/((www|vm|vt|m)\.)?tiktok\.com\/.+/i;
 const CLIP_URL = /^https?:\/\/.+/i;
@@ -71,6 +72,12 @@ export const claimContract = createServerFn({ method: "POST" })
       if (error.code === "23505") throw new Error("You've already taken this contract.");
       throw new Error(error.message);
     }
+    notifyAsync({
+      event: "claim.created",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.bounty_id,
+      details: { tiktok_handle: data.tiktok_handle, editor_id: context.userId },
+    });
     return { ok: true };
   });
 
@@ -125,6 +132,17 @@ export const deliverProof = createServerFn({ method: "POST" })
       })
       .eq("id", data.submission_id);
     if (error) throw new Error(error.message);
+    notifyAsync({
+      event: "proof.delivered",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.submission_id,
+      details: {
+        clip_url: data.clip_url,
+        auto_check_passed: passed,
+        auto_check_notes: notes,
+        oembed_author: oembed?.author_name ?? null,
+      },
+    });
     return { ok: true, auto_check_passed: passed };
   });
 
