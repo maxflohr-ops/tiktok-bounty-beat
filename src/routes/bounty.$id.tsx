@@ -63,6 +63,8 @@ function BountyDetail() {
   const [paypal, setPaypal] = useState("");
   const [clipUrl, setClipUrl] = useState("");
   const [busy, setBusy] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{ tiktok_handle?: string; paypal_email?: string }>({});
+  const [touched, setTouched] = useState<{ tiktok_handle?: boolean; paypal_email?: boolean }>({});
   useEffect(() => {
     if (me?.profile?.tiktok_handle) setHandle(me.profile.tiktok_handle);
   }, [me?.profile?.tiktok_handle]);
@@ -72,7 +74,9 @@ function BountyDetail() {
     if (!user) { navigate({ to: "/auth" }); return; }
     const { validateClaimFields } = await import("@/lib/claim-validation");
     const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal });
-    if (!check.ok) { toast.error(check.message); return; }
+    setTouched({ tiktok_handle: true, paypal_email: true });
+    if (!check.ok) { setFieldErrors(check.errors); return; }
+    setFieldErrors({});
     setBusy(true);
     try {
       await claimFn({ data: { bounty_id: id, tiktok_handle: check.data.tiktok_handle, paypal_email: check.data.paypal_email } });
@@ -82,6 +86,13 @@ function BountyDetail() {
       toast.error(err instanceof Error ? err.message : "Could not take the contract.");
     } finally { setBusy(false); }
   };
+
+  const validateField = async (field: "tiktok_handle" | "paypal_email", value: string) => {
+    const mod = await import("@/lib/claim-validation");
+    const msg = field === "tiktok_handle" ? mod.validateTiktokHandle(value) : mod.validatePaypalEmail(value);
+    setFieldErrors((prev) => ({ ...prev, [field]: msg }));
+  };
+
 
   const deliver = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -226,20 +237,40 @@ function BountyDetail() {
                 <Link to="/auth" className="silver-btn mt-5 w-full">sign the ledger</Link>
               </>
             ) : !myClaim ? (
-              <form onSubmit={take} className="mt-4 space-y-4">
+              <form onSubmit={take} noValidate className="mt-4 space-y-4">
                 <label className="block">
                   <span className="label-cap text-bone-soft">your tiktok</span>
-                  <div className="mt-2 flex items-center border border-[var(--border)] px-3 py-2">
+                  <div
+                    className={`mt-2 flex items-center border px-3 py-2 ${
+                      touched.tiktok_handle && fieldErrors.tiktok_handle
+                        ? "border-red-500"
+                        : "border-[var(--border)]"
+                    }`}
+                  >
                     <span className="text-bone-soft">@</span>
                     <input
                       required
                       value={handle}
-                      onChange={(e) => setHandle(e.target.value)}
+                      onChange={(e) => {
+                        setHandle(e.target.value);
+                        if (touched.tiktok_handle) validateField("tiktok_handle", e.target.value);
+                      }}
+                      onBlur={(e) => {
+                        setTouched((t) => ({ ...t, tiktok_handle: true }));
+                        validateField("tiktok_handle", e.target.value);
+                      }}
                       maxLength={60}
+                      aria-invalid={!!(touched.tiktok_handle && fieldErrors.tiktok_handle)}
+                      aria-describedby="tiktok-handle-error"
                       className="w-full bg-transparent px-1 text-bone outline-none placeholder:italic placeholder:text-bone-soft/60"
                       placeholder="yourname"
                     />
                   </div>
+                  {touched.tiktok_handle && fieldErrors.tiktok_handle && (
+                    <p id="tiktok-handle-error" role="alert" className="mt-1 text-xs text-red-400">
+                      {fieldErrors.tiktok_handle}
+                    </p>
+                  )}
                 </label>
                 <label className="block">
                   <span className="label-cap text-bone-soft">your paypal</span>
@@ -247,11 +278,27 @@ function BountyDetail() {
                     required
                     type="email"
                     value={paypal}
-                    onChange={(e) => setPaypal(e.target.value)}
+                    onChange={(e) => {
+                      setPaypal(e.target.value);
+                      if (touched.paypal_email) validateField("paypal_email", e.target.value);
+                    }}
+                    onBlur={(e) => {
+                      setTouched((t) => ({ ...t, paypal_email: true }));
+                      validateField("paypal_email", e.target.value);
+                    }}
                     maxLength={160}
-                    className="dark-input mt-2"
+                    aria-invalid={!!(touched.paypal_email && fieldErrors.paypal_email)}
+                    aria-describedby="paypal-email-error"
+                    className={`dark-input mt-2 ${
+                      touched.paypal_email && fieldErrors.paypal_email ? "border-red-500" : ""
+                    }`}
                     placeholder="you@paypal.com"
                   />
+                  {touched.paypal_email && fieldErrors.paypal_email && (
+                    <p id="paypal-email-error" role="alert" className="mt-1 text-xs text-red-400">
+                      {fieldErrors.paypal_email}
+                    </p>
+                  )}
                 </label>
                 <button disabled={busy} className="silver-btn w-full">
                   {busy ? "taking…" : "take the contract"}
@@ -260,6 +307,7 @@ function BountyDetail() {
                   The board keeps a record.
                 </p>
               </form>
+
             ) : (
               <div className="mt-4 space-y-4">
                 <div className="border border-[var(--border)] p-3 text-sm">
