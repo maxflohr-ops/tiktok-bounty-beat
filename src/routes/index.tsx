@@ -44,12 +44,12 @@ function isExpired(b: Bounty) {
 }
 function bottomLine(b: Bounty) {
   const overridden = isExpired(b);
-  if (overridden === "expired") return { text: "expired", seal: false };
-  if (overridden === "fulfilled" || b.status === "fulfilled") return { text: "fulfilled", seal: true };
+  if (overridden === "expired") return { text: "expired", seal: false, variant: "magenta" as const };
+  if (overridden === "fulfilled" || b.status === "fulfilled") return { text: "fulfilled", seal: true, variant: "cyan" as const };
   if (b.max_submissions && b.claims_count > 0)
-    return { text: `claimed ${b.claims_count} of ${b.max_submissions}`, seal: false };
-  if (b.claims_count > 0) return { text: `claimed ${b.claims_count}`, seal: false };
-  return { text: "open", seal: false };
+    return { text: `claimed ${b.claims_count} of ${b.max_submissions}`, seal: false, variant: "amber" as const };
+  if (b.claims_count > 0) return { text: `claimed ${b.claims_count}`, seal: false, variant: "amber" as const };
+  return { text: "open", seal: false, variant: "cyan" as const };
 }
 
 function HomePage() {
@@ -81,17 +81,32 @@ function HomePage() {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
+
       <SiteHeader />
 
-      <section className="container-board py-6">
-        <div className="board-frame p-6 md:p-12">
+      <section className="container-board relative z-10 py-6">
+        <div className="board-frame relative p-6 md:p-12">
+          {/* Corner brackets */}
+          <div className="corner-bracket absolute top-3 left-3 border-t-2 border-l-2" />
+          <div className="corner-bracket absolute top-3 right-3 border-t-2 border-r-2" />
+          <div className="corner-bracket absolute bottom-3 left-3 border-b-2 border-l-2" />
+          <div className="corner-bracket absolute bottom-3 right-3 border-b-2 border-r-2" />
+
           {/* Header */}
           <div className="mb-8 text-center md:mb-12">
+            <div className="relative mb-4 flex flex-col items-center">
+              <div className="system-bar">
+                <span className="status-dot" />
+                system status · connected
+              </div>
+            </div>
             <div className="flex items-center justify-center gap-4">
-              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+              <div className="h-px w-20 bg-gradient-to-r from-transparent via-[var(--neon-cyan)] to-transparent opacity-60" />
               <span className="label-cap text-bone-soft">Notices posted this season</span>
-              <div className="h-px w-20 bg-gradient-to-l from-transparent via-[var(--gold)] to-transparent" />
+              <div className="h-px w-20 bg-gradient-to-l from-transparent via-[var(--neon-cyan)] to-transparent opacity-60" />
             </div>
             <h1 className="mt-4 font-display text-3xl leading-tight text-bone md:text-5xl">
               Contracts for those who can cut.
@@ -141,8 +156,8 @@ function HomePage() {
           {/* Board grid */}
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--gold)] border-t-transparent" />
-              <p className="script-note mt-4 text-lg text-bone-soft">Consulting the ledger…</p>
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--neon-cyan)] border-t-transparent" />
+              <p className="terminal mt-4 text-bone-soft">Consulting the ledger…</p>
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-20 text-center">
@@ -205,9 +220,15 @@ function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-[var(--iron)]">
-        <div className="container-board flex flex-col items-center gap-1 py-8 text-center text-xs text-bone-soft">
+      <footer className="relative z-10 border-t border-[var(--iron)]">
+        <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
           <span className="script-note text-lg text-silver-glow">The board assumes no liability for what answers.</span>
+          <div className="terminal flex items-center gap-4 opacity-70">
+            <span className="flex items-center gap-2">
+              <span className="status-dot" /> encrypted link established
+            </span>
+            <span>v.04.22-alpha</span>
+          </div>
           <span>© {new Date().getFullYear()} · posted by the harbormaster</span>
         </div>
       </footer>
@@ -228,7 +249,7 @@ function FilterGroup({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="label-cap text-bone-soft">{label}</span>
+      <span className="terminal text-bone-soft">{label}</span>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => (
           <button
@@ -250,7 +271,7 @@ function ContractCard({
   bl,
 }: {
   b: Bounty;
-  bl: { text: string; seal: boolean };
+  bl: { text: string; seal: boolean; variant: "cyan" | "amber" | "magenta" };
 }) {
   const reward =
     b.payout_type === "per_1k_views"
@@ -261,8 +282,29 @@ function ContractCard({
           ? `${b.reward_points} pts per clip`
           : "Crowns awarded on delivery";
 
+  const glowClass =
+    bl.variant === "cyan"
+      ? "holo-glow"
+      : bl.variant === "amber"
+        ? "holo-glow-amber"
+        : "holo-glow";
+
+  const badgeClass =
+    bl.variant === "cyan"
+      ? "digital-badge"
+      : bl.variant === "amber"
+        ? "digital-badge-amber"
+        : "digital-badge-magenta";
+
+  const dotClass =
+    bl.variant === "cyan"
+      ? "status-dot"
+      : bl.variant === "amber"
+        ? "status-dot-amber"
+        : "status-dot-magenta";
+
   return (
-    <article className="contract contract-nail group relative cursor-pointer hover:-translate-y-1 hover:rotate-0">
+    <article className={`contract contract-nail ${glowClass} group relative cursor-pointer hover:-translate-y-1 hover:rotate-0`}>
       {bl.seal ? <span className="wax-seal">Fulfilled</span> : null}
       <span className="water-stain" style={{ top: 40, left: -20, width: 120, height: 80 }} />
       <span className="water-stain" style={{ bottom: 20, right: 10, width: 90, height: 60 }} />
@@ -270,7 +312,7 @@ function ContractCard({
       <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
-          <span className="label-cap text-ink-soft">No. {pad(b.contract_no)}</span>
+          <span className="terminal text-[10px] text-ink-soft">ID: #{pad(b.contract_no)}</span>
         </div>
         {(b as any).funded_cash_cents > 0 ? (
           <span className="label-cap silver">
@@ -304,7 +346,10 @@ function ContractCard({
         </div>
       </div>
 
-      <p className="script-note mt-4 text-center text-base text-ink-soft">{bl.text}</p>
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <span className={dotClass} />
+        <span className={`${badgeClass} text-center`}>{bl.text}</span>
+      </div>
     </article>
   );
 }
