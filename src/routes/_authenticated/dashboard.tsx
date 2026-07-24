@@ -31,8 +31,16 @@ function Dashboard() {
   const claimsFn = useServerFn(listMyClaims);
   const updFn = useServerFn(updateMyProfile);
   const viewsFn = useServerFn(updateViewCount);
+  const disputesFn = useServerFn(listMyDisputes);
+  const fileFn = useServerFn(fileDispute);
   const { data: me, refetch: refetchMe } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
   const { data: claims = [], refetch } = useQuery({ queryKey: ["myClaims"], queryFn: () => claimsFn() });
+  const { data: disputes = [], refetch: refetchDisputes } = useQuery({ queryKey: ["myDisputes"], queryFn: () => disputesFn() });
+  const disputesBySub = useMemo(() => {
+    const m: Record<string, typeof disputes> = {};
+    for (const d of disputes) (m[d.submission_id] ||= []).push(d);
+    return m;
+  }, [disputes]);
 
   const [name, setName] = useState("");
   const [handle, setHandle] = useState("");
