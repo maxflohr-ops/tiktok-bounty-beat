@@ -195,6 +195,62 @@ export type Database = {
           },
         ]
       }
+      payout_disputes: {
+        Row: {
+          claimed_view_count: number | null
+          created_at: string
+          created_by: string
+          evidence_url: string | null
+          id: string
+          note: string
+          resolved_at: string | null
+          resolved_view_count: number | null
+          reviewer_id: string | null
+          reviewer_note: string | null
+          status: Database["public"]["Enums"]["dispute_status"]
+          submission_id: string
+          updated_at: string
+        }
+        Insert: {
+          claimed_view_count?: number | null
+          created_at?: string
+          created_by: string
+          evidence_url?: string | null
+          id?: string
+          note: string
+          resolved_at?: string | null
+          resolved_view_count?: number | null
+          reviewer_id?: string | null
+          reviewer_note?: string | null
+          status?: Database["public"]["Enums"]["dispute_status"]
+          submission_id: string
+          updated_at?: string
+        }
+        Update: {
+          claimed_view_count?: number | null
+          created_at?: string
+          created_by?: string
+          evidence_url?: string | null
+          id?: string
+          note?: string
+          resolved_at?: string | null
+          resolved_view_count?: number | null
+          reviewer_id?: string | null
+          reviewer_note?: string | null
+          status?: Database["public"]["Enums"]["dispute_status"]
+          submission_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payout_disputes_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payout_methods: {
         Row: {
           created_at: string
@@ -392,6 +448,7 @@ export type Database = {
         | "in_review"
         | "fulfilled"
         | "expired"
+      dispute_status: "open" | "under_review" | "resolved" | "rejected"
       payout_approval_status:
         | "pending"
         | "approved"
@@ -544,6 +601,7 @@ export const Constants = {
         "fulfilled",
         "expired",
       ],
+      dispute_status: ["open", "under_review", "resolved", "rejected"],
       payout_approval_status: [
         "pending",
         "approved",
