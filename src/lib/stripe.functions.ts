@@ -398,6 +398,19 @@ export const approveAndSendPayout = createServerFn({ method: "POST" })
       status: "sent", stripe_transfer_id: transferId,
     }).eq("id", approval.id);
 
+    notifyAsync({
+      event: "payout.sent",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: approval.id,
+      details: {
+        submission_id: sub.id,
+        bounty_id: bounty.id,
+        editor_id: sub.editor_id,
+        amount_cents: amountCents,
+        currency: bounty.currency,
+        stripe_transfer_id: transferId,
+      },
+    });
     return { transferId, amountCents };
   });
 
