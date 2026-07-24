@@ -212,7 +212,7 @@ function BountiesPanel() {
             <Field label="payout">
               <select value={editing.payout_type ?? "flat"} onChange={(e) => setEditing({ ...editing, payout_type: e.target.value as Bounty["payout_type"] })} className="dark-input">
                 <option value="flat">flat / clip</option>
-                <option value="per_1k_views">per 1k views</option>
+                <option value="per_1k_views">per 100k views</option>
               </select>
             </Field>
             <Field label="cap (max clips)">
