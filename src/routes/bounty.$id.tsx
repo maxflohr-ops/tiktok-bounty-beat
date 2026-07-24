@@ -109,7 +109,7 @@ function BountyDetail() {
 
   const reward =
     bounty.payout_type === "per_1k_views"
-      ? `${money(bounty.reward_cash_cents, bounty.currency) ?? "silver"} per 1,000 views`
+      ? `${money(bounty.reward_cash_cents, bounty.currency) ?? "silver"} per 100,000 views`
       : bounty.reward_cash_cents > 0
         ? `${money(bounty.reward_cash_cents, bounty.currency)} per approved clip`
         : `${bounty.reward_points} pts per approved clip`;

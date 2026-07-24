@@ -196,7 +196,7 @@ async function computePayoutAmount(supabase: any, submissionId: string) {
 
   let amountCents = 0;
   if (bounty.payout_type === "per_1k_views") {
-    amountCents = Math.floor((sub.view_count || 0) / 1000) * bounty.reward_cash_cents;
+    amountCents = Math.floor((sub.view_count || 0) / 100000) * bounty.reward_cash_cents;
   } else {
     amountCents = sub.awarded_cash_cents ?? bounty.reward_cash_cents;
   }
