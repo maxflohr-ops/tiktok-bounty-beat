@@ -260,7 +260,7 @@ function SubmissionsPanel() {
   const reviewFn = useServerFn(reviewSubmission);
   const { data = [], refetch } = useQuery({ queryKey: ["allSubs"], queryFn: () => listFn() });
 
-  const pending = data.filter((s) => s.status === "submitted" || s.status === "pending" || s.status === "in_review");
+  const pending = data.filter((s) => { const st = s.status as string; return st === "submitted" || st === "pending" || st === "in_review"; });
 
   const decide = async (id: string, decision: "approved" | "rejected", points: number, cash: number, notes: string) => {
     try {
