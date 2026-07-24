@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { notifyAsync } from "@/lib/notify.server";
+import { claimContractSchema } from "@/lib/claim-validation";
 
 const TIKTOK_URL = /^https?:\/\/((www|vm|vt|m)\.)?tiktok\.com\/.+/i;
 const CLIP_URL = /^https?:\/\/.+/i;
@@ -28,20 +29,7 @@ async function fetchOembed(url: string) {
 // TAKE THE CONTRACT — create a claim row, no URL yet.
 export const claimContract = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
-    z
-      .object({
-        bounty_id: z.string().uuid(),
-        tiktok_handle: z
-          .string()
-          .trim()
-          .min(2)
-          .max(60)
-          .transform((v) => v.replace(/^@/, "").toLowerCase()),
-        paypal_email: z.string().trim().email().max(160),
-      })
-      .parse(d),
-  )
+  .inputValidator((d: unknown) => claimContractSchema.parse(d))
   .handler(async ({ data, context }) => {
     const { data: bounty, error: berr } = await context.supabase
       .from("bounties")
