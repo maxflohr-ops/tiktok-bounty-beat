@@ -60,6 +60,7 @@ function BountyDetail() {
   const myClaim = myClaims.find((c) => c.bounty_id === id);
 
   const [handle, setHandle] = useState("");
+  const [paypal, setPaypal] = useState("");
   const [clipUrl, setClipUrl] = useState("");
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -71,7 +72,7 @@ function BountyDetail() {
     if (!user) { navigate({ to: "/auth" }); return; }
     setBusy(true);
     try {
-      await claimFn({ data: { bounty_id: id, tiktok_handle: handle } });
+      await claimFn({ data: { bounty_id: id, tiktok_handle: handle, paypal_email: paypal } });
       toast.success("Contract taken. Deliver proof before the deadline.");
       refetchClaims(); refetchBounties();
     } catch (err) {
@@ -224,7 +225,7 @@ function BountyDetail() {
             ) : !myClaim ? (
               <form onSubmit={take} className="mt-4 space-y-4">
                 <label className="block">
-                  <span className="label-cap text-bone-soft">your handle</span>
+                  <span className="label-cap text-bone-soft">your tiktok</span>
                   <div className="mt-2 flex items-center border border-[var(--border)] px-3 py-2">
                     <span className="text-bone-soft">@</span>
                     <input
@@ -236,6 +237,18 @@ function BountyDetail() {
                       placeholder="yourname"
                     />
                   </div>
+                </label>
+                <label className="block">
+                  <span className="label-cap text-bone-soft">your paypal</span>
+                  <input
+                    required
+                    type="email"
+                    value={paypal}
+                    onChange={(e) => setPaypal(e.target.value)}
+                    maxLength={160}
+                    className="dark-input mt-2"
+                    placeholder="you@paypal.com"
+                  />
                 </label>
                 <button disabled={busy} className="silver-btn w-full">
                   {busy ? "taking…" : "take the contract"}

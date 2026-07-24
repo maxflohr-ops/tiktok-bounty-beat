@@ -38,6 +38,7 @@ export const claimContract = createServerFn({ method: "POST" })
           .min(2)
           .max(60)
           .transform((v) => v.replace(/^@/, "").toLowerCase()),
+        paypal_email: z.string().trim().email().max(160),
       })
       .parse(d),
   )
@@ -65,6 +66,7 @@ export const claimContract = createServerFn({ method: "POST" })
       bounty_id: data.bounty_id,
       editor_id: context.userId,
       tiktok_handle: data.tiktok_handle,
+      paypal_email: data.paypal_email,
       status: "claimed",
       tiktok_video_url: null,
     });
@@ -76,7 +78,11 @@ export const claimContract = createServerFn({ method: "POST" })
       event: "claim.created",
       actor: (context.claims as { email?: string })?.email ?? context.userId,
       reference: data.bounty_id,
-      details: { tiktok_handle: data.tiktok_handle, editor_id: context.userId },
+      details: {
+        tiktok_handle: data.tiktok_handle,
+        paypal_email: data.paypal_email,
+        editor_id: context.userId,
+      },
     });
     return { ok: true };
   });
@@ -173,7 +179,7 @@ export const updateViewCount = createServerFn({ method: "POST" })
   });
 
 const SUB_COLS =
-  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at";
+  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,paypal_email,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at";
 
 export const listMyClaims = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
