@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       bounties: {
         Row: {
+          artist_song: string | null
+          contract_no: number
           cover_url: string | null
           created_at: string
           created_by: string | null
@@ -24,15 +26,20 @@ export type Database = {
           description: string
           id: string
           max_submissions: number | null
+          payout_type: Database["public"]["Enums"]["payout_type"]
+          platform_target: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents: number
           reward_points: number
           sound_name: string
+          source_assets_url: string | null
           status: Database["public"]["Enums"]["bounty_status"]
           tiktok_sound_url: string | null
           title: string
           updated_at: string
         }
         Insert: {
+          artist_song?: string | null
+          contract_no?: number
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -41,15 +48,20 @@ export type Database = {
           description: string
           id?: string
           max_submissions?: number | null
+          payout_type?: Database["public"]["Enums"]["payout_type"]
+          platform_target?: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents?: number
           reward_points?: number
           sound_name: string
+          source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
           tiktok_sound_url?: string | null
           title: string
           updated_at?: string
         }
         Update: {
+          artist_song?: string | null
+          contract_no?: number
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -58,9 +70,12 @@ export type Database = {
           description?: string
           id?: string
           max_submissions?: number | null
+          payout_type?: Database["public"]["Enums"]["payout_type"]
+          platform_target?: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents?: number
           reward_points?: number
           sound_name?: string
+          source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
           tiktok_sound_url?: string | null
           title?: string
@@ -105,19 +120,23 @@ export type Database = {
           awarded_cash_cents: number
           awarded_points: number
           bounty_id: string
+          claimed_at: string
           created_at: string
           editor_id: string
           id: string
           oembed_author: string | null
           oembed_thumbnail: string | null
           oembed_title: string | null
+          paid_at: string | null
           review_notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           status: Database["public"]["Enums"]["submission_status"]
+          submitted_at: string | null
           tiktok_handle: string
-          tiktok_video_url: string
+          tiktok_video_url: string | null
           updated_at: string
+          view_count: number
         }
         Insert: {
           auto_check_notes?: string | null
@@ -125,19 +144,23 @@ export type Database = {
           awarded_cash_cents?: number
           awarded_points?: number
           bounty_id: string
+          claimed_at?: string
           created_at?: string
           editor_id: string
           id?: string
           oembed_author?: string | null
           oembed_thumbnail?: string | null
           oembed_title?: string | null
+          paid_at?: string | null
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
+          submitted_at?: string | null
           tiktok_handle: string
-          tiktok_video_url: string
+          tiktok_video_url?: string | null
           updated_at?: string
+          view_count?: number
         }
         Update: {
           auto_check_notes?: string | null
@@ -145,19 +168,23 @@ export type Database = {
           awarded_cash_cents?: number
           awarded_points?: number
           bounty_id?: string
+          claimed_at?: string
           created_at?: string
           editor_id?: string
           id?: string
           oembed_author?: string | null
           oembed_thumbnail?: string | null
           oembed_title?: string | null
+          paid_at?: string | null
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
+          submitted_at?: string | null
           tiktok_handle?: string
-          tiktok_video_url?: string
+          tiktok_video_url?: string | null
           updated_at?: string
+          view_count?: number
         }
         Relationships: [
           {
@@ -206,8 +233,23 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "manager" | "editor"
-      bounty_status: "draft" | "active" | "closed"
-      submission_status: "pending" | "approved" | "rejected"
+      bounty_status:
+        | "draft"
+        | "active"
+        | "closed"
+        | "claimed"
+        | "in_review"
+        | "fulfilled"
+        | "expired"
+      payout_type: "flat" | "per_1k_views"
+      platform_target: "tiktok" | "reels" | "shorts"
+      submission_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "claimed"
+        | "submitted"
+        | "paid"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -336,8 +378,25 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "manager", "editor"],
-      bounty_status: ["draft", "active", "closed"],
-      submission_status: ["pending", "approved", "rejected"],
+      bounty_status: [
+        "draft",
+        "active",
+        "closed",
+        "claimed",
+        "in_review",
+        "fulfilled",
+        "expired",
+      ],
+      payout_type: ["flat", "per_1k_views"],
+      platform_target: ["tiktok", "reels", "shorts"],
+      submission_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "claimed",
+        "submitted",
+        "paid",
+      ],
     },
   },
 } as const

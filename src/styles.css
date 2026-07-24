@@ -1,127 +1,282 @@
 @import "tailwindcss" source(none);
 @source "../src";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * THE BOARD — Victorian harbor notice board.
+ * Aged contract notices pinned to a dark wall.
+ */
+
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
+  --color-wall: var(--wall);
+  --color-paper: var(--paper);
+  --color-paper-shade: var(--paper-shade);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
-  --color-accent-brand: var(--accent-brand);
-  --color-accent-brand-foreground: var(--accent-brand-foreground);
-  --font-display: var(--font-display);
-  --font-sans: var(--font-sans);
+  --color-bone: var(--bone);
+  --color-bone-soft: var(--bone-soft);
+  --color-silver: var(--silver);
+  --color-silver-glow: var(--silver-glow);
+  --color-border: var(--border);
+  --color-rule: var(--rule);
+  --color-primary: var(--silver);
+  --color-primary-foreground: var(--wall);
+  --color-secondary: var(--paper-shade);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--paper-shade);
+  --color-muted-foreground: var(--ink-soft);
+  --color-accent: var(--silver);
+  --color-accent-foreground: var(--wall);
+  --color-destructive: oklch(0.55 0.18 25);
+  --color-destructive-foreground: var(--bone);
+  --color-card: var(--paper);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--paper);
+  --color-popover-foreground: var(--ink);
+  --color-input: var(--rule);
+  --color-ring: var(--silver);
+  --color-ring-offset-background: var(--wall);
+
+  --font-display: "IM Fell English SC", "IM Fell English", serif;
+  --font-body: "IM Fell English", Georgia, serif;
+  --font-script: "La Belle Aurore", cursive;
 }
 
 :root {
-  --radius: 0.5rem;
+  --wall: #141210;
+  --wall-2: #1c1917;
+  --background: #141210;
+  --foreground: #e6e0d3;
+  --paper: #e0dbce;
+  --paper-shade: #cdc7b6;
+  --ink: #262422;
+  --ink-soft: #5a544c;
+  --bone: #e6e0d3;
+  --bone-soft: #b8b0a0;
+  --silver: #94969a;
+  --silver-glow: #cfd2d6;
+  --rule: rgba(38, 36, 34, 0.55);
+  --border: rgba(230, 224, 211, 0.14);
 
-  /* Editorial light palette */
-  --background: oklch(1 0 0);                     /* #ffffff */
-  --surface: oklch(0.975 0.005 85);               /* #f4f4f0 */
-  --surface-2: oklch(0.955 0.008 85);
-  --foreground: oklch(0.145 0 0);                 /* #111 */
-  --ink: oklch(0.145 0 0);
-  --ink-soft: oklch(0.42 0.01 260);
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.06  0 0 0 0 0.05  0 0 0 0 0.04  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15  0 0 0 0 0.14  0 0 0 0 0.13  0 0 0 0.14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-
-  --primary: oklch(0.145 0 0);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.975 0.005 85);
-  --secondary-foreground: oklch(0.145 0 0);
-
-  --muted: oklch(0.975 0.005 85);
-  --muted-foreground: oklch(0.45 0.01 260);
-  --accent: oklch(0.975 0.005 85);
-  --accent-foreground: oklch(0.145 0 0);
-
-  --accent-brand: oklch(0.65 0.22 25);            /* #ff4d3d */
-  --accent-brand-foreground: oklch(1 0 0);
-
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9 0.005 85);
-  --input: oklch(0.9 0.005 85);
-  --ring: oklch(0.65 0.22 25);
-
-  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+.dark {
+  color-scheme: dark;
 }
 
 @layer base {
   * {
-    border-color: var(--color-border);
+    border-color: var(--border);
   }
-  html, body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
+  html,
+  body {
+    background: var(--wall);
+    color: var(--bone);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3 {
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
+  body {
+    background-color: var(--wall);
+    background-image: var(--grain);
+    background-repeat: repeat;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    font-weight: 400;
+  }
+  a { color: inherit; }
+  ::selection { background: var(--silver); color: var(--wall); }
+  input, textarea, select, button { font-family: inherit; }
 }
 
-@utility container-editorial {
-  max-width: 72rem;
+@utility container-board {
+  max-width: 1180px;
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
 
-@utility chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-ink);
+@utility label-cap {
+  font-family: var(--font-display);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
 }
 
-@utility chip-brand {
+@utility script-note {
+  font-family: var(--font-script);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+@utility rule-double {
+  border-top: 1px solid currentColor;
+  box-shadow: 0 3px 0 -1px currentColor;
+  padding-top: 3px;
+}
+
+@utility rule-dbl-b {
+  border-bottom: 1px solid currentColor;
+  box-shadow: 0 -3px 0 -1px currentColor inset;
+  padding-bottom: 3px;
+}
+
+/* THE PAPER CONTRACT CARD */
+@utility contract {
+  position: relative;
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(1200px 300px at 20% 0%, rgba(115, 92, 60, 0.08), transparent 60%),
+    radial-gradient(600px 200px at 90% 100%, rgba(90, 70, 40, 0.09), transparent 60%),
+    var(--paper-grain);
+  color: var(--ink);
+  padding: 2rem 1.5rem 1.35rem;
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.4),
+    0 18px 30px -20px rgba(0, 0, 0, 0.65),
+    inset 0 0 0 1px rgba(38, 36, 34, 0.08);
+  clip-path: polygon(
+    0% 3%, 2% 0%, 12% 1%, 22% 0%, 38% 1.2%, 52% 0%, 68% 1%, 82% 0%, 96% 1%, 100% 2.5%,
+    99.5% 15%, 100% 40%, 99% 65%, 100% 88%, 99% 97%, 92% 100%, 78% 99%, 58% 100%,
+    38% 99%, 20% 100%, 6% 99%, 0% 97%, 0.5% 82%, 0% 60%, 0.5% 35%, 0% 15%
+  );
+}
+
+@utility contract-nail {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 35% 35%, #b8b0a0 0%, #4a463f 60%, #1a1815 100%);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5), inset 0 -1px 1px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@utility silver {
+  color: var(--silver-glow);
+  text-shadow: 0 0 1px rgba(207, 210, 214, 0.35);
+}
+
+@utility ink-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: 9999px;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+  font-family: var(--font-display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   font-size: 0.75rem;
-  font-weight: 600;
-  background: var(--color-accent-brand);
-  color: var(--color-accent-brand-foreground);
+  min-height: 44px;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+  &:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}
+
+@utility silver-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border: 1px solid var(--silver);
+  color: var(--silver-glow);
+  background: transparent;
+  font-family: var(--font-display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  min-height: 44px;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+  &:hover:not(:disabled) { background: var(--silver); color: var(--wall); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+@utility bone-input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  padding: 0.55rem 0.25rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  &:focus { border-bottom-color: var(--ink); }
+  &::placeholder { color: rgba(38, 36, 34, 0.4); font-style: italic; }
+}
+
+@utility dark-input {
+  width: 100%;
+  background: rgba(230, 224, 211, 0.04);
+  border: 1px solid var(--border);
+  color: var(--bone);
+  padding: 0.6rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  &:focus { border-color: var(--silver); }
+  &::placeholder { color: rgba(230, 224, 211, 0.35); font-style: italic; }
+}
+
+/* Wax seal for FULFILLED */
+@utility wax-seal {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 74px;
+  height: 74px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, #cfd2d6 0%, #94969a 45%, #4a4c50 100%);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.55), inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: #1a1815;
+  transform: rotate(-8deg);
+  text-align: center;
+  line-height: 1;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 999px;
+    border: 1px dashed rgba(20, 18, 16, 0.6);
+  }
+}
+
+@utility water-stain {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(120, 90, 50, 0.18), rgba(120, 90, 50, 0) 65%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
 }
