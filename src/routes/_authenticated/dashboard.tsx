@@ -68,12 +68,22 @@ function Dashboard() {
   const pointsEarned = ledger.reduce((s, c) => s + (c.awarded_points || 0), 0);
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
       <SiteHeader />
-      <div className="container-board grid gap-8 py-8 md:grid-cols-[1fr_320px]">
+      <div className="container-board relative z-10 grid gap-8 py-8 md:grid-cols-[1fr_320px]">
         <section>
-          <h1 className="font-display text-4xl text-bone">Your contracts</h1>
-          <p className="script-note text-xl text-bone-soft">The board remembers.</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-display text-4xl text-bone">Your contracts</h1>
+              <p className="script-note text-xl text-bone-soft">The board remembers.</p>
+            </div>
+            <div className="system-bar">
+              <span className="status-dot" />
+              editor link · connected
+            </div>
+          </div>
 
           <PaymentSetup />
 
