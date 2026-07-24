@@ -116,7 +116,7 @@ function HomePage() {
             options={[
               { v: "all", l: "any" },
               { v: "flat", l: "per clip" },
-              { v: "per_1k_views", l: "per 1k views" },
+              { v: "per_1k_views", l: "per 100k views" },
             ]}
             value={payout}
             onChange={(v) => setPayout(v as typeof payout)}
