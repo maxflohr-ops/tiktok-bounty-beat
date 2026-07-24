@@ -251,7 +251,7 @@ function BountyDetail() {
                       {busy ? "delivering…" : "deliver proof"}
                     </button>
                   </form>
-                ) : myClaim.status === "submitted" || myClaim.status === "pending" || myClaim.status === "in_review" ? (
+                ) : (["submitted", "pending", "in_review"] as string[]).includes(myClaim.status as string) ? (
                   <p className="italic text-bone-soft">
                     Proof delivered. The harbormaster will honor or dispute the contract shortly.
                   </p>
