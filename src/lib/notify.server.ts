@@ -63,31 +63,10 @@ async function sendToSheet(p: EventPayload, ts: string) {
 }
 
 async function sendEmailAlert(p: EventPayload, ts: string) {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) return;
-  const subject = `[BountySounds] ${p.event}${p.reference ? ` — ${p.reference}` : ""}`;
-  const lines = [
-    `<p><strong>Event:</strong> ${p.event}</p>`,
-    `<p><strong>When:</strong> ${ts}</p>`,
-    p.actor ? `<p><strong>Actor:</strong> ${p.actor}</p>` : "",
-    p.reference ? `<p><strong>Reference:</strong> ${p.reference}</p>` : "",
-    `<pre style="background:#f5f5f5;padding:12px;border-radius:6px;white-space:pre-wrap;font-family:monospace">${escapeHtml(
-      JSON.stringify(p.details ?? {}, null, 2),
-    )}</pre>`,
-  ].filter(Boolean).join("");
-  const html = `<div style="font-family:system-ui,sans-serif;color:#141210">${lines}</div>`;
-  try {
-    const { sendLovableEmail } = await import("@lovable.dev/email-js");
-    await sendLovableEmail({
-      apiKey: key,
-      to: ALERT_EMAIL,
-      subject,
-      html,
-    } as unknown as Parameters<typeof sendLovableEmail>[0]);
-  } catch (err) {
-    // Expected until an email domain is configured for the project.
-    console.error("[notify.email]", err instanceof Error ? err.message : err);
-  }
+  // App email sending requires a verified sender domain on this project.
+  // Until the user configures one, log and skip so notifications still land in Airtable + Sheets.
+  console.info(`[notify.email:skipped] ${p.event} at ${ts} — email domain not yet configured`);
+  return;
 }
 
 function escapeHtml(s: string) {
