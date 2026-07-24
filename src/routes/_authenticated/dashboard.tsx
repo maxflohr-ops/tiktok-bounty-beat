@@ -197,14 +197,18 @@ function PaymentSetup() {
   };
 
   return (
-    <div className="mt-6 board-frame p-5">
+    <div className="mt-6 board-frame relative p-5">
+      <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+      <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+      <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+      <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
       <h2 className="font-display text-2xl text-bone">Payment setup</h2>
       {isLoading ? (
         <p className="mt-2 italic text-bone-soft">Consulting the harbor bank…</p>
       ) : status === "enabled" ? (
         <div className="mt-3 flex items-center gap-2">
-          <CheckCircle2 className="h-4 w-4 silver" />
-          <span className="label-cap silver">Payouts connected</span>
+          <span className="status-dot" />
+          <span className="digital-badge">Payouts connected</span>
         </div>
       ) : status === "pending" ? (
         <div className="mt-3 space-y-3">
