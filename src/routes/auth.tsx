@@ -90,7 +90,7 @@ function AuthPage() {
         </div>
         <p className="text-xs text-bone-soft">By continuing you agree to reasonable use.</p>
       </aside>
-      <main className="flex items-center justify-center p-6">
+      <main className="relative z-10 flex items-center justify-center p-6">
         <div className="w-full max-w-sm">
           <div className="mb-6 flex md:hidden">
             <Link to="/" className="font-display text-xl text-bone">
