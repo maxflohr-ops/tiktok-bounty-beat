@@ -13,11 +13,12 @@ import {
 } from "@/lib/submissions.functions";
 import { getMe } from "@/lib/me.functions";
 import { createBountyTopUp, requestPayout, listPayoutApprovals, approveAndSendPayout, rejectPayout } from "@/lib/stripe.functions";
+import { listAllDisputesStaff, resolveDispute } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet } from "lucide-react";
+import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -64,6 +65,7 @@ function Admin() {
           <SubmissionsPanel />
         </div>
         <PayoutApprovalsPanel />
+        <DisputesPanel />
         <Ledger />
       </div>
     </div>
@@ -573,6 +575,184 @@ function PayoutApprovalsPanel() {
             ))}
           </ul>
         </div>
+      ) : null}
+    </section>
+  );
+}
+
+function DisputesPanel() {
+  const listFn = useServerFn(listAllDisputesStaff);
+  const resolveFn = useServerFn(resolveDispute);
+  const qc = useQueryClient();
+  const { data = [] } = useQuery({ queryKey: ["disputesStaff"], queryFn: () => listFn() });
+
+  const [drafts, setDrafts] = useState<Record<string, { note: string; corrected: string }>>({});
+  const upd = (id: string, patch: Partial<{ note: string; corrected: string }>) =>
+    setDrafts((s) => ({ ...s, [id]: { note: s[id]?.note ?? "", corrected: s[id]?.corrected ?? "", ...patch } }));
+
+  const act = async (
+    id: string,
+    decision: "under_review" | "resolved" | "rejected",
+  ) => {
+    const d = drafts[id] ?? { note: "", corrected: "" };
+    try {
+      await resolveFn({
+        data: {
+          id,
+          decision,
+          reviewer_note: d.note,
+          corrected_view_count:
+            decision === "resolved" && d.corrected ? Number(d.corrected) : undefined,
+        },
+      });
+      toast.success(
+        decision === "resolved"
+          ? "Dispute resolved — views corrected if provided."
+          : decision === "rejected"
+            ? "Dispute rejected."
+            : "Marked under review.",
+      );
+      qc.invalidateQueries({ queryKey: ["disputesStaff"] });
+      qc.invalidateQueries({ queryKey: ["submissionsStaff"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed.");
+    }
+  };
+
+  const open = data.filter((d) => d.status === "open" || d.status === "under_review");
+  const closed = data.filter((d) => d.status === "resolved" || d.status === "rejected");
+
+  return (
+    <section className="mt-8 border border-border/60 p-5">
+      <div className="flex items-center justify-between">
+        <h2 className="font-display text-2xl text-bone">
+          <Flag className="mr-2 inline h-5 w-5 silver" />
+          Payout disputes
+        </h2>
+        <span className="label-cap text-bone-soft">{open.length} awaiting</span>
+      </div>
+
+      {open.length === 0 ? (
+        <p className="script-note mt-3 text-lg text-silver-glow">no open disputes.</p>
+      ) : (
+        <ul className="mt-4 space-y-4">
+          {open.map((d) => {
+            const s = (d as any).submission;
+            const b = s?.bounty;
+            const draft = drafts[d.id] ?? { note: "", corrected: "" };
+            return (
+              <li key={d.id} className="border border-border/60 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="label-cap silver">
+                      Dispute · No. {b?.contract_no != null ? String(b.contract_no).padStart(3, "0") : "—"}
+                    </div>
+                    <div className="font-display text-lg text-bone">{b?.title ?? "—"}</div>
+                    <div className="text-xs text-bone-soft">
+                      by {(d as any).creator?.display_name || "—"}
+                      {(d as any).creator?.tiktok_handle ? ` · @${(d as any).creator.tiktok_handle}` : ""}
+                      {" · filed "}
+                      {new Date(d.created_at).toLocaleString()}
+                    </div>
+                    {s?.tiktok_video_url ? (
+                      <a
+                        href={s.tiktok_video_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-1 inline-flex items-center gap-1 text-xs italic underline text-bone-soft"
+                      >
+                        open the clip <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ) : null}
+                    <p className="mt-2 italic text-bone-soft">&ldquo;{d.note}&rdquo;</p>
+                    {d.evidence_url ? (
+                      <a
+                        href={d.evidence_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-1 inline-flex items-center gap-1 text-xs italic underline text-bone-soft"
+                      >
+                        evidence <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ) : null}
+                  </div>
+                  <div className="text-right text-xs text-bone-soft">
+                    <div>
+                      recorded views:{" "}
+                      <span className="silver">{(s?.view_count ?? 0).toLocaleString()}</span>
+                    </div>
+                    {d.claimed_view_count != null ? (
+                      <div>
+                        claimed:{" "}
+                        <span className="silver">{d.claimed_view_count.toLocaleString()}</span>
+                      </div>
+                    ) : null}
+                    <div className="mt-1 label-cap silver">
+                      {d.status.replace("_", " ")}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 grid gap-2 sm:grid-cols-[1fr_180px]">
+                  <textarea
+                    rows={2}
+                    value={draft.note}
+                    onChange={(e) => upd(d.id, { note: e.target.value })}
+                    maxLength={2000}
+                    placeholder="reviewer note (shared with the creator)"
+                    className="dark-input w-full"
+                  />
+                  <input
+                    type="number"
+                    min={0}
+                    value={draft.corrected}
+                    onChange={(e) => upd(d.id, { corrected: e.target.value })}
+                    placeholder="corrected views"
+                    className="dark-input"
+                  />
+                </div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {d.status === "open" ? (
+                    <button
+                      onClick={() => act(d.id, "under_review")}
+                      className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+                    >
+                      mark under review
+                    </button>
+                  ) : null}
+                  <button onClick={() => act(d.id, "resolved")} className="silver-btn">
+                    <Check className="h-3.5 w-3.5" /> resolve & correct
+                  </button>
+                  <button
+                    onClick={() => act(d.id, "rejected")}
+                    className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+                  >
+                    <X className="h-3.5 w-3.5" /> reject
+                  </button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {closed.length > 0 ? (
+        <details className="mt-6">
+          <summary className="label-cap cursor-pointer text-bone-soft">
+            closed disputes ({closed.length})
+          </summary>
+          <ul className="mt-3 space-y-2 text-xs text-bone-soft">
+            {closed.map((d) => (
+              <li key={d.id} className="border border-border/40 p-2">
+                <span className="label-cap silver mr-2">{d.status}</span>
+                <span className="italic">{d.note}</span>
+                {d.reviewer_note ? (
+                  <div className="mt-1 italic">note: &ldquo;{d.reviewer_note}&rdquo;</div>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </details>
       ) : null}
     </section>
   );
