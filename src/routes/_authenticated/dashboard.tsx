@@ -301,11 +301,15 @@ function ClaimRow({
         </div>
         <div className="text-right">
           {(claim as any).paid_cash_cents > 0 ? (
-            <div className="label-cap silver border border-[var(--gold)]/40 inline-block px-2 py-1">
+            <div className="digital-badge">
+              <span className="status-dot" />
               Paid: <Money cents={(claim as any).paid_cash_cents} currency={b?.currency ?? "USD"} />
             </div>
           ) : (
-            <div className="label-cap silver">{prettyStatus(claim.status)}</div>
+            <div className="flex items-center justify-end gap-2">
+              <span className="status-dot-amber" />
+              <span className="digital-badge-amber">{prettyStatus(claim.status)}</span>
+            </div>
           )}
           {claim.awarded_cash_cents > 0 ? (
             <div className="mt-1 font-display text-lg silver">{money(claim.awarded_cash_cents, b?.currency ?? "USD")}</div>
