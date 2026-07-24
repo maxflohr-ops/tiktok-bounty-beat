@@ -60,6 +60,7 @@ function BountyDetail() {
   const myClaim = myClaims.find((c) => c.bounty_id === id);
 
   const [handle, setHandle] = useState("");
+  const [paypal, setPaypal] = useState("");
   const [clipUrl, setClipUrl] = useState("");
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -71,7 +72,7 @@ function BountyDetail() {
     if (!user) { navigate({ to: "/auth" }); return; }
     setBusy(true);
     try {
-      await claimFn({ data: { bounty_id: id, tiktok_handle: handle } });
+      await claimFn({ data: { bounty_id: id, tiktok_handle: handle, paypal_email: paypal } });
       toast.success("Contract taken. Deliver proof before the deadline.");
       refetchClaims(); refetchBounties();
     } catch (err) {
