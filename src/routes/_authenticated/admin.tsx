@@ -12,10 +12,12 @@ import {
   markPaid,
 } from "@/lib/submissions.functions";
 import { getMe } from "@/lib/me.functions";
+import { createBountyTopUp, payoutEditor } from "@/lib/stripe.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Money } from "@/components/Money";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins } from "lucide-react";
+import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -153,22 +155,25 @@ function BountiesPanel() {
       </div>
       <ul className="mt-4 divide-y divide-border/40">
         {data.map((b) => (
-          <li key={b.id} className="flex items-center justify-between gap-3 py-3">
-            <div className="min-w-0">
-              <div className="label-cap silver">No. {pad(b.contract_no)}</div>
-              <div className="truncate text-bone">{b.title}</div>
-              <div className="text-xs italic text-bone-soft">
-                {b.sound_name} · {b.status}
+          <li key={b.id} className="flex flex-col gap-3 py-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="label-cap silver">No. {pad(b.contract_no)}</div>
+                <div className="truncate text-bone">{b.title}</div>
+                <div className="text-xs italic text-bone-soft">
+                  {b.sound_name} · {b.status} · Pot: <Money cents={(b as any).funded_cash_cents ?? 0} currency={b.currency} />
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <button className="rounded p-2 text-bone-soft hover:text-bone" onClick={() => setEditing(b)} title="edit">
+                  <Pencil className="h-4 w-4" />
+                </button>
+                <button className="rounded p-2 text-bone-soft hover:text-bone" onClick={() => remove(b.id)} title="delete">
+                  <Trash2 className="h-4 w-4" />
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-1">
-              <button className="rounded p-2 text-bone-soft hover:text-bone" onClick={() => setEditing(b)} title="edit">
-                <Pencil className="h-4 w-4" />
-              </button>
-              <button className="rounded p-2 text-bone-soft hover:text-bone" onClick={() => remove(b.id)} title="delete">
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
+            <TopUpControl bountyId={b.id} />
           </li>
         ))}
         {data.length === 0 ? (
@@ -250,6 +255,40 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="label-cap text-bone-soft">{label}</span>
       <div className="mt-2">{children}</div>
     </label>
+  );
+}
+
+function TopUpControl({ bountyId }: { bountyId: string }) {
+  const topUpFn = useServerFn(createBountyTopUp);
+  const [amount, setAmount] = useState(100);
+  const [busy, setBusy] = useState(false);
+
+  const topUp = async () => {
+    setBusy(true);
+    try {
+      const r = await topUpFn({ data: { bountyId, amountCents: Math.round(amount * 100) } });
+      if (r?.url) window.location.href = r.url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "The bank refused this top-up.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2 border-t border-border/40 pt-2">
+      <span className="label-cap text-bone-soft">top up pot ($)</span>
+      <input
+        type="number"
+        min={1}
+        value={amount}
+        onChange={(e) => setAmount(Number(e.target.value))}
+        className="dark-input max-w-[100px]"
+      />
+      <button onClick={topUp} disabled={busy} className="silver-btn">
+        <Wallet className="h-3.5 w-3.5" /> top up
+      </button>
+    </div>
   );
 }
 
@@ -354,15 +393,30 @@ function ReviewCard({
 function Ledger() {
   const listFn = useServerFn(listAllSubmissionsStaff);
   const payFn = useServerFn(markPaid);
+  const stripePayFn = useServerFn(payoutEditor);
   const { data = [], refetch } = useQuery({ queryKey: ["allSubs"], queryFn: () => listFn() });
+  const [payingId, setPayingId] = useState<string | null>(null);
 
   const rows = data.filter((s) => s.status === "approved" || s.status === "paid");
   const owed = rows.filter((s) => s.status === "approved").reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
   const paid = rows.filter((s) => s.status === "paid").reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
 
-  const pay = async (id: string) => {
+  const payManually = async (id: string) => {
     try { await payFn({ data: { id } }); toast.success("Silver logged."); refetch(); }
     catch (err) { toast.error(err instanceof Error ? err.message : "Payment log refused."); }
+  };
+
+  const payViaStripe = async (id: string) => {
+    setPayingId(id);
+    try {
+      const r = await stripePayFn({ data: { submissionId: id } });
+      toast.success(`Paid via Stripe${r?.transferId ? ` · ${r.transferId}` : ""}.`);
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Stripe payout refused.");
+    } finally {
+      setPayingId(null);
+    }
   };
 
   return (
@@ -371,6 +425,7 @@ function Ledger() {
         <div>
           <h2 className="label-cap silver">P A I D &nbsp; I N &nbsp; S I L V E R</h2>
           <p className="script-note text-lg text-silver-glow">a running weight of honored contracts.</p>
+          <p className="mt-1 text-xs italic text-bone-soft">Payouts are sent via Stripe to the clipper's linked account.</p>
         </div>
         <div className="flex gap-6 text-right">
           <div><div className="label-cap text-bone-soft">owed</div><div className="font-display text-xl silver">{money(owed)}</div></div>
@@ -384,15 +439,25 @@ function Ledger() {
               <span className="label-cap silver mr-2">No. {r.bounty?.contract_no != null ? pad(r.bounty.contract_no) : "—"}</span>
               <span className="text-bone">{r.bounty?.title}</span>
               <span className="ml-2 italic text-bone-soft">to {r.editor?.display_name || "editor"} @{r.tiktok_handle}</span>
+              {r.status === "paid" && (r as any).stripe_transfer_id ? (
+                <div className="mt-1 text-xs italic text-bone-soft">
+                  transfer: {(r as any).stripe_transfer_id} · paid <Money cents={(r as any).paid_cash_cents ?? r.awarded_cash_cents ?? 0} currency={r.bounty?.currency || "USD"} />
+                </div>
+              ) : null}
             </div>
             <div className="flex items-center gap-3">
               <span className="font-display silver">{money(r.awarded_cash_cents || 0, r.bounty?.currency || "USD")}</span>
               {r.status === "paid" ? (
                 <span className="label-cap silver border border-silver/40 px-2 py-1">paid</span>
               ) : (
-                <button onClick={() => pay(r.id)} className="silver-btn">
-                  <Coins className="h-3.5 w-3.5" /> mark paid
-                </button>
+                <>
+                  <button onClick={() => payViaStripe(r.id)} disabled={payingId === r.id} className="silver-btn">
+                    <Coins className="h-3.5 w-3.5" /> {payingId === r.id ? "paying…" : "honor & pay (stripe)"}
+                  </button>
+                  <button onClick={() => payManually(r.id)} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+                    mark paid manually
+                  </button>
+                </>
               )}
             </div>
           </li>

@@ -3,10 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listMyClaims, updateViewCount } from "@/lib/submissions.functions";
 import { getMe, updateMyProfile } from "@/lib/me.functions";
+import { getMyPayoutMethod, connectStripeAccount, refreshConnectStatus } from "@/lib/stripe.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Money } from "@/components/Money";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, CheckCircle2, Link2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -64,6 +66,8 @@ function Dashboard() {
           <h1 className="font-display text-4xl text-bone">Your contracts</h1>
           <p className="script-note text-xl text-silver-glow">the board remembers.</p>
 
+          <PaymentSetup />
+
           {claims.length === 0 ? (
             <div className="mt-10 border border-dashed border-border/60 p-10 text-center">
               <p className="script-note text-3xl text-silver-glow">
@@ -117,6 +121,75 @@ function Dashboard() {
   );
 }
 
+function PaymentSetup() {
+  const getFn = useServerFn(getMyPayoutMethod);
+  const connectFn = useServerFn(connectStripeAccount);
+  const refreshFn = useServerFn(refreshConnectStatus);
+  const { data, refetch, isLoading } = useQuery({ queryKey: ["payoutMethod"], queryFn: () => getFn() });
+  const [busy, setBusy] = useState(false);
+
+  const status = data?.stripe_connect_status ?? "not_connected";
+
+  const link = async () => {
+    setBusy(true);
+    try {
+      const r = await connectFn();
+      if (r?.url) window.location.href = r.url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Stripe refused the request.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const refresh = async () => {
+    setBusy(true);
+    try {
+      await refreshFn();
+      await refetch();
+      toast.success("Status refreshed.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not refresh status.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="mt-6 border border-border/60 p-5">
+      <h2 className="font-display text-2xl text-bone">Payment setup</h2>
+      {isLoading ? (
+        <p className="mt-2 italic text-bone-soft">consulting the harbor bank…</p>
+      ) : status === "enabled" ? (
+        <div className="mt-3 flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 silver" />
+          <span className="label-cap silver">payouts connected</span>
+        </div>
+      ) : status === "pending" ? (
+        <div className="mt-3 space-y-3">
+          <p className="italic text-bone-soft">Stripe onboarding is incomplete.</p>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={link} disabled={busy} className="silver-btn">
+              <Link2 className="h-3.5 w-3.5" /> complete stripe setup
+            </button>
+            <button onClick={refresh} disabled={busy} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+              refresh status
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3 space-y-3">
+          <p className="italic text-bone-soft">Link a Stripe account so the board can pay you in silver directly.</p>
+          <button onClick={link} disabled={busy} className="silver-btn">
+            <Link2 className="h-3.5 w-3.5" /> link stripe account for payouts
+          </button>
+        </div>
+      )}
+      <p className="mt-3 text-xs italic text-bone-soft">PayPal support coming soon.</p>
+    </div>
+  );
+}
+
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div>
@@ -156,7 +229,13 @@ function ClaimRow({ claim, onSaveViews }: { claim: Claim; onSaveViews: (v: numbe
           ) : null}
         </div>
         <div className="text-right">
-          <div className="label-cap silver">{prettyStatus(claim.status)}</div>
+          {(claim as any).paid_cash_cents > 0 ? (
+            <div className="label-cap silver border border-silver/40 inline-block px-2 py-1">
+              Paid: <Money cents={(claim as any).paid_cash_cents} currency={b?.currency ?? "USD"} />
+            </div>
+          ) : (
+            <div className="label-cap silver">{prettyStatus(claim.status)}</div>
+          )}
           {claim.awarded_cash_cents > 0 ? (
             <div className="mt-1 font-display text-lg silver">{money(claim.awarded_cash_cents, b?.currency ?? "USD")}</div>
           ) : null}
