@@ -121,7 +121,11 @@ function Dashboard() {
         </section>
 
         <aside className="space-y-6">
-          <div className="board-frame p-5">
+          <div className="board-frame relative p-5">
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
             <h2 className="font-display text-2xl text-bone">Editor's mark</h2>
             <form onSubmit={save} className="mt-3 space-y-4">
               <label className="block">
@@ -139,7 +143,11 @@ function Dashboard() {
             </form>
           </div>
 
-          <div className="board-frame p-5">
+          <div className="board-frame relative p-5">
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
             <h2 className="label-cap silver text-center">Paid in crowns</h2>
             <div className="mt-3 grid grid-cols-2 gap-4 text-center">
               <Metric label="approved" value={money(silverEarned)} />
