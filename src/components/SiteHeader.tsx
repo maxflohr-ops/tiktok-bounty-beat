@@ -16,7 +16,7 @@ export function SiteHeader() {
   });
 
   return (
-    <header className="border-b border-[var(--iron)]">
+    <header className="relative z-30 border-b border-[var(--iron)]">
       <div className="container-board flex flex-col items-center gap-2 py-5 md:flex-row md:justify-between md:py-6">
         <Link to="/" className="flex flex-col items-center gap-0.5 md:items-start">
           <span className="label-cap text-bone-soft">The Harbormaster's</span>
@@ -60,7 +60,8 @@ export function SiteHeader() {
                 cash in
               </Link>
               {typeof me?.profile?.points === "number" ? (
-                <span className="silver label-cap ml-1 border border-gold/40 px-2 py-1">
+                <span className="digital-badge ml-1">
+                  <span className="status-dot" />
                   {me.profile.points} pts
                 </span>
               ) : null}
