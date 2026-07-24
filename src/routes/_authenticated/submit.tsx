@@ -168,8 +168,12 @@ function SubmitPage() {
 
           <form
             onSubmit={deliver}
-            className="mt-6 board-frame p-5"
+            className="mt-6 board-frame relative p-5"
           >
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
             <label className="block">
               <span className="label-cap text-bone-soft">tiktok clip url</span>
               <div className="mt-2 flex items-center gap-2 border border-[var(--border)] px-3 py-2">
@@ -272,16 +276,20 @@ function SubmitPage() {
                   return (
                     <div
                       key={c.id}
-                      className="board-frame p-4"
+                      className="board-frame relative p-4"
                     >
+                      <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+                      <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+                      <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+                      <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <div>
                           <div className="font-display text-bone">
                             {b?.title ?? "contract"}
                           </div>
-                          <div className="text-xs italic text-bone-soft">
-                            {b?.contract_no ? <>No. {pad(b.contract_no)} · </> : null}
-                            {statusLabel(c.status)}
+                          <div className="mt-1 flex flex-wrap items-center gap-2">
+                            {b?.contract_no ? <span className="label-cap text-silver">No. {pad(b.contract_no)}</span> : null}
+                            <span className="digital-badge-amber">{statusLabel(c.status)}</span>
                           </div>
                         </div>
                         {c.tiktok_video_url ? (
