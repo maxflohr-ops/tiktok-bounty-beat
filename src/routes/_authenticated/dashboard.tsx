@@ -1,29 +1,35 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { listMySubmissions } from "@/lib/submissions.functions";
+import { listMyClaims, updateViewCount } from "@/lib/submissions.functions";
 import { getMe, updateMyProfile } from "@/lib/me.functions";
 import { SiteHeader } from "@/components/SiteHeader";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Music, ExternalLink, Check, X, Clock } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Your dashboard — Sound Bounties" },
-      { name: "description", content: "Your bounty submissions, points and profile." },
+      { title: "Your contracts · THE BOARD" },
+      { name: "description", content: "Contracts you've taken and silver you've earned." },
     ],
   }),
   component: Dashboard,
 });
 
+function pad(n: number) { return n.toString().padStart(3, "0"); }
+function money(cents: number, currency = "USD") {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(cents / 100);
+}
+
 function Dashboard() {
   const meFn = useServerFn(getMe);
-  const subsFn = useServerFn(listMySubmissions);
+  const claimsFn = useServerFn(listMyClaims);
   const updFn = useServerFn(updateMyProfile);
+  const viewsFn = useServerFn(updateViewCount);
   const { data: me, refetch: refetchMe } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
-  const { data: subs = [] } = useQuery({ queryKey: ["mySubs"], queryFn: () => subsFn() });
+  const { data: claims = [], refetch } = useQuery({ queryKey: ["myClaims"], queryFn: () => claimsFn() });
 
   const [name, setName] = useState("");
   const [handle, setHandle] = useState("");
@@ -38,111 +44,71 @@ function Dashboard() {
     e.preventDefault();
     try {
       await updFn({ data: { display_name: name, tiktok_handle: handle } });
-      toast.success("Profile updated.");
+      toast.success("Profile marked in the ledger.");
       refetchMe();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Update failed.");
+      toast.error(err instanceof Error ? err.message : "Ledger refused the change.");
     }
   };
+
+  const ledger = claims.filter((c) => c.status === "approved" || c.status === "paid");
+  const silverEarned = ledger.reduce((s, c) => s + (c.awarded_cash_cents || 0), 0);
+  const silverPaid = claims.filter((c) => c.status === "paid").reduce((s, c) => s + (c.awarded_cash_cents || 0), 0);
+  const pointsEarned = ledger.reduce((s, c) => s + (c.awarded_points || 0), 0);
 
   return (
     <div className="min-h-screen">
       <SiteHeader />
-      <div className="container-editorial grid gap-10 py-10 md:grid-cols-[1fr_320px]">
+      <div className="container-board grid gap-8 py-8 md:grid-cols-[1fr_320px]">
         <section>
-          <h1 className="font-display text-3xl">Your submissions</h1>
-          <p className="mt-1 text-ink-soft">Track status and points earned.</p>
-          {subs.length === 0 ? (
-            <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
-              <p className="font-display text-xl">Nothing here yet.</p>
-              <p className="mt-1 text-sm text-ink-soft">Pick a bounty to submit your first edit.</p>
-              <Link
-                to="/"
-                className="mt-4 inline-flex rounded-full bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
-              >
-                Browse bounties
-              </Link>
+          <h1 className="font-display text-4xl text-bone">Your contracts</h1>
+          <p className="script-note text-xl text-silver-glow">the board remembers.</p>
+
+          {claims.length === 0 ? (
+            <div className="mt-10 border border-dashed border-border/60 p-10 text-center">
+              <p className="script-note text-3xl text-silver-glow">
+                you've taken nothing. the board notices.
+              </p>
+              <Link to="/" className="silver-btn mt-6 inline-flex">visit the board</Link>
             </div>
           ) : (
             <ul className="mt-6 space-y-3">
-              {subs.map((s) => (
-                <li key={s.id} className="rounded-xl border border-border bg-background p-4">
-                  <div className="flex items-start gap-4">
-                    {s.oembed_thumbnail ? (
-                      <img
-                        src={s.oembed_thumbnail}
-                        alt=""
-                        className="h-20 w-16 rounded object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-20 w-16 items-center justify-center rounded bg-surface">
-                        <Music className="h-5 w-5 text-ink-soft" />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 text-xs text-ink-soft">
-                        <Music className="h-3 w-3" /> {s.bounty?.sound_name}
-                      </div>
-                      <div className="font-medium">{s.bounty?.title}</div>
-                      <a
-                        href={s.tiktok_video_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-0.5 inline-flex items-center gap-1 text-xs text-ink-soft hover:text-ink"
-                      >
-                        {s.tiktok_video_url} <ExternalLink className="h-3 w-3" />
-                      </a>
-                      {s.review_notes ? (
-                        <p className="mt-1 text-xs text-ink-soft">"{s.review_notes}"</p>
-                      ) : null}
-                    </div>
-                    <div className="text-right">
-                      <StatusBadge status={s.status} />
-                      {s.status === "approved" ? (
-                        <div className="mt-1 text-xs text-ink-soft">
-                          +{s.awarded_points} pts
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                </li>
+              {claims.map((c) => (
+                <ClaimRow key={c.id} claim={c} onSaveViews={async (v) => {
+                  try { await viewsFn({ data: { submission_id: c.id, view_count: v } }); toast.success("Views logged."); refetch(); }
+                  catch (err) { toast.error(err instanceof Error ? err.message : "Failed."); }
+                }} />
               ))}
             </ul>
           )}
         </section>
 
-        <aside>
-          <div className="rounded-2xl border border-border bg-background p-5">
-            <h2 className="font-display text-xl">Profile</h2>
-            <form onSubmit={save} className="mt-4 space-y-3 text-sm">
-              <label className="block text-xs font-medium text-ink-soft">
-                Display name
-                <input
-                  value={name}
-                  maxLength={80}
-                  onChange={(e) => setName(e.target.value)}
-                  className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-ink"
-                />
+        <aside className="space-y-6">
+          <div className="border border-border/60 p-5">
+            <h2 className="font-display text-2xl text-bone">Editor's mark</h2>
+            <form onSubmit={save} className="mt-3 space-y-4">
+              <label className="block">
+                <span className="label-cap text-bone-soft">name</span>
+                <input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} className="dark-input mt-2" />
               </label>
-              <label className="block text-xs font-medium text-ink-soft">
-                TikTok handle
-                <div className="mt-1 flex items-center rounded-md border border-border bg-background focus-within:border-ink">
-                  <span className="pl-3 text-ink-soft">@</span>
-                  <input
-                    value={handle}
-                    maxLength={60}
-                    onChange={(e) => setHandle(e.target.value)}
-                    className="w-full bg-transparent px-2 py-2 text-sm outline-none"
-                  />
+              <label className="block">
+                <span className="label-cap text-bone-soft">tiktok handle</span>
+                <div className="mt-2 flex items-center border border-border/60 px-3 py-2">
+                  <span className="text-bone-soft">@</span>
+                  <input value={handle} maxLength={60} onChange={(e) => setHandle(e.target.value)} className="w-full bg-transparent px-1 text-bone outline-none" />
                 </div>
               </label>
-              <button className="w-full rounded-md bg-primary py-2 text-primary-foreground hover:bg-primary/90">
-                Save profile
-              </button>
+              <button className="silver-btn w-full">mark the ledger</button>
             </form>
-            <div className="mt-6 rounded-lg bg-surface p-4 text-center">
-              <div className="text-xs text-ink-soft">Total points</div>
-              <div className="font-display text-3xl">{me?.profile?.points ?? 0}</div>
+          </div>
+
+          <div className="border border-border/60 p-5">
+            <h2 className="label-cap silver text-center">Paid in silver</h2>
+            <div className="mt-3 grid grid-cols-2 gap-4 text-center">
+              <Metric label="approved" value={money(silverEarned)} />
+              <Metric label="paid" value={money(silverPaid)} />
+              <Metric label="points" value={String(pointsEarned)} />
+              <Metric label="contracts" value={String(claims.length)} />
             </div>
           </div>
         </aside>
@@ -151,22 +117,80 @@ function Dashboard() {
   );
 }
 
-function StatusBadge({ status }: { status: "pending" | "approved" | "rejected" }) {
-  if (status === "approved")
-    return (
-      <span className="chip" style={{ background: "#e8f5e9", borderColor: "#a5d6a7" }}>
-        <Check className="h-3 w-3" /> Approved
-      </span>
-    );
-  if (status === "rejected")
-    return (
-      <span className="chip" style={{ background: "#fdecea", borderColor: "#f5c6c2" }}>
-        <X className="h-3 w-3" /> Rejected
-      </span>
-    );
+function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <span className="chip">
-      <Clock className="h-3 w-3" /> Pending
-    </span>
+    <div>
+      <div className="label-cap text-bone-soft">{label}</div>
+      <div className="mt-1 font-display text-xl silver">{value}</div>
+    </div>
   );
+}
+
+type Claim = Awaited<ReturnType<typeof listMyClaims>>[number];
+
+function ClaimRow({ claim, onSaveViews }: { claim: Claim; onSaveViews: (v: number) => void }) {
+  const b = claim.bounty;
+  const [views, setViews] = useState(claim.view_count);
+  const canLogViews = b?.payout_type === "per_1k_views";
+  return (
+    <li className="border border-border/60 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <div className="label-cap silver">
+            No. {b?.contract_no != null ? pad(b.contract_no) : "—"}
+          </div>
+          <div className="font-display text-xl text-bone">{b?.title}</div>
+          <div className="mt-0.5 text-sm italic text-bone-soft">
+            {b?.artist_song || b?.sound_name}
+            {b?.deadline ? ` · by ${new Date(b.deadline).toLocaleDateString()}` : ""}
+          </div>
+          {claim.tiktok_video_url ? (
+            <a href={claim.tiktok_video_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs italic underline text-bone-soft">
+              open the clip <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : (
+            <div className="mt-2 text-xs italic text-bone-soft">no proof delivered yet</div>
+          )}
+          {claim.review_notes ? (
+            <p className="mt-2 italic text-bone-soft">&ldquo;{claim.review_notes}&rdquo;</p>
+          ) : null}
+        </div>
+        <div className="text-right">
+          <div className="label-cap silver">{prettyStatus(claim.status)}</div>
+          {claim.awarded_cash_cents > 0 ? (
+            <div className="mt-1 font-display text-lg silver">{money(claim.awarded_cash_cents, b?.currency ?? "USD")}</div>
+          ) : null}
+          {claim.awarded_points > 0 ? (
+            <div className="text-xs text-bone-soft">+{claim.awarded_points} pts</div>
+          ) : null}
+        </div>
+      </div>
+      {canLogViews ? (
+        <div className="mt-3 flex items-center gap-2 border-t border-border/40 pt-3">
+          <span className="label-cap text-bone-soft">views</span>
+          <input
+            type="number"
+            min={0}
+            value={views}
+            onChange={(e) => setViews(Number(e.target.value))}
+            className="dark-input max-w-[160px]"
+          />
+          <button onClick={() => onSaveViews(views)} className="silver-btn">log</button>
+        </div>
+      ) : null}
+    </li>
+  );
+}
+
+function prettyStatus(s: string) {
+  switch (s) {
+    case "claimed": return "active";
+    case "submitted":
+    case "pending":
+    case "in_review": return "in review";
+    case "approved": return "honored";
+    case "rejected": return "disputed";
+    case "paid": return "paid";
+    default: return s;
+  }
 }

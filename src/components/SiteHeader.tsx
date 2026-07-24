@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getMe } from "@/lib/me.functions";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, User as UserIcon } from "lucide-react";
+import { LogOut } from "lucide-react";
 
-export function SiteHeader({ artistName = "Sound Bounties" }: { artistName?: string }) {
+export function SiteHeader() {
   const { user, loading } = useSession();
   const meFn = useServerFn(getMe);
   const { data: me } = useQuery({
@@ -16,49 +16,50 @@ export function SiteHeader({ artistName = "Sound Bounties" }: { artistName?: str
   });
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
-      <div className="container-editorial flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-baseline gap-2">
-          <span className="font-display text-2xl leading-none">{artistName}</span>
-          <span className="chip-brand hidden sm:inline-flex">bounties</span>
+    <header className="border-b border-border/60">
+      <div className="container-board flex flex-col items-center gap-2 py-6 md:flex-row md:justify-between md:py-8">
+        <Link to="/" className="flex flex-col items-center gap-0.5 md:items-start">
+          <span className="label-cap text-bone-soft">The Harbormaster's</span>
+          <span className="font-display text-3xl leading-none tracking-wider text-bone md:text-4xl">
+            T H E &nbsp; B O A R D
+          </span>
+          <span className="script-note text-silver-glow">notices posted daily</span>
         </Link>
-        <nav className="flex items-center gap-1.5 text-sm">
+        <nav className="flex items-center gap-1 text-bone-soft">
           <Link
             to="/"
-            className="rounded-md px-3 py-1.5 text-ink-soft hover:text-ink hover:bg-surface"
-            activeProps={{ className: "rounded-md px-3 py-1.5 text-ink bg-surface" }}
+            className="label-cap px-3 py-2 hover:text-bone"
+            activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
+            activeOptions={{ exact: true }}
           >
-            Bounties
+            the board
           </Link>
           {me?.isStaff ? (
             <Link
               to="/admin"
-              className="rounded-md px-3 py-1.5 text-ink-soft hover:text-ink hover:bg-surface"
-              activeProps={{ className: "rounded-md px-3 py-1.5 text-ink bg-surface" }}
+              className="label-cap px-3 py-2 hover:text-bone"
+              activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
             >
-              Admin
+              harbormaster
             </Link>
           ) : null}
           {loading ? null : user ? (
             <>
               <Link
                 to="/dashboard"
-                className="rounded-md px-3 py-1.5 text-ink-soft hover:text-ink hover:bg-surface"
-                activeProps={{ className: "rounded-md px-3 py-1.5 text-ink bg-surface" }}
+                className="label-cap px-3 py-2 hover:text-bone"
+                activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
               >
-                <span className="inline-flex items-center gap-1.5">
-                  <UserIcon className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">
-                    {me?.profile?.display_name || "You"}
-                  </span>
-                  {typeof me?.profile?.points === "number" ? (
-                    <span className="chip">{me.profile.points} pts</span>
-                  ) : null}
-                </span>
+                my contracts
               </Link>
+              {typeof me?.profile?.points === "number" ? (
+                <span className="silver label-cap ml-1 border border-silver/40 px-2 py-1">
+                  {me.profile.points} pts
+                </span>
+              ) : null}
               <button
                 onClick={() => supabase.auth.signOut()}
-                className="rounded-md p-2 text-ink-soft hover:text-ink hover:bg-surface"
+                className="ml-1 rounded p-2 text-bone-soft hover:text-bone"
                 aria-label="Sign out"
                 title="Sign out"
               >
@@ -66,11 +67,8 @@ export function SiteHeader({ artistName = "Sound Bounties" }: { artistName?: str
               </button>
             </>
           ) : (
-            <Link
-              to="/auth"
-              className="rounded-md bg-primary px-3.5 py-1.5 text-primary-foreground hover:bg-primary/90"
-            >
-              Sign in
+            <Link to="/auth" className="silver-btn ml-2">
+              sign the ledger
             </Link>
           )}
         </nav>
