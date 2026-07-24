@@ -79,24 +79,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sound Bounties — TikTok edits for artists" },
+      { name: "theme-color", content: "#141210" },
+      { title: "THE BOARD — clipping contracts" },
       {
         name: "description",
         content:
-          "A bounty board where TikTok editors earn points and payouts for creating edits with an artist's sound.",
+          "A harbor notice board for video clipping bounties. Take a contract, deliver proof, get paid in silver.",
       },
-      { property: "og:title", content: "Sound Bounties" },
+      { property: "og:title", content: "THE BOARD" },
       {
         property: "og:description",
-        content: "Pick up a bounty, post your TikTok edit, get rewarded.",
+        content: "Clipping contracts for video editors. Take one. Deliver proof. Paid in silver.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=La+Belle+Aurore&display=swap",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },

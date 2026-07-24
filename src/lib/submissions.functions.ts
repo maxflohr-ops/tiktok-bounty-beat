@@ -213,7 +213,8 @@ export const reviewSubmission = createServerFn({ method: "POST" })
       .eq("id", data.id)
       .single();
     if (se || !sub) throw new Error("Not found.");
-    if (sub.status !== "submitted" && sub.status !== "in_review" && sub.status !== "pending")
+    const cur = sub.status as string;
+    if (cur !== "submitted" && cur !== "in_review" && cur !== "pending")
       throw new Error("This claim is not awaiting review.");
 
     const { error: ue } = await context.supabase
