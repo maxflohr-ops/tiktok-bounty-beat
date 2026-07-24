@@ -137,7 +137,6 @@ export const createBountyTopUp = createServerFn({ method: "POST" })
       customerId = customer.id;
       await context.supabase
         .from("bounties")
-        // @ts-expect-error stripe_customer_id is not in generated types yet
         .update({ stripe_customer_id: customerId })
         .eq("id", data.bountyId);
     }
@@ -172,7 +171,6 @@ export const createBountyTopUp = createServerFn({ method: "POST" })
 
     await context.supabase
       .from("bounties")
-      // @ts-expect-error top_up_session_id is not in generated types yet
       .update({ top_up_session_id: sessionId })
       .eq("id", data.bountyId);
 
@@ -252,7 +250,6 @@ export const payoutEditor = createServerFn({ method: "POST" })
 
     await supabaseAdmin
       .from("bounties")
-      // @ts-expect-error funded_cash_cents is not in generated types yet
       .update({ funded_cash_cents: funded - amountCents })
       .eq("id", bounty.id);
 

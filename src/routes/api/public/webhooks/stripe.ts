@@ -53,7 +53,6 @@ export const Route = createFileRoute("/api/public/webhooks/stripe")({
 
             await supabaseAdmin
               .from("bounties")
-              // @ts-expect-error funded_cash_cents/top_up_session_id are not in generated types yet
               .update({
                 funded_cash_cents: currentFunded + payment.amount_cents,
                 top_up_session_id: null,
