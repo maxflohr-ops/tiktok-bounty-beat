@@ -394,7 +394,8 @@ function ReviewCard({
 function Ledger() {
   const listFn = useServerFn(listAllSubmissionsStaff);
   const payFn = useServerFn(markPaid);
-  const stripePayFn = useServerFn(payoutEditor);
+  const stripePayFn = useServerFn(requestPayout);
+  const qc = useQueryClient();
   const { data = [], refetch } = useQuery({ queryKey: ["allSubs"], queryFn: () => listFn() });
   const [payingId, setPayingId] = useState<string | null>(null);
 
@@ -407,18 +408,20 @@ function Ledger() {
     catch (err) { toast.error(err instanceof Error ? err.message : "Payment log refused."); }
   };
 
-  const payViaStripe = async (id: string) => {
+  const requestPay = async (id: string) => {
     setPayingId(id);
     try {
-      const r = await stripePayFn({ data: { submissionId: id } });
-      toast.success(`Paid via Stripe${r?.transferId ? ` · ${r.transferId}` : ""}.`);
+      await stripePayFn({ data: { submissionId: id } });
+      toast.success("Payout requested — waiting for admin approval.");
+      qc.invalidateQueries({ queryKey: ["payoutApprovals"] });
       refetch();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Stripe payout refused.");
+      toast.error(err instanceof Error ? err.message : "Payout request refused.");
     } finally {
       setPayingId(null);
     }
   };
+
 
   return (
     <section className="mt-10 border border-border/60 p-5">
