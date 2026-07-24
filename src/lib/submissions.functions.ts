@@ -101,13 +101,24 @@ export const listPendingSubmissionsStaff = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("submissions")
       .select(
-        "*, bounty:bounties(id,title,sound_name,reward_points,reward_cash_cents,currency), editor:profiles!editor_id(display_name,tiktok_handle,avatar_url)",
+        "*, bounty:bounties(id,title,sound_name,reward_points,reward_cash_cents,currency)",
       )
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) throw new Error(error.message);
-    return data ?? [];
+    const rows = data ?? [];
+    const editorIds = Array.from(new Set(rows.map((r) => r.editor_id)));
+    const editorMap: Record<string, { display_name: string | null; tiktok_handle: string | null }> = {};
+    if (editorIds.length > 0) {
+      const { data: profs } = await context.supabase
+        .from("profiles")
+        .select("id,display_name,tiktok_handle")
+        .in("id", editorIds);
+      for (const p of profs ?? []) editorMap[p.id] = { display_name: p.display_name, tiktok_handle: p.tiktok_handle };
+    }
+    return rows.map((r) => ({ ...r, editor: editorMap[r.editor_id] ?? null }));
   });
+
 
 export const reviewSubmission = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
