@@ -24,6 +24,7 @@ export type Database = {
           currency: string
           deadline: string | null
           description: string
+          funded_cash_cents: number
           id: string
           max_submissions: number | null
           payout_type: Database["public"]["Enums"]["payout_type"]
@@ -33,8 +34,10 @@ export type Database = {
           sound_name: string
           source_assets_url: string | null
           status: Database["public"]["Enums"]["bounty_status"]
+          stripe_customer_id: string | null
           tiktok_sound_url: string | null
           title: string
+          top_up_session_id: string | null
           updated_at: string
         }
         Insert: {
@@ -46,6 +49,7 @@ export type Database = {
           currency?: string
           deadline?: string | null
           description: string
+          funded_cash_cents?: number
           id?: string
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
@@ -55,8 +59,10 @@ export type Database = {
           sound_name: string
           source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
+          stripe_customer_id?: string | null
           tiktok_sound_url?: string | null
           title: string
+          top_up_session_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -68,6 +74,7 @@ export type Database = {
           currency?: string
           deadline?: string | null
           description?: string
+          funded_cash_cents?: number
           id?: string
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
@@ -77,9 +84,91 @@ export type Database = {
           sound_name?: string
           source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
+          stripe_customer_id?: string | null
           tiktok_sound_url?: string | null
           title?: string
+          top_up_session_id?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      bounty_payments: {
+        Row: {
+          amount_cents: number
+          bounty_id: string
+          created_at: string
+          created_by: string | null
+          currency: string
+          id: string
+          status: string
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          bounty_id: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          id?: string
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          bounty_id?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          id?: string
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bounty_payments_bounty_id_fkey"
+            columns: ["bounty_id"]
+            isOneToOne: false
+            referencedRelation: "bounties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payout_methods: {
+        Row: {
+          created_at: string
+          default_method: string
+          id: string
+          paypal_email: string | null
+          stripe_connect_account_id: string | null
+          stripe_connect_status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          default_method?: string
+          id?: string
+          paypal_email?: string | null
+          stripe_connect_account_id?: string | null
+          stripe_connect_status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          default_method?: string
+          id?: string
+          paypal_email?: string | null
+          stripe_connect_account_id?: string | null
+          stripe_connect_status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -128,10 +217,12 @@ export type Database = {
           oembed_thumbnail: string | null
           oembed_title: string | null
           paid_at: string | null
+          paid_cash_cents: number
           review_notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           status: Database["public"]["Enums"]["submission_status"]
+          stripe_transfer_id: string | null
           submitted_at: string | null
           tiktok_handle: string
           tiktok_video_url: string | null
@@ -152,10 +243,12 @@ export type Database = {
           oembed_thumbnail?: string | null
           oembed_title?: string | null
           paid_at?: string | null
+          paid_cash_cents?: number
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
+          stripe_transfer_id?: string | null
           submitted_at?: string | null
           tiktok_handle: string
           tiktok_video_url?: string | null
@@ -176,10 +269,12 @@ export type Database = {
           oembed_thumbnail?: string | null
           oembed_title?: string | null
           paid_at?: string | null
+          paid_cash_cents?: number
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
+          stripe_transfer_id?: string | null
           submitted_at?: string | null
           tiktok_handle?: string
           tiktok_video_url?: string | null
