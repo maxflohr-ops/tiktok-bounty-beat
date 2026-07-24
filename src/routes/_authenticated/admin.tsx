@@ -13,11 +13,12 @@ import {
 } from "@/lib/submissions.functions";
 import { getMe } from "@/lib/me.functions";
 import { createBountyTopUp, requestPayout, listPayoutApprovals, approveAndSendPayout, rejectPayout } from "@/lib/stripe.functions";
+import { listAllDisputesStaff, resolveDispute } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet } from "lucide-react";
+import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
