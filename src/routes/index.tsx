@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { leaderboard } from "@/lib/me.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Money } from "@/components/Money";
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -256,6 +257,15 @@ function ContractCard({
       <div className="mt-2 flex items-center justify-between">
         <span className="label-cap">C O N T R A C T</span>
         <span className="label-cap">No. {pad(b.contract_no)}</span>
+      </div>
+      <div className="mt-1 flex justify-end">
+        {(b as any).funded_cash_cents > 0 ? (
+          <span className="label-cap silver">
+            Pot: <Money cents={(b as any).funded_cash_cents} currency={b.currency} />
+          </span>
+        ) : (
+          <span className="label-cap text-ink-soft/70">pot empty</span>
+        )}
       </div>
 
       <h3 className="mt-4 font-display text-2xl leading-tight text-ink">{b.title}</h3>

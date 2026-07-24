@@ -8,6 +8,7 @@ import {
   listMyClaims,
 } from "@/lib/submissions.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Money } from "@/components/Money";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
 import { ArrowLeft, ExternalLink } from "lucide-react";
@@ -151,6 +152,13 @@ function BountyDetail() {
               <div>
                 <div className="label-cap silver">R E W A R D</div>
                 <p className="mt-1 font-display text-lg silver">{reward}</p>
+                <p className="mt-1 text-xs italic text-ink-soft">
+                  {(bounty as any).funded_cash_cents > 0 ? (
+                    <>Pot: <Money cents={(bounty as any).funded_cash_cents} currency={bounty.currency} /></>
+                  ) : (
+                    "pot empty"
+                  )}
+                </p>
               </div>
               <div>
                 <div className="label-cap silver">A S S E T S</div>
