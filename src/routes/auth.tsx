@@ -42,7 +42,7 @@ function AuthPage() {
         toast.success("Welcome back.");
         navigate({ to: "/dashboard" });
       } else {
-        const { error } = await supabase.signUp({
+        const { error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: window.location.origin },
