@@ -1,3 +1,4 @@
+import { isStaff } from "@/lib/authz.server";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -167,7 +168,7 @@ export const listMyClaims = createServerFn({ method: "GET" })
 export const listAllSubmissionsStaff = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
     const { data, error } = await context.supabase
       .from("submissions")
@@ -204,7 +205,7 @@ export const reviewSubmission = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
 
     const { data: sub, error: se } = await context.supabase
@@ -261,7 +262,7 @@ export const markPaid = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
     const { error } = await context.supabase
       .from("submissions")

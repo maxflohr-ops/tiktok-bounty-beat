@@ -1,3 +1,4 @@
+import { isStaff } from "@/lib/authz.server";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -60,7 +61,7 @@ export const upsertBounty = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => upsertBountyInput.parse(d))
   .handler(async ({ data, context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
     const row = {
       title: data.title,
@@ -98,7 +99,7 @@ export const deleteBounty = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
     const { error } = await context.supabase.from("bounties").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
@@ -108,7 +109,7 @@ export const deleteBounty = createServerFn({ method: "POST" })
 export const listAllBountiesStaff = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
     const { data, error } = await context.supabase
       .from("bounties")

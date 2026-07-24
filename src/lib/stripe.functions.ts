@@ -1,3 +1,4 @@
+import { isStaff, hasRole } from "@/lib/authz.server";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -111,7 +112,7 @@ export const createBountyTopUp = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
 
     const { data: bounty, error: be } = await context.supabase
@@ -208,7 +209,7 @@ export const requestPayout = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ submissionId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
 
     const { sub, bounty, amountCents } = await computePayoutAmount(context.supabase, data.submissionId);
@@ -251,7 +252,7 @@ export const requestPayout = createServerFn({ method: "POST" })
 export const listPayoutApprovals = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
     const { data, error } = await context.supabase
       .from("payout_approvals")
@@ -283,7 +284,7 @@ export const rejectPayout = createServerFn({ method: "POST" })
     z.object({ approvalId: z.string().uuid(), note: z.string().max(1000).optional() }).parse(d),
   )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const isAdmin = await hasRole(context.supabase, context.userId, "admin");
     if (!isAdmin) throw new Error("Only admins can decide payouts.");
     const { data: row, error } = await context.supabase
       .from("payout_approvals")
@@ -308,7 +309,7 @@ export const approveAndSendPayout = createServerFn({ method: "POST" })
     z.object({ approvalId: z.string().uuid(), note: z.string().max(1000).optional() }).parse(d),
   )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const isAdmin = await hasRole(context.supabase, context.userId, "admin");
     if (!isAdmin) throw new Error("Only admins can approve payouts.");
 
     // Lock the row into 'approved' first so a second admin can't double-send.
