@@ -63,6 +63,7 @@ function Admin() {
           <BountiesPanel />
           <SubmissionsPanel />
         </div>
+        <PayoutApprovalsPanel />
         <Ledger />
       </div>
     </div>
