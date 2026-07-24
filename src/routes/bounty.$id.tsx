@@ -205,8 +205,15 @@ function BountyDetail() {
             </p>
           </article>
 
-          <aside className="board-frame p-5 md:p-6">
-            <h2 className="font-display text-2xl text-bone">The take</h2>
+          <aside className="board-frame relative p-5 md:p-6">
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-display text-2xl text-bone">The take</h2>
+              <span className="terminal text-[10px] text-bone-soft">ID: #{pad(bounty.contract_no)}</span>
+            </div>
             {!user ? (
               <>
                 <p className="mt-3 text-bone-soft">
