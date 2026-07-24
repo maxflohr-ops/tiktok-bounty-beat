@@ -63,6 +63,8 @@ function BountyDetail() {
   const [paypal, setPaypal] = useState("");
   const [clipUrl, setClipUrl] = useState("");
   const [busy, setBusy] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{ tiktok_handle?: string; paypal_email?: string }>({});
+  const [touched, setTouched] = useState<{ tiktok_handle?: boolean; paypal_email?: boolean }>({});
   useEffect(() => {
     if (me?.profile?.tiktok_handle) setHandle(me.profile.tiktok_handle);
   }, [me?.profile?.tiktok_handle]);
@@ -72,7 +74,9 @@ function BountyDetail() {
     if (!user) { navigate({ to: "/auth" }); return; }
     const { validateClaimFields } = await import("@/lib/claim-validation");
     const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal });
-    if (!check.ok) { toast.error(check.message); return; }
+    setTouched({ tiktok_handle: true, paypal_email: true });
+    if (!check.ok) { setFieldErrors(check.errors); return; }
+    setFieldErrors({});
     setBusy(true);
     try {
       await claimFn({ data: { bounty_id: id, tiktok_handle: check.data.tiktok_handle, paypal_email: check.data.paypal_email } });
@@ -82,6 +86,13 @@ function BountyDetail() {
       toast.error(err instanceof Error ? err.message : "Could not take the contract.");
     } finally { setBusy(false); }
   };
+
+  const validateField = async (field: "tiktok_handle" | "paypal_email", value: string) => {
+    const mod = await import("@/lib/claim-validation");
+    const msg = field === "tiktok_handle" ? mod.validateTiktokHandle(value) : mod.validatePaypalEmail(value);
+    setFieldErrors((prev) => ({ ...prev, [field]: msg }));
+  };
+
 
   const deliver = async (e: React.FormEvent) => {
     e.preventDefault();
