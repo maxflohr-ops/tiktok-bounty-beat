@@ -52,6 +52,13 @@ export function SiteHeader() {
               >
                 my contracts
               </Link>
+              <Link
+                to="/submit"
+                className="label-cap px-3 py-2 hover:text-bone"
+                activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
+              >
+                cash in
+              </Link>
               {typeof me?.profile?.points === "number" ? (
                 <span className="silver label-cap ml-1 border border-silver/40 px-2 py-1">
                   {me.profile.points} pts
