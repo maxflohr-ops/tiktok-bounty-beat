@@ -31,11 +31,29 @@ export const claimContractSchema = z.object({
 
 export type ClaimContractInput = z.infer<typeof claimContractSchema>;
 
+export type ClaimFieldErrors = { tiktok_handle?: string; paypal_email?: string };
+
 export function validateClaimFields(input: { tiktok_handle: string; paypal_email: string }) {
   const result = z
     .object({ tiktok_handle: tiktokHandleSchema, paypal_email: paypalEmailSchema })
     .safeParse(input);
-  if (result.success) return { ok: true as const, data: result.data };
+  if (result.success) return { ok: true as const, data: result.data, errors: {} as ClaimFieldErrors };
+  const errors: ClaimFieldErrors = {};
+  for (const issue of result.error.issues) {
+    const key = issue.path[0] as keyof ClaimFieldErrors | undefined;
+    if (key && !errors[key]) errors[key] = issue.message;
+  }
   const first = result.error.issues[0];
-  return { ok: false as const, message: first?.message ?? "Invalid input." };
+  return { ok: false as const, errors, message: first?.message ?? "Invalid input." };
 }
+
+export function validateTiktokHandle(value: string): string | undefined {
+  const r = tiktokHandleSchema.safeParse(value);
+  return r.success ? undefined : r.error.issues[0]?.message;
+}
+
+export function validatePaypalEmail(value: string): string | undefined {
+  const r = paypalEmailSchema.safeParse(value);
+  return r.success ? undefined : r.error.issues[0]?.message;
+}
+
