@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { isStaff } from "@/lib/authz.server";
+import { notifyAsync } from "@/lib/notify.server";
 
 const DISPUTE_COLS =
   "id,submission_id,created_by,claimed_view_count,evidence_url,note,status,reviewer_id,reviewer_note,resolved_view_count,resolved_at,created_at,updated_at";
@@ -42,6 +43,16 @@ export const fileDispute = createServerFn({ method: "POST" })
         throw new Error("A dispute for this claim is already under review.");
       throw new Error(error.message);
     }
+    notifyAsync({
+      event: "dispute.filed",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.submission_id,
+      details: {
+        claimed_view_count: data.claimed_view_count ?? null,
+        evidence_url: data.evidence_url || null,
+        note: data.note,
+      },
+    });
     return { ok: true };
   });
 
@@ -139,5 +150,15 @@ export const resolveDispute = createServerFn({ method: "POST" })
       .update(patch)
       .eq("id", data.id);
     if (error) throw new Error(error.message);
+    notifyAsync({
+      event: `dispute.${data.decision}`,
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.id,
+      details: {
+        decision: data.decision,
+        corrected_view_count: data.corrected_view_count ?? null,
+        reviewer_note: data.reviewer_note || null,
+      },
+    });
     return { ok: true };
   });
