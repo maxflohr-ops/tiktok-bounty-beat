@@ -63,17 +63,26 @@ async function sendToSheet(p: EventPayload, ts: string) {
 }
 
 async function sendEmailAlert(p: EventPayload, ts: string) {
-  // App email sending requires a verified sender domain on this project.
-  // Until the user configures one, log and skip so notifications still land in Airtable + Sheets.
-  console.info(`[notify.email:skipped] ${p.event} at ${ts} — email domain not yet configured`);
-  return;
+  try {
+    const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
+    await sendTemplateEmail("action-alert", ALERT_EMAIL, {
+      templateData: {
+        event: p.event,
+        actor: p.actor ?? null,
+        reference: p.reference ?? null,
+        timestamp: ts,
+        detailsJson: JSON.stringify(p.details ?? {}, null, 2),
+      },
+      idempotencyKey: `alert-${p.event}-${p.reference ?? "n/a"}-${ts}`,
+    });
+  } catch (err) {
+    // Domain may still be verifying (EmailAPIError code=domain_not_verified) —
+    // fine to skip so Airtable + Sheets sinks keep working.
+    console.warn(`[notify.email] skipped: ${(err as Error)?.message ?? err}`);
+  }
 }
 
-function escapeHtml(s: string) {
-  return s.replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
-  );
-}
+
 
 export async function notify(p: EventPayload): Promise<void> {
   const ts = new Date().toISOString();
