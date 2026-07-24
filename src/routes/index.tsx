@@ -15,10 +15,10 @@ export const Route = createFileRoute("/")({
         content:
           "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in silver.",
       },
-      { property: "og:title", content: "THE BOARD" },
+      { property: "og:title", content: "THE BOARD — clipping contracts posted daily" },
       {
         property: "og:description",
-        content: "Take a clipping contract. Deliver proof. Paid in silver.",
+        content: "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in silver.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -80,19 +80,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#141210" },
-      { title: "THE BOARD — clipping contracts" },
+      { title: "THE BOARD — clipping contracts posted daily" },
       {
         name: "description",
         content:
-          "A harbor notice board for video clipping bounties. Take a contract, deliver proof, get paid in silver.",
+          "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in silver.",
       },
-      { property: "og:title", content: "THE BOARD" },
+      { property: "og:title", content: "THE BOARD — clipping contracts posted daily" },
       {
         property: "og:description",
-        content: "Clipping contracts for video editors. Take one. Deliver proof. Paid in silver.",
+        content: "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in silver.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "THE BOARD — clipping contracts posted daily" },
+      { name: "twitter:description", content: "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in silver." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/647e4035-b75b-4dd6-a38b-14e2b9958ce6/id-preview-ab5836c3--e9c30e42-72cd-48c2-8de7-f2c8325ca2a1.lovable.app-1784868756687.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/647e4035-b75b-4dd6-a38b-14e2b9958ce6/id-preview-ab5836c3--e9c30e42-72cd-48c2-8de7-f2c8325ca2a1.lovable.app-1784868756687.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
