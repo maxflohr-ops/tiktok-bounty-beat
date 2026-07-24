@@ -2,6 +2,7 @@ import { isStaff, hasRole } from "@/lib/authz.server";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { notifyAsync } from "@/lib/notify.server";
 
 function appOrigin() {
   return process.env.NODE_ENV === "production"
@@ -245,6 +246,12 @@ export const requestPayout = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error) throw new Error(error.message);
+    notifyAsync({
+      event: "payout.requested",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.submissionId,
+      details: { approval_id: row.id, amount_cents: amountCents, currency: bounty.currency },
+    });
     return { approvalId: row.id, amountCents };
   });
 
@@ -299,6 +306,12 @@ export const rejectPayout = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error || !row) throw new Error(error?.message ?? "Approval not found or already decided.");
+    notifyAsync({
+      event: "payout.rejected",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.approvalId,
+      details: { note: data.note ?? null },
+    });
     return { ok: true };
   });
 
