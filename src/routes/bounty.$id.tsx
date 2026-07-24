@@ -115,15 +115,23 @@ function BountyDetail() {
         : `${bounty.reward_points} pts per approved clip`;
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
       <SiteHeader />
-      <div className="container-board py-8">
-        <Link to="/" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
-          <ArrowLeft className="h-3.5 w-3.5" /> back to the board
-        </Link>
+      <div className="container-board relative z-10 py-8">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
+            <ArrowLeft className="h-3.5 w-3.5" /> back to the board
+          </Link>
+          <div className="system-bar">
+            <span className="status-dot" />
+            contract view · active
+          </div>
+        </div>
 
         <div className="mt-6 grid gap-8 md:grid-cols-[1.35fr_1fr]">
-          <article className="contract contract-nail relative">
+          <article className="contract contract-nail holo-glow relative">
             <span className="water-stain" style={{ top: 60, left: -20, width: 160, height: 120 }} />
 
             <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
