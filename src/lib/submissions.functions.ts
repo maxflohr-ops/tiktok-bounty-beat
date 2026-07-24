@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { notifyAsync } from "@/lib/notify.server";
+import { claimContractSchema } from "@/lib/claim-validation";
 
 const TIKTOK_URL = /^https?:\/\/((www|vm|vt|m)\.)?tiktok\.com\/.+/i;
 const CLIP_URL = /^https?:\/\/.+/i;
