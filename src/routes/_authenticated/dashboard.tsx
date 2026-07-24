@@ -223,11 +223,37 @@ function Metric({ label, value }: { label: string; value: string }) {
 }
 
 type Claim = Awaited<ReturnType<typeof listMyClaims>>[number];
+type Dispute = Awaited<ReturnType<typeof listMyDisputes>>[number];
+type DisputePayload = { claimed_view_count?: number; evidence_url?: string; note: string };
 
-function ClaimRow({ claim, onSaveViews }: { claim: Claim; onSaveViews: (v: number) => void }) {
+function ClaimRow({
+  claim,
+  disputes,
+  onSaveViews,
+  onFileDispute,
+}: {
+  claim: Claim;
+  disputes: Dispute[];
+  onSaveViews: (v: number) => void;
+  onFileDispute: (payload: DisputePayload) => Promise<void> | void;
+}) {
   const b = claim.bounty;
   const [views, setViews] = useState(claim.view_count);
   const canLogViews = b?.payout_type === "per_1k_views";
+  const [showDispute, setShowDispute] = useState(false);
+  const [dNote, setDNote] = useState("");
+  const [dViews, setDViews] = useState<string>("");
+  const [dEvidence, setDEvidence] = useState("");
+  const openDispute = disputes.find((d) => d.status === "open" || d.status === "under_review");
+  const canDispute =
+    !openDispute &&
+    (claim.status === "submitted" ||
+      claim.status === "approved" ||
+      claim.status === "paid" ||
+      claim.status === "rejected" ||
+      (claim.status as string) === "in_review" ||
+      (claim.status as string) === "pending");
+
   return (
     <li className="border border-border/60 p-4">
       <div className="flex items-start justify-between gap-4">
@@ -268,7 +294,7 @@ function ClaimRow({ claim, onSaveViews }: { claim: Claim; onSaveViews: (v: numbe
         </div>
       </div>
       {canLogViews ? (
-        <div className="mt-3 flex items-center gap-2 border-t border-border/40 pt-3">
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border/40 pt-3">
           <span className="label-cap text-bone-soft">views</span>
           <input
             type="number"
@@ -278,7 +304,107 @@ function ClaimRow({ claim, onSaveViews }: { claim: Claim; onSaveViews: (v: numbe
             className="dark-input max-w-[160px]"
           />
           <button onClick={() => onSaveViews(views)} className="silver-btn">log</button>
+          {canDispute ? (
+            <button
+              type="button"
+              onClick={() => setShowDispute((s) => !s)}
+              className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+            >
+              <Flag className="h-3.5 w-3.5" /> flag view count
+            </button>
+          ) : null}
         </div>
+      ) : canDispute ? (
+        <div className="mt-3 border-t border-border/40 pt-3">
+          <button
+            type="button"
+            onClick={() => setShowDispute((s) => !s)}
+            className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+          >
+            <Flag className="h-3.5 w-3.5" /> dispute payout
+          </button>
+        </div>
+      ) : null}
+
+      {disputes.length > 0 ? (
+        <ul className="mt-3 space-y-2 border-t border-border/40 pt-3">
+          {disputes.map((d) => (
+            <li key={d.id} className="text-xs text-bone-soft">
+              <span className="label-cap silver mr-2">{d.status.replace("_", " ")}</span>
+              <span className="italic">{d.note}</span>
+              {d.reviewer_note ? (
+                <div className="mt-1 italic">harbormaster: &ldquo;{d.reviewer_note}&rdquo;</div>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {showDispute ? (
+        <form
+          className="mt-3 space-y-2 border-t border-border/40 pt-3"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (dNote.trim().length < 5) {
+              toast.error("Add a short note (5+ characters).");
+              return;
+            }
+            await onFileDispute({
+              note: dNote.trim(),
+              claimed_view_count: dViews ? Number(dViews) : undefined,
+              evidence_url: dEvidence.trim() || undefined,
+            });
+            setShowDispute(false);
+            setDNote("");
+            setDViews("");
+            setDEvidence("");
+          }}
+        >
+          <div className="grid gap-2 sm:grid-cols-2">
+            <label className="block">
+              <span className="label-cap text-bone-soft">true view count</span>
+              <input
+                type="number"
+                min={0}
+                value={dViews}
+                onChange={(e) => setDViews(e.target.value)}
+                placeholder="e.g. 128400"
+                className="dark-input mt-1"
+              />
+            </label>
+            <label className="block">
+              <span className="label-cap text-bone-soft">evidence link (screenshot, analytics)</span>
+              <input
+                type="url"
+                value={dEvidence}
+                onChange={(e) => setDEvidence(e.target.value)}
+                placeholder="https://…"
+                className="dark-input mt-1"
+              />
+            </label>
+          </div>
+          <label className="block">
+            <span className="label-cap text-bone-soft">note</span>
+            <textarea
+              value={dNote}
+              onChange={(e) => setDNote(e.target.value)}
+              maxLength={2000}
+              rows={3}
+              placeholder="What is wrong with the recorded view count?"
+              className="dark-input mt-1 w-full"
+            />
+          </label>
+          <div className="flex gap-2">
+            <button type="submit" className="silver-btn">request manual review</button>
+            <button
+              type="button"
+              onClick={() => setShowDispute(false)}
+              className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+            >
+              cancel
+            </button>
+          </div>
+        </form>
       ) : null}
     </li>
   );
