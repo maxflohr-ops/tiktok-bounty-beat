@@ -163,6 +163,12 @@ export const updateViewCount = createServerFn({ method: "POST" })
       .update({ view_count: data.view_count })
       .eq("id", data.submission_id);
     if (error) throw new Error(error.message);
+    notifyAsync({
+      event: "views.updated",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.submission_id,
+      details: { view_count: data.view_count },
+    });
     return { ok: true };
   });
 
@@ -271,6 +277,17 @@ export const reviewSubmission = createServerFn({ method: "POST" })
         .update({ points: current + data.awarded_points })
         .eq("id", sub.editor_id);
     }
+    notifyAsync({
+      event: `review.${data.decision}`,
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.id,
+      details: {
+        decision: data.decision,
+        awarded_points: data.decision === "approved" ? data.awarded_points : 0,
+        awarded_cash_cents: data.decision === "approved" ? computedCash : 0,
+        review_notes: data.review_notes || null,
+      },
+    });
     return { ok: true };
   });
 
@@ -288,5 +305,10 @@ export const markPaid = createServerFn({ method: "POST" })
       .eq("id", data.id)
       .eq("status", "approved");
     if (error) throw new Error(error.message);
+    notifyAsync({
+      event: "payment.marked_paid",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.id,
+    });
     return { ok: true };
   });
