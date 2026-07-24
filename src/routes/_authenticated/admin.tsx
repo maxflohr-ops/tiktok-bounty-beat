@@ -12,7 +12,7 @@ import {
   markPaid,
 } from "@/lib/submissions.functions";
 import { getMe } from "@/lib/me.functions";
-import { createBountyTopUp, payoutEditor } from "@/lib/stripe.functions";
+import { createBountyTopUp, requestPayout, listPayoutApprovals, approveAndSendPayout, rejectPayout } from "@/lib/stripe.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useState } from "react";
