@@ -55,11 +55,21 @@ function Admin() {
     );
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
       <SiteHeader />
-      <div className="container-board py-8">
-        <h1 className="font-display text-4xl text-bone">Harbormaster's desk</h1>
-        <p className="script-note text-xl text-bone-soft">Post the contracts. Honor the true. Pay in crowns.</p>
+      <div className="container-board relative z-10 py-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-display text-4xl text-bone">Harbormaster's desk</h1>
+            <p className="script-note text-xl text-bone-soft">Post the contracts. Honor the true. Pay in crowns.</p>
+          </div>
+          <div className="system-bar">
+            <span className="status-dot" />
+            admin console · authorized
+          </div>
+        </div>
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
           <BountiesPanel />
           <SubmissionsPanel />
