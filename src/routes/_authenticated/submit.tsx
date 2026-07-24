@@ -133,12 +133,22 @@ function SubmitPage() {
     bounties.find((b: any) => b.id === bountyId) as any;
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
       <SiteHeader />
-      <div className="container-board py-8">
+      <div className="container-board relative z-10 py-8">
         <div className="mx-auto max-w-3xl">
-          <span className="label-cap silver">Delivery Office</span>
-          <h1 className="mt-2 font-display text-4xl text-bone">Cash in your contract</h1>
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="label-cap silver">Delivery Office</span>
+              <h1 className="mt-2 font-display text-4xl text-bone">Cash in your contract</h1>
+            </div>
+            <div className="system-bar">
+              <span className="status-dot" />
+              delivery terminal · online
+            </div>
+          </div>
           <p className="mt-2 italic text-bone-soft">
             Paste your posted TikTok URL. The board matches it to your open contract,
             confirms the handle by eye, and the harbormaster honors the pot.
