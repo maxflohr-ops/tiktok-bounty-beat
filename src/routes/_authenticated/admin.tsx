@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Harbormaster · THE BOARD" },
-      { name: "description", content: "Post contracts, honor or dispute deliveries, pay in silver." },
+      { name: "description", content: "Post contracts, honor or dispute deliveries, pay in crowns." },
     ],
   }),
   component: Admin,
@@ -40,16 +40,16 @@ function Admin() {
   const { data: me, isLoading } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
 
   if (isLoading)
-    return <Frame><p className="script-note text-2xl text-silver-glow">consulting the ledger…</p></Frame>;
+    return <Frame><p className="script-note text-2xl text-bone-soft">consulting the ledger…</p></Frame>;
   if (!me?.isStaff)
     return (
       <Frame>
         <div className="text-center">
           <h1 className="font-display text-3xl text-bone">Only the harbormaster may post.</h1>
-          <p className="script-note mt-2 text-xl text-silver-glow">
-            request a seal from an admin.
+          <p className="script-note mt-2 text-xl text-bone-soft">
+            Request a seal from an admin.
           </p>
-          <Link to="/" className="silver-btn mt-6 inline-flex">back to the board</Link>
+          <Link to="/" className="silver-btn mt-6 inline-flex">Back to the board</Link>
         </div>
       </Frame>
     );
@@ -59,7 +59,7 @@ function Admin() {
       <SiteHeader />
       <div className="container-board py-8">
         <h1 className="font-display text-4xl text-bone">Harbormaster's desk</h1>
-        <p className="script-note text-xl text-silver-glow">post the contracts. honor the true. pay in silver.</p>
+        <p className="script-note text-xl text-bone-soft">Post the contracts. Honor the true. Pay in crowns.</p>
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
           <BountiesPanel />
           <SubmissionsPanel />
@@ -149,14 +149,14 @@ function BountiesPanel() {
   };
 
   return (
-    <section className="border border-border/60 p-5">
+    <section className="board-frame p-5">
       <div className="flex items-center justify-between">
         <h2 className="font-display text-2xl text-bone">Contracts</h2>
         <button onClick={() => setEditing(blankBounty)} className="silver-btn">
           <Plus className="h-3.5 w-3.5" /> new notice
         </button>
       </div>
-      <ul className="mt-4 divide-y divide-border/40">
+      <ul className="mt-4 divide-y divide-[var(--border)]">
         {data.map((b) => (
           <li key={b.id} className="flex flex-col gap-3 py-3">
             <div className="flex items-center justify-between gap-3">
@@ -180,12 +180,12 @@ function BountiesPanel() {
           </li>
         ))}
         {data.length === 0 ? (
-          <li className="script-note py-6 text-center text-xl text-silver-glow">the wall is bare.</li>
+          <li className="script-note py-6 text-center text-xl text-bone-soft">The wall is bare.</li>
         ) : null}
       </ul>
 
       {editing ? (
-        <form onSubmit={save} className="mt-6 space-y-4 border-t border-border/40 pt-5">
+        <form onSubmit={save} className="mt-6 space-y-4 border-t border-[var(--border)] pt-5">
           <h3 className="font-display text-xl text-bone">{editing.id ? "Amend contract" : "Post a new contract"}</h3>
           <Field label="title">
             <input required maxLength={120} value={editing.title ?? ""} onChange={(e) => setEditing({ ...editing, title: e.target.value })} className="dark-input" />
@@ -239,10 +239,10 @@ function BountiesPanel() {
               </select>
             </Field>
           </div>
-          <p className="script-note text-silver-glow">payment tracked here manually · PayPal/Stripe later.</p>
+          <p className="script-note text-bone-soft">Payment tracked here manually · PayPal/Stripe later.</p>
           <div className="flex gap-2 pt-2">
             <button className="silver-btn">post</button>
-            <button type="button" onClick={() => setEditing(null)} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+            <button type="button" onClick={() => setEditing(null)} className="ink-btn">
               cancel
             </button>
           </div>
@@ -279,7 +279,7 @@ function TopUpControl({ bountyId }: { bountyId: string }) {
   };
 
   return (
-    <div className="flex items-center gap-2 border-t border-border/40 pt-2">
+    <div className="flex items-center gap-2 border-t border-[var(--border)] pt-2">
       <span className="label-cap text-bone-soft">top up pot ($)</span>
       <input
         type="number"
@@ -315,15 +315,15 @@ function SubmissionsPanel() {
   };
 
   return (
-    <section className="border border-border/60 p-5">
+    <section className="board-frame p-5">
       <h2 className="font-display text-2xl text-bone">Awaiting the harbormaster</h2>
-      <p className="script-note text-lg text-silver-glow">latest first. auto-check ✓ = URL and handle agree.</p>
+      <p className="script-note text-lg text-bone-soft">Latest first. Auto-check ✓ = URL and handle agree.</p>
       <ul className="mt-4 space-y-4">
         {pending.map((s) => (
           <ReviewCard key={s.id} s={s} onDecide={decide} />
         ))}
         {pending.length === 0 ? (
-          <li className="script-note py-6 text-center text-xl text-silver-glow">the desk is clear.</li>
+          <li className="script-note py-6 text-center text-xl text-bone-soft">The desk is clear.</li>
         ) : null}
       </ul>
     </section>
@@ -341,12 +341,12 @@ function ReviewCard({
   const [cash, setCash] = useState(s.bounty?.reward_cash_cents ?? 0);
   const [notes, setNotes] = useState("");
   return (
-    <li className="border border-border/60 p-4">
+    <li className="border border-[var(--border)] p-4">
       <div className="flex gap-4">
         {s.oembed_thumbnail ? (
           <img src={s.oembed_thumbnail} alt="" className="h-24 w-20 object-cover" />
         ) : (
-          <div className="flex h-24 w-20 items-center justify-center border border-border/40 text-xs italic text-bone-soft">no thumb</div>
+          <div className="flex h-24 w-20 items-center justify-center border border-[var(--border)] text-xs italic text-bone-soft">no thumb</div>
         )}
         <div className="min-w-0 flex-1">
           <div className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</div>
@@ -360,14 +360,14 @@ function ReviewCard({
             </a>
           ) : null}
           <div className="mt-2">
-            <span className={`label-cap ${s.auto_check_passed ? "silver border border-silver/40 px-2 py-1" : "text-bone-soft"}`}>
+            <span className={`label-cap ${s.auto_check_passed ? "silver border border-[var(--gold)]/40 px-2 py-1" : "text-bone-soft"}`}>
               {s.auto_check_passed ? "auto-check ✓" : "needs eyes"}
             </span>
             {s.auto_check_notes ? <p className="mt-1 text-xs italic text-bone-soft">{s.auto_check_notes}</p> : null}
           </div>
         </div>
       </div>
-      <div className="mt-4 grid gap-2 border-t border-border/40 pt-4 md:grid-cols-[1fr_1fr_2fr_auto]">
+      <div className="mt-4 grid gap-2 border-t border-[var(--border)] pt-4 md:grid-cols-[1fr_1fr_2fr_auto]">
         <label className="block">
           <span className="label-cap text-bone-soft">points</span>
           <input type="number" min={0} value={points} onChange={(e) => setPoints(Number(e.target.value))} className="dark-input mt-1" />
@@ -384,7 +384,7 @@ function ReviewCard({
           <button onClick={() => onDecide(s.id, "approved", points, cash, notes)} className="silver-btn">
             <Check className="h-4 w-4" /> honor
           </button>
-          <button onClick={() => onDecide(s.id, "rejected", 0, 0, notes)} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+          <button onClick={() => onDecide(s.id, "rejected", 0, 0, notes)} className="ink-btn">
             <X className="h-4 w-4" /> dispute
           </button>
         </div>
@@ -424,13 +424,12 @@ function Ledger() {
     }
   };
 
-
   return (
-    <section className="mt-10 border border-border/60 p-5">
+    <section className="board-frame mt-10 p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h2 className="label-cap silver">P A I D &nbsp; I N &nbsp; S I L V E R</h2>
-          <p className="script-note text-lg text-silver-glow">a running weight of honored contracts.</p>
+          <h2 className="label-cap silver">Paid in crowns</h2>
+          <p className="script-note text-lg text-bone-soft">A running weight of honored contracts.</p>
           <p className="mt-1 text-xs italic text-bone-soft">Payouts are sent via Stripe to the clipper's linked account.</p>
         </div>
         <div className="flex gap-6 text-right">
@@ -438,7 +437,7 @@ function Ledger() {
           <div><div className="label-cap text-bone-soft">paid</div><div className="font-display text-xl silver">{money(paid)}</div></div>
         </div>
       </div>
-      <ul className="mt-4 divide-y divide-border/40">
+      <ul className="mt-4 divide-y divide-[var(--border)]">
         {rows.map((r) => (
           <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
             <div className="min-w-0">
@@ -454,13 +453,13 @@ function Ledger() {
             <div className="flex items-center gap-3">
               <span className="font-display silver">{money(r.awarded_cash_cents || 0, r.bounty?.currency || "USD")}</span>
               {r.status === "paid" ? (
-                <span className="label-cap silver border border-silver/40 px-2 py-1">paid</span>
+                <span className="label-cap silver border border-[var(--gold)]/40 px-2 py-1">paid</span>
               ) : (
                 <>
                   <button onClick={() => requestPay(r.id)} disabled={payingId === r.id} className="silver-btn">
                     <Coins className="h-3.5 w-3.5" /> {payingId === r.id ? "requesting…" : "request payout"}
                   </button>
-                  <button onClick={() => payManually(r.id)} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+                  <button onClick={() => payManually(r.id)} className="ink-btn">
                     mark paid manually
                   </button>
                 </>
@@ -469,7 +468,7 @@ function Ledger() {
           </li>
         ))}
         {rows.length === 0 ? (
-          <li className="script-note py-6 text-center text-xl text-silver-glow">no silver weighed yet.</li>
+          <li className="script-note py-6 text-center text-xl text-bone-soft">No silver weighed yet.</li>
         ) : null}
       </ul>
     </section>
@@ -513,11 +512,11 @@ function PayoutApprovalsPanel() {
   };
 
   return (
-    <section className="mt-10 border border-border/60 p-5">
+    <section className="board-frame mt-10 p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h2 className="label-cap silver">P A Y O U T &nbsp; A P P R O V A L S</h2>
-          <p className="script-note text-lg text-silver-glow">no silver leaves the harbor without a second seal.</p>
+          <h2 className="label-cap silver">Payout approvals</h2>
+          <p className="script-note text-lg text-bone-soft">No silver leaves the harbor without a second seal.</p>
           <p className="mt-1 text-xs italic text-bone-soft">Any staff can request. Only admins can approve; approval sends the Stripe transfer.</p>
         </div>
         <div className="text-right">
@@ -526,7 +525,7 @@ function PayoutApprovalsPanel() {
         </div>
       </div>
 
-      <ul className="mt-4 divide-y divide-border/40">
+      <ul className="mt-4 divide-y divide-[var(--border)]">
         {pending.map((a: any) => (
           <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
             <div className="min-w-0">
@@ -542,21 +541,21 @@ function PayoutApprovalsPanel() {
               <button onClick={() => decide(a.id, "approve")} disabled={busyId === a.id} className="silver-btn">
                 <Check className="h-3.5 w-3.5" /> {busyId === a.id ? "working…" : "approve & send"}
               </button>
-              <button onClick={() => decide(a.id, "reject")} disabled={busyId === a.id} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+              <button onClick={() => decide(a.id, "reject")} disabled={busyId === a.id} className="ink-btn">
                 <X className="h-3.5 w-3.5" /> reject
               </button>
             </div>
           </li>
         ))}
         {pending.length === 0 ? (
-          <li className="script-note py-6 text-center text-xl text-silver-glow">no payouts await a seal.</li>
+          <li className="script-note py-6 text-center text-xl text-bone-soft">No payouts await a seal.</li>
         ) : null}
       </ul>
 
       {recent.length > 0 ? (
-        <div className="mt-6 border-t border-border/40 pt-4">
-          <div className="label-cap text-bone-soft mb-2">recent decisions</div>
-          <ul className="divide-y divide-border/40">
+        <div className="mt-6 border-t border-[var(--border)] pt-4">
+          <div className="label-cap text-bone-soft mb-2">Recent decisions</div>
+          <ul className="divide-y divide-[var(--border)]">
             {recent.map((a: any) => (
               <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-2 text-xs italic text-bone-soft">
                 <div className="min-w-0">
@@ -568,7 +567,7 @@ function PayoutApprovalsPanel() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="font-display silver">{money(a.amount_cents, a.currency)}</span>
-                  <span className={`label-cap border px-2 py-0.5 ${a.status === "sent" ? "silver border-silver/40" : "border-border/60"}`}>{a.status}</span>
+                  <span className={`label-cap border px-2 py-0.5 ${a.status === "sent" ? "silver border-[var(--gold)]/40" : "border-[var(--border)]"}`}>{a.status}</span>
                   <span>{a.decided_by_name || "—"}</span>
                 </div>
               </li>
@@ -623,7 +622,7 @@ function DisputesPanel() {
   const closed = data.filter((d) => d.status === "resolved" || d.status === "rejected");
 
   return (
-    <section className="mt-8 border border-border/60 p-5">
+    <section className="board-frame mt-8 p-5">
       <div className="flex items-center justify-between">
         <h2 className="font-display text-2xl text-bone">
           <Flag className="mr-2 inline h-5 w-5 silver" />
@@ -633,7 +632,7 @@ function DisputesPanel() {
       </div>
 
       {open.length === 0 ? (
-        <p className="script-note mt-3 text-lg text-silver-glow">no open disputes.</p>
+        <p className="script-note mt-3 text-lg text-bone-soft">No open disputes.</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {open.map((d) => {
@@ -641,7 +640,7 @@ function DisputesPanel() {
             const b = s?.bounty;
             const draft = drafts[d.id] ?? { note: "", corrected: "" };
             return (
-              <li key={d.id} className="border border-border/60 p-4">
+              <li key={d.id} className="border border-[var(--border)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="min-w-0">
                     <div className="label-cap silver">
@@ -664,7 +663,7 @@ function DisputesPanel() {
                         open the clip <ExternalLink className="h-3 w-3" />
                       </a>
                     ) : null}
-                    <p className="mt-2 italic text-bone-soft">&ldquo;{d.note}&rdquo;</p>
+                    <p className="mt-2 italic text-bone-soft">“{d.note}”</p>
                     {d.evidence_url ? (
                       <a
                         href={d.evidence_url}
@@ -715,7 +714,7 @@ function DisputesPanel() {
                   {d.status === "open" ? (
                     <button
                       onClick={() => act(d.id, "under_review")}
-                      className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+                      className="ink-btn"
                     >
                       mark under review
                     </button>
@@ -725,7 +724,7 @@ function DisputesPanel() {
                   </button>
                   <button
                     onClick={() => act(d.id, "rejected")}
-                    className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+                    className="ink-btn"
                   >
                     <X className="h-3.5 w-3.5" /> reject
                   </button>
@@ -739,15 +738,15 @@ function DisputesPanel() {
       {closed.length > 0 ? (
         <details className="mt-6">
           <summary className="label-cap cursor-pointer text-bone-soft">
-            closed disputes ({closed.length})
+            Closed disputes ({closed.length})
           </summary>
           <ul className="mt-3 space-y-2 text-xs text-bone-soft">
             {closed.map((d) => (
-              <li key={d.id} className="border border-border/40 p-2">
+              <li key={d.id} className="border border-[var(--border)] p-2">
                 <span className="label-cap silver mr-2">{d.status}</span>
                 <span className="italic">{d.note}</span>
                 {d.reviewer_note ? (
-                  <div className="mt-1 italic">note: &ldquo;{d.reviewer_note}&rdquo;</div>
+                  <div className="mt-1 italic">note: “{d.reviewer_note}”</div>
                 ) : null}
               </li>
             ))}
