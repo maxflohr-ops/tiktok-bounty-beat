@@ -455,8 +455,8 @@ function Ledger() {
                 <span className="label-cap silver border border-silver/40 px-2 py-1">paid</span>
               ) : (
                 <>
-                  <button onClick={() => payViaStripe(r.id)} disabled={payingId === r.id} className="silver-btn">
-                    <Coins className="h-3.5 w-3.5" /> {payingId === r.id ? "paying…" : "honor & pay (stripe)"}
+                  <button onClick={() => requestPay(r.id)} disabled={payingId === r.id} className="silver-btn">
+                    <Coins className="h-3.5 w-3.5" /> {payingId === r.id ? "requesting…" : "request payout"}
                   </button>
                   <button onClick={() => payManually(r.id)} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
                     mark paid manually
