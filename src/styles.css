@@ -4,13 +4,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * THE BOARD — Victorian harbor notice board.
- * Aged contract notices pinned to a dark wall.
+ * THE BOARD — neon-corsair edition.
+ * Cyberpunk pirate bounty deck. Chrome, neon, glitch.
  */
 
 @theme inline {
-  --radius-sm: 2px;
-  --radius-md: 3px;
+  --radius-sm: 0px;
+  --radius-md: 2px;
   --radius-lg: 4px;
 
   --color-background: var(--background);
@@ -26,47 +26,65 @@
   --color-silver-glow: var(--silver-glow);
   --color-border: var(--border);
   --color-rule: var(--rule);
-  --color-primary: var(--silver);
+  --color-primary: var(--neon-cyan);
   --color-primary-foreground: var(--wall);
   --color-secondary: var(--paper-shade);
   --color-secondary-foreground: var(--ink);
   --color-muted: var(--paper-shade);
   --color-muted-foreground: var(--ink-soft);
-  --color-accent: var(--silver);
+  --color-accent: var(--neon-magenta);
   --color-accent-foreground: var(--wall);
-  --color-destructive: oklch(0.55 0.18 25);
+  --color-destructive: #ff2e5b;
   --color-destructive-foreground: var(--bone);
   --color-card: var(--paper);
   --color-card-foreground: var(--ink);
   --color-popover: var(--paper);
   --color-popover-foreground: var(--ink);
   --color-input: var(--rule);
-  --color-ring: var(--silver);
+  --color-ring: var(--neon-cyan);
   --color-ring-offset-background: var(--wall);
 
-  --font-display: "IM Fell English SC", "IM Fell English", serif;
-  --font-body: "IM Fell English", Georgia, serif;
-  --font-script: "La Belle Aurore", cursive;
+  --font-display: "Chakra Petch", "Rajdhani", system-ui, sans-serif;
+  --font-body: "Share Tech Mono", "JetBrains Mono", ui-monospace, monospace;
+  --font-script: "Pirata One", "Chakra Petch", serif;
+  --font-terminal: "VT323", "Share Tech Mono", monospace;
 }
 
 :root {
-  --wall: #141210;
-  --wall-2: #1c1917;
-  --background: #141210;
-  --foreground: #e6e0d3;
-  --paper: #e0dbce;
-  --paper-shade: #cdc7b6;
-  --ink: #262422;
-  --ink-soft: #5a544c;
-  --bone: #e6e0d3;
-  --bone-soft: #b8b0a0;
-  --silver: #94969a;
-  --silver-glow: #cfd2d6;
-  --rule: rgba(38, 36, 34, 0.55);
-  --border: rgba(230, 224, 211, 0.14);
+  --wall: #05070b;
+  --wall-2: #0b1220;
+  --background: #05070b;
+  --foreground: #d7e3ea;
 
-  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.06  0 0 0 0 0.05  0 0 0 0 0.04  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15  0 0 0 0 0.14  0 0 0 0 0.13  0 0 0 0.14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  /* "paper" now = a dark holo panel with a warm chrome tint */
+  --paper: #0e1420;
+  --paper-shade: #131a2a;
+
+  --ink: #d7e3ea;          /* text on panels */
+  --ink-soft: #7f8ea2;
+
+  --bone: #e6f0f6;
+  --bone-soft: #94a3b8;
+
+  --silver: #22d3ee;        /* primary neon = cyan */
+  --silver-glow: #7dd3fc;
+  --neon-cyan: #22d3ee;
+  --neon-magenta: #ff2e88;
+  --neon-lime: #b6ff3c;
+  --rust: #ff7a2a;
+
+  --rule: rgba(125, 211, 252, 0.28);
+  --border: rgba(125, 211, 252, 0.18);
+
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.14  0 0 0 0 0.82  0 0 0 0 0.93  0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --scanlines: repeating-linear-gradient(
+    to bottom,
+    rgba(125, 211, 252, 0.05) 0px,
+    rgba(125, 211, 252, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.13  0 0 0 0 0.83  0 0 0 0 0.93  0 0 0 0.08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 .dark {
@@ -82,22 +100,27 @@
     background: var(--wall);
     color: var(--bone);
     font-family: var(--font-body);
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
   body {
     background-color: var(--wall);
-    background-image: var(--grain);
+    background-image:
+      radial-gradient(1200px 500px at 15% -10%, rgba(34, 211, 238, 0.10), transparent 60%),
+      radial-gradient(900px 400px at 100% 10%, rgba(255, 46, 136, 0.10), transparent 60%),
+      var(--scanlines),
+      var(--grain);
     background-repeat: repeat;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: 0.02em;
-    font-weight: 400;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    text-transform: uppercase;
   }
   a { color: inherit; }
-  ::selection { background: var(--silver); color: var(--wall); }
+  ::selection { background: var(--neon-magenta); color: var(--wall); }
   input, textarea, select, button { font-family: inherit; }
 }
 
@@ -109,15 +132,19 @@
 
 @utility label-cap {
   font-family: var(--font-display);
-  letter-spacing: 0.28em;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
+  color: var(--neon-cyan);
 }
 
 @utility script-note {
   font-family: var(--font-script);
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: var(--neon-magenta);
+  text-shadow: 0 0 12px rgba(255, 46, 136, 0.45);
 }
 
 @utility rule-double {
@@ -132,45 +159,47 @@
   padding-bottom: 3px;
 }
 
-/* THE PAPER CONTRACT CARD */
+/* THE PANEL — holo contract card */
 @utility contract {
   position: relative;
   background-color: var(--paper);
   background-image:
-    radial-gradient(1200px 300px at 20% 0%, rgba(115, 92, 60, 0.08), transparent 60%),
-    radial-gradient(600px 200px at 90% 100%, rgba(90, 70, 40, 0.09), transparent 60%),
+    linear-gradient(180deg, rgba(34, 211, 238, 0.06), transparent 40%),
+    linear-gradient(0deg, rgba(255, 46, 136, 0.05), transparent 40%),
+    var(--scanlines),
     var(--paper-grain);
   color: var(--ink);
-  padding: 2rem 1.5rem 1.35rem;
+  padding: 1.75rem 1.5rem 1.35rem;
+  border: 1px solid var(--border);
   box-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.4),
-    0 18px 30px -20px rgba(0, 0, 0, 0.65),
-    inset 0 0 0 1px rgba(38, 36, 34, 0.08);
+    0 0 0 1px rgba(34, 211, 238, 0.12),
+    0 24px 60px -30px rgba(34, 211, 238, 0.35),
+    inset 0 0 40px rgba(255, 46, 136, 0.05);
   clip-path: polygon(
-    0% 3%, 2% 0%, 12% 1%, 22% 0%, 38% 1.2%, 52% 0%, 68% 1%, 82% 0%, 96% 1%, 100% 2.5%,
-    99.5% 15%, 100% 40%, 99% 65%, 100% 88%, 99% 97%, 92% 100%, 78% 99%, 58% 100%,
-    38% 99%, 20% 100%, 6% 99%, 0% 97%, 0.5% 82%, 0% 60%, 0.5% 35%, 0% 15%
+    0 12px, 12px 0,
+    calc(100% - 28px) 0, 100% 28px,
+    100% calc(100% - 12px), calc(100% - 12px) 100%,
+    20px 100%, 0 calc(100% - 20px)
   );
 }
 
 @utility contract-nail {
   &::before {
-    content: "";
+    content: "◤ LOCKED";
     position: absolute;
     top: 8px;
-    left: 50%;
-    width: 8px;
-    height: 8px;
-    margin-left: -4px;
-    border-radius: 999px;
-    background: radial-gradient(circle at 35% 35%, #b8b0a0 0%, #4a463f 60%, #1a1815 100%);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5), inset 0 -1px 1px rgba(0, 0, 0, 0.5);
+    right: 12px;
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    letter-spacing: 0.28em;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 6px rgba(34, 211, 238, 0.7);
   }
 }
 
 @utility silver {
-  color: var(--silver-glow);
-  text-shadow: 0 0 1px rgba(207, 210, 214, 0.35);
+  color: var(--neon-cyan);
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.55);
 }
 
 @utility ink-btn {
@@ -183,14 +212,19 @@
   color: var(--ink);
   background: transparent;
   font-family: var(--font-display);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   font-size: 0.75rem;
   min-height: 44px;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
-  &:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
-  &:disabled { opacity: 0.55; cursor: not-allowed; }
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+  &:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 0 0 1px var(--neon-magenta), 0 0 18px rgba(255, 46, 136, 0.35);
+  }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 @utility silver-btn {
@@ -199,74 +233,87 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.65rem 1.15rem;
-  border: 1px solid var(--silver);
-  color: var(--silver-glow);
-  background: transparent;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(34, 211, 238, 0.06);
   font-family: var(--font-display);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   font-size: 0.72rem;
   min-height: 44px;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
-  &:hover:not(:disabled) { background: var(--silver); color: var(--wall); }
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+  text-shadow: 0 0 6px rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.35), 0 0 22px -6px rgba(34, 211, 238, 0.45);
+  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+  &:hover:not(:disabled) {
+    background: var(--neon-cyan);
+    color: var(--wall);
+    text-shadow: none;
+    box-shadow: 0 0 0 1px var(--neon-cyan), 0 0 28px rgba(34, 211, 238, 0.7);
+  }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 @utility bone-input {
   width: 100%;
-  background: transparent;
+  background: rgba(5, 7, 11, 0.35);
   border: 0;
   border-bottom: 1px solid var(--rule);
   color: var(--ink);
-  padding: 0.55rem 0.25rem;
+  padding: 0.55rem 0.5rem;
   font-family: var(--font-body);
   font-size: 1rem;
   outline: none;
-  &:focus { border-bottom-color: var(--ink); }
-  &::placeholder { color: rgba(38, 36, 34, 0.4); font-style: italic; }
+  &:focus { border-bottom-color: var(--neon-cyan); box-shadow: 0 1px 0 0 var(--neon-cyan); }
+  &::placeholder { color: rgba(215, 227, 234, 0.35); }
 }
 
 @utility dark-input {
   width: 100%;
-  background: rgba(230, 224, 211, 0.04);
+  background: rgba(125, 211, 252, 0.04);
   border: 1px solid var(--border);
   color: var(--bone);
   padding: 0.6rem 0.75rem;
   font-family: var(--font-body);
   font-size: 0.95rem;
   outline: none;
-  &:focus { border-color: var(--silver); }
-  &::placeholder { color: rgba(230, 224, 211, 0.35); font-style: italic; }
+  &:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 1px var(--neon-cyan); }
+  &::placeholder { color: rgba(230, 240, 246, 0.3); }
 }
 
-/* Wax seal for FULFILLED */
+/* Chrome data-stamp for FULFILLED */
 @utility wax-seal {
   position: absolute;
   top: -12px;
   right: -12px;
-  width: 74px;
-  height: 74px;
-  border-radius: 999px;
+  width: 78px;
+  height: 78px;
+  border-radius: 4px;
   background:
-    radial-gradient(circle at 35% 35%, #cfd2d6 0%, #94969a 45%, #4a4c50 100%);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.55), inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+    linear-gradient(135deg, #ff2e88 0%, #22d3ee 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 46, 136, 0.6),
+    0 0 24px rgba(255, 46, 136, 0.45),
+    0 0 24px rgba(34, 211, 238, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-  color: #1a1815;
-  transform: rotate(-8deg);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: #05070b;
+  text-transform: uppercase;
+  transform: rotate(-6deg);
   text-align: center;
   line-height: 1;
+  clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
   &::before {
     content: "";
     position: absolute;
-    inset: 6px;
-    border-radius: 999px;
-    border: 1px dashed rgba(20, 18, 16, 0.6);
+    inset: 4px;
+    border: 1px dashed rgba(5, 7, 11, 0.55);
+    clip-path: inherit;
   }
 }
 
@@ -274,7 +321,7 @@
   position: absolute;
   border-radius: 999px;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(120, 90, 50, 0.18), rgba(120, 90, 50, 0) 65%);
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.18), rgba(34, 211, 238, 0) 65%);
 }
 
 @media (prefers-reduced-motion: reduce) {
