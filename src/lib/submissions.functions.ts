@@ -29,20 +29,7 @@ async function fetchOembed(url: string) {
 // TAKE THE CONTRACT — create a claim row, no URL yet.
 export const claimContract = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
-    z
-      .object({
-        bounty_id: z.string().uuid(),
-        tiktok_handle: z
-          .string()
-          .trim()
-          .min(2)
-          .max(60)
-          .transform((v) => v.replace(/^@/, "").toLowerCase()),
-        paypal_email: z.string().trim().email().max(160),
-      })
-      .parse(d),
-  )
+  .inputValidator((d: unknown) => claimContractSchema.parse(d))
   .handler(async ({ data, context }) => {
     const { data: bounty, error: berr } = await context.supabase
       .from("bounties")
