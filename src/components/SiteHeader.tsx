@@ -16,16 +16,16 @@ export function SiteHeader() {
   });
 
   return (
-    <header className="border-b border-border/60">
-      <div className="container-board flex flex-col items-center gap-2 py-6 md:flex-row md:justify-between md:py-8">
+    <header className="border-b border-[var(--iron)]">
+      <div className="container-board flex flex-col items-center gap-2 py-5 md:flex-row md:justify-between md:py-6">
         <Link to="/" className="flex flex-col items-center gap-0.5 md:items-start">
           <span className="label-cap text-bone-soft">The Harbormaster's</span>
-          <span className="font-display text-3xl leading-none tracking-wider text-bone md:text-4xl">
+          <span className="font-display text-3xl leading-none tracking-widest text-bone md:text-4xl">
             T H E &nbsp; B O A R D
           </span>
           <span className="script-note text-silver-glow">notices posted daily</span>
         </Link>
-        <nav className="flex items-center gap-1 text-bone-soft">
+        <nav className="flex flex-wrap items-center justify-center gap-1 text-bone-soft">
           <Link
             to="/"
             className="label-cap px-3 py-2 hover:text-bone"
@@ -60,7 +60,7 @@ export function SiteHeader() {
                 cash in
               </Link>
               {typeof me?.profile?.points === "number" ? (
-                <span className="silver label-cap ml-1 border border-silver/40 px-2 py-1">
+                <span className="silver label-cap ml-1 border border-gold/40 px-2 py-1">
                   {me.profile.points} pts
                 </span>
               ) : null}

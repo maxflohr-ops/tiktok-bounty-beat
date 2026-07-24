@@ -19,7 +19,7 @@ export const Route = createFileRoute("/bounty/$id")({
   head: () => ({
     meta: [
       { title: "Contract · THE BOARD" },
-      { name: "description", content: "Take the contract. Deliver proof. Be paid in silver." },
+      { name: "description", content: "Take the contract. Deliver proof. Be paid in crowns." },
     ],
   }),
   component: BountyDetail,
@@ -100,8 +100,8 @@ function BountyDetail() {
       <div className="min-h-screen">
         <SiteHeader />
         <div className="container-board py-20 text-center">
-          <p className="script-note text-3xl text-silver-glow">no such contract on the board.</p>
-          <Link to="/" className="silver-btn mt-6 inline-flex">back to the board</Link>
+          <p className="script-note text-3xl text-bone-soft">No such contract on the board.</p>
+          <Link to="/" className="silver-btn mt-6 inline-flex">Back to the board</Link>
         </div>
       </div>
     );
@@ -109,7 +109,7 @@ function BountyDetail() {
 
   const reward =
     bounty.payout_type === "per_1k_views"
-      ? `${money(bounty.reward_cash_cents, bounty.currency) ?? "silver"} per 100,000 views`
+      ? `${money(bounty.reward_cash_cents, bounty.currency) ?? "—"} per 100,000 views`
       : bounty.reward_cash_cents > 0
         ? `${money(bounty.reward_cash_cents, bounty.currency)} per approved clip`
         : `${bounty.reward_points} pts per approved clip`;
@@ -125,14 +125,17 @@ function BountyDetail() {
         <div className="mt-6 grid gap-8 md:grid-cols-[1.35fr_1fr]">
           <article className="contract contract-nail relative">
             <span className="water-stain" style={{ top: 60, left: -20, width: 160, height: 120 }} />
-            <div className="rule-double" />
-            <div className="mt-2 flex items-center justify-between">
-              <span className="label-cap">C O N T R A C T</span>
-              <span className="label-cap">No. {pad(bounty.contract_no)}</span>
+
+            <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
+                <span className="label-cap text-ink-soft">No. {pad(bounty.contract_no)}</span>
+              </div>
             </div>
-            <h1 className="mt-4 font-display text-4xl leading-tight text-ink">{bounty.title}</h1>
+
+            <h1 className="font-display text-3xl leading-tight text-ink md:text-4xl">{bounty.title}</h1>
             {bounty.artist_song ? (
-              <p className="mt-1 italic text-ink-soft">for &ldquo;{bounty.artist_song}&rdquo;</p>
+              <p className="mt-1 font-body italic text-ink-soft">for “{bounty.artist_song}”</p>
             ) : null}
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm italic text-ink-soft">
               <span>sound · {bounty.sound_name}</span>
@@ -143,15 +146,15 @@ function BountyDetail() {
               {bounty.max_submissions ? <span>cap · {bounty.max_submissions} clips</span> : null}
             </div>
 
-            <div className="mt-6 border-t border-ink/25 pt-4">
-              <div className="label-cap silver">B R I E F</div>
-              <p className="mt-2 whitespace-pre-wrap italic leading-relaxed">{bounty.description}</p>
+            <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
+              <div className="label-cap text-ink-soft">Brief</div>
+              <p className="mt-2 whitespace-pre-wrap font-body italic leading-relaxed text-ink-soft">{bounty.description}</p>
             </div>
 
-            <div className="mt-6 grid gap-4 border-t border-ink/25 pt-4 sm:grid-cols-2">
+            <div className="mt-6 grid gap-4 border-t border-[var(--paper-dark)] pt-4 sm:grid-cols-2">
               <div>
-                <div className="label-cap silver">R E W A R D</div>
-                <p className="mt-1 font-display text-lg silver">{reward}</p>
+                <div className="label-cap text-ink-soft">Reward</div>
+                <p className="mt-1 font-display text-lg text-ink">{reward}</p>
                 <p className="mt-1 text-xs italic text-ink-soft">
                   {(bounty as any).funded_cash_cents > 0 ? (
                     <>Pot: <Money cents={(bounty as any).funded_cash_cents} currency={bounty.currency} /></>
@@ -161,18 +164,18 @@ function BountyDetail() {
                 </p>
               </div>
               <div>
-                <div className="label-cap silver">A S S E T S</div>
+                <div className="label-cap text-ink-soft">Assets</div>
                 {bounty.source_assets_url ? (
                   <a
                     href={bounty.source_assets_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 italic underline"
+                    className="mt-1 inline-flex items-center gap-1 font-body italic text-ink underline"
                   >
                     view source pack <ExternalLink className="h-3 w-3" />
                   </a>
                 ) : (
-                  <p className="mt-1 italic text-ink-soft">provided on take</p>
+                  <p className="mt-1 font-body italic text-ink-soft">provided on take</p>
                 )}
                 {bounty.tiktok_sound_url ? (
                   <div className="mt-1">
@@ -180,7 +183,7 @@ function BountyDetail() {
                       href={bounty.tiktok_sound_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 italic underline"
+                      className="inline-flex items-center gap-1 font-body italic text-ink underline"
                     >
                       sound page <ExternalLink className="h-3 w-3" />
                     </a>
@@ -189,17 +192,16 @@ function BountyDetail() {
               </div>
             </div>
 
-            <div className="rule-dbl-b mt-8" />
-            <p className="script-note mt-3 text-center">
-              signed by the harbormaster · posted on the board.
+            <p className="script-note mt-8 text-center text-base text-ink-soft">
+              Signed by the harbormaster · posted on the board.
             </p>
           </article>
 
-          <aside className="rounded border border-border/60 p-6">
+          <aside className="board-frame p-5 md:p-6">
             <h2 className="font-display text-2xl text-bone">The take</h2>
             {!user ? (
               <>
-                <p className="mt-3 italic text-bone-soft">
+                <p className="mt-3 text-bone-soft">
                   Sign the ledger to take this contract.
                 </p>
                 <Link to="/auth" className="silver-btn mt-5 w-full">sign the ledger</Link>
@@ -208,7 +210,7 @@ function BountyDetail() {
               <form onSubmit={take} className="mt-4 space-y-4">
                 <label className="block">
                   <span className="label-cap text-bone-soft">your handle</span>
-                  <div className="mt-2 flex items-center border border-border/60 px-3 py-2">
+                  <div className="mt-2 flex items-center border border-[var(--border)] px-3 py-2">
                     <span className="text-bone-soft">@</span>
                     <input
                       required
@@ -223,17 +225,17 @@ function BountyDetail() {
                 <button disabled={busy} className="silver-btn w-full">
                   {busy ? "taking…" : "take the contract"}
                 </button>
-                <p className="script-note text-center text-lg text-silver-glow">
-                  the board keeps a record.
+                <p className="script-note text-center text-lg text-bone-soft">
+                  The board keeps a record.
                 </p>
               </form>
             ) : (
               <div className="mt-4 space-y-4">
-                <div className="border border-border/60 p-3 text-sm">
-                  <div className="label-cap text-silver">status</div>
+                <div className="border border-[var(--border)] p-3 text-sm">
+                  <div className="label-cap text-bone-soft">status</div>
                   <div className="mt-1 font-display text-lg text-bone">{prettyStatus(myClaim.status)}</div>
                   {myClaim.review_notes ? (
-                    <p className="mt-1 italic text-bone-soft">&ldquo;{myClaim.review_notes}&rdquo;</p>
+                    <p className="mt-1 italic text-bone-soft">“{myClaim.review_notes}”</p>
                   ) : null}
                 </div>
 
@@ -260,16 +262,16 @@ function BountyDetail() {
                     </button>
                   </form>
                 ) : (["submitted", "pending", "in_review"] as string[]).includes(myClaim.status as string) ? (
-                  <p className="italic text-bone-soft">
+                  <p className="text-bone-soft">
                     Proof delivered. The harbormaster will honor or dispute the contract shortly.
                   </p>
                 ) : myClaim.status === "approved" ? (
-                  <p className="italic text-bone-soft">
-                    Approved. Awaiting payment in silver.
+                  <p className="text-bone-soft">
+                    Approved. Awaiting payment in crowns.
                   </p>
                 ) : myClaim.status === "paid" ? (
-                  <p className="italic text-silver-glow">
-                    Paid in silver. Well cut.
+                  <p className="text-silver-glow">
+                    Paid in crowns. Well cut.
                   </p>
                 ) : null}
               </div>
@@ -287,9 +289,9 @@ function prettyStatus(s: string) {
     case "submitted":
     case "pending":
     case "in_review": return "in review";
-    case "approved": return "honored — awaiting silver";
+    case "approved": return "honored — awaiting crowns";
     case "rejected": return "disputed — you may re-deliver";
-    case "paid": return "paid in silver";
+    case "paid": return "paid in crowns";
     default: return s;
   }
 }

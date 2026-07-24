@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Your contracts · THE BOARD" },
-      { name: "description", content: "Contracts you've taken and silver you've earned." },
+      { name: "description", content: "Contracts you've taken and crowns you've earned." },
     ],
   }),
   component: Dashboard,
@@ -73,16 +73,16 @@ function Dashboard() {
       <div className="container-board grid gap-8 py-8 md:grid-cols-[1fr_320px]">
         <section>
           <h1 className="font-display text-4xl text-bone">Your contracts</h1>
-          <p className="script-note text-xl text-silver-glow">the board remembers.</p>
+          <p className="script-note text-xl text-bone-soft">The board remembers.</p>
 
           <PaymentSetup />
 
           {claims.length === 0 ? (
-            <div className="mt-10 border border-dashed border-border/60 p-10 text-center">
-              <p className="script-note text-3xl text-silver-glow">
-                you've taken nothing. the board notices.
+            <div className="mt-10 border border-dashed border-[var(--border)] p-10 text-center">
+              <p className="script-note text-3xl text-bone-soft">
+                You've taken nothing. The board notices.
               </p>
-              <Link to="/" className="silver-btn mt-6 inline-flex">visit the board</Link>
+              <Link to="/" className="silver-btn mt-6 inline-flex">Visit the board</Link>
             </div>
           ) : (
             <ul className="mt-6 space-y-3">
@@ -111,7 +111,7 @@ function Dashboard() {
         </section>
 
         <aside className="space-y-6">
-          <div className="border border-border/60 p-5">
+          <div className="board-frame p-5">
             <h2 className="font-display text-2xl text-bone">Editor's mark</h2>
             <form onSubmit={save} className="mt-3 space-y-4">
               <label className="block">
@@ -120,17 +120,17 @@ function Dashboard() {
               </label>
               <label className="block">
                 <span className="label-cap text-bone-soft">tiktok handle</span>
-                <div className="mt-2 flex items-center border border-border/60 px-3 py-2">
+                <div className="mt-2 flex items-center border border-[var(--border)] px-3 py-2">
                   <span className="text-bone-soft">@</span>
                   <input value={handle} maxLength={60} onChange={(e) => setHandle(e.target.value)} className="w-full bg-transparent px-1 text-bone outline-none" />
                 </div>
               </label>
-              <button className="silver-btn w-full">mark the ledger</button>
+              <button className="silver-btn w-full">Mark the ledger</button>
             </form>
           </div>
 
-          <div className="border border-border/60 p-5">
-            <h2 className="label-cap silver text-center">Paid in silver</h2>
+          <div className="board-frame p-5">
+            <h2 className="label-cap silver text-center">Paid in crowns</h2>
             <div className="mt-3 grid grid-cols-2 gap-4 text-center">
               <Metric label="approved" value={money(silverEarned)} />
               <Metric label="paid" value={money(silverPaid)} />
@@ -179,14 +179,14 @@ function PaymentSetup() {
   };
 
   return (
-    <div className="mt-6 border border-border/60 p-5">
+    <div className="mt-6 board-frame p-5">
       <h2 className="font-display text-2xl text-bone">Payment setup</h2>
       {isLoading ? (
-        <p className="mt-2 italic text-bone-soft">consulting the harbor bank…</p>
+        <p className="mt-2 italic text-bone-soft">Consulting the harbor bank…</p>
       ) : status === "enabled" ? (
         <div className="mt-3 flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 silver" />
-          <span className="label-cap silver">payouts connected</span>
+          <span className="label-cap silver">Payouts connected</span>
         </div>
       ) : status === "pending" ? (
         <div className="mt-3 space-y-3">
@@ -195,14 +195,14 @@ function PaymentSetup() {
             <button onClick={link} disabled={busy} className="silver-btn">
               <Link2 className="h-3.5 w-3.5" /> complete stripe setup
             </button>
-            <button onClick={refresh} disabled={busy} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+            <button onClick={refresh} disabled={busy} className="ink-btn">
               refresh status
             </button>
           </div>
         </div>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="italic text-bone-soft">Link a Stripe account so the board can pay you in silver directly.</p>
+          <p className="italic text-bone-soft">Link a Stripe account so the board can pay you in crowns directly.</p>
           <button onClick={link} disabled={busy} className="silver-btn">
             <Link2 className="h-3.5 w-3.5" /> link stripe account for payouts
           </button>
@@ -255,7 +255,7 @@ function ClaimRow({
       (claim.status as string) === "pending");
 
   return (
-    <li className="border border-border/60 p-4">
+    <li className="board-frame border border-[var(--border)] p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="label-cap silver">
@@ -271,15 +271,15 @@ function ClaimRow({
               open the clip <ExternalLink className="h-3 w-3" />
             </a>
           ) : (
-            <div className="mt-2 text-xs italic text-bone-soft">no proof delivered yet</div>
+            <div className="mt-2 text-xs italic text-bone-soft">No proof delivered yet</div>
           )}
           {claim.review_notes ? (
-            <p className="mt-2 italic text-bone-soft">&ldquo;{claim.review_notes}&rdquo;</p>
+            <p className="mt-2 italic text-bone-soft">“{claim.review_notes}”</p>
           ) : null}
         </div>
         <div className="text-right">
           {(claim as any).paid_cash_cents > 0 ? (
-            <div className="label-cap silver border border-silver/40 inline-block px-2 py-1">
+            <div className="label-cap silver border border-[var(--gold)]/40 inline-block px-2 py-1">
               Paid: <Money cents={(claim as any).paid_cash_cents} currency={b?.currency ?? "USD"} />
             </div>
           ) : (
@@ -294,7 +294,7 @@ function ClaimRow({
         </div>
       </div>
       {canLogViews ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border/40 pt-3">
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[var(--border)] pt-3">
           <span className="label-cap text-bone-soft">views</span>
           <input
             type="number"
@@ -308,18 +308,18 @@ function ClaimRow({
             <button
               type="button"
               onClick={() => setShowDispute((s) => !s)}
-              className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+              className="ink-btn"
             >
               <Flag className="h-3.5 w-3.5" /> flag view count
             </button>
           ) : null}
         </div>
       ) : canDispute ? (
-        <div className="mt-3 border-t border-border/40 pt-3">
+        <div className="mt-3 border-t border-[var(--border)] pt-3">
           <button
             type="button"
             onClick={() => setShowDispute((s) => !s)}
-            className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+            className="ink-btn"
           >
             <Flag className="h-3.5 w-3.5" /> dispute payout
           </button>
@@ -327,13 +327,13 @@ function ClaimRow({
       ) : null}
 
       {disputes.length > 0 ? (
-        <ul className="mt-3 space-y-2 border-t border-border/40 pt-3">
+        <ul className="mt-3 space-y-2 border-t border-[var(--border)] pt-3">
           {disputes.map((d) => (
             <li key={d.id} className="text-xs text-bone-soft">
               <span className="label-cap silver mr-2">{d.status.replace("_", " ")}</span>
               <span className="italic">{d.note}</span>
               {d.reviewer_note ? (
-                <div className="mt-1 italic">harbormaster: &ldquo;{d.reviewer_note}&rdquo;</div>
+                <div className="mt-1 italic">harbormaster: “{d.reviewer_note}”</div>
               ) : null}
             </li>
           ))}
@@ -342,7 +342,7 @@ function ClaimRow({
 
       {showDispute ? (
         <form
-          className="mt-3 space-y-2 border-t border-border/40 pt-3"
+          className="mt-3 space-y-2 border-t border-[var(--border)] pt-3"
           onSubmit={async (e) => {
             e.preventDefault();
             if (dNote.trim().length < 5) {
@@ -395,11 +395,11 @@ function ClaimRow({
             />
           </label>
           <div className="flex gap-2">
-            <button type="submit" className="silver-btn">request manual review</button>
+            <button type="submit" className="silver-btn">Request manual review</button>
             <button
               type="button"
               onClick={() => setShowDispute(false)}
-              className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10"
+              className="ink-btn"
             >
               cancel
             </button>

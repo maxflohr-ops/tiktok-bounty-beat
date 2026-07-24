@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/submit")({
       { property: "og:title", content: "Cash In · THE BOARD" },
       {
         property: "og:description",
-        content: "Deliver proof of your TikTok clip and be paid in silver.",
+        content: "Deliver proof of your TikTok clip and be paid in crowns.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -137,7 +137,7 @@ function SubmitPage() {
       <SiteHeader />
       <div className="container-board py-8">
         <div className="mx-auto max-w-3xl">
-          <span className="label-cap silver">D E L I V E R Y · O F F I C E</span>
+          <span className="label-cap silver">Delivery Office</span>
           <h1 className="mt-2 font-display text-4xl text-bone">Cash in your contract</h1>
           <p className="mt-2 italic text-bone-soft">
             Paste your posted TikTok URL. The board matches it to your open contract,
@@ -158,11 +158,11 @@ function SubmitPage() {
 
           <form
             onSubmit={deliver}
-            className="mt-6 rounded border border-border/60 bg-black/20 p-5"
+            className="mt-6 board-frame p-5"
           >
             <label className="block">
               <span className="label-cap text-bone-soft">tiktok clip url</span>
-              <div className="mt-2 flex items-center gap-2 border border-border/60 px-3 py-2">
+              <div className="mt-2 flex items-center gap-2 border border-[var(--border)] px-3 py-2">
                 <Link2 className="h-4 w-4 text-bone-soft" />
                 <input
                   type="url"
@@ -175,14 +175,14 @@ function SubmitPage() {
                 />
               </div>
               {url && !urlValid ? (
-                <p className="mt-1 text-xs italic text-silver-glow">
+                <p className="mt-1 text-xs italic text-bone-soft">
                   must be a tiktok.com link
                 </p>
               ) : null}
             </label>
 
             {openClaims.length === 0 ? (
-              <div className="mt-4 border border-border/60 p-3 text-sm italic text-bone-soft">
+              <div className="mt-4 border border-[var(--border)] p-3 text-sm italic text-bone-soft">
                 you have no open contracts.{" "}
                 <Link to="/" className="underline">
                   take one from the board
@@ -203,8 +203,8 @@ function SubmitPage() {
                         key={c.id}
                         className={`flex cursor-pointer items-start gap-3 border p-3 transition ${
                           picked
-                            ? "border-silver-glow bg-black/30"
-                            : "border-border/60 hover:border-bone-soft"
+                            ? "border-[var(--gold)] bg-[var(--wall)]/40"
+                            : "border-[var(--border)] hover:border-bone-soft"
                         }`}
                       >
                         <input
@@ -244,8 +244,8 @@ function SubmitPage() {
             >
               {busyId ? "delivering…" : "deliver proof"}
             </button>
-            <p className="script-note mt-3 text-center text-silver-glow">
-              the harbormaster reviews every delivery before silver is released.
+            <p className="script-note mt-3 text-center text-bone-soft">
+              The harbormaster reviews every delivery before silver is released.
             </p>
           </form>
 
@@ -262,7 +262,7 @@ function SubmitPage() {
                   return (
                     <div
                       key={c.id}
-                      className="rounded border border-border/60 p-4"
+                      className="board-frame p-4"
                     >
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <div>
@@ -293,7 +293,7 @@ function SubmitPage() {
                       ) : null}
 
                       {c.paid_cash_cents > 0 ? (
-                        <p className="mt-2 text-sm text-silver-glow">
+                        <p className="mt-2 text-sm text-bone-soft">
                           paid{" "}
                           <Money
                             cents={c.paid_cash_cents}
@@ -366,9 +366,9 @@ function statusLabel(s: string) {
     case "in_review":
       return "in review";
     case "approved":
-      return "honored — awaiting silver";
+      return "honored — awaiting crowns";
     case "paid":
-      return "paid in silver";
+      return "paid in crowns";
     case "rejected":
       return "disputed — re-deliver";
     case "claimed":

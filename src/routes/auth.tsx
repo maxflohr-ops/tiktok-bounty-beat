@@ -8,8 +8,8 @@ import { z } from "zod";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Sound Bounties" },
-      { name: "description", content: "Sign in or create an editor account to claim bounties." },
+      { title: "Sign in — THE BOARD" },
+      { name: "description", content: "Sign in or create an editor account to claim contracts." },
     ],
   }),
   component: AuthPage,
@@ -48,7 +48,7 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success("Account created. You can start claiming bounties.");
+        toast.success("Account created. You can start claiming contracts.");
         navigate({ to: "/dashboard" });
       }
     } catch (err) {
@@ -74,38 +74,38 @@ function AuthPage() {
 
   return (
     <div className="grid min-h-screen md:grid-cols-2">
-      <aside className="hidden flex-col justify-between border-r border-border bg-surface p-10 md:flex">
-        <Link to="/" className="font-display text-2xl">
-          Sound Bounties
+      <aside className="hidden flex-col justify-between border-r border-[var(--iron)] bg-[var(--wall-2)] p-10 md:flex">
+        <Link to="/" className="font-display text-2xl text-bone">
+          THE BOARD
         </Link>
         <div>
-          <h2 className="font-display text-4xl leading-tight">
-            Edit. Post. <span className="text-[color:var(--accent-brand)]">Get rewarded.</span>
+          <h2 className="font-display text-4xl leading-tight text-bone">
+            Edit. Post. <span className="text-[var(--gold)]">Get rewarded.</span>
           </h2>
-          <p className="mt-3 max-w-sm text-sm text-ink-soft">
-            Join as an editor to claim bounties from the artist and earn points and cash payouts.
+          <p className="mt-3 max-w-sm text-sm text-bone-soft">
+            Join as an editor to claim contracts from the artist and earn points and cash payouts.
           </p>
         </div>
-        <p className="text-xs text-ink-soft">By continuing you agree to reasonable use.</p>
+        <p className="text-xs text-bone-soft">By continuing you agree to reasonable use.</p>
       </aside>
       <main className="flex items-center justify-center p-6">
         <div className="w-full max-w-sm">
           <div className="mb-6 flex md:hidden">
-            <Link to="/" className="font-display text-xl">
-              Sound Bounties
+            <Link to="/" className="font-display text-xl text-bone">
+              THE BOARD
             </Link>
           </div>
-          <h1 className="font-display text-3xl">
+          <h1 className="font-display text-3xl text-bone">
             {mode === "signin" ? "Welcome back" : "Create your editor account"}
           </h1>
-          <p className="mt-1 text-sm text-ink-soft">
-            {mode === "signin" ? "Sign in to submit bounties." : "It takes a minute."}
+          <p className="mt-1 text-sm text-bone-soft">
+            {mode === "signin" ? "Sign in to submit contracts." : "It takes a minute."}
           </p>
 
           <button
             onClick={google}
             disabled={busy}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-md border border-border bg-background px-4 py-2.5 text-sm font-medium hover:bg-surface disabled:opacity-60"
+            className="mt-6 flex w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--wall-2)] px-4 py-2.5 text-sm font-medium text-bone transition hover:bg-[var(--wall)] disabled:opacity-60"
           >
             <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden>
               <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.4 2.6 30 .5 24 .5 14.6.5 6.5 5.9 2.6 13.7l7.9 6.1C12.5 13.2 17.7 9.5 24 9.5z"/>
@@ -116,22 +116,22 @@ function AuthPage() {
             Continue with Google
           </button>
 
-          <div className="my-5 flex items-center gap-3 text-xs text-ink-soft">
-            <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+          <div className="my-5 flex items-center gap-3 text-xs text-bone-soft">
+            <span className="h-px flex-1 bg-[var(--border)]" /> or <span className="h-px flex-1 bg-[var(--border)]" />
           </div>
 
           <form onSubmit={submit} className="space-y-3">
-            <label className="block text-xs font-medium text-ink-soft">
+            <label className="block text-xs font-medium text-bone-soft">
               Email
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-ink"
+                className="mt-1 w-full border border-[var(--border)] bg-[var(--wall-2)] px-3 py-2 text-sm text-bone outline-none focus:border-[var(--gold)]"
               />
             </label>
-            <label className="block text-xs font-medium text-ink-soft">
+            <label className="block text-xs font-medium text-bone-soft">
               Password
               <input
                 type="password"
@@ -139,22 +139,22 @@ function AuthPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-ink"
+                className="mt-1 w-full border border-[var(--border)] bg-[var(--wall-2)] px-3 py-2 text-sm text-bone outline-none focus:border-[var(--gold)]"
               />
             </label>
             <button
               disabled={busy}
-              className="w-full rounded-md bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+              className="silver-btn w-full"
             >
               {mode === "signin" ? "Sign in" : "Create account"}
             </button>
           </form>
 
-          <p className="mt-5 text-center text-sm text-ink-soft">
+          <p className="mt-5 text-center text-sm text-bone-soft">
             {mode === "signin" ? "New here?" : "Already have an account?"}{" "}
             <button
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="font-medium text-ink underline underline-offset-2"
+              className="font-medium text-bone underline underline-offset-2"
             >
               {mode === "signin" ? "Create an account" : "Sign in"}
             </button>
