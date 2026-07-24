@@ -223,7 +223,7 @@ export const reviewSubmission = createServerFn({ method: "POST" })
     if (data.decision === "approved" && bounty) {
       computedCash =
         bounty.payout_type === "per_1k_views"
-          ? Math.floor((sub.view_count || 0) / 1000) * bounty.reward_cash_cents
+          ? Math.floor((sub.view_count || 0) / 100000) * bounty.reward_cash_cents
           : (data.awarded_cash_cents || bounty.reward_cash_cents);
     }
 
