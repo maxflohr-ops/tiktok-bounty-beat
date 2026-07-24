@@ -248,9 +248,12 @@ function BountyDetail() {
               <div className="mt-4 space-y-4">
                 <div className="border border-[var(--border)] p-3 text-sm">
                   <div className="label-cap text-bone-soft">status</div>
-                  <div className="mt-1 font-display text-lg text-bone">{prettyStatus(myClaim.status)}</div>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="status-dot" />
+                    <span className="digital-badge">{prettyStatus(myClaim.status)}</span>
+                  </div>
                   {myClaim.review_notes ? (
-                    <p className="mt-1 italic text-bone-soft">“{myClaim.review_notes}”</p>
+                    <p className="mt-2 italic text-bone-soft">“{myClaim.review_notes}”</p>
                   ) : null}
                 </div>
 
