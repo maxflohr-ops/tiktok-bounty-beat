@@ -111,7 +111,13 @@ export const resolveDispute = createServerFn({ method: "POST" })
       .single();
     if (de || !disp) throw new Error("Dispute not found.");
 
-    const patch: Record<string, unknown> = {
+    const patch: {
+      status: "under_review" | "resolved" | "rejected";
+      reviewer_id: string;
+      reviewer_note: string | null;
+      resolved_at?: string;
+      resolved_view_count?: number;
+    } = {
       status: data.decision,
       reviewer_id: context.userId,
       reviewer_note: data.reviewer_note || null,
