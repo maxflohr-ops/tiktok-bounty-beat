@@ -177,84 +177,216 @@ export const createBountyTopUp = createServerFn({ method: "POST" })
     return { url, sessionId };
   });
 
-// Staff: pay out an approved submission via Stripe Connect transfer.
-export const payoutEditor = createServerFn({ method: "POST" })
+// Compute the payout amount for a submission based on its bounty's rules.
+async function computePayoutAmount(supabase: any, submissionId: string) {
+  const { data: sub, error } = await supabase
+    .from("submissions")
+    .select(
+      "id,editor_id,status,awarded_cash_cents,view_count,paid_cash_cents,stripe_transfer_id,bounty_id,bounties:bounty_id(id,currency,payout_type,reward_cash_cents,funded_cash_cents)",
+    )
+    .eq("id", submissionId)
+    .single();
+  if (error || !sub) throw new Error("Claim not found.");
+  if (sub.status !== "approved") throw new Error("Claim must be honored before requesting payout.");
+  const paidAlready = (sub as { paid_cash_cents: number | null }).paid_cash_cents ?? 0;
+  if (paidAlready > 0 || sub.stripe_transfer_id) throw new Error("Already paid.");
+  const bounty = (sub as { bounties: { id: string; currency: string; payout_type: string; reward_cash_cents: number; funded_cash_cents: number | null } }).bounties;
+  if (!bounty) throw new Error("Bounty not found.");
+
+  let amountCents = 0;
+  if (bounty.payout_type === "per_1k_views") {
+    amountCents = Math.floor((sub.view_count || 0) / 1000) * bounty.reward_cash_cents;
+  } else {
+    amountCents = sub.awarded_cash_cents ?? bounty.reward_cash_cents;
+  }
+  if (amountCents <= 0) throw new Error("Nothing to pay.");
+  return { sub, bounty, amountCents };
+}
+
+// Staff: request a payout for an approved submission. Creates a pending approval; does NOT move money.
+export const requestPayout = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ submissionId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
     if (!staff) throw new Error("Forbidden");
 
-    const { data: sub, error: se } = await context.supabase
-      .from("submissions")
-      .select(
-        "id,editor_id,status,awarded_cash_cents,view_count,paid_cash_cents,stripe_transfer_id,bounty_id,bounties:bounty_id(id,currency,payout_type,reward_cash_cents,funded_cash_cents)",
-      )
-      .eq("id", data.submissionId)
-      .single();
-    if (se || !sub) throw new Error("Claim not found.");
-    if (sub.status !== "approved") throw new Error("Claim must be honored before paying.");
-    const paidAlready = (sub as unknown as { paid_cash_cents: number | null }).paid_cash_cents ?? 0;
-    if (paidAlready > 0 || sub.stripe_transfer_id) throw new Error("Already paid.");
+    const { sub, bounty, amountCents } = await computePayoutAmount(context.supabase, data.submissionId);
 
-    const bounty = (sub as unknown as {
-      bounties: { id: string; currency: string; payout_type: string; reward_cash_cents: number; funded_cash_cents: number | null };
-    }).bounties;
-    if (!bounty) throw new Error("Bounty not found.");
-
-    let amountCents = 0;
-    if (bounty.payout_type === "per_1k_views") {
-      amountCents = Math.floor((sub.view_count || 0) / 1000) * bounty.reward_cash_cents;
-    } else {
-      amountCents = sub.awarded_cash_cents ?? bounty.reward_cash_cents;
-    }
-    if (amountCents <= 0) throw new Error("Nothing to pay.");
-
-    const funded = bounty.funded_cash_cents ?? 0;
-    if (funded < amountCents) throw new Error("Insufficient funds in the bounty pot.");
-
-    const { data: pm, error: pme } = await context.supabase
+    const { data: pm } = await context.supabase
       .from("payout_methods")
-      .select("stripe_connect_account_id,stripe_connect_status,default_method")
+      .select("stripe_connect_account_id,stripe_connect_status")
       .eq("user_id", sub.editor_id)
       .eq("default_method", "stripe")
       .maybeSingle();
-    if (pme) throw new Error(pme.message);
-    if (!pm || !pm.stripe_connect_account_id || pm.stripe_connect_status !== "enabled")
+    if (!pm?.stripe_connect_account_id || pm.stripe_connect_status !== "enabled")
       throw new Error("Editor has not connected a Stripe payout account.");
 
+    if ((bounty.funded_cash_cents ?? 0) < amountCents)
+      throw new Error("Insufficient funds in the bounty pot.");
+
+    const { data: existing } = await context.supabase
+      .from("payout_approvals")
+      .select("id,status")
+      .eq("submission_id", data.submissionId)
+      .in("status", ["pending", "approved", "sent"])
+      .maybeSingle();
+    if (existing) throw new Error(`A payout is already ${existing.status} for this claim.`);
+
+    const { data: row, error } = await context.supabase
+      .from("payout_approvals")
+      .insert({
+        submission_id: data.submissionId,
+        amount_cents: amountCents,
+        currency: bounty.currency,
+        requested_by: context.userId,
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    return { approvalId: row.id, amountCents };
+  });
+
+// Staff: list payout approvals (pending + recent decisions).
+export const listPayoutApprovals = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: staff } = await context.supabase.rpc("is_staff", { _user_id: context.userId });
+    if (!staff) throw new Error("Forbidden");
+    const { data, error } = await context.supabase
+      .from("payout_approvals")
+      .select(
+        "id,submission_id,amount_cents,currency,status,requested_by,decided_by,decision_note,stripe_transfer_id,error,decided_at,created_at,submission:submission_id(id,tiktok_handle,editor_id,bounty:bounty_id(id,title,contract_no,currency))",
+      )
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) throw new Error(error.message);
+
+    const ids = Array.from(new Set((data ?? []).flatMap((r: any) => [r.requested_by, r.decided_by].filter(Boolean) as string[])));
+    let names: Record<string, string> = {};
+    if (ids.length) {
+      const { data: profs } = await context.supabase
+        .from("profiles").select("id,display_name").in("id", ids);
+      names = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p.display_name ?? ""]));
+    }
+    return (data ?? []).map((r: any) => ({
+      ...r,
+      requested_by_name: names[r.requested_by] ?? null,
+      decided_by_name: r.decided_by ? names[r.decided_by] ?? null : null,
+    }));
+  });
+
+// Admin: reject a pending payout approval.
+export const rejectPayout = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ approvalId: z.string().uuid(), note: z.string().max(1000).optional() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only admins can decide payouts.");
+    const { data: row, error } = await context.supabase
+      .from("payout_approvals")
+      .update({
+        status: "rejected",
+        decided_by: context.userId,
+        decided_at: new Date().toISOString(),
+        decision_note: data.note ?? null,
+      })
+      .eq("id", data.approvalId)
+      .eq("status", "pending")
+      .select("id")
+      .single();
+    if (error || !row) throw new Error(error?.message ?? "Approval not found or already decided.");
+    return { ok: true };
+  });
+
+// Admin: approve a pending payout and execute the Stripe transfer.
+export const approveAndSendPayout = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ approvalId: z.string().uuid(), note: z.string().max(1000).optional() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only admins can approve payouts.");
+
+    // Lock the row into 'approved' first so a second admin can't double-send.
+    const { data: approval, error: ae } = await context.supabase
+      .from("payout_approvals")
+      .update({
+        status: "approved",
+        decided_by: context.userId,
+        decided_at: new Date().toISOString(),
+        decision_note: data.note ?? null,
+      })
+      .eq("id", data.approvalId)
+      .eq("status", "pending")
+      .select("id,submission_id,amount_cents,currency")
+      .single();
+    if (ae || !approval) throw new Error(ae?.message ?? "Approval not found or already decided.");
+
+    const { sub, bounty, amountCents } = await computePayoutAmount(context.supabase, approval.submission_id);
+    if (amountCents !== approval.amount_cents) {
+      await context.supabase.from("payout_approvals").update({
+        status: "failed", error: `Amount changed since request (${approval.amount_cents} → ${amountCents}).`,
+      }).eq("id", approval.id);
+      throw new Error("Payout amount has changed since it was requested. Please re-request.");
+    }
+    if ((bounty.funded_cash_cents ?? 0) < amountCents) {
+      await context.supabase.from("payout_approvals").update({
+        status: "failed", error: "Insufficient funds in bounty pot at approval time.",
+      }).eq("id", approval.id);
+      throw new Error("Insufficient funds in the bounty pot.");
+    }
+
+    const { data: pm } = await context.supabase
+      .from("payout_methods")
+      .select("stripe_connect_account_id,stripe_connect_status")
+      .eq("user_id", sub.editor_id)
+      .eq("default_method", "stripe")
+      .maybeSingle();
+    if (!pm?.stripe_connect_account_id || pm.stripe_connect_status !== "enabled") {
+      await context.supabase.from("payout_approvals").update({
+        status: "failed", error: "Editor Stripe account not enabled.",
+      }).eq("id", approval.id);
+      throw new Error("Editor has not connected a Stripe payout account.");
+    }
+
     const { createTransfer } = await import("@/lib/stripe.server");
-    const { transferId } = await createTransfer({
-      toAccountId: pm.stripe_connect_account_id,
-      amountCents,
-      currency: bounty.currency,
-      transferGroup: `bounty_${bounty.id}`,
-      metadata: {
-        submission_id: sub.id,
-        bounty_id: bounty.id,
-        editor_id: sub.editor_id,
-      },
-    });
+    let transferId: string;
+    try {
+      const r = await createTransfer({
+        toAccountId: pm.stripe_connect_account_id,
+        amountCents,
+        currency: bounty.currency,
+        transferGroup: `bounty_${bounty.id}`,
+        metadata: { submission_id: sub.id, bounty_id: bounty.id, editor_id: sub.editor_id, approval_id: approval.id },
+      });
+      transferId = r.transferId;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Stripe transfer failed.";
+      await context.supabase.from("payout_approvals").update({ status: "failed", error: msg }).eq("id", approval.id);
+      throw new Error(msg);
+    }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error: ue } = await supabaseAdmin
-      .from("submissions")
-      .update({
-        stripe_transfer_id: transferId,
-        paid_cash_cents: amountCents,
-        status: "paid",
-        paid_at: new Date().toISOString(),
-      })
-      .eq("id", sub.id);
-    if (ue) throw new Error(ue.message);
-
-    await supabaseAdmin
-      .from("bounties")
-      .update({ funded_cash_cents: funded - amountCents })
-      .eq("id", bounty.id);
+    await supabaseAdmin.from("submissions").update({
+      stripe_transfer_id: transferId,
+      paid_cash_cents: amountCents,
+      status: "paid",
+      paid_at: new Date().toISOString(),
+    }).eq("id", sub.id);
+    await supabaseAdmin.from("bounties").update({
+      funded_cash_cents: (bounty.funded_cash_cents ?? 0) - amountCents,
+    }).eq("id", bounty.id);
+    await supabaseAdmin.from("payout_approvals").update({
+      status: "sent", stripe_transfer_id: transferId,
+    }).eq("id", approval.id);
 
     return { transferId, amountCents };
   });
 
-// Alias kept for admin UI naming: Stripe Connect payout for a submission.
-export const stripePayout = payoutEditor;
+// Back-compat aliases. Direct payout is deprecated; both now create an approval request.
+export const payoutEditor = requestPayout;
+export const stripePayout = requestPayout;
