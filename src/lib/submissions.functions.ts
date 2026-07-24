@@ -148,7 +148,7 @@ export const updateViewCount = createServerFn({ method: "POST" })
   });
 
 const SUB_COLS =
-  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at";
+  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at";
 
 export const listMyClaims = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -209,7 +209,7 @@ export const reviewSubmission = createServerFn({ method: "POST" })
 
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
-      .select("id,editor_id,status")
+      .select("id,editor_id,status,view_count,bounties:bounty_id(payout_type,reward_cash_cents)")
       .eq("id", data.id)
       .single();
     if (se || !sub) throw new Error("Not found.");
@@ -217,12 +217,21 @@ export const reviewSubmission = createServerFn({ method: "POST" })
     if (cur !== "submitted" && cur !== "in_review" && cur !== "pending")
       throw new Error("This claim is not awaiting review.");
 
+    const bounty = (sub as unknown as { bounties: { payout_type: string; reward_cash_cents: number } }).bounties;
+    let computedCash = data.awarded_cash_cents;
+    if (data.decision === "approved" && bounty) {
+      computedCash =
+        bounty.payout_type === "per_1k_views"
+          ? Math.floor((sub.view_count || 0) / 1000) * bounty.reward_cash_cents
+          : (data.awarded_cash_cents || bounty.reward_cash_cents);
+    }
+
     const { error: ue } = await context.supabase
       .from("submissions")
       .update({
         status: data.decision,
         awarded_points: data.decision === "approved" ? data.awarded_points : 0,
-        awarded_cash_cents: data.decision === "approved" ? data.awarded_cash_cents : 0,
+        awarded_cash_cents: data.decision === "approved" ? computedCash : 0,
         review_notes: data.review_notes || null,
         reviewed_by: context.userId,
         reviewed_at: new Date().toISOString(),
@@ -246,6 +255,8 @@ export const reviewSubmission = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// NOTE: markPaid is for manual/offline ledger entries only.
+// For Stripe Connect payouts, use `stripePayout`/`payoutEditor` in stripe.functions.ts.
 export const markPaid = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid() }).parse(d))
