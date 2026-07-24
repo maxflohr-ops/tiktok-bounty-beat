@@ -258,3 +258,6 @@ export const payoutEditor = createServerFn({ method: "POST" })
 
     return { transferId, amountCents };
   });
+
+// Alias kept for admin UI naming: Stripe Connect payout for a submission.
+export const stripePayout = payoutEditor;
