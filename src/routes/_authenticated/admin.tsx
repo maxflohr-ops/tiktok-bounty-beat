@@ -473,3 +473,107 @@ function Ledger() {
     </section>
   );
 }
+
+function PayoutApprovalsPanel() {
+  const qc = useQueryClient();
+  const listFn = useServerFn(listPayoutApprovals);
+  const approveFn = useServerFn(approveAndSendPayout);
+  const rejectFn = useServerFn(rejectPayout);
+  const { data = [], refetch } = useQuery({ queryKey: ["payoutApprovals"], queryFn: () => listFn() });
+  const [busyId, setBusyId] = useState<string | null>(null);
+
+  const pending = data.filter((a: any) => a.status === "pending");
+  const recent = data.filter((a: any) => a.status !== "pending").slice(0, 10);
+
+  const decide = async (id: string, kind: "approve" | "reject") => {
+    const note = kind === "reject"
+      ? (prompt("Reason for rejecting this payout?") ?? "")
+      : (prompt("Optional note for approval (leave blank to approve):") ?? "");
+    if (kind === "reject" && !note.trim()) { toast.error("Rejections need a reason."); return; }
+    if (kind === "approve" && !confirm("Approve and send this payout via Stripe? This moves real money.")) return;
+    setBusyId(id);
+    try {
+      if (kind === "approve") {
+        const r = await approveFn({ data: { approvalId: id, note: note || undefined } });
+        toast.success(`Sent via Stripe · ${r.transferId}`);
+      } else {
+        await rejectFn({ data: { approvalId: id, note } });
+        toast.success("Payout rejected.");
+      }
+      refetch();
+      qc.invalidateQueries({ queryKey: ["allSubs"] });
+      qc.invalidateQueries({ queryKey: ["bountiesStaff"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Decision failed.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  return (
+    <section className="mt-10 border border-border/60 p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div>
+          <h2 className="label-cap silver">P A Y O U T &nbsp; A P P R O V A L S</h2>
+          <p className="script-note text-lg text-silver-glow">no silver leaves the harbor without a second seal.</p>
+          <p className="mt-1 text-xs italic text-bone-soft">Any staff can request. Only admins can approve; approval sends the Stripe transfer.</p>
+        </div>
+        <div className="text-right">
+          <div className="label-cap text-bone-soft">pending</div>
+          <div className="font-display text-xl silver">{pending.length}</div>
+        </div>
+      </div>
+
+      <ul className="mt-4 divide-y divide-border/40">
+        {pending.map((a: any) => (
+          <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+            <div className="min-w-0">
+              <span className="label-cap silver mr-2">No. {a.submission?.bounty?.contract_no != null ? pad(a.submission.bounty.contract_no) : "—"}</span>
+              <span className="text-bone">{a.submission?.bounty?.title}</span>
+              <span className="ml-2 italic text-bone-soft">@{a.submission?.tiktok_handle}</span>
+              <div className="mt-1 text-xs italic text-bone-soft">
+                requested by {a.requested_by_name || "staff"} · {new Date(a.created_at).toLocaleString()}
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="font-display silver">{money(a.amount_cents, a.currency)}</span>
+              <button onClick={() => decide(a.id, "approve")} disabled={busyId === a.id} className="silver-btn">
+                <Check className="h-3.5 w-3.5" /> {busyId === a.id ? "working…" : "approve & send"}
+              </button>
+              <button onClick={() => decide(a.id, "reject")} disabled={busyId === a.id} className="ink-btn border-border/60 text-bone-soft hover:bg-bone/10">
+                <X className="h-3.5 w-3.5" /> reject
+              </button>
+            </div>
+          </li>
+        ))}
+        {pending.length === 0 ? (
+          <li className="script-note py-6 text-center text-xl text-silver-glow">no payouts await a seal.</li>
+        ) : null}
+      </ul>
+
+      {recent.length > 0 ? (
+        <div className="mt-6 border-t border-border/40 pt-4">
+          <div className="label-cap text-bone-soft mb-2">recent decisions</div>
+          <ul className="divide-y divide-border/40">
+            {recent.map((a: any) => (
+              <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-2 text-xs italic text-bone-soft">
+                <div className="min-w-0">
+                  <span className="label-cap silver mr-2">No. {a.submission?.bounty?.contract_no != null ? pad(a.submission.bounty.contract_no) : "—"}</span>
+                  <span className="text-bone">{a.submission?.bounty?.title}</span>
+                  <span className="ml-2">@{a.submission?.tiktok_handle}</span>
+                  {a.decision_note ? <div className="mt-0.5">note: {a.decision_note}</div> : null}
+                  {a.error ? <div className="mt-0.5 text-red-400/80">error: {a.error}</div> : null}
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-display silver">{money(a.amount_cents, a.currency)}</span>
+                  <span className={`label-cap border px-2 py-0.5 ${a.status === "sent" ? "silver border-silver/40" : "border-border/60"}`}>{a.status}</span>
+                  <span>{a.decided_by_name || "—"}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </section>
+  );
+}
