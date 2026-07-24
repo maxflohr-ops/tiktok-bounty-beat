@@ -330,6 +330,7 @@ export type Database = {
           oembed_title: string | null
           paid_at: string | null
           paid_cash_cents: number
+          paypal_email: string | null
           review_notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
@@ -356,6 +357,7 @@ export type Database = {
           oembed_title?: string | null
           paid_at?: string | null
           paid_cash_cents?: number
+          paypal_email?: string | null
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -382,6 +384,7 @@ export type Database = {
           oembed_title?: string | null
           paid_at?: string | null
           paid_cash_cents?: number
+          paypal_email?: string | null
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
