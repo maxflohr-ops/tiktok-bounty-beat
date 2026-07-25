@@ -117,7 +117,14 @@ function HomePage() {
             <p className="mx-auto mt-3 max-w-xl text-bone-soft">
               The board is where the harbor's clipping work is posted. Any editor of standing may take a contract; those who deliver are paid in crowns.
             </p>
+            <div className="mt-6 flex flex-col items-center gap-2">
+              <Link to="/list-sound" className="silver-btn">
+                submit your sound for a campaign
+              </Link>
+              <span className="terminal text-xs text-bone-soft">artists · $200 listing · 30 days on the board</span>
+            </div>
           </div>
+
 
           {/* Filters */}
           <div className="mb-8 flex flex-wrap items-center justify-center gap-4 md:mb-10">

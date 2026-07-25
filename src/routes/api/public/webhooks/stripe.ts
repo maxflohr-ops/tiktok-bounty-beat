@@ -27,39 +27,72 @@ export const Route = createFileRoute("/api/public/webhooks/stripe")({
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
         if (event.type === "checkout.session.completed") {
-          const session = event.data.object as { id: string; payment_intent: string | null };
-          const { data: payment } = await supabaseAdmin
-            .from("bounty_payments")
-            .select("id,bounty_id,amount_cents")
-            .eq("stripe_checkout_session_id", session.id)
-            .maybeSingle();
+          const session = event.data.object as {
+            id: string;
+            payment_intent: string | null;
+            metadata?: Record<string, string> | null;
+          };
+          const kind = session.metadata?.kind;
+          const soundListingId = session.metadata?.sound_listing_id;
 
-          if (payment) {
+          if (kind === "sound_listing" && soundListingId) {
+            const now = new Date();
+            const expires = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
             await supabaseAdmin
-              .from("bounty_payments")
+              .from("sound_listings")
               .update({
-                status: "succeeded",
+                status: "pending_review",
                 stripe_payment_intent_id: session.payment_intent ?? null,
+                listed_at: now.toISOString(),
+                expires_at: expires.toISOString(),
               })
-              .eq("id", payment.id);
+              .eq("id", soundListingId);
 
-            const { data: bountyRaw } = await supabaseAdmin
-              .from("bounties")
-              .select("*")
-              .eq("id", payment.bounty_id)
+            try {
+              const { notify } = await import("@/lib/notify.server");
+              await notify({
+                event: "sound_listing.paid",
+                reference: soundListingId,
+                details: { session_id: session.id, expires_at: expires.toISOString() },
+              });
+            } catch (err) {
+              console.warn("[stripe webhook] notify failed", err);
+            }
+          } else {
+            const { data: payment } = await supabaseAdmin
+              .from("bounty_payments")
+              .select("id,bounty_id,amount_cents")
+              .eq("stripe_checkout_session_id", session.id)
               .maybeSingle();
-            const bounty = bountyRaw as unknown as { funded_cash_cents: number | null } | null;
-            const currentFunded = bounty?.funded_cash_cents ?? 0;
 
-            await supabaseAdmin
-              .from("bounties")
-              .update({
-                funded_cash_cents: currentFunded + payment.amount_cents,
-                top_up_session_id: null,
-              })
-              .eq("id", payment.bounty_id);
+            if (payment) {
+              await supabaseAdmin
+                .from("bounty_payments")
+                .update({
+                  status: "succeeded",
+                  stripe_payment_intent_id: session.payment_intent ?? null,
+                })
+                .eq("id", payment.id);
+
+              const { data: bountyRaw } = await supabaseAdmin
+                .from("bounties")
+                .select("*")
+                .eq("id", payment.bounty_id)
+                .maybeSingle();
+              const bounty = bountyRaw as unknown as { funded_cash_cents: number | null } | null;
+              const currentFunded = bounty?.funded_cash_cents ?? 0;
+
+              await supabaseAdmin
+                .from("bounties")
+                .update({
+                  funded_cash_cents: currentFunded + payment.amount_cents,
+                  top_up_session_id: null,
+                })
+                .eq("id", payment.bounty_id);
+            }
           }
         } else if (event.type === "transfer.created") {
+
           const transfer = event.data.object as { id: string; amount: number };
           const { data: subRaw } = await supabaseAdmin
             .from("submissions")
