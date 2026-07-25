@@ -11,7 +11,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -62,7 +62,8 @@ function BountyDetail() {
   const [handle, setHandle] = useState("");
   const [paypal, setPaypal] = useState("");
   const [clipUrl, setClipUrl] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [claimBusy, setClaimBusy] = useState(false);
+  const [deliverBusy, setDeliverBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ tiktok_handle?: string; paypal_email?: string }>({});
   const [touched, setTouched] = useState<{ tiktok_handle?: boolean; paypal_email?: boolean }>({});
   useEffect(() => {
@@ -77,14 +78,14 @@ function BountyDetail() {
     setTouched({ tiktok_handle: true, paypal_email: true });
     if (!check.ok) { setFieldErrors(check.errors); return; }
     setFieldErrors({});
-    setBusy(true);
+    setClaimBusy(true);
     try {
       await claimFn({ data: { bounty_id: id, tiktok_handle: check.data.tiktok_handle, paypal_email: check.data.paypal_email } });
       toast.success("Contract taken. Deliver proof before the deadline.");
       refetchClaims(); refetchBounties();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not take the contract.");
-    } finally { setBusy(false); }
+    } finally { setClaimBusy(false); }
   };
 
   const validateField = async (field: "tiktok_handle" | "paypal_email", value: string) => {
@@ -97,7 +98,7 @@ function BountyDetail() {
   const deliver = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!myClaim) return;
-    setBusy(true);
+    setDeliverBusy(true);
     try {
       const r = await deliverFn({ data: { submission_id: myClaim.id, clip_url: clipUrl } });
       toast.success(r.auto_check_passed
@@ -107,7 +108,7 @@ function BountyDetail() {
       refetchClaims();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Delivery refused.");
-    } finally { setBusy(false); }
+    } finally { setDeliverBusy(false); }
   };
 
   if (!bounty) {
@@ -264,6 +265,7 @@ function BountyDetail() {
                       aria-describedby="tiktok-handle-error"
                       className="w-full bg-transparent px-1 text-bone outline-none placeholder:italic placeholder:text-bone-soft/60"
                       placeholder="yourname"
+                      disabled={claimBusy}
                     />
                   </div>
                   {touched.tiktok_handle && fieldErrors.tiktok_handle && (
@@ -293,6 +295,7 @@ function BountyDetail() {
                       touched.paypal_email && fieldErrors.paypal_email ? "border-red-500" : ""
                     }`}
                     placeholder="you@paypal.com"
+                    disabled={claimBusy}
                   />
                   {touched.paypal_email && fieldErrors.paypal_email && (
                     <p id="paypal-email-error" role="alert" className="mt-1 text-xs text-red-400">
@@ -300,8 +303,16 @@ function BountyDetail() {
                     </p>
                   )}
                 </label>
-                <button disabled={busy} className="silver-btn w-full">
-                  {busy ? "taking…" : "take the contract"}
+                <button
+                  type="submit"
+                  disabled={claimBusy}
+                  aria-busy={claimBusy}
+                  className="silver-btn w-full disabled:opacity-60"
+                >
+                  <span className="inline-flex items-center justify-center gap-2">
+                    {claimBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    {claimBusy ? "taking contract…" : "take the contract"}
+                  </span>
                 </button>
                 <p className="script-note text-center text-lg text-bone-soft">
                   The board keeps a record.
@@ -337,10 +348,19 @@ function BountyDetail() {
                         }
                         maxLength={500}
                         className="dark-input mt-2"
+                        disabled={deliverBusy}
                       />
                     </label>
-                    <button disabled={busy} className="silver-btn w-full">
-                      {busy ? "delivering…" : "deliver proof"}
+                    <button
+                      type="submit"
+                      disabled={deliverBusy}
+                      aria-busy={deliverBusy}
+                      className="silver-btn w-full disabled:opacity-60"
+                    >
+                      <span className="inline-flex items-center justify-center gap-2">
+                        {deliverBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                        {deliverBusy ? "delivering…" : "deliver proof"}
+                      </span>
                     </button>
                   </form>
                 ) : (["submitted", "pending", "in_review"] as string[]).includes(myClaim.status as string) ? (
