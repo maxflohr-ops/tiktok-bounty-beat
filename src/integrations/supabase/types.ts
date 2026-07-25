@@ -314,6 +314,66 @@ export type Database = {
         }
         Relationships: []
       }
+      sound_listings: {
+        Row: {
+          amount_cents: number
+          artist_name: string
+          contact_email: string
+          created_at: string
+          currency: string
+          expires_at: string | null
+          id: string
+          listed_at: string | null
+          notes: string | null
+          song_title: string
+          spotify_url: string | null
+          status: string
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
+          tiktok_sound_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents?: number
+          artist_name: string
+          contact_email: string
+          created_at?: string
+          currency?: string
+          expires_at?: string | null
+          id?: string
+          listed_at?: string | null
+          notes?: string | null
+          song_title: string
+          spotify_url?: string | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          tiktok_sound_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          artist_name?: string
+          contact_email?: string
+          created_at?: string
+          currency?: string
+          expires_at?: string | null
+          id?: string
+          listed_at?: string | null
+          notes?: string | null
+          song_title?: string
+          spotify_url?: string | null
+          status?: string
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
+          tiktok_sound_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       submissions: {
         Row: {
           auto_check_notes: string | null
