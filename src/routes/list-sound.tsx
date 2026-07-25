@@ -28,7 +28,8 @@ export const Route = createFileRoute("/list-sound")({
 });
 
 function ListSoundPage() {
-  const { user, ready } = useSession();
+  const { user, loading } = useSession();
+  const ready = !loading;
   const navigate = useNavigate();
   const search = useSearch({ from: "/list-sound" });
   const createFn = useServerFn(createSoundListingCheckout);
