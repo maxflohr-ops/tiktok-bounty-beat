@@ -131,22 +131,22 @@ function ListSoundPage() {
                 <h2 className="label-cap mb-4 text-silver">the notice</h2>
                 <div className="grid gap-4">
                   <Field label="Artist name" required>
-                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="input-board" placeholder="Ridgeclub" />
+                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="Ridgeclub" />
                   </Field>
                   <Field label="Song title" required>
-                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="input-board" placeholder="Do I Clench My Fist" />
+                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="Do I Clench My Fist" />
                   </Field>
                   <Field label="TikTok sound URL" hint="Optional but strongly recommended">
-                    <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="input-board" placeholder="https://www.tiktok.com/music/..." />
+                    <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="https://www.tiktok.com/music/..." />
                   </Field>
                   <Field label="Spotify / streaming link" hint="Optional">
-                    <input value={spotify} onChange={(e) => setSpotify(e.target.value)} className="input-board" placeholder="https://open.spotify.com/track/..." />
+                    <input value={spotify} onChange={(e) => setSpotify(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="https://open.spotify.com/track/..." />
                   </Field>
                   <Field label="Contact email" required>
-                    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-board" />
+                    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" />
                   </Field>
                   <Field label="Notes for the harbormaster" hint="Genre, sync history, campaign goals, budget…">
-                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="input-board min-h-[100px]" />
+                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)] min-h-[100px]" />
                   </Field>
                 </div>
 
