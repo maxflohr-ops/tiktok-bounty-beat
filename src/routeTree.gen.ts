@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TiktokClipperRouteImport } from './routes/tiktok-clipper'
 import { Route as ListSoundRouteImport } from './routes/list-sound'
+import { Route as ForEditorsRouteImport } from './routes/for-editors'
+import { Route as ForArtistsRouteImport } from './routes/for-artists'
+import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,9 +24,29 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public/webhooks/stripe'
 
+const TiktokClipperRoute = TiktokClipperRouteImport.update({
+  id: '/tiktok-clipper',
+  path: '/tiktok-clipper',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ListSoundRoute = ListSoundRouteImport.update({
   id: '/list-sound',
   path: '/list-sound',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForEditorsRoute = ForEditorsRouteImport.update({
+  id: '/for-editors',
+  path: '/for-editors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForArtistsRoute = ForArtistsRouteImport.update({
+  id: '/for-artists',
+  path: '/for-artists',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClippingCampaignsRoute = ClippingCampaignsRouteImport.update({
+  id: '/clipping-campaigns',
+  path: '/clipping-campaigns',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -74,7 +98,11 @@ const ApiPublicWebhooksStripeRoute = ApiPublicWebhooksStripeRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/clipping-campaigns': typeof ClippingCampaignsRoute
+  '/for-artists': typeof ForArtistsRoute
+  '/for-editors': typeof ForEditorsRoute
   '/list-sound': typeof ListSoundRoute
+  '/tiktok-clipper': typeof TiktokClipperRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
@@ -85,7 +113,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/clipping-campaigns': typeof ClippingCampaignsRoute
+  '/for-artists': typeof ForArtistsRoute
+  '/for-editors': typeof ForEditorsRoute
   '/list-sound': typeof ListSoundRoute
+  '/tiktok-clipper': typeof TiktokClipperRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
@@ -98,7 +130,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/clipping-campaigns': typeof ClippingCampaignsRoute
+  '/for-artists': typeof ForArtistsRoute
+  '/for-editors': typeof ForEditorsRoute
   '/list-sound': typeof ListSoundRoute
+  '/tiktok-clipper': typeof TiktokClipperRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
@@ -111,7 +147,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/clipping-campaigns'
+    | '/for-artists'
+    | '/for-editors'
     | '/list-sound'
+    | '/tiktok-clipper'
     | '/admin'
     | '/dashboard'
     | '/submit'
@@ -122,7 +162,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/clipping-campaigns'
+    | '/for-artists'
+    | '/for-editors'
     | '/list-sound'
+    | '/tiktok-clipper'
     | '/admin'
     | '/dashboard'
     | '/submit'
@@ -134,7 +178,11 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/clipping-campaigns'
+    | '/for-artists'
+    | '/for-editors'
     | '/list-sound'
+    | '/tiktok-clipper'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/submit'
@@ -147,7 +195,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ClippingCampaignsRoute: typeof ClippingCampaignsRoute
+  ForArtistsRoute: typeof ForArtistsRoute
+  ForEditorsRoute: typeof ForEditorsRoute
   ListSoundRoute: typeof ListSoundRoute
+  TiktokClipperRoute: typeof TiktokClipperRoute
   BountyIdRoute: typeof BountyIdRoute
   ApiPublicWebhooksStripeRoute: typeof ApiPublicWebhooksStripeRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -155,11 +207,39 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tiktok-clipper': {
+      id: '/tiktok-clipper'
+      path: '/tiktok-clipper'
+      fullPath: '/tiktok-clipper'
+      preLoaderRoute: typeof TiktokClipperRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/list-sound': {
       id: '/list-sound'
       path: '/list-sound'
       fullPath: '/list-sound'
       preLoaderRoute: typeof ListSoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-editors': {
+      id: '/for-editors'
+      path: '/for-editors'
+      fullPath: '/for-editors'
+      preLoaderRoute: typeof ForEditorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-artists': {
+      id: '/for-artists'
+      path: '/for-artists'
+      fullPath: '/for-artists'
+      preLoaderRoute: typeof ForArtistsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clipping-campaigns': {
+      id: '/clipping-campaigns'
+      path: '/clipping-campaigns'
+      fullPath: '/clipping-campaigns'
+      preLoaderRoute: typeof ClippingCampaignsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -247,7 +327,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ClippingCampaignsRoute: ClippingCampaignsRoute,
+  ForArtistsRoute: ForArtistsRoute,
+  ForEditorsRoute: ForEditorsRoute,
   ListSoundRoute: ListSoundRoute,
+  TiktokClipperRoute: TiktokClipperRoute,
   BountyIdRoute: BountyIdRoute,
   ApiPublicWebhooksStripeRoute: ApiPublicWebhooksStripeRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
