@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 
-const HOME_TITLE = "Bounty Sounds — Clip sounds. Get paid.";
+const HOME_TITLE = "Bounty Sounds — Every sound has a bounty.";
 const HOME_DESC =
   "Artists fund a pot for their sound. You post the clip. Verified views pay out — via PayPal or Stripe. Funded pots, checked deliveries, real payouts.";
 const HOME_URL = "https://bountysounds.com/";
@@ -46,17 +46,17 @@ function LandingPage() {
       <section className="container-board pt-20 pb-24 text-center md:pt-28 md:pb-32">
         <p className="label-cap">Bounty Sounds</p>
         <h1 className="mx-auto mt-4 max-w-3xl text-5xl leading-[1.05] md:text-7xl">
-          Clip sounds.
+          Every sound
           <br />
-          Get paid.
+          has a bounty.
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-xl text-bone-soft">
-          Artists fund a pot for their sound. You post the clip.
+          Artists fund it. You post the clip.
           Verified views pay out.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Link to="/taste" className="silver-btn px-7">
-            Find your bounties
+            Find your bounty
           </Link>
           <Link to="/board" className="ink-btn px-7">
             {openCount > 0 ? `Browse all ${openCount}` : "Browse the board"}
