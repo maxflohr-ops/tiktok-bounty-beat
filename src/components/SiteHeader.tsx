@@ -23,7 +23,14 @@ export function SiteHeader() {
     <header className="relative z-30 border-b border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)]">
       <div className="container-board flex flex-col items-center gap-2 py-5 md:flex-row md:justify-between md:py-6">
         <Link to="/" className="flex flex-col items-center gap-1 md:items-start">
-          <span className="font-[var(--font-display)] text-2xl font-bold leading-none text-[var(--color-bs-ink)] md:text-3xl">
+          <span className="relative font-[var(--font-display)] text-2xl font-bold leading-none text-[var(--color-bs-ink)] md:text-3xl">
+            <img
+              src="/art/cardinal-perch.png"
+              alt=""
+              aria-hidden
+              draggable={false}
+              className="pointer-events-none absolute -top-[13px] left-0 w-7 select-none md:-top-4 md:w-8"
+            />
             Bounty<span className="text-[var(--color-bs-accent)]">Sounds</span>
           </span>
           <BsEyebrow>clip sounds, streams & keynotes · get paid per view</BsEyebrow>
