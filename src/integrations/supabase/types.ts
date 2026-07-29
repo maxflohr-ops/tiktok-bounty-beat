@@ -400,6 +400,7 @@ export type Database = {
           tiktok_handle: string
           tiktok_video_url: string | null
           updated_at: string
+          verified_view_count: number | null
           view_count: number
         }
         Insert: {
@@ -427,6 +428,7 @@ export type Database = {
           tiktok_handle: string
           tiktok_video_url?: string | null
           updated_at?: string
+          verified_view_count?: number | null
           view_count?: number
         }
         Update: {
@@ -454,6 +456,7 @@ export type Database = {
           tiktok_handle?: string
           tiktok_video_url?: string | null
           updated_at?: string
+          verified_view_count?: number | null
           view_count?: number
         }
         Relationships: [
