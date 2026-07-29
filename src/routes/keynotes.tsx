@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Reveal } from "@/components/Reveal";
 
 const TITLE = "Keynote Clipping Campaigns · Bounty Sounds";
 const DESC =
@@ -51,6 +52,7 @@ function KeynotesPage() {
       {/* Why keynotes clip — black band */}
       <section className="bg-[#000] py-24 text-center text-white md:py-32">
         <div className="container-board">
+        <Reveal>
           <p className="label-cap text-[#86868b]">Why it works</p>
           <h2 className="mx-auto mt-4 max-w-2xl text-4xl leading-tight text-white md:text-6xl">
             Launch day is a clip economy.
@@ -75,6 +77,7 @@ function KeynotesPage() {
               <p className="mt-2 text-sm text-[#a1a1a6]">payouts against verified views only.</p>
             </div>
           </div>
+        </Reveal>
         </div>
       </section>
 

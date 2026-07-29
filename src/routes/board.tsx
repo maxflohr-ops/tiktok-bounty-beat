@@ -182,7 +182,7 @@ function BoardPage() {
 
           {/* Board grid */}
           {isLoading ? (
-            <BsLoading label="loading contracts" variant="card" />
+            <DelayedLoading />
           ) : filtered.length === 0 ? (
             <BsEmpty
               eyebrow="the board"
@@ -411,4 +411,17 @@ function ContractCard({
       </div>
     </article>
   );
+}
+
+
+// Loader appears only after 240ms so fast responses never flash it
+// (pattern from Instatic's spotlight skeletons); visual is BsLoading.
+function DelayedLoading() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShow(true), 240);
+    return () => clearTimeout(t);
+  }, []);
+  if (!show) return <div className="py-20" />;
+  return <BsLoading label="loading contracts" variant="card" />;
 }
