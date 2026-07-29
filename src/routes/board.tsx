@@ -48,11 +48,10 @@ function isExpired(b: Bounty) {
   return null;
 }
 function isFeatured(b: Bounty) {
-  return Boolean(
-    (b as any).featured_until &&
-    new Date((b as any).featured_until).getTime() > Date.now() &&
-    !isExpired(b),
-  );
+  const paid =
+    ((b as any).featured_until && new Date((b as any).featured_until).getTime() > Date.now()) ||
+    (b as any).featured_plus;
+  return Boolean(paid && !isExpired(b));
 }
 function bottomLine(b: Bounty) {
   const overridden = isExpired(b);

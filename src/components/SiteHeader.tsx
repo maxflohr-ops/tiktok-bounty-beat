@@ -34,7 +34,7 @@ export function SiteHeader() {
             />
             Bounty<span className="text-[var(--color-bs-accent)]">Sounds</span>
           </span>
-          <BsEyebrow>clip sounds, streams & keynotes · get paid per view</BsEyebrow>
+          <BsEyebrow>clip sounds, streams, keynotes & pods · get paid per view</BsEyebrow>
         </Link>
         <nav className="flex flex-wrap items-center justify-center gap-1">
           <Link to="/board" className={navLink} activeProps={navActive}>board</Link>

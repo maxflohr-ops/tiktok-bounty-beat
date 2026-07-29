@@ -63,7 +63,11 @@ function LandingPage() {
     (b) => b.status !== "expired" && b.status !== "fulfilled" && b.status !== "closed",
   );
   const featured = (b: Bounty) =>
-    Boolean((b as any).featured_until && new Date((b as any).featured_until).getTime() > Date.now());
+    Boolean(
+      ((b as any).featured_until && new Date((b as any).featured_until).getTime() > Date.now()) ||
+      (b as any).featured_plus,
+    );
+  const presentedBy = live.find((b) => (b as any).featured_plus);
   const open = [...live.filter(featured), ...live.filter((b) => !featured(b))].slice(0, 5);
 
   return (
@@ -98,7 +102,7 @@ function LandingPage() {
             </div>
 
             <p className="mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] md:text-lg">
-              Sounds, streams, keynote speeches. Post the clip — verified views pay out.
+              Sounds, streams, keynotes, podcasts. Post the clip — verified views pay out.
             </p>
 
             <div className="mt-8 flex justify-center">
@@ -125,6 +129,17 @@ function LandingPage() {
             </div>
 
             <div className="bs-rule mt-10 pt-6">
+              {presentedBy ? (
+                <p className="mb-3 text-center">
+                  <Link
+                    to="/bounty/$id"
+                    params={{ id: presentedBy.id }}
+                    className="bs-mono uppercase tracking-[0.16em] text-[var(--color-bs-ink-mute)] underline underline-offset-2 hover:text-[var(--color-bs-ink)]"
+                  >
+                    this issue presented by {presentedBy.title} →
+                  </Link>
+                </p>
+              ) : null}
               <div className="mb-3 flex items-center justify-between">
                 <BsBadge variant="live">Live · {open.length} open</BsBadge>
                 <Link to="/board" className="bs-mono underline underline-offset-2 hover:text-[var(--color-bs-ink)]">

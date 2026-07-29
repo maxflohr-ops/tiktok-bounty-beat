@@ -144,6 +144,7 @@ function BountiesPanel() {
           max_submissions: editing.max_submissions ?? null,
           deadline: editing.deadline || null,
           featured_until: (editing as any).featured_until || null,
+          featured_plus: Boolean((editing as any).featured_plus),
           hashtags: (editing as any).hashtags ?? [],
           rules: (editing as any).rules || null,
           status: (editing.status ?? "active") as "draft" | "active" | "claimed" | "in_review" | "fulfilled" | "expired" | "closed",
@@ -251,6 +252,12 @@ function BountiesPanel() {
             </Field>
             <Field label="featured until ($1k/mo slot)">
               <input type="datetime-local" value={(editing as any).featured_until ? (editing as any).featured_until.slice(0, 16) : ""} onChange={(e) => setEditing({ ...editing, featured_until: e.target.value ? new Date(e.target.value).toISOString() : null } as any)} className="dark-input" />
+            </Field>
+            <Field label="featured+ ($2.5k/mo · presented-by)">
+              <label className="flex items-center gap-2 py-2 text-sm text-bone-soft">
+                <input type="checkbox" checked={Boolean((editing as any).featured_plus)} onChange={(e) => setEditing({ ...editing, featured_plus: e.target.checked } as any)} />
+                presented-by line on the front page
+              </label>
             </Field>
             <Field label="status">
               <select value={editing.status ?? "active"} onChange={(e) => setEditing({ ...editing, status: e.target.value as Bounty["status"] })} className="dark-input">
