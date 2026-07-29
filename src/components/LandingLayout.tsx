@@ -35,9 +35,7 @@ export function LandingLayout({
             {intro}
           </p>
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <BsButtonLink asChild={false as never} href={primaryHref} {...({} as object)}>
-              <Link to={primaryHref} className="bs-btn">{primaryCta}</Link>
-            </BsButtonLink>
+            <Link to={primaryHref} className="bs-btn">{primaryCta}</Link>
             {secondaryCta && secondaryHref ? (
               <Link to={secondaryHref} className="bs-btn bs-btn-ghost">
                 {secondaryCta}
