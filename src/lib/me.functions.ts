@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { notifyAsync } from "@/lib/notify.server";
 
 export const getMe = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -8,12 +9,38 @@ export const getMe = createServerFn({ method: "GET" })
     const [{ data: profile }, { data: roles }] = await Promise.all([
       context.supabase
         .from("profiles")
-        .select("id,display_name,tiktok_handle,avatar_url,points,wallet_address")
+        .select("id,display_name,tiktok_handle,avatar_url,points,wallet_address,signup_logged_at")
         .eq("id", context.userId)
         .maybeSingle(),
       context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
     ]);
     const roleSet = new Set((roles ?? []).map((r) => r.role));
+
+    // First sign-in: log user.signup to the event stream exactly once.
+    // The conditional update is the race guard - only the caller that flips
+    // signup_logged_at from null sends the event.
+    if (profile && !profile.signup_logged_at) {
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { data: marked } = await supabaseAdmin
+          .from("profiles")
+          .update({ signup_logged_at: new Date().toISOString() })
+          .eq("id", context.userId)
+          .is("signup_logged_at", null)
+          .select("id");
+        if (marked && marked.length > 0) {
+          notifyAsync({
+            event: "user.signup",
+            actor: (context.claims as { email?: string })?.email ?? context.userId,
+            reference: profile.display_name ?? profile.tiktok_handle ?? null,
+            details: { user_id: context.userId },
+          });
+        }
+      } catch {
+        // logging must never break sign-in
+      }
+    }
+
     return {
       userId: context.userId,
       profile,
