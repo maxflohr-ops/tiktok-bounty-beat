@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { getMe } from "@/lib/me.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut } from "lucide-react";
+import { BsBadge, BsEyebrow, BsMono } from "@/components/bs";
 
 export function SiteHeader() {
   const { user, loading } = useSession();
@@ -15,59 +16,33 @@ export function SiteHeader() {
     enabled: !!user,
   });
 
+  const navLink = "bs-mono px-3 py-2 uppercase tracking-[0.16em] text-[var(--color-bs-ink-mute)] hover:text-[var(--color-bs-ink)]";
+  const navActive = { className: "bs-mono px-3 py-2 uppercase tracking-[0.16em] text-[var(--color-bs-ink)]" };
+
   return (
-    <header className="relative z-30 border-b border-[var(--iron)]">
+    <header className="relative z-30 border-b border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)]">
       <div className="container-board flex flex-col items-center gap-2 py-5 md:flex-row md:justify-between md:py-6">
         <Link to="/" className="flex flex-col items-center gap-1 md:items-start">
-          <span className="flex items-baseline gap-2">
-            <span className="font-display text-2xl font-bold leading-none text-bone md:text-3xl">
-              Bounty<span className="silver">Sounds</span>
-            </span>
+          <span className="font-[var(--font-display)] text-2xl font-bold leading-none text-[var(--color-bs-ink)] md:text-3xl">
+            Bounty<span className="text-[var(--color-bs-accent)]">Sounds</span>
           </span>
-          <span className="label-cap">clip sounds · get paid per view</span>
+          <BsEyebrow>clip sounds · get paid per view</BsEyebrow>
         </Link>
-        <nav className="flex flex-wrap items-center justify-center gap-1 text-bone-soft">
-          <Link
-            to="/board"
-            className="label-cap px-3 py-2 hover:text-bone"
-            activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
-          >
-            board
-          </Link>
+        <nav className="flex flex-wrap items-center justify-center gap-1">
+          <Link to="/board" className={navLink} activeProps={navActive}>board</Link>
           {me?.isStaff ? (
-            <Link
-              to="/admin"
-              className="label-cap px-3 py-2 hover:text-bone"
-              activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
-            >
-              admin
-            </Link>
+            <Link to="/admin" className={navLink} activeProps={navActive}>admin</Link>
           ) : null}
           {loading ? null : user ? (
             <>
-              <Link
-                to="/dashboard"
-                className="label-cap px-3 py-2 hover:text-bone"
-                activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
-              >
-                dashboard
-              </Link>
-              <Link
-                to="/submit"
-                className="label-cap px-3 py-2 hover:text-bone"
-                activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
-              >
-                submit clip
-              </Link>
+              <Link to="/dashboard" className={navLink} activeProps={navActive}>dashboard</Link>
+              <Link to="/submit" className={navLink} activeProps={navActive}>submit clip</Link>
               {typeof me?.profile?.points === "number" ? (
-                <span className="digital-badge ml-1">
-                  <span className="status-dot" />
-                  {me.profile.points} pts
-                </span>
+                <BsBadge className="ml-1"><BsMono>{me.profile.points} pts</BsMono></BsBadge>
               ) : null}
               <button
                 onClick={() => supabase.auth.signOut()}
-                className="ml-1 rounded p-2 text-bone-soft hover:text-bone"
+                className="ml-1 p-2 text-[var(--color-bs-ink-mute)] hover:text-[var(--color-bs-ink)]"
                 aria-label="Sign out"
                 title="Sign out"
               >
@@ -75,9 +50,7 @@ export function SiteHeader() {
               </button>
             </>
           ) : (
-            <Link to="/auth" className="silver-btn ml-2">
-              sign in
-            </Link>
+            <Link to="/auth" className="bs-btn ml-2">sign in</Link>
           )}
         </nav>
       </div>
