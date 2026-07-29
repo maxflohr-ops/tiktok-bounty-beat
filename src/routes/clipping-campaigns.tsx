@@ -9,15 +9,15 @@ const DESCRIPTION =
 const FAQ = [
   {
     q: "What is a clipping campaign?",
-    a: "A clipping campaign hires short-form video editors ('clippers') to post edits, movie mashups, or reaction clips using a specific sound — usually paying per view rather than a flat rate per post.",
+    a: "You pay short-form editors per view to post clips built on your sound, stream, or keynote — instead of a flat rate for posts nobody watches.",
   },
   {
-    q: "How much does a clipping campaign cost?",
-    a: "$200 lists your campaign on the Bounty Board for 30 days. You separately fund the per-view pot at a rate you set. That way small campaigns stay affordable and big ones scale with performance.",
+    q: "What does it cost?",
+    a: "$200 lists the campaign for 30 days. The per-view pot is funded separately at a rate you set.",
   },
   {
-    q: "Can I run a clipping campaign for a movie, brand, or podcast — not music?",
-    a: "Right now the Bounty Board is built around music sounds so we can verify usage via TikTok's official sound link. Non-music campaigns are on the roadmap.",
+    q: "Does it have to be music?",
+    a: "No. Streams and keynote speeches clip just as well — often better. Anything you own the footage for.",
   },
 ];
 
@@ -56,41 +56,32 @@ function ClippingCampaigns() {
     <LandingLayout
       eyebrow="clipping campaigns"
       h1="Run a pay-per-view TikTok clipping campaign"
-      intro="Post a bounty. Vetted clippers claim it, edit with your sound, and deliver TikToks. You approve every payout — no lump-sum agency fees, no ghost posts."
+      intro="Post a bounty. Clippers claim it, cut your footage, and deliver TikToks. You approve every payout — no agency fees, no ghost posts."
       primaryCta="launch a campaign — $200 / 30 days"
       primaryHref="/list-sound"
       secondaryCta="see live campaigns"
-      secondaryHref="/"
+      secondaryHref="/board"
     >
-      <LandingSection title="Why clipping campaigns work">
+      <LandingSection title="Why it works">
         <p>
-          Clippers already spend all day making edits. Give them a sound, a payout rate, and a clear brief and they'll
-          produce more variety than any single agency ever could — and their income depends on the videos actually
-          performing.
+          Clippers already spend all day making edits. Give them footage, a rate, and a brief, and
+          you get more variety than any agency — from people paid only when the videos perform.
         </p>
-        <ul className="list-disc space-y-2 pl-6">
-          <li>Per-view payouts you set (e.g. $1 per 100k views)</li>
-          <li>Optional caps on total spend and number of claims</li>
-          <li>Every submission logged to Airtable + Google Sheets</li>
-          <li>Dispute workflow when view counts don't line up</li>
+        <ul className="list-disc space-y-3 pl-6">
+          <li>Per-view rates you set</li>
+          <li>Caps on total spend and claims</li>
+          <li>A person approves every payout</li>
+          <li>Dispute flow when counts don't line up</li>
         </ul>
       </LandingSection>
-      <LandingSection title="Everything you need on one board">
-        <ul className="list-disc space-y-2 pl-6">
-          <li>Live view tracking on submitted TikToks</li>
-          <li>Manual payout approvals for every disbursement</li>
-          <li>Editor leaderboard so top clippers earn a reputation</li>
-          <li>Notifications on every claim, delivery, and dispute</li>
-        </ul>
-      </LandingSection>
-      <LandingSection title="Frequently asked questions">
+      <LandingSection title="Questions">
         <FaqList items={FAQ} />
       </LandingSection>
       <LandingSection title="Related">
-        <ul className="list-disc space-y-1 pl-6">
-          <li><a href="/for-artists" className="underline hover:text-bone">TikTok music promotion for artists</a></li>
-          <li><a href="/for-editors" className="underline hover:text-bone">UGC creator jobs for editors</a></li>
-          <li><a href="/list-sound" className="underline hover:text-bone">List your sound — $200 / 30 days</a></li>
+        <ul className="list-disc space-y-2 pl-6">
+          <li><a href="/keynotes" className="underline hover:text-bone">Keynote campaigns</a></li>
+          <li><a href="/for-artists" className="underline hover:text-bone">For artists</a></li>
+          <li><a href="/for-editors" className="underline hover:text-bone">For editors</a></li>
         </ul>
       </LandingSection>
     </LandingLayout>

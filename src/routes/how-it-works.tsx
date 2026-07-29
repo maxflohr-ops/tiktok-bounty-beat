@@ -11,19 +11,19 @@ const URL = "https://bountysounds.com/how-it-works";
 const FAQ = [
   {
     q: "Can I clip from more than one TikTok account?",
-    a: "Yes. Add every account you post from on your dashboard. Deliveries are checked against your accounts, and an account earns trusted status once a clip from it gets approved.",
+    a: "Yes. Add every account you post from on your dashboard — an account earns trusted status once a clip gets approved.",
   },
   {
-    q: "What if TikTok remaps the audio on my clip?",
-    a: "It happens. Put #bountysounds in your caption and deliver anyway — nothing gets auto-rejected. A sound mismatch just becomes a note for the reviewer.",
+    q: "What if TikTok remaps my audio?",
+    a: "Put #bountysounds in your caption and deliver anyway. A mismatch is a note for the reviewer, never an auto-reject.",
   },
   {
     q: "Do I need a follower minimum?",
-    a: "No. The board is public — no invite, no gated Discord, no minimum. If your clip earns verified views, it earns the rate.",
+    a: "No. If your clip earns verified views, it earns the rate.",
   },
   {
-    q: "When does the money actually move?",
-    a: "After review. Views are verified against the contract's rate, the payout is approved, and it goes out to your PayPal or USDC wallet.",
+    q: "When does the money move?",
+    a: "After review — views verified, payout approved, sent to your PayPal or USDC wallet.",
   },
 ];
 
@@ -61,22 +61,22 @@ const STEPS = [
   {
     n: "01",
     title: "Claim",
-    body: "Pick a contract on the board. The rate, the pot, and the deadline are printed on it before you commit.",
+    body: "Pick a contract. Rate, pot, and deadline are printed on it before you commit.",
   },
   {
     n: "02",
     title: "Post",
-    body: "Make the clip and post it from your own TikTok, using the contract's sound or footage. The brief travels with the contract.",
+    body: "Cut the clip and post it from your own TikTok with the contract's sound or footage.",
   },
   {
     n: "03",
     title: "Prove",
-    body: "Paste your video link on the contract page. We check it came from one of your accounts — that's the whole delivery.",
+    body: "Paste your video link on the contract page. That's the whole delivery.",
   },
   {
     n: "04",
     title: "Get paid",
-    body: "Views get verified, the payout gets approved, and the money lands in your PayPal or USDC wallet.",
+    body: "Views verified, payout approved, money lands in your PayPal or USDC wallet.",
   },
 ];
 
@@ -126,19 +126,19 @@ function HowItWorksPage() {
               <div>
                 <p className="font-display text-lg text-bone">Your account</p>
                 <p className="mt-1 text-sm text-bone-soft">
-                  The clip has to come from a TikTok on your profile. You can add as many accounts as you post from.
+                  The clip has to come from a TikTok on your profile. Add as many as you post from.
                 </p>
               </div>
               <div>
                 <p className="font-display text-lg text-bone">The sound</p>
                 <p className="mt-1 text-sm text-bone-soft">
-                  We look for the contract's sound on your video. TikTok sometimes remaps audio — that's a note, never a rejection.
+                  We look for the contract's sound. A remap is a note, never a rejection.
                 </p>
               </div>
               <div>
                 <p className="font-display text-lg text-bone">The tag</p>
                 <p className="mt-1 text-sm text-bone-soft">
-                  #bountysounds in your caption backs you up when the sound match gets weird.
+                  #bountysounds in your caption backs you up when the match gets weird.
                 </p>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { listPublicBounties } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
-import { InkCardinal, InkDogwood } from "@/components/ArtMarks";
+import { InkCardinal, InkDogwood, InkSeal } from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
@@ -199,6 +199,7 @@ function LandingPage() {
 
       <footer className="border-t border-[var(--border)]">
         <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
+          <InkSeal className="mb-1 w-24 opacity-70" />
           <span>Every contract shows its pot, rate, and deadline before you claim.</span>
           <span>© {new Date().getFullYear()} Bounty Sounds</span>
         </div>

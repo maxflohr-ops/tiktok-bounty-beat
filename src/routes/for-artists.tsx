@@ -8,20 +8,16 @@ const DESCRIPTION =
 
 const FAQ = [
   {
-    q: "How does music promotion on TikTok work here?",
-    a: "You list your sound for a flat 30-day campaign fee. Vetted TikTok editors claim the contract, post edits using your song, and submit the TikTok URL. You approve payouts based on verified view counts.",
-  },
-  {
-    q: "What does it cost to promote a song?",
-    a: "The listing fee is $200 for a 30-day campaign slot on the Bounty Board. You separately fund the per-view bounty pot — usually $1 per 100,000 TikTok views — so total spend scales with results, not promises.",
+    q: "What does it cost?",
+    a: "$200 lists your sound for 30 days. You fund the per-view pot separately, so spend scales with results, not promises.",
   },
   {
     q: "Who are the editors?",
-    a: "Independent UGC creators and TikTok clippers who make edits, movie mashups, and lifestyle content around trending sounds. Every payout is manually approved before money moves.",
+    a: "Independent clippers who already make edits around trending sounds. Every payout is reviewed before money moves.",
   },
   {
-    q: "How is this different from a distributor like SoundOn?",
-    a: "Distributors get your song onto TikTok's sound library. Bounty Sounds recruits creators to actually use it — with a transparent pay-per-view rate and admin approval on every payout.",
+    q: "How is this different from a distributor?",
+    a: "Distributors get your song into TikTok's library. We recruit creators to actually use it — at a per-view rate you set.",
   },
 ];
 
@@ -60,41 +56,38 @@ function ForArtists() {
     <LandingLayout
       eyebrow="for music artists & labels"
       h1="Promote your song on TikTok — pay per view, not per promise"
-      intro="List your sound on Bounty Board and let vetted UGC creators post edits using your track. You approve every payout, so every crown goes to real, verified views."
+      intro="List your sound, set a rate, and let editors post edits with your track. Every payout is approved against verified views."
       primaryCta="list your sound — $200 / 30 days"
       primaryHref="/list-sound"
       secondaryCta="see live contracts"
-      secondaryHref="/"
+      secondaryHref="/board"
     >
-      <LandingSection title="How TikTok music promotion works on Bounty Sounds">
-        <ol className="list-decimal space-y-2 pl-6">
-          <li>Submit your artist name, song title, and TikTok sound link. Pay the $200 listing fee to open a 30-day campaign.</li>
-          <li>We post your contract on Bounty Board with your per-view payout rate (e.g. $1 per 100k views).</li>
-          <li>Editors claim the contract, publish TikToks using your sound, and paste their video URL as proof.</li>
-          <li>We verify view counts, approve payouts, and disburse via PayPal, Stripe, or USDC.</li>
+      <LandingSection title="How it works">
+        <ol className="list-decimal space-y-3 pl-6">
+          <li>Submit your artist name, song, and TikTok sound link — $200 opens a 30-day campaign.</li>
+          <li>Your contract goes on the board with the per-view rate you set.</li>
+          <li>Editors claim it, post TikToks with your sound, and deliver the links.</li>
+          <li>We verify views; you pay for results only.</li>
         </ol>
       </LandingSection>
-      <LandingSection title="Why pay-per-view beats flat-fee song promotion">
+      <LandingSection title="Why per-view beats flat-fee">
         <p>
-          Most TikTok music promotion services charge a lump sum for a fixed number of posts — with no guarantee anyone
-          watches them. A bounty flips that model: creators are motivated to make edits that <em>actually pop</em> because
-          their payout scales with real views.
+          Flat-fee promo buys posts nobody watches. A bounty pays editors to make the edit that
+          actually pops — their money scales with your views.
         </p>
-        <ul className="list-disc space-y-2 pl-6">
-          <li>Transparent per-100k-view pricing you set</li>
-          <li>Manual approval on every payout — no autopilot spending</li>
-          <li>Dispute workflow when views don't match evidence</li>
-          <li>Every submission logged to your team's Sheets and Airtable</li>
+        <ul className="list-disc space-y-3 pl-6">
+          <li>You set the per-100k rate</li>
+          <li>Every payout approved by a person</li>
+          <li>Dispute flow when numbers don't match</li>
         </ul>
       </LandingSection>
-      <LandingSection title="Frequently asked questions">
+      <LandingSection title="Questions">
         <FaqList items={FAQ} />
       </LandingSection>
       <LandingSection title="Related">
-        <ul className="list-disc space-y-1 pl-6">
-          <li><a href="/clipping-campaigns" className="underline hover:text-bone">How clipping campaigns work</a></li>
-          <li><a href="/for-editors" className="underline hover:text-bone">For TikTok editors & UGC creators</a></li>
-          <li><a href="/list-sound" className="underline hover:text-bone">List your sound — $200 / 30 days</a></li>
+        <ul className="list-disc space-y-2 pl-6">
+          <li><a href="/clipping-campaigns" className="underline hover:text-bone">How campaigns work</a></li>
+          <li><a href="/for-editors" className="underline hover:text-bone">For editors</a></li>
         </ul>
       </LandingSection>
     </LandingLayout>

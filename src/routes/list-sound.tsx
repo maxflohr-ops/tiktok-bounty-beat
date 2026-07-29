@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { useSession } from "@/lib/session";
 import { createSoundListingCheckout, listMySoundListings } from "@/lib/sound-listings.functions";
 import { BsBadge, BsButton, BsCard, BsDisplay, BsEyebrow, BsMono } from "@/components/bs";
+import { InkDrips } from "@/components/ArtMarks";
 
 const LIST_URL = "https://bountysounds.com/list-sound";
 const LIST_TITLE = "List Your Sound for a TikTok Campaign — $200 / 30 Days | Bounty Sounds";
@@ -94,6 +95,7 @@ function ListSoundPage() {
           <BsDisplay as="h1" size="lg" className="mt-3">
             List your sound for a campaign
           </BsDisplay>
+          <InkDrips className="mx-auto -mt-1 w-44 opacity-50" />
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
             Thirty days on the Bounty Board. Editors take contracts and deliver TikToks with your sound.{" "}
             <a href="/for-artists" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">

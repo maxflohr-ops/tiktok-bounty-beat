@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
+import { InkSeal } from "@/components/ArtMarks";
 
 const TITLE = "Keynote Clipping Campaigns · Bounty Sounds";
 const DESC =
@@ -139,7 +140,8 @@ function KeynotesPage() {
       </section>
 
       {/* Rights — white band */}
-      <section className="container-board py-24 text-center md:py-28">
+      <section className="container-board relative overflow-hidden py-24 text-center md:py-28">
+        <InkSeal className="absolute -right-16 top-1/2 w-72 -translate-y-1/2 opacity-[0.06] md:w-96" />
         <h2 className="mx-auto max-w-2xl text-4xl leading-tight md:text-5xl">
           You own the keynote.
           <br />
