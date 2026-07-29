@@ -14,7 +14,7 @@ function appOrigin() {
 }
 
 const listingInput = z.object({
-  listing_type: z.enum(["sound", "stream"]).default("sound"),
+  listing_type: z.enum(["sound", "stream", "keynote"]).default("sound"),
   artist_name: z.string().trim().min(1, "Name is required").max(120),
   song_title: z.string().trim().min(1, "Title is required").max(200),
   tiktok_sound_url: z
@@ -30,11 +30,12 @@ const listingInput = z.object({
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("").transform(() => undefined)),
+  // Streams need a Twitch/YouTube/Kick link; keynote footage can live anywhere
+  // watchable (validated per-type in the superRefine below).
   stream_url: z
     .string()
     .trim()
     .url("Must be a valid URL")
-    .refine((v) => /twitch\.tv|youtube\.com|youtu\.be|kick\.com/i.test(v), "Use a Twitch, YouTube, or Kick link")
     .optional()
     .or(z.literal("").transform(() => undefined)),
   stream_at: z.string().datetime({ offset: true }).optional().or(z.literal("").transform(() => undefined)),
@@ -58,9 +59,17 @@ const listingInput = z.object({
       captured_at: z.string().max(40).optional(),
     })
     .optional(),
-}).refine((d) => d.listing_type !== "stream" || d.stream_url, {
-  message: "A stream listing needs a channel or VOD link",
-  path: ["stream_url"],
+}).superRefine((d, ctx) => {
+  if (d.listing_type === "stream") {
+    if (!d.stream_url) {
+      ctx.addIssue({ code: "custom", message: "A stream listing needs a channel or VOD link", path: ["stream_url"] });
+    } else if (!/twitch\.tv|youtube\.com|youtu\.be|kick\.com/i.test(d.stream_url)) {
+      ctx.addIssue({ code: "custom", message: "Use a Twitch, YouTube, or Kick link", path: ["stream_url"] });
+    }
+  }
+  if (d.listing_type === "keynote" && !d.stream_url) {
+    ctx.addIssue({ code: "custom", message: "A keynote listing needs a footage link", path: ["stream_url"] });
+  }
 });
 
 // Create a Stripe Checkout session for a $200 / 30-day sound listing.
@@ -104,10 +113,9 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
           currency: "usd",
           unit_amount: LISTING_FEE_CENTS,
           product_data: {
-            name:
-              data.listing_type === "stream"
-                ? `Stream listing — ${data.song_title} by ${data.artist_name}`
-                : `Sound listing — ${data.song_title} by ${data.artist_name}`,
+            name: `${
+              data.listing_type === "stream" ? "Stream" : data.listing_type === "keynote" ? "Keynote" : "Sound"
+            } listing — ${data.song_title} by ${data.artist_name}`,
             description: `30-day campaign listing on Bounty Sounds`,
           },
         },

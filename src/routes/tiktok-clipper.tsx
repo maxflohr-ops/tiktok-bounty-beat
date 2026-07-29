@@ -59,6 +59,7 @@ function TiktokClipperPage() {
       intro="If you already make TikTok edits, you're leaving money on the table. Claim a bounty, post your clip, cash in per verified view."
       primaryCta="sign in and claim a bounty"
       primaryHref="/auth"
+      primaryReturnTo="/board"
       secondaryCta="browse open bounties"
       secondaryHref="/board"
     >

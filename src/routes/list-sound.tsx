@@ -10,6 +10,7 @@ import { createSoundListingCheckout, listMySoundListings } from "@/lib/sound-lis
 import { BsBadge, BsButton, BsCard, BsDisplay, BsEyebrow, BsMono } from "@/components/bs";
 import { InkDrips } from "@/components/ArtMarks";
 import { getAttribution } from "@/lib/attribution";
+import { setReturnTo } from "@/lib/return-to";
 
 const LIST_URL = "https://bountysounds.com/list-sound";
 const LIST_TITLE = "List a Sound or a Livestream for Clipping — $200 / 30 Days | Bounty Sounds";
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/list-sound")({
     success: s.success === "1" || s.success === 1 ? true : undefined,
     cancelled: s.cancelled === "1" || s.cancelled === 1 ? true : undefined,
     id: typeof s.id === "string" ? s.id : undefined,
+    type: s.type === "stream" || s.type === "keynote" ? (s.type as "stream" | "keynote") : undefined,
   }),
   component: ListSoundPage,
 });
@@ -50,7 +52,7 @@ function ListSoundPage() {
     enabled: !!user,
   });
 
-  const [kind, setKind] = useState<"sound" | "stream">("sound");
+  const [kind, setKind] = useState<"sound" | "stream" | "keynote">(search.type ?? "sound");
   const [when, setWhen] = useState<"upcoming" | "previous">("upcoming");
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
@@ -67,7 +69,7 @@ function ListSoundPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) { navigate({ to: "/auth" }); return; }
+    if (!user) { setReturnTo(window.location.pathname + window.location.search); navigate({ to: "/auth" }); return; }
     setBusy(true);
     try {
       const res = await createFn({
@@ -77,9 +79,9 @@ function ListSoundPage() {
           song_title: song,
           tiktok_sound_url: kind === "sound" ? tiktok || undefined : undefined,
           spotify_url: kind === "sound" ? spotify || undefined : undefined,
-          stream_url: kind === "stream" ? streamUrl || undefined : undefined,
+          stream_url: kind !== "sound" ? streamUrl || undefined : undefined,
           stream_at:
-            kind === "stream" && when === "upcoming" && streamAt
+            kind !== "sound" && when === "upcoming" && streamAt
               ? new Date(streamAt).toISOString()
               : undefined,
           contact_email: email,
@@ -111,12 +113,12 @@ function ListSoundPage() {
         <div className="mx-auto max-w-3xl text-center">
           <BsEyebrow>listings · $200 / 30 days</BsEyebrow>
           <BsDisplay as="h1" size="lg" className="mt-3">
-            List a sound — or a livestream
+            List a sound, a stream — or a keynote
           </BsDisplay>
           <InkDrips className="mx-auto -mt-1 w-44 opacity-50" />
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
             Thirty days on the Bounty Board. Editors take contracts and deliver TikToks cut from
-            your sound or your stream — upcoming or previous.{" "}
+            your footage — upcoming or already out.{" "}
             <a href="/for-artists" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
               the full breakdown →
             </a>
@@ -140,7 +142,7 @@ function ListSoundPage() {
         {!ready ? null : !user ? (
           <div className="mx-auto mt-8 max-w-2xl text-center">
             <p className="mb-4 text-[var(--color-bs-ink-soft)]">Sign in to list a sound or a stream.</p>
-            <BsButton onClick={() => navigate({ to: "/auth" })}>sign in</BsButton>
+            <BsButton onClick={() => { setReturnTo(window.location.pathname + window.location.search); navigate({ to: "/auth" }); }}>sign in</BsButton>
           </div>
         ) : (
           <div className="mx-auto mt-10 grid max-w-5xl gap-8 md:grid-cols-[2fr,1fr]">
@@ -148,8 +150,8 @@ function ListSoundPage() {
               <BsCard variant="flat">
                 <div className="flex items-center justify-between">
                   <BsEyebrow>the notice</BsEyebrow>
-                  <div className="flex gap-2" role="tablist" aria-label="Listing type">
-                    {(["sound", "stream"] as const).map((k) => (
+                  <div className="flex flex-wrap gap-2" role="tablist" aria-label="Listing type">
+                    {(["sound", "stream", "keynote"] as const).map((k) => (
                       <button
                         key={k}
                         type="button"
@@ -158,17 +160,17 @@ function ListSoundPage() {
                         onClick={() => setKind(k)}
                         className={kind === k ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
                       >
-                        {k === "sound" ? "a sound" : "a livestream"}
+                        {k === "sound" ? "a sound" : k === "stream" ? "a livestream" : "a keynote"}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div className="mt-4 grid gap-4">
-                  <Field label={kind === "sound" ? "Artist name" : "Streamer name"} required>
-                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Ridgeclub" : "ebbionline"} />
+                  <Field label={kind === "sound" ? "Artist name" : kind === "stream" ? "Streamer name" : "Speaker or company"} required>
+                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Ridgeclub" : kind === "stream" ? "ebbionline" : "Meridian"} />
                   </Field>
-                  <Field label={kind === "sound" ? "Song title" : "Stream title"} required>
-                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Do I Clench My Fist" : "Thursday variety stream"} />
+                  <Field label={kind === "sound" ? "Song title" : kind === "stream" ? "Stream title" : "Keynote title"} required>
+                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Do I Clench My Fist" : kind === "stream" ? "Thursday variety stream" : "Developer Keynote '26"} />
                   </Field>
                   {kind === "sound" ? (
                     <>
@@ -181,8 +183,12 @@ function ListSoundPage() {
                     </>
                   ) : (
                     <>
-                      <Field label="Channel or VOD link" required hint="Twitch, YouTube, or Kick">
-                        <input required value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} className="bs-input" placeholder="https://twitch.tv/ebbionline" />
+                      <Field
+                        label={kind === "stream" ? "Channel or VOD link" : "Footage link"}
+                        required
+                        hint={kind === "stream" ? "Twitch, YouTube, or Kick" : "YouTube, Drive — anywhere clippers can watch it"}
+                      >
+                        <input required value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} className="bs-input" placeholder={kind === "stream" ? "https://twitch.tv/ebbionline" : "https://youtube.com/watch?v=…"} />
                       </Field>
                       <Field label="When">
                         <div className="flex flex-wrap items-center gap-2">
@@ -194,7 +200,9 @@ function ListSoundPage() {
                               onClick={() => setWhen(w)}
                               className={when === w ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
                             >
-                              {w === "upcoming" ? "upcoming stream" : "previous stream / VOD"}
+                              {w === "upcoming"
+                                ? kind === "stream" ? "upcoming stream" : "upcoming keynote"
+                                : kind === "stream" ? "previous stream / VOD" : "already delivered"}
                             </button>
                           ))}
                           {when === "upcoming" ? (

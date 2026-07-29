@@ -5,6 +5,7 @@ import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { z } from "zod";
 import { BsButton, BsDisplay, BsEyebrow, BsMarker, BsWell } from "@/components/bs";
+import { consumeReturnTo } from "@/lib/return-to";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -45,7 +46,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Welcome back.");
-        navigate({ to: "/dashboard" });
+        navigate({ to: (consumeReturnTo() ?? "/dashboard") as never });
       } else {
         const { error } = await supabase.auth.signUp({
           email,
@@ -54,7 +55,7 @@ function AuthPage() {
         });
         if (error) throw error;
         toast.success("Account created. You can start claiming contracts.");
-        navigate({ to: "/dashboard" });
+        navigate({ to: (consumeReturnTo() ?? "/dashboard") as never });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong.");
@@ -74,7 +75,7 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/dashboard" });
+    navigate({ to: (consumeReturnTo() ?? "/dashboard") as never });
   };
 
   return (

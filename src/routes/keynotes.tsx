@@ -40,7 +40,7 @@ function KeynotesPage() {
           two-hour video. Fund a pot. Clippers find the moments. Verified views pay out.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/list-sound" className="silver-btn px-7">
+          <Link to="/list-sound" search={{ type: "keynote" }} className="silver-btn px-7">
             Run a keynote campaign
           </Link>
           <Link to="/board" className="ink-btn px-7">
@@ -153,7 +153,7 @@ function KeynotesPage() {
           knows the rules before the first cut.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/list-sound" className="silver-btn px-7">
+          <Link to="/list-sound" search={{ type: "keynote" }} className="silver-btn px-7">
             Start a campaign
           </Link>
           <Link to="/clipping-campaigns" className="ink-btn px-7">
