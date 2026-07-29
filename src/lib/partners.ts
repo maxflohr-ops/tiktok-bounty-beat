@@ -8,6 +8,8 @@ export type Partner = {
   url: string;
   // Paste the affiliate/tracking URL here when approved; null = plain link.
   affiliateUrl: string | null;
+  // false keeps it out of the clipper toolkits (still reachable via /api/go/).
+  kit?: boolean;
 };
 
 export const PARTNERS: Record<string, Partner> = {
@@ -40,6 +42,15 @@ export const PARTNERS: Record<string, Partner> = {
     blurb: "record your own show, auto-clip the highlights",
     url: "https://riverside.fm",
     affiliateUrl: null, // affiliate program on their site — paste the tracking URL once approved
+  },
+  // Not a clipper tool: the quiet upstream funnel for campaigns bigger than a
+  // board listing. Linked from the funder-facing pages only.
+  florra: {
+    name: "Florra",
+    blurb: "campaigns bigger than a board",
+    url: "https://florra.club",
+    affiliateUrl: null,
+    kit: false,
   },
 };
 

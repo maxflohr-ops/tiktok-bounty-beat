@@ -83,6 +83,12 @@ function ClippingCampaigns() {
           <li><a href="/for-artists" className="underline hover:text-bone">For artists</a></li>
           <li><a href="/for-editors" className="underline hover:text-bone">For editors</a></li>
         </ul>
+        <p className="pt-2 text-xs text-[var(--color-bs-ink-mute)]">
+          running something bigger?{" "}
+          <a href="/api/go/florra" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+            florra.club
+          </a>
+        </p>
       </LandingSection>
     </LandingLayout>
   );
