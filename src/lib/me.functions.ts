@@ -6,13 +6,14 @@ import { notifyAsync } from "@/lib/notify.server";
 export const getMe = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const [{ data: profile }, { data: roles }] = await Promise.all([
+    const [{ data: profile }, { data: roles }, { data: tiktokAccounts }] = await Promise.all([
       context.supabase
         .from("profiles")
         .select("id,display_name,tiktok_handle,avatar_url,points,wallet_address,signup_logged_at")
         .eq("id", context.userId)
         .maybeSingle(),
       context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
+      context.supabase.from("tiktok_accounts").select("handle,status").eq("user_id", context.userId).order("created_at"),
     ]);
     const roleSet = new Set((roles ?? []).map((r) => r.role));
 
@@ -44,6 +45,7 @@ export const getMe = createServerFn({ method: "GET" })
     return {
       userId: context.userId,
       profile,
+      tiktokAccounts: tiktokAccounts ?? [],
       roles: Array.from(roleSet),
       isStaff: roleSet.has("admin") || roleSet.has("manager"),
       isAdmin: roleSet.has("admin"),
@@ -93,3 +95,35 @@ export const leaderboard = createServerFn({ method: "GET" }).handler(async () =>
     .limit(10);
   return data ?? [];
 });
+
+
+export const addTiktokAccount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ handle: z.string().trim().max(60) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { tiktokHandleSchema } = await import("@/lib/claim-validation");
+    const handle = tiktokHandleSchema.parse(data.handle);
+    const { error } = await context.supabase
+      .from("tiktok_accounts")
+      .insert({ user_id: context.userId, handle, status: "unverified" });
+    if (error) {
+      if (error.code === "23505") throw new Error("That account is already linked.");
+      throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
+export const removeTiktokAccount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ handle: z.string().trim().max(60) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("tiktok_accounts")
+      .delete()
+      .eq("user_id", context.userId)
+      .eq("handle", data.handle.toLowerCase().replace(/^@/, ""));
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

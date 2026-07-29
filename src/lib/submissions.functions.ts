@@ -129,11 +129,28 @@ export const deliverProof = createServerFn({ method: "POST" })
     const author =
       handleFromAuthorUrl(oembed?.author_url) ??
       (oembed?.author_name || "").replace(/^@/, "").toLowerCase();
-    const handleMatches = oembed ? author === sub.tiktok_handle : null;
-    if (oembed && !handleMatches)
-      throw new Error(
-        `TikTok reports this video was posted by @${author || "unknown"}, but your claim is for @${sub.tiktok_handle}. Deliver a clip posted from your claimed account.`,
-      );
+
+    // Clippers run multiple accounts. Never block on the posting account:
+    // linked accounts auto-verify; a new account is auto-linked as
+    // 'unverified' and the delivery is flagged for review instead.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    let accountTrusted: boolean | null = null; // null = author unknown
+    if (oembed && author) {
+      const { data: accounts } = await context.supabase
+        .from("tiktok_accounts")
+        .select("handle,status")
+        .eq("user_id", context.userId);
+      const known = (accounts ?? []).find((a) => a.handle === author);
+      accountTrusted = known ? known.status === "trusted" : author === sub.tiktok_handle;
+      if (!known) {
+        await supabaseAdmin
+          .from("tiktok_accounts")
+          .upsert(
+            { user_id: context.userId, handle: author, status: author === sub.tiktok_handle ? "trusted" : "unverified" },
+            { onConflict: "user_id,handle", ignoreDuplicates: true },
+          );
+      }
+    }
 
     // Sound: compare the contract's music ID against the video page's music data.
     const wantMusicId = isTikTok ? parseMusicId(bounty?.tiktok_sound_url) : null;
@@ -147,21 +164,27 @@ export const deliverProof = createServerFn({ method: "POST" })
         `This video doesn't appear to use the contract's sound ("${bounty?.sound_name}"). Post with the official sound linked on the contract, then deliver again.`,
       );
 
-    const passed = Boolean(oembed && handleMatches && soundOk === true);
+    const passed = Boolean(oembed && accountTrusted && soundOk === true);
+    const soundNote =
+      soundOk === true
+        ? "using the contract's sound"
+        : wantMusicId
+          ? "sound not auto-verified (manual confirm)"
+          : "no sound link on contract (manual confirm)";
     const notes = !isTikTok
       ? "Non-TikTok delivery — will be verified manually."
       : !oembed
         ? "Could not verify with TikTok (URL may be private, removed, or blocked)."
-        : soundOk === true
-          ? "Public TikTok video posted by the claimed handle, using the contract's sound."
-          : wantMusicId
-            ? "Posted by the claimed handle. Sound could not be auto-verified — it will be confirmed manually."
-            : "Posted by the claimed handle. Contract has no TikTok sound link; the sound is confirmed manually.";
+        : accountTrusted
+          ? `Posted from linked account @${author}, ${soundNote}.`
+          : `First delivery from @${author} — account auto-linked, verify it's theirs. Also: ${soundNote}.`;
 
     const { error } = await context.supabase
       .from("submissions")
       .update({
         tiktok_video_url: data.clip_url,
+        // record the account that actually posted, not just the one claimed
+        ...(author ? { tiktok_handle: author } : {}),
         oembed_title: oembed?.title ?? null,
         oembed_author: oembed?.author_name ?? null,
         oembed_thumbnail: oembed?.thumbnail_url ?? null,
@@ -301,7 +324,7 @@ export const reviewSubmission = createServerFn({ method: "POST" })
 
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
-      .select("id,editor_id,status,view_count,verified_view_count,bounties:bounty_id(payout_type,reward_cash_cents)")
+      .select("id,editor_id,status,view_count,verified_view_count,tiktok_handle,bounties:bounty_id(payout_type,reward_cash_cents)")
       .eq("id", data.id)
       .single();
     if (se || !sub) throw new Error("Not found.");
@@ -335,6 +358,16 @@ export const reviewSubmission = createServerFn({ method: "POST" })
       })
       .eq("id", data.id);
     if (ue) throw new Error(ue.message);
+
+    if (data.decision === "approved" && (sub as { tiktok_handle: string | null }).tiktok_handle) {
+      // An approved delivery proves the account is really theirs.
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin
+        .from("tiktok_accounts")
+        .update({ status: "trusted" })
+        .eq("user_id", sub.editor_id)
+        .eq("handle", (sub as { tiktok_handle: string }).tiktok_handle);
+    }
 
     if (data.decision === "approved" && data.awarded_points > 0) {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

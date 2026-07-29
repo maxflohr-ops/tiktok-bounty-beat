@@ -195,7 +195,7 @@ function SubmitPage() {
                 </p>
               ) : (
                 <p className="mt-1 text-xs text-bone-soft">
-                  the clip must be posted from your claimed TikTok account, using the contract's sound — deliveries are checked
+                  post from any TikTok account linked to your profile, using the contract's sound — new accounts are fine, first delivery just gets reviewed
                 </p>
               )}
             </label>

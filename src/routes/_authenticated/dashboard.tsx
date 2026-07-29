@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listMyClaims, updateViewCount } from "@/lib/submissions.functions";
-import { getMe, updateMyProfile } from "@/lib/me.functions";
+import { getMe, updateMyProfile, addTiktokAccount, removeTiktokAccount } from "@/lib/me.functions";
 import { getMyPayoutMethod, connectStripeAccount, refreshConnectStatus } from "@/lib/stripe.functions";
 import { fileDispute, listMyDisputes } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -146,6 +146,8 @@ function Dashboard() {
               <button className="silver-btn w-full">Save profile</button>
             </form>
           </div>
+
+          <TikTokAccounts />
 
           <div className="board-frame relative p-5">
             <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
@@ -532,4 +534,88 @@ function prettyStatus(s: string) {
     case "paid": return "paid";
     default: return s;
   }
+}
+
+
+// Linked TikTok accounts — deliver from any of them. New accounts appearing
+// in a delivery are auto-linked as unverified; staff approval trusts them.
+function TikTokAccounts() {
+  const meFn = useServerFn(getMe);
+  const addFn = useServerFn(addTiktokAccount);
+  const removeFn = useServerFn(removeTiktokAccount);
+  const { data: me, refetch } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
+  const [handle, setHandle] = useState("");
+  const [busy, setBusy] = useState(false);
+  const accounts = (me?.tiktokAccounts ?? []) as { handle: string; status: string }[];
+
+  const add = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      await addFn({ data: { handle } });
+      toast.success(`@${handle.replace(/^@/, "")} linked.`);
+      setHandle("");
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't link account.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const remove = async (h: string) => {
+    setBusy(true);
+    try {
+      await removeFn({ data: { handle: h } });
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't remove.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="board-frame relative p-5">
+      <h2 className="font-display text-2xl text-bone">TikTok accounts</h2>
+      <p className="mt-1 text-xs text-bone-soft">
+        Deliver from any account linked here. New accounts you post from get linked
+        automatically and verified on your first approved delivery.
+      </p>
+      <ul className="mt-3 space-y-2">
+        {accounts.map((a) => (
+          <li key={a.handle} className="flex items-center justify-between gap-2 text-sm">
+            <span className="text-bone">@{a.handle}</span>
+            <span className="flex items-center gap-2">
+              <span className={a.status === "trusted" ? "digital-badge" : "digital-badge-amber"}>
+                {a.status === "trusted" ? "verified" : "pending"}
+              </span>
+              <button
+                onClick={() => remove(a.handle)}
+                disabled={busy}
+                className="text-xs text-bone-soft underline hover:text-bone"
+                aria-label={`remove @${a.handle}`}
+              >
+                remove
+              </button>
+            </span>
+          </li>
+        ))}
+        {accounts.length === 0 ? <li className="text-sm text-bone-soft">No accounts linked yet.</li> : null}
+      </ul>
+      <form onSubmit={add} className="mt-3 flex items-center gap-2">
+        <div className="flex flex-1 items-center border border-[var(--border)] px-3 py-2">
+          <span className="text-bone-soft">@</span>
+          <input
+            value={handle}
+            maxLength={30}
+            onChange={(e) => setHandle(e.target.value)}
+            className="w-full bg-transparent px-1 text-bone outline-none"
+            placeholder="another.account"
+          />
+        </div>
+        <button className="silver-btn" disabled={busy || handle.trim().length < 2}>add</button>
+      </form>
+    </div>
+  );
 }
