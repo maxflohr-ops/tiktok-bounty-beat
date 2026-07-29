@@ -173,7 +173,7 @@ function BountyDetail() {
             {bounty.artist_song ? (
               <p className="mt-1 font-body italic text-ink-soft">for “{bounty.artist_song}”</p>
             ) : null}
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm italic text-ink-soft">
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
               <span>sound · {bounty.sound_name}</span>
               <span>platform · {bounty.platform_target}</span>
               {bounty.deadline ? (
@@ -184,14 +184,14 @@ function BountyDetail() {
 
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Brief</div>
-              <p className="mt-2 whitespace-pre-wrap font-body italic leading-relaxed text-ink-soft">{bounty.description}</p>
+              <p className="mt-2 whitespace-pre-wrap font-body leading-relaxed text-ink-soft">{bounty.description}</p>
             </div>
 
             <div className="mt-6 grid gap-4 border-t border-[var(--paper-dark)] pt-4 sm:grid-cols-2">
               <div>
                 <div className="label-cap text-ink-soft">Reward</div>
                 <p className="mt-1 font-display text-lg text-ink">{reward}</p>
-                <p className="mt-1 text-xs italic text-ink-soft">
+                <p className="mt-1 text-xs text-ink-soft">
                   {(bounty as any).funded_cash_cents > 0 ? (
                     <>Pot: <Money cents={(bounty as any).funded_cash_cents} currency={bounty.currency} /></>
                   ) : (

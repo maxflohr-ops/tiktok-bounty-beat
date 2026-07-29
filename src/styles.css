@@ -64,10 +64,10 @@
   --paper-dark: #b5a391;
 
   --ink: #2d241e;
-  --ink-soft: #6b5a4a;
+  --ink-soft: #574739;
 
   --bone: #e3d5c5;
-  --bone-soft: #8e7355;
+  --bone-soft: #a68a68;
 
   --gold: #c19a6b;
   --gold-bright: #d4af37;
@@ -110,7 +110,8 @@
     background: var(--wall);
     color: var(--bone);
     font-family: var(--font-body);
-    font-size: 16px;
+    /* EB Garamond has a small x-height; 17px reads like 16px in a grotesque */
+    font-size: 17px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
