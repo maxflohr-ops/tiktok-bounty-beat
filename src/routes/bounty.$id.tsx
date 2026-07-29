@@ -16,12 +16,24 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/bounty/$id")({
-  head: () => ({
-    meta: [
-      { title: "Contract · THE BOARD" },
-      { name: "description", content: "Take the contract. Deliver proof. Be paid in crowns." },
-    ],
-  }),
+  head: ({ params }) => {
+    const url = `https://bountysounds.com/bounty/${params.id}`;
+    const title = "Clipping contract — Bounty Sounds";
+    const desc = "Take this TikTok clipping contract on Bounty Sounds. Post an edit using the artist's sound, deliver proof, and get paid per verified view.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { name: "robots", content: "noindex, follow" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: BountyDetail,
 });
 

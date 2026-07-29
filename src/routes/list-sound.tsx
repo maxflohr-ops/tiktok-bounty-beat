@@ -8,16 +8,22 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { useSession } from "@/lib/session";
 import { createSoundListingCheckout, listMySoundListings } from "@/lib/sound-listings.functions";
 
+const LIST_URL = "https://bountysounds.com/list-sound";
+const LIST_TITLE = "List Your Sound for a TikTok Campaign — $200 / 30 Days | Bounty Sounds";
+const LIST_DESC = "Get your song in front of TikTok clippers. $200 lists your sound on Bounty Sounds for a 30-day pay-per-view clipping campaign.";
+
 export const Route = createFileRoute("/list-sound")({
   head: () => ({
     meta: [
-      { title: "List your sound — THE BOARD" },
-      { name: "description", content: "Get your song in front of TikTok clippers. $200 for a 30-day campaign listing on THE BOARD." },
-      { property: "og:title", content: "List your sound — THE BOARD" },
-      { property: "og:description", content: "Get your song in front of TikTok clippers. $200 for a 30-day campaign listing on THE BOARD." },
+      { title: LIST_TITLE },
+      { name: "description", content: LIST_DESC },
+      { property: "og:title", content: LIST_TITLE },
+      { property: "og:description", content: LIST_DESC },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: LIST_URL },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: LIST_URL }],
   }),
   validateSearch: (s: Record<string, unknown>) => ({
     success: s.success === "1" || s.success === 1 ? true : undefined,
