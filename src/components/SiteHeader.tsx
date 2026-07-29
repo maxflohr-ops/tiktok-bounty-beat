@@ -28,10 +28,9 @@ export function SiteHeader() {
         </Link>
         <nav className="flex flex-wrap items-center justify-center gap-1 text-bone-soft">
           <Link
-            to="/"
+            to="/board"
             className="label-cap px-3 py-2 hover:text-bone"
             activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
-            activeOptions={{ exact: true }}
           >
             board
           </Link>

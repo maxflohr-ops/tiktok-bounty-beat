@@ -129,7 +129,7 @@ function BountyDetail() {
         <SiteHeader />
         <div className="container-board py-20 text-center">
           <p className="script-note text-3xl text-bone-soft">No such contract on the board.</p>
-          <Link to="/" className="silver-btn mt-6 inline-flex">Back to the board</Link>
+          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the board</Link>
         </div>
       </div>
     );
@@ -149,7 +149,7 @@ function BountyDetail() {
       <SiteHeader />
       <div className="container-board relative z-10 py-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
+          <Link to="/board" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
             <ArrowLeft className="h-3.5 w-3.5" /> back to the board
           </Link>
           <div className="system-bar">

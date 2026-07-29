@@ -202,7 +202,7 @@ function SubmitPage() {
             {openClaims.length === 0 ? (
               <div className="mt-4 border border-[var(--border)] p-3 text-sm text-bone-soft">
                 you have no open contracts.{" "}
-                <Link to="/" className="underline">
+                <Link to="/board" className="underline">
                   take one from the board
                 </Link>{" "}
                 first.
