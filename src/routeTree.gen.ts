@@ -16,6 +16,7 @@ import { Route as BoardRouteImport } from './routes/board'
 import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
 import { Route as ForArtistsRouteImport } from './routes/for-artists'
 import { Route as ForEditorsRouteImport } from './routes/for-editors'
+import { Route as KeynotesRouteImport } from './routes/keynotes'
 import { Route as ListSoundRouteImport } from './routes/list-sound'
 import { Route as TasteRouteImport } from './routes/taste'
 import { Route as TiktokClipperRouteImport } from './routes/tiktok-clipper'
@@ -59,6 +60,11 @@ const ForArtistsRoute = ForArtistsRouteImport.update({
 const ForEditorsRoute = ForEditorsRouteImport.update({
   id: '/for-editors',
   path: '/for-editors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KeynotesRoute = KeynotesRouteImport.update({
+  id: '/keynotes',
+  path: '/keynotes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListSoundRoute = ListSoundRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
+  '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/taste': typeof TasteRoute
   '/tiktok-clipper': typeof TiktokClipperRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
+  '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/taste': typeof TasteRoute
   '/tiktok-clipper': typeof TiktokClipperRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
+  '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/taste': typeof TasteRoute
   '/tiktok-clipper': typeof TiktokClipperRoute
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/clipping-campaigns'
     | '/for-artists'
     | '/for-editors'
+    | '/keynotes'
     | '/list-sound'
     | '/taste'
     | '/tiktok-clipper'
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/clipping-campaigns'
     | '/for-artists'
     | '/for-editors'
+    | '/keynotes'
     | '/list-sound'
     | '/taste'
     | '/tiktok-clipper'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/clipping-campaigns'
     | '/for-artists'
     | '/for-editors'
+    | '/keynotes'
     | '/list-sound'
     | '/taste'
     | '/tiktok-clipper'
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   ClippingCampaignsRoute: typeof ClippingCampaignsRoute
   ForArtistsRoute: typeof ForArtistsRoute
   ForEditorsRoute: typeof ForEditorsRoute
+  KeynotesRoute: typeof KeynotesRoute
   ListSoundRoute: typeof ListSoundRoute
   TasteRoute: typeof TasteRoute
   TiktokClipperRoute: typeof TiktokClipperRoute
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/for-editors'
       fullPath: '/for-editors'
       preLoaderRoute: typeof ForEditorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/keynotes': {
+      id: '/keynotes'
+      path: '/keynotes'
+      fullPath: '/keynotes'
+      preLoaderRoute: typeof KeynotesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/list-sound': {
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClippingCampaignsRoute: ClippingCampaignsRoute,
   ForArtistsRoute: ForArtistsRoute,
   ForEditorsRoute: ForEditorsRoute,
+  KeynotesRoute: KeynotesRoute,
   ListSoundRoute: ListSoundRoute,
   TasteRoute: TasteRoute,
   TiktokClipperRoute: TiktokClipperRoute,

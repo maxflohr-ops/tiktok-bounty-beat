@@ -201,6 +201,12 @@ function LandingPage() {
               </Link>
               <p className="mt-1 text-sm text-bone-soft">Turn your edits into per-view income. No follower minimum.</p>
             </li>
+            <li className="rounded-2xl bg-[var(--wall-2)] p-6 sm:col-span-2">
+              <Link to="/keynotes" className="text-lg font-semibold hover:underline">
+                Keynote clipping campaigns
+              </Link>
+              <p className="mt-1 text-sm text-bone-soft">Your keynote, a thousand cuts — fund a pot on your own footage and pay only for verified views.</p>
+            </li>
           </ul>
         </nav>
       </section>
@@ -211,6 +217,7 @@ function LandingPage() {
             <Link to="/board" className="hover:text-bone">Board</Link>
             <Link to="/for-artists" className="hover:text-bone">For artists</Link>
             <Link to="/for-editors" className="hover:text-bone">For editors</Link>
+            <Link to="/keynotes" className="hover:text-bone">Keynotes</Link>
             <Link to="/clipping-campaigns" className="hover:text-bone">Clipping campaigns</Link>
             <Link to="/tiktok-clipper" className="hover:text-bone">TikTok clippers</Link>
             <Link to="/list-sound" className="hover:text-bone">List a sound</Link>
