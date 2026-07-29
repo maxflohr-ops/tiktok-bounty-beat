@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
+import { BsEmpty, BsLoading } from "@/components/bs";
 
 const HOME_TITLE = "The Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
