@@ -82,7 +82,7 @@ export function FaqList({
   return (
     <dl className="space-y-4">
       {items.map((it) => (
-        <BsCard key={it.q} variant="flat" as="div" {...({} as object)}>
+        <BsCard key={it.q} variant="flat">
           <dt className="font-[var(--font-display)] text-lg font-semibold text-[var(--color-bs-ink)]">
             {it.q}
           </dt>
