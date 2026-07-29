@@ -5,6 +5,7 @@ import { listPublicBounties } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
+import { InkCardinal, InkDogwood } from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
@@ -69,6 +70,7 @@ function LandingPage() {
       <section className="bs-surface relative overflow-hidden py-16 md:py-24">
         <SprayMark className="absolute -top-6 -left-10 rotate-[-14deg] text-[var(--color-bs-accent)]/70" />
         <SprayMark className="absolute -bottom-8 -right-8 rotate-[12deg] text-[var(--color-bs-ink)]/40" />
+        <InkDogwood className="absolute -bottom-12 -left-6 w-56 rotate-[-4deg] opacity-[0.09] md:w-72" />
 
         <div className="container-board relative">
           <BsWell className="mx-auto max-w-4xl">
@@ -137,8 +139,9 @@ function LandingPage() {
             </div>
           </BsWell>
 
-          <p className="mx-auto mt-3 max-w-4xl pr-2 text-right">
+          <p className="mx-auto mt-3 flex max-w-4xl items-end justify-end gap-2 pr-2 text-right">
             <BsMarker>no invites · no gated discord</BsMarker>
+            <InkCardinal accent className="w-20 opacity-80 md:w-24" />
           </p>
 
           <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4 text-center">

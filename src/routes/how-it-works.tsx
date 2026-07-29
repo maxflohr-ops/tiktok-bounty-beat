@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
+import { InkCardinal, InkScrawl } from "@/components/ArtMarks";
 
 const TITLE = "How It Works · Bounty Sounds";
 const DESC =
@@ -94,6 +95,7 @@ function HowItWorksPage() {
         <p className="mx-auto mt-5 max-w-md text-lg text-bone-soft">
           No invite, no gated Discord. Anyone can claim a contract.
         </p>
+        <InkScrawl className="mx-auto mt-6 w-56 opacity-70" />
       </section>
 
       <section className="container-board pb-16">
@@ -159,6 +161,7 @@ function HowItWorksPage() {
 
       {/* Funders pointer */}
       <section className="container-board pb-20 text-center">
+        <InkCardinal accent className="mx-auto mb-4 w-28" />
         <p className="text-bone-soft">
           Funding a campaign instead of clipping one?
         </p>
