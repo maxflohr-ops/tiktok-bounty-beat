@@ -128,8 +128,8 @@ function BountyDetail() {
       <div className="min-h-screen">
         <SiteHeader />
         <div className="container-board py-20 text-center">
-          <p className="script-note text-3xl text-bone-soft">No such contract on the board.</p>
-          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the board</Link>
+          <p className="script-note text-3xl text-bone-soft">No such contract on the Bounty Board.</p>
+          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the Bounty Board</Link>
         </div>
       </div>
     );
@@ -150,7 +150,7 @@ function BountyDetail() {
       <div className="container-board relative z-10 py-8">
         <div className="flex items-center justify-between">
           <Link to="/board" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
-            <ArrowLeft className="h-3.5 w-3.5" /> back to the board
+            <ArrowLeft className="h-3.5 w-3.5" /> back to the Bounty Board
           </Link>
           <div className="system-bar">
             <span className="status-dot" />
