@@ -192,7 +192,11 @@ function SubmitPage() {
                 <p className="mt-1 text-xs text-bone-soft">
                   must be a tiktok.com link
                 </p>
-              ) : null}
+              ) : (
+                <p className="mt-1 text-xs text-bone-soft">
+                  the clip must be posted from your claimed TikTok account, using the contract's sound — deliveries are checked
+                </p>
+              )}
             </label>
 
             {openClaims.length === 0 ? (

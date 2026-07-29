@@ -12,7 +12,7 @@ async function fetchOembed(url: string) {
   try {
     const res = await fetch(
       `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`,
-      { headers: { "User-Agent": "Mozilla/5.0 TheBoard/1.0" } },
+      { headers: { "User-Agent": "Mozilla/5.0 TheBoard/1.0" }, signal: AbortSignal.timeout(8000) },
     );
     if (!res.ok) return null;
     return (await res.json()) as {
@@ -21,6 +21,24 @@ async function fetchOembed(url: string) {
       author_url?: string;
       thumbnail_url?: string;
     };
+  } catch {
+    return null;
+  }
+}
+
+async function fetchVideoHtml(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        Accept: "text/html",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return null;
+    return await res.text();
   } catch {
     return null;
   }
@@ -89,7 +107,9 @@ export const deliverProof = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
-      .select("id,editor_id,status,tiktok_handle,bounty_id,bounties:bounty_id(platform_target)")
+      .select(
+        "id,editor_id,status,tiktok_handle,bounty_id,bounties:bounty_id(platform_target,tiktok_sound_url,sound_name)",
+      )
       .eq("id", data.submission_id)
       .single();
     if (se || !sub) throw new Error("Claim not found.");
@@ -97,20 +117,46 @@ export const deliverProof = createServerFn({ method: "POST" })
     if (sub.status !== "claimed" && sub.status !== "rejected")
       throw new Error("This claim already has delivered proof.");
 
-    const platform = (sub as unknown as { bounties: { platform_target: string } }).bounties
-      ?.platform_target;
-    const isTikTok = platform === "tiktok" && TIKTOK_URL.test(data.clip_url);
+    const bounty = (sub as unknown as {
+      bounties: { platform_target: string; tiktok_sound_url: string | null; sound_name: string };
+    }).bounties;
+    const { parseMusicId, handleFromAuthorUrl, musicIdInHtml } = await import("@/lib/tiktok-verify");
+
+    const isTikTok = bounty?.platform_target === "tiktok" && TIKTOK_URL.test(data.clip_url);
     const oembed = isTikTok ? await fetchOembed(data.clip_url) : null;
-    const author = (oembed?.author_name || "").replace(/^@/, "").toLowerCase();
-    const handleMatches = author && author === sub.tiktok_handle;
-    const passed = Boolean(oembed && handleMatches);
+
+    // Author: the unique handle lives in author_url; author_name is a display nickname.
+    const author =
+      handleFromAuthorUrl(oembed?.author_url) ??
+      (oembed?.author_name || "").replace(/^@/, "").toLowerCase();
+    const handleMatches = oembed ? author === sub.tiktok_handle : null;
+    if (oembed && !handleMatches)
+      throw new Error(
+        `TikTok reports this video was posted by @${author || "unknown"}, but your claim is for @${sub.tiktok_handle}. Deliver a clip posted from your claimed account.`,
+      );
+
+    // Sound: compare the contract's music ID against the video page's music data.
+    const wantMusicId = isTikTok ? parseMusicId(bounty?.tiktok_sound_url) : null;
+    let soundOk: boolean | null = null;
+    if (wantMusicId) {
+      const html = await fetchVideoHtml(data.clip_url);
+      soundOk = html ? musicIdInHtml(html, wantMusicId) : null;
+    }
+    if (soundOk === false)
+      throw new Error(
+        `This video doesn't appear to use the contract's sound ("${bounty?.sound_name}"). Post with the official sound linked on the contract, then deliver again.`,
+      );
+
+    const passed = Boolean(oembed && handleMatches && soundOk === true);
     const notes = !isTikTok
       ? "Non-TikTok delivery — a harbormaster will verify by eye."
       : !oembed
         ? "Could not verify with TikTok (URL may be private, removed, or blocked)."
-        : !handleMatches
-          ? `TikTok reports the author as @${author || "unknown"} — does not match @${sub.tiktok_handle}.`
-          : "Public TikTok video posted by the claimed handle. Awaiting sound confirmation.";
+        : soundOk === true
+          ? "Public TikTok video posted by the claimed handle, using the contract's sound."
+          : wantMusicId
+            ? "Posted by the claimed handle. Sound could not be auto-verified — a harbormaster will confirm."
+            : "Posted by the claimed handle. Contract has no TikTok sound link; harbormaster confirms the sound.";
 
     const { error } = await context.supabase
       .from("submissions")
