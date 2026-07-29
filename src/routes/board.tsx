@@ -181,21 +181,14 @@ function BoardPage() {
 
           {/* Board grid */}
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--neon-cyan)] border-t-transparent" />
-              <p className="terminal mt-4 text-bone-soft">loading contracts…</p>
-            </div>
+            <BsLoading label="loading contracts" variant="card" />
           ) : filtered.length === 0 ? (
-            <div className="py-20 text-center">
-              <p className="font-display text-2xl font-bold text-bone">No live contracts right now.</p>
-              <p className="mt-2 text-bone-soft">
-                Check back soon — or{" "}
-                <Link to="/list-sound" className="silver underline">
-                  list your own sound
-                </Link>{" "}
-                and fund the first pot.
-              </p>
-            </div>
+            <BsEmpty
+              eyebrow="the board"
+              title="No live contracts right now."
+              body={<>Check back soon — or fund the first pot yourself.</>}
+              action={<Link to="/list-sound" className="bs-btn bs-btn-accent">list your sound</Link>}
+            />
           ) : (
             <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map(({ b, score }) => {
