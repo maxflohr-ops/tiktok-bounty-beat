@@ -14,7 +14,7 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: bounties, error } = await supabaseAdmin
     .from("bounties")
-    .select(BOUNTY_COLS)
+    .select(PUBLIC_BOUNTY_COLS)
     .neq("status", "draft")
     .order("contract_no", { ascending: false });
   if (error) throw new Error(error.message);
