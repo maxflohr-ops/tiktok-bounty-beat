@@ -334,6 +334,11 @@ function BountyDetail() {
                 <p className="script-note text-center text-lg text-bone-soft">
                   The Bounty Board keeps a record.
                 </p>
+                <p className="text-center">
+                  <Link to="/how-it-works" className="terminal text-[10px] text-bone-soft underline hover:text-bone">
+                    first contract? how it works
+                  </Link>
+                </p>
               </form>
 
             ) : (

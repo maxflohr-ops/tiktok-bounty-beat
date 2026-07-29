@@ -38,7 +38,7 @@ function TastePage() {
     {
       label: "your sound",
       title: "What do you listen to?",
-      sub: "Pick as many as you want — this ranks the Bounty Board toward sounds you'd actually clip.",
+      sub: "Pick a few. The Bounty Board ranks to match.",
       body: (
         <>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -62,7 +62,7 @@ function TastePage() {
     {
       label: "your vibe",
       title: "What kind of clips do you make?",
-      sub: "Energy and mood — we match it against each contract's brief.",
+      sub: "Energy and mood.",
       body: (
         <>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

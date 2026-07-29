@@ -16,8 +16,10 @@ import { Route as BoardRouteImport } from './routes/board'
 import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
 import { Route as ForArtistsRouteImport } from './routes/for-artists'
 import { Route as ForEditorsRouteImport } from './routes/for-editors'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as KeynotesRouteImport } from './routes/keynotes'
 import { Route as ListSoundRouteImport } from './routes/list-sound'
+import { Route as PayoutsRouteImport } from './routes/payouts'
 import { Route as TasteRouteImport } from './routes/taste'
 import { Route as TiktokClipperRouteImport } from './routes/tiktok-clipper'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -63,6 +65,11 @@ const ForEditorsRoute = ForEditorsRouteImport.update({
   path: '/for-editors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KeynotesRoute = KeynotesRouteImport.update({
   id: '/keynotes',
   path: '/keynotes',
@@ -71,6 +78,11 @@ const KeynotesRoute = KeynotesRouteImport.update({
 const ListSoundRoute = ListSoundRouteImport.update({
   id: '/list-sound',
   path: '/list-sound',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayoutsRoute = PayoutsRouteImport.update({
+  id: '/payouts',
+  path: '/payouts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TasteRoute = TasteRouteImport.update({
@@ -132,8 +144,10 @@ export interface FileRoutesByFullPath {
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
+  '/payouts': typeof PayoutsRoute
   '/taste': typeof TasteRoute
   '/tiktok-clipper': typeof TiktokClipperRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -152,8 +166,10 @@ export interface FileRoutesByTo {
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
+  '/payouts': typeof PayoutsRoute
   '/taste': typeof TasteRoute
   '/tiktok-clipper': typeof TiktokClipperRoute
   '/admin': typeof AuthenticatedAdminRoute
@@ -174,8 +190,10 @@ export interface FileRoutesById {
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
+  '/payouts': typeof PayoutsRoute
   '/taste': typeof TasteRoute
   '/tiktok-clipper': typeof TiktokClipperRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
@@ -196,8 +214,10 @@ export interface FileRouteTypes {
     | '/clipping-campaigns'
     | '/for-artists'
     | '/for-editors'
+    | '/how-it-works'
     | '/keynotes'
     | '/list-sound'
+    | '/payouts'
     | '/taste'
     | '/tiktok-clipper'
     | '/admin'
@@ -216,8 +236,10 @@ export interface FileRouteTypes {
     | '/clipping-campaigns'
     | '/for-artists'
     | '/for-editors'
+    | '/how-it-works'
     | '/keynotes'
     | '/list-sound'
+    | '/payouts'
     | '/taste'
     | '/tiktok-clipper'
     | '/admin'
@@ -237,8 +259,10 @@ export interface FileRouteTypes {
     | '/clipping-campaigns'
     | '/for-artists'
     | '/for-editors'
+    | '/how-it-works'
     | '/keynotes'
     | '/list-sound'
+    | '/payouts'
     | '/taste'
     | '/tiktok-clipper'
     | '/_authenticated/admin'
@@ -259,8 +283,10 @@ export interface RootRouteChildren {
   ClippingCampaignsRoute: typeof ClippingCampaignsRoute
   ForArtistsRoute: typeof ForArtistsRoute
   ForEditorsRoute: typeof ForEditorsRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   KeynotesRoute: typeof KeynotesRoute
   ListSoundRoute: typeof ListSoundRoute
+  PayoutsRoute: typeof PayoutsRoute
   TasteRoute: typeof TasteRoute
   TiktokClipperRoute: typeof TiktokClipperRoute
   BountyIdRoute: typeof BountyIdRoute
@@ -320,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForEditorsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/keynotes': {
       id: '/keynotes'
       path: '/keynotes'
@@ -332,6 +365,13 @@ declare module '@tanstack/react-router' {
       path: '/list-sound'
       fullPath: '/list-sound'
       preLoaderRoute: typeof ListSoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payouts': {
+      id: '/payouts'
+      path: '/payouts'
+      fullPath: '/payouts'
+      preLoaderRoute: typeof PayoutsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/taste': {
@@ -432,8 +472,10 @@ const rootRouteChildren: RootRouteChildren = {
   ClippingCampaignsRoute: ClippingCampaignsRoute,
   ForArtistsRoute: ForArtistsRoute,
   ForEditorsRoute: ForEditorsRoute,
+  HowItWorksRoute: HowItWorksRoute,
   KeynotesRoute: KeynotesRoute,
   ListSoundRoute: ListSoundRoute,
+  PayoutsRoute: PayoutsRoute,
   TasteRoute: TasteRoute,
   TiktokClipperRoute: TiktokClipperRoute,
   BountyIdRoute: BountyIdRoute,
@@ -444,3 +486,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

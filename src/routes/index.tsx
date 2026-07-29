@@ -93,7 +93,7 @@ function LandingPage() {
             </div>
 
             <p className="mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] md:text-lg">
-              A public clipping bounty board. Sounds, streams, keynote speeches. Post the clip and verified views pay out.
+              Sounds, streams, keynote speeches. Post the clip — verified views pay out.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -155,6 +155,14 @@ function LandingPage() {
               </div>
             ))}
           </div>
+          <p className="mt-4 text-center">
+            <Link
+              to="/how-it-works"
+              className="bs-mono underline underline-offset-2 text-[var(--color-bs-ink-mute)] hover:text-[var(--color-bs-ink)]"
+            >
+              the full flow →
+            </Link>
+          </p>
         </div>
       </section>
 
@@ -164,6 +172,8 @@ function LandingPage() {
           <BsEyebrow className="block text-center">Explore</BsEyebrow>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {[
+              { to: "/how-it-works", label: "How it works" },
+              { to: "/payouts", label: "Payouts" },
               { to: "/for-artists", label: "For artists" },
               { to: "/for-editors", label: "For editors" },
               { to: "/clipping-campaigns", label: "Clipping campaigns" },
