@@ -1,1 +1,12 @@
 project_id = "abvqcdiutahxfkruxidk"
+
+# Copula bridge functions authenticate via HMAC (x-bridge-signature over the
+# raw body with BRIDGE_SHARED_SECRET), not Supabase JWTs.
+[functions.bridge-contracts]
+verify_jwt = false
+
+[functions.bridge-claims]
+verify_jwt = false
+
+[functions.bridge-claims-approve]
+verify_jwt = false
