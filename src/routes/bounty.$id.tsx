@@ -263,7 +263,7 @@ function BountyDetail() {
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Clipper toolkit</div>
               <ul className="mt-2 space-y-1 text-sm text-ink-soft">
-                {Object.entries(PARTNERS).map(([id, p]) => (
+                {Object.entries(PARTNERS).filter(([, p]) => p.kit !== false).map(([id, p]) => (
                   <li key={id}>
                     <a
                       href={partnerGoHref(id)}

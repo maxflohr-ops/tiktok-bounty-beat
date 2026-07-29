@@ -142,7 +142,7 @@ function ForEditors() {
 
       <LandingSection title="Toolkit">
         <ul className="list-disc space-y-2 pl-6">
-          {Object.entries(PARTNERS).map(([id, p]) => (
+          {Object.entries(PARTNERS).filter(([, p]) => p.kit !== false).map(([id, p]) => (
             <li key={id}>
               <a
                 href={partnerGoHref(id)}

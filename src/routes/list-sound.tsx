@@ -253,6 +253,12 @@ function ListSoundPage() {
                       </span>
                     </label>
                   ))}
+                  <p className="mt-1 border-t border-[var(--color-bs-rule)] pt-2 text-xs text-[var(--color-bs-ink-mute)]">
+                    bigger than featured?{" "}
+                    <a href="/api/go/florra" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+                      florra.club
+                    </a>
+                  </p>
                 </fieldset>
 
                 <div className="mt-6 flex items-center justify-between border-t border-[var(--color-bs-rule)] pt-4">
