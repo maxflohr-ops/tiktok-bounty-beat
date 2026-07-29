@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
+import { Reveal } from "@/components/Reveal";
 
 const HOME_TITLE = "The Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
@@ -181,10 +182,7 @@ function BoardPage() {
 
           {/* Board grid */}
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--neon-cyan)] border-t-transparent" />
-              <p className="terminal mt-4 text-bone-soft">loading contracts…</p>
-            </div>
+            <BoardSkeleton />
           ) : filtered.length === 0 ? (
             <div className="py-20 text-center">
               <p className="font-display text-2xl font-bold text-bone">No live contracts right now.</p>
@@ -416,5 +414,24 @@ function ContractCard({
         <span className={`${badgeClass} text-center`}>{bl.text}</span>
       </div>
     </article>
+  );
+}
+
+
+// Skeleton cards shown only after 240ms, so fast responses never flash a
+// loader (pattern from Instatic's spotlight skeletons).
+function BoardSkeleton() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShow(true), 240);
+    return () => clearTimeout(t);
+  }, []);
+  if (!show) return <div className="py-20" />;
+  return (
+    <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" aria-hidden>
+      {Array.from({ length: 6 }, (_, i) => (
+        <li key={i} className="skeleton h-64 rounded-2xl" />
+      ))}
+    </ul>
   );
 }

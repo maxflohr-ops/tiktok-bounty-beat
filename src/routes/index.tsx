@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
@@ -158,6 +159,7 @@ function LandingPage() {
       </section>
 
       <section className="container-board py-14">
+        <Reveal>
         <nav aria-label="Explore Bounty Sounds" className="mx-auto max-w-3xl">
           <BsEyebrow className="block text-center">Explore</BsEyebrow>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -179,6 +181,7 @@ function LandingPage() {
             ))}
           </ul>
         </nav>
+        </Reveal>
       </section>
 
       <footer className="border-t border-[var(--border)]">
