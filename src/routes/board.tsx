@@ -120,7 +120,7 @@ function BoardPage() {
               The board
             </h1>
             <p className="mx-auto mt-2 max-w-xl text-bone-soft">
-              Public to anyone — no invite, no Discord. Every contract shows its rate, pot,
+              Public to anyone. No invite, no Discord. Every contract shows its rate, pot,
               and deadline. Claim one, post your clip, get paid for verified views.
             </p>
             <p className="mt-3">
@@ -187,7 +187,7 @@ function BoardPage() {
             <BsEmpty
               eyebrow="the board"
               title="No live contracts right now."
-              body={<>Check back soon — or fund the first pot yourself.</>}
+              body={<>Check back soon, or fund the first pot yourself.</>}
               action={<Link to="/list-sound" className="bs-btn bs-btn-accent">list your sound</Link>}
             />
           ) : (

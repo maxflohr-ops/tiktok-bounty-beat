@@ -8,7 +8,7 @@ import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/compo
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
-  "A public clipping and sound bounty board. Artists fund a pot for their sound. You post the clip. Verified views pay out.";
+  "A public clipping bounty board for sounds, streams, and keynotes. Someone funds a pot, you post the clip, verified views pay out.";
 const HOME_URL = "https://bountysounds.com/";
 
 export const Route = createFileRoute("/")({
@@ -93,7 +93,7 @@ function LandingPage() {
             </div>
 
             <p className="mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] md:text-lg">
-              Public bounty board for TikTok clippers. Post the clip — verified views pay out.
+              A public clipping bounty board. Sounds, streams, keynote speeches. Post the clip and verified views pay out.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
