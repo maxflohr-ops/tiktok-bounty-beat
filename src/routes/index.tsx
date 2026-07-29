@@ -62,13 +62,14 @@ function LandingPage() {
           Verified views pay out from the pot — via PayPal or Stripe.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/board" className="silver-btn px-8">
-            {openCount > 0 ? `browse ${openCount} open contract${openCount === 1 ? "" : "s"}` : "browse the board"}
+          <Link to="/taste" className="silver-btn px-8">
+            find bounties you'll love
           </Link>
-          <Link to="/list-sound" className="ink-btn px-8 text-bone">
-            list your sound
+          <Link to="/board" className="ink-btn px-8 text-bone">
+            {openCount > 0 ? `browse all ${openCount}` : "browse everything"}
           </Link>
         </div>
+        <p className="terminal mt-3 text-xs text-bone-soft">three taps · no account needed · your board, ranked</p>
       </section>
 
       {/* How it works — both sides */}
@@ -136,11 +137,16 @@ function LandingPage() {
         </div>
 
         {/* Second CTA */}
-        <div className="mt-12 text-center">
-          <Link to="/board" className="silver-btn px-10">
-            open the board
-          </Link>
-          <p className="terminal mt-3 text-xs text-bone-soft">artists · $200 listing · 30 days on the board</p>
+        <div className="mt-12 flex flex-col items-center gap-3 text-center">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link to="/board" className="silver-btn px-10">
+              open the board
+            </Link>
+            <Link to="/list-sound" className="ink-btn px-8 text-bone">
+              list your sound
+            </Link>
+          </div>
+          <p className="terminal text-xs text-bone-soft">artists · $200 listing · 30 days on the board</p>
         </div>
 
         {/* SEO hub */}
