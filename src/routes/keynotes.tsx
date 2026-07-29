@@ -164,6 +164,8 @@ function KeynotesPage() {
         <div className="container-board flex flex-col items-center gap-3 py-10 text-center text-xs text-bone-soft">
           <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link to="/board" className="hover:text-bone">Board</Link>
+            <Link to="/how-it-works" className="hover:text-bone">How it works</Link>
+            <Link to="/payouts" className="hover:text-bone">Payouts</Link>
             <Link to="/for-artists" className="hover:text-bone">For artists</Link>
             <Link to="/for-editors" className="hover:text-bone">For editors</Link>
             <Link to="/keynotes" className="hover:text-bone">Keynotes</Link>

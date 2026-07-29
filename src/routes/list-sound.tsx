@@ -95,8 +95,10 @@ function ListSoundPage() {
             List your sound for a campaign
           </BsDisplay>
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
-            A single listing keeps your song on the Bounty Board for thirty days. Editors discover it, take contracts,
-            and deliver TikToks using your sound. Every listing is reviewed before it goes live.
+            Thirty days on the Bounty Board. Editors take contracts and deliver TikToks with your sound.{" "}
+            <a href="/for-artists" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+              the full breakdown →
+            </a>
           </p>
         </div>
 

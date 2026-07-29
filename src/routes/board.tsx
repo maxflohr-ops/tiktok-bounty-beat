@@ -122,11 +122,10 @@ function BoardPage() {
               The Bounty Board
             </h1>
             <p className="mx-auto mt-2 max-w-xl text-bone-soft">
-              Public to anyone. No invite, no Discord. Every contract shows its rate, pot,
-              and deadline. Claim one, post your clip, get paid for verified views.
+              Rate, pot, and deadline — printed on every contract before you claim.
             </p>
             <p className="mt-3">
-              <Link to="/" className="terminal text-xs text-bone-soft underline hover:text-bone">
+              <Link to="/how-it-works" className="terminal text-xs text-bone-soft underline hover:text-bone">
                 new here? how it works
               </Link>
             </p>
@@ -143,7 +142,7 @@ function BoardPage() {
               </div>
             ) : (
               <Link to="/taste" className="digital-badge hover:text-bone">
-                ✦ 30 seconds of questions → a board ranked to your taste
+                ✦ 30 seconds to tune the board to your taste
               </Link>
             )}
           </div>
@@ -289,6 +288,8 @@ function BoardPage() {
           <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link to="/" className="hover:text-bone">home</Link>
             <Link to="/board" className="hover:text-bone">board</Link>
+            <Link to="/how-it-works" className="hover:text-bone">how it works</Link>
+            <Link to="/payouts" className="hover:text-bone">payouts</Link>
             <Link to="/for-artists" className="hover:text-bone">for artists</Link>
             <Link to="/for-editors" className="hover:text-bone">for editors</Link>
             <Link to="/keynotes" className="hover:text-bone">keynotes</Link>
