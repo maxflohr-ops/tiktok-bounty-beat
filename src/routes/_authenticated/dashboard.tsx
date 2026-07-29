@@ -93,8 +93,8 @@ function Dashboard() {
               <BsEmpty
                 eyebrow="your contracts"
                 title="You've taken nothing yet."
-                body="Grab a contract from the board to start earning."
-                action={<Link to="/board" className="bs-btn bs-btn-accent">Visit the board</Link>}
+                body="Grab a contract from the Bounty Board to start earning."
+                action={<Link to="/board" className="bs-btn bs-btn-accent">Visit the Bounty Board</Link>}
                 variant="well"
               />
             </div>
@@ -230,7 +230,7 @@ function PaymentSetup() {
         </div>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="text-bone-soft">Link a Stripe account so the board can pay you directly.</p>
+          <p className="text-bone-soft">Link a Stripe account so the Bounty Board can pay you directly.</p>
           <button onClick={link} disabled={busy} className="silver-btn">
             <Link2 className="h-3.5 w-3.5" /> link stripe account for payouts
           </button>
@@ -295,7 +295,7 @@ function CryptoPayout() {
       ) : (
         <div className="mt-2 space-y-2">
           <p className="text-sm text-bone-soft">
-            Connect a wallet or paste an EVM address. USDC payouts are sent manually by the board after approval.
+            Connect a wallet or paste an EVM address. USDC payouts are sent manually by the Bounty Board after approval.
           </p>
           <div className="flex flex-wrap items-center gap-2">
             <button onClick={connect} disabled={busy} className="ink-btn">

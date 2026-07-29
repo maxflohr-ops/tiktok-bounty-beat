@@ -13,11 +13,11 @@ const FAQ = [
   },
   {
     q: "How much does a clipping campaign cost?",
-    a: "$200 lists your campaign on the board for 30 days. You separately fund the per-view pot at a rate you set. That way small campaigns stay affordable and big ones scale with performance.",
+    a: "$200 lists your campaign on the Bounty Board for 30 days. You separately fund the per-view pot at a rate you set. That way small campaigns stay affordable and big ones scale with performance.",
   },
   {
     q: "Can I run a clipping campaign for a movie, brand, or podcast — not music?",
-    a: "Right now the board is built around music sounds so we can verify usage via TikTok's official sound link. Non-music campaigns are on the roadmap.",
+    a: "Right now the Bounty Board is built around music sounds so we can verify usage via TikTok's official sound link. Non-music campaigns are on the roadmap.",
   },
 ];
 

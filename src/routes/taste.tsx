@@ -38,7 +38,7 @@ function TastePage() {
     {
       label: "your sound",
       title: "What do you listen to?",
-      sub: "Pick as many as you want — this ranks the board toward sounds you'd actually clip.",
+      sub: "Pick as many as you want — this ranks the Bounty Board toward sounds you'd actually clip.",
       body: (
         <>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

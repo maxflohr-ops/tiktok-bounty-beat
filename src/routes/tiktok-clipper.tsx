@@ -55,7 +55,7 @@ function TiktokClipperPage() {
   return (
     <LandingLayout
       eyebrow="paid tiktok clippers"
-      h1="Get paid to clip — TikTok music bounties on The Board"
+      h1="Get paid to clip — TikTok music bounties on Bounty Board"
       intro="If you already make TikTok edits, you're leaving money on the table. Claim music bounties, post your clip, and cash in per verified view."
       primaryCta="sign in and claim a bounty"
       primaryHref="/auth"
@@ -67,7 +67,7 @@ function TiktokClipperPage() {
           <li>Bounties are open — first-come-first-served, no application form</li>
           <li>Per-view payouts, so a single viral edit is a serious payday</li>
           <li>Payouts via PayPal, Stripe, or USDC, on your schedule</li>
-          <li>Dispute flow if the TikTok view count doesn't match the board</li>
+          <li>Dispute flow if the TikTok view count doesn't match the Bounty Board</li>
           <li>Leaderboard so consistent clippers build a public track record</li>
         </ul>
       </LandingSection>

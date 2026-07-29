@@ -50,7 +50,7 @@ function Admin() {
           <p className="script-note mt-2 text-xl text-bone-soft">
             Request a seal from an admin.
           </p>
-          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the board</Link>
+          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the Bounty Board</Link>
         </div>
       </Frame>
     );
@@ -146,7 +146,7 @@ function BountiesPanel() {
           status: (editing.status ?? "active") as "draft" | "active" | "claimed" | "in_review" | "fulfilled" | "expired" | "closed",
         },
       });
-      toast.success("Posted to the board.");
+      toast.success("Posted to the Bounty Board.");
       setEditing(null);
       refetch();
       qc.invalidateQueries({ queryKey: ["bounties", "public"] });

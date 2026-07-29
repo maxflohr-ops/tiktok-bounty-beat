@@ -74,7 +74,7 @@ function LandingPage() {
           <BsWell className="mx-auto max-w-4xl">
             <div className="flex items-center justify-between">
               <BsMono>Issue No. {pad(open.length + 42)}</BsMono>
-              <BsMono className="hidden sm:inline">— The Board —</BsMono>
+              <BsMono className="hidden sm:inline">— Bounty Board —</BsMono>
               <BsMono>
                 {new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" })}
               </BsMono>
@@ -97,7 +97,7 @@ function LandingPage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/board" className="bs-btn">Open the board</Link>
+              <Link to="/board" className="bs-btn">Open the Bounty Board</Link>
               <Link to="/list-sound" className="bs-btn bs-btn-ghost">List a sound</Link>
             </div>
 
@@ -111,7 +111,7 @@ function LandingPage() {
 
               {open.length === 0 ? (
                 <p className="py-6 text-center italic text-[var(--color-bs-ink-mute)]">
-                  No contracts posted right now. Check the board.
+                  No contracts posted right now. Check the Bounty Board.
                 </p>
               ) : (
                 <ul className="divide-y divide-[var(--color-bs-rule)]">

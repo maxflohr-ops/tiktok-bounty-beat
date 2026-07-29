@@ -60,7 +60,7 @@ function ForEditors() {
     <LandingLayout
       eyebrow="for tiktok editors & UGC creators"
       h1="UGC creator jobs — get paid per view for TikTok edits"
-      intro="Claim a music bounty, post a TikTok using the artist's official sound, and cash in per verified view. No brand outreach, no cold pitching — the contracts are already on the board."
+      intro="Claim a music bounty, post a TikTok using the artist's official sound, and cash in per verified view. No brand outreach, no cold pitching — the contracts are already on the Bounty Board."
       primaryCta="create an account & claim a contract"
       primaryHref="/auth"
       secondaryCta="browse open contracts"
@@ -74,13 +74,13 @@ function ForEditors() {
         <ul className="list-disc space-y-2 pl-6">
           <li>Per-view payouts, usually $1 per 100,000 TikTok views</li>
           <li>Flat rewards on some bounties for guaranteed baseline pay</li>
-          <li>Dispute flow if the view count on your TikTok doesn't match what the board shows</li>
+          <li>Dispute flow if the view count on your TikTok doesn't match what the Bounty Board shows</li>
           <li>Payouts via PayPal, Stripe, or USDC to your wallet — you pick</li>
         </ul>
       </LandingSection>
       <LandingSection title="How the workflow goes">
         <ol className="list-decimal space-y-2 pl-6">
-          <li>Sign in and browse open contracts on The Board.</li>
+          <li>Sign in and browse open contracts on Bounty Board.</li>
           <li>Take a contract — enter your TikTok handle and PayPal email.</li>
           <li>Make and post your edit using the artist's official TikTok sound.</li>
           <li>Paste the TikTok URL as proof. We verify view counts and approve your payout.</li>

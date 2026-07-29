@@ -205,8 +205,8 @@ function SubmitPage() {
                 <BsEmpty
                   eyebrow="delivery office"
                   title="No open contracts."
-                  body="Take one from the board first, then come back to deliver proof."
-                  action={<Link to="/board" className="bs-btn bs-btn-ghost">go to the board</Link>}
+                  body="Take one from the Bounty Board first, then come back to deliver proof."
+                  action={<Link to="/board" className="bs-btn bs-btn-ghost">go to the Bounty Board</Link>}
                 />
               </div>
             ) : (

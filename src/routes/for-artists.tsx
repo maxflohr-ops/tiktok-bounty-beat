@@ -13,7 +13,7 @@ const FAQ = [
   },
   {
     q: "What does it cost to promote a song?",
-    a: "The listing fee is $200 for a 30-day campaign slot on the board. You separately fund the per-view bounty pot — usually $1 per 100,000 TikTok views — so total spend scales with results, not promises.",
+    a: "The listing fee is $200 for a 30-day campaign slot on the Bounty Board. You separately fund the per-view bounty pot — usually $1 per 100,000 TikTok views — so total spend scales with results, not promises.",
   },
   {
     q: "Who are the editors?",
@@ -60,7 +60,7 @@ function ForArtists() {
     <LandingLayout
       eyebrow="for music artists & labels"
       h1="Promote your song on TikTok — pay per view, not per promise"
-      intro="List your sound on The Board and let vetted UGC creators post edits using your track. You approve every payout, so every crown goes to real, verified views."
+      intro="List your sound on Bounty Board and let vetted UGC creators post edits using your track. You approve every payout, so every crown goes to real, verified views."
       primaryCta="list your sound — $200 / 30 days"
       primaryHref="/list-sound"
       secondaryCta="see live contracts"
@@ -69,7 +69,7 @@ function ForArtists() {
       <LandingSection title="How TikTok music promotion works on Bounty Sounds">
         <ol className="list-decimal space-y-2 pl-6">
           <li>Submit your artist name, song title, and TikTok sound link. Pay the $200 listing fee to open a 30-day campaign.</li>
-          <li>We post your contract on The Board with your per-view payout rate (e.g. $1 per 100k views).</li>
+          <li>We post your contract on Bounty Board with your per-view payout rate (e.g. $1 per 100k views).</li>
           <li>Editors claim the contract, publish TikToks using your sound, and paste their video URL as proof.</li>
           <li>We verify view counts, approve payouts, and disburse via PayPal, Stripe, or USDC.</li>
         </ol>

@@ -95,7 +95,7 @@ function ListSoundPage() {
             List your sound for a campaign
           </BsDisplay>
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
-            A single listing keeps your song on the board for thirty days. Editors discover it, take contracts,
+            A single listing keeps your song on the Bounty Board for thirty days. Editors discover it, take contracts,
             and deliver TikToks using your sound. Every listing is reviewed before it goes live.
           </p>
         </div>

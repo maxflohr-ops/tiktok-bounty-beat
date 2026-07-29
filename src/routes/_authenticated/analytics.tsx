@@ -105,7 +105,7 @@ function AnalyticsPage() {
       <Frame>
         <h1 className="text-3xl font-semibold">Staff only.</h1>
         <p className="mt-2 text-bone-soft">This page requires an admin account.</p>
-        <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the board</Link>
+        <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the Bounty Board</Link>
       </Frame>
     );
 

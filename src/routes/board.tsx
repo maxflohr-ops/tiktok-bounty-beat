@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
 import { BsEmpty, BsLoading } from "@/components/bs";
 
-const HOME_TITLE = "The Board — Live TikTok Clipping Contracts · Bounty Sounds";
+const HOME_TITLE = "Bounty Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
   "Every live clipping contract: the sound, the rate, the funded pot, and the deadline. Claim one, post your clip, get paid for verified views.";
 const HOME_URL = "https://bountysounds.com/board";
@@ -185,7 +185,7 @@ function BoardPage() {
             <DelayedLoading />
           ) : filtered.length === 0 ? (
             <BsEmpty
-              eyebrow="the board"
+              eyebrow="the Bounty Board"
               title="No live contracts right now."
               body={<>Check back soon, or fund the first pot yourself.</>}
               action={<Link to="/list-sound" className="bs-btn bs-btn-accent">list your sound</Link>}

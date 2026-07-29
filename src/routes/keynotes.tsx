@@ -43,7 +43,7 @@ function KeynotesPage() {
             Run a keynote campaign
           </Link>
           <Link to="/board" className="ink-btn px-7">
-            See the board
+            See the Bounty Board
           </Link>
         </div>
         <p className="mt-4 text-sm text-bone-soft">Your footage. Your rate. Pay only for verified views.</p>
