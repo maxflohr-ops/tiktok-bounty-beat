@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { z } from "zod";
+import { BsButton, BsDisplay, BsEyebrow, BsMarker, BsWell } from "@/components/bs";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -77,41 +78,28 @@ function AuthPage() {
   };
 
   return (
-    <div className="relative grid min-h-screen md:grid-cols-2">
-      <div className="scanlines fixed inset-0 z-50 opacity-40" />
-      <div className="vignette fixed inset-0 z-40" />
-      <aside className="relative z-10 hidden flex-col justify-between border-r border-[var(--iron)] bg-[var(--wall-2)] p-10 md:flex">
-        <Link to="/" className="font-display text-2xl font-bold text-bone">
-          Bounty<span className="silver">Sounds</span>
-        </Link>
-        <div>
-          <h2 className="font-display text-4xl leading-tight text-bone">
-            Edit. Post. <span className="text-[var(--gold)]">Get rewarded.</span>
-          </h2>
-          <p className="mt-3 max-w-sm text-sm text-bone-soft">
-            Join as an editor to claim contracts from the artist and earn points and cash payouts.
-          </p>
-        </div>
-        <p className="text-xs text-bone-soft">By continuing you agree to reasonable use.</p>
-      </aside>
-      <main className="relative z-10 flex items-center justify-center p-6">
-        <div className="w-full max-w-sm">
-          <div className="mb-6 flex md:hidden">
-            <Link to="/" className="font-display text-xl font-bold text-bone">
-              Bounty<span className="silver">Sounds</span>
+    <div className="bs-surface min-h-screen">
+      <main className="container-board flex min-h-screen items-center justify-center py-10">
+        <BsWell className="w-full max-w-md">
+          <div className="text-center">
+            <Link to="/" className="inline-block font-[var(--font-display)] text-xl font-bold text-[var(--color-bs-ink)]">
+              Bounty<span className="text-[var(--color-bs-accent)]">Sounds</span>
             </Link>
+            <BsEyebrow className="mt-4 block">
+              {mode === "signin" ? "welcome back" : "create account"}
+            </BsEyebrow>
+            <BsDisplay as="h1" size="sm" className="mt-2">
+              {mode === "signin" ? "Sign in" : "Editor account"}
+            </BsDisplay>
+            <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">
+              {mode === "signin" ? "Claim contracts. Cash verified views." : "Takes a minute. Start claiming right after."}
+            </p>
           </div>
-          <h1 className="font-display text-3xl text-bone">
-            {mode === "signin" ? "Welcome back" : "Create your editor account"}
-          </h1>
-          <p className="mt-1 text-sm text-bone-soft">
-            {mode === "signin" ? "Sign in to submit contracts." : "It takes a minute."}
-          </p>
 
           <button
             onClick={google}
             disabled={busy}
-            className="mt-6 flex w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--wall-2)] px-4 py-2.5 text-sm font-medium text-bone transition hover:bg-[var(--wall)] disabled:opacity-60"
+            className="bs-btn bs-btn-ghost mt-6 w-full"
           >
             <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden>
               <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.4 2.6 30 .5 24 .5 14.6.5 6.5 5.9 2.6 13.7l7.9 6.1C12.5 13.2 17.7 9.5 24 9.5z"/>
@@ -122,50 +110,50 @@ function AuthPage() {
             Continue with Google
           </button>
 
-          <div className="my-5 flex items-center gap-3 text-xs text-bone-soft">
-            <span className="h-px flex-1 bg-[var(--border)]" /> or <span className="h-px flex-1 bg-[var(--border)]" />
+          <div className="my-5 flex items-center gap-3 text-xs text-[var(--color-bs-ink-mute)]">
+            <span className="h-px flex-1 bg-[var(--color-bs-rule)]" /> or <span className="h-px flex-1 bg-[var(--color-bs-rule)]" />
           </div>
 
           <form onSubmit={submit} className="space-y-3">
-            <label className="block text-xs font-medium text-bone-soft">
-              Email
+            <label className="block">
+              <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">Email</span>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full border border-[var(--border)] bg-[var(--wall-2)] px-3 py-2 text-sm text-bone outline-none focus:border-[var(--gold)]"
+                className="bs-input mt-1"
               />
             </label>
-            <label className="block text-xs font-medium text-bone-soft">
-              Password
+            <label className="block">
+              <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">Password</span>
               <input
                 type="password"
                 required
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full border border-[var(--border)] bg-[var(--wall-2)] px-3 py-2 text-sm text-bone outline-none focus:border-[var(--gold)]"
+                className="bs-input mt-1"
               />
             </label>
-            <button
-              disabled={busy}
-              className="silver-btn w-full"
-            >
+            <BsButton type="submit" disabled={busy} className="w-full">
               {mode === "signin" ? "Sign in" : "Create account"}
-            </button>
+            </BsButton>
           </form>
 
-          <p className="mt-5 text-center text-sm text-bone-soft">
+          <p className="mt-5 text-center text-sm text-[var(--color-bs-ink-soft)]">
             {mode === "signin" ? "New here?" : "Already have an account?"}{" "}
             <button
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="font-medium text-bone underline underline-offset-2"
+              className="font-medium text-[var(--color-bs-ink)] underline underline-offset-2"
             >
               {mode === "signin" ? "Create an account" : "Sign in"}
             </button>
           </p>
-        </div>
+          <p className="mt-4 text-center">
+            <BsMarker>paid in verified views</BsMarker>
+          </p>
+        </BsWell>
       </main>
     </div>
   );

@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { useSession } from "@/lib/session";
 import { createSoundListingCheckout, listMySoundListings } from "@/lib/sound-listings.functions";
+import { BsBadge, BsButton, BsCard, BsDisplay, BsEyebrow, BsMono } from "@/components/bs";
 
 const LIST_URL = "https://bountysounds.com/list-sound";
 const LIST_TITLE = "List Your Sound for a TikTok Campaign — $200 / 30 Days | Bounty Sounds";
@@ -84,103 +85,86 @@ function ListSoundPage() {
   };
 
   return (
-    <div className="relative min-h-screen">
-      <div className="scanlines fixed inset-0 z-50 opacity-40" />
-      <div className="vignette fixed inset-0 z-40" />
+    <div className="bs-surface min-h-screen">
       <SiteHeader />
 
-      <section className="container-board relative z-10 py-6">
-        <div className="board-frame relative p-6 md:p-12">
-          <div className="corner-bracket absolute top-3 left-3 border-t-2 border-l-2" />
-          <div className="corner-bracket absolute top-3 right-3 border-t-2 border-r-2" />
-          <div className="corner-bracket absolute bottom-3 left-3 border-b-2 border-l-2" />
-          <div className="corner-bracket absolute bottom-3 right-3 border-b-2 border-r-2" />
+      <section className="container-board relative py-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <BsEyebrow>sound listings · $200 / 30 days</BsEyebrow>
+          <BsDisplay as="h1" size="lg" className="mt-3">
+            List your sound for a campaign
+          </BsDisplay>
+          <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
+            A single listing keeps your song on the board for thirty days. Editors discover it, take contracts,
+            and deliver TikToks using your sound. Every listing is reviewed before it goes live.
+          </p>
+        </div>
 
-          <div className="mb-6 text-center">
-            <div className="system-bar mx-auto">
-              <span className="status-dot" /> sound listings · $200 / 30 days
-            </div>
-            <h1 className="mt-4 font-display text-3xl leading-tight text-bone md:text-5xl">
-              List your sound for a campaign
-            </h1>
-            <p className="script-note mt-3 text-xl text-silver-glow">
-              Post it on the board. Let the clippers cut.
+        {search.success ? (
+          <BsCard variant="flat" className="mx-auto mt-6 max-w-2xl text-center">
+            <BsMono className="uppercase text-[var(--color-bs-ink)]">payment received · listing queued for review</BsMono>
+            <p className="mt-1 text-sm text-[var(--color-bs-ink-soft)]">
+              We'll review and publish your listing shortly. Watch your inbox.
             </p>
-            <p className="mx-auto mt-3 max-w-xl text-bone-soft">
-              A single listing keeps your song on the board for thirty days. Editors will discover it, take contracts, and
-              deliver TikToks using your sound. Every listing is reviewed before it goes live.
-            </p>
+          </BsCard>
+        ) : null}
+        {search.cancelled ? (
+          <BsCard variant="flat" className="mx-auto mt-6 max-w-2xl text-center">
+            <BsMono className="uppercase text-[var(--color-bs-ink-mute)]">payment cancelled · your draft is saved below</BsMono>
+          </BsCard>
+        ) : null}
+
+        {!ready ? null : !user ? (
+          <div className="mx-auto mt-8 max-w-2xl text-center">
+            <p className="mb-4 text-[var(--color-bs-ink-soft)]">Sign in to list a sound.</p>
+            <BsButton onClick={() => navigate({ to: "/auth" })}>sign in</BsButton>
           </div>
-
-          {search.success ? (
-            <div className="mx-auto mb-6 max-w-2xl border border-[var(--neon-cyan)] bg-[var(--wall-2)]/60 p-4 text-center">
-              <p className="terminal text-bone">payment received · listing queued for review</p>
-              <p className="mt-1 text-sm text-bone-soft">We'll review and publish your listing shortly. Watch your inbox.</p>
-            </div>
-          ) : null}
-          {search.cancelled ? (
-            <div className="mx-auto mb-6 max-w-2xl border border-[var(--iron)] bg-[var(--wall-2)]/60 p-4 text-center">
-              <p className="terminal text-bone-soft">payment cancelled · your draft is saved below</p>
-            </div>
-          ) : null}
-
-          {!ready ? null : !user ? (
-            <div className="mx-auto max-w-2xl text-center">
-              <p className="mb-4 text-bone-soft">Sign in to list a sound.</p>
-              <button className="silver-btn" onClick={() => navigate({ to: "/auth" })}>
-                sign in
-              </button>
-            </div>
-          ) : (
-            <div className="grid gap-8 md:grid-cols-[2fr,1fr]">
-              <form onSubmit={submit} className="border border-[var(--iron)] bg-[var(--wall-2)]/50 p-6">
-                <h2 className="label-cap mb-4 text-silver">the notice</h2>
-                <div className="grid gap-4">
+        ) : (
+          <div className="mx-auto mt-10 grid max-w-5xl gap-8 md:grid-cols-[2fr,1fr]">
+            <form onSubmit={submit}>
+              <BsCard variant="flat">
+                <BsEyebrow>the notice</BsEyebrow>
+                <div className="mt-4 grid gap-4">
                   <Field label="Artist name" required>
-                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="Ridgeclub" />
+                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder="Ridgeclub" />
                   </Field>
                   <Field label="Song title" required>
-                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="Do I Clench My Fist" />
+                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder="Do I Clench My Fist" />
                   </Field>
                   <Field label="TikTok sound URL" hint="Optional but strongly recommended">
-                    <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="https://www.tiktok.com/music/..." />
+                    <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="bs-input" placeholder="https://www.tiktok.com/music/..." />
                   </Field>
                   <Field label="Spotify / streaming link" hint="Optional">
-                    <input value={spotify} onChange={(e) => setSpotify(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" placeholder="https://open.spotify.com/track/..." />
+                    <input value={spotify} onChange={(e) => setSpotify(e.target.value)} className="bs-input" placeholder="https://open.spotify.com/track/..." />
                   </Field>
                   <Field label="Contact email" required>
-                    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" />
+                    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bs-input" />
                   </Field>
                   <Field label="Notes for the review team" hint="Genre, sync history, campaign goals, budget…">
-                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)] min-h-[100px]" />
+                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="bs-input min-h-[100px]" />
                   </Field>
                 </div>
 
-                <div className="mt-6 flex items-center justify-between border-t border-[var(--iron)] pt-4">
+                <div className="mt-6 flex items-center justify-between border-t border-[var(--color-bs-rule)] pt-4">
                   <div>
-                    <div className="label-cap text-silver">listing fee</div>
-                    <div className="font-display text-2xl text-bone">$200 · 30 days</div>
+                    <BsEyebrow>listing fee</BsEyebrow>
+                    <div className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-bs-ink)]">$200 · 30 days</div>
                   </div>
-                  <button
-                    type="submit"
-                    disabled={busy}
-                    aria-busy={busy}
-                    className="silver-btn disabled:opacity-60"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                      {busy ? "opening checkout…" : "pay & submit"}
-                    </span>
-                  </button>
+                  <BsButton type="submit" variant="accent" disabled={busy} aria-busy={busy}>
+                    {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    {busy ? "opening checkout…" : "pay & submit"}
+                  </BsButton>
                 </div>
-                <p className="mt-3 text-xs text-bone-soft">
+                <p className="mt-3 text-xs text-[var(--color-bs-ink-mute)]">
                   Secure payment through Stripe. Your listing enters review the moment payment clears.
                 </p>
-              </form>
+              </BsCard>
+            </form>
 
-              <aside className="border border-[var(--iron)] bg-[var(--wall-2)]/50 p-6">
-                <h2 className="label-cap mb-3 text-silver">what you get</h2>
-                <ul className="space-y-2 text-sm text-bone-soft">
+            <aside>
+              <BsCard variant="flat">
+                <BsEyebrow>what you get</BsEyebrow>
+                <ul className="mt-3 space-y-2 text-sm text-[var(--color-bs-ink-soft)]">
                   <li>· 30 days on the public board</li>
                   <li>· Contracts editors can claim</li>
                   <li>· TikTok proof reviewed by staff</li>
@@ -189,26 +173,28 @@ function ListSoundPage() {
                 </ul>
 
                 {mine.length > 0 ? (
-                  <div className="mt-6 border-t border-[var(--iron)] pt-4">
-                    <h3 className="label-cap mb-3 text-silver">your listings</h3>
-                    <ul className="space-y-3 text-sm">
+                  <div className="mt-6 border-t border-[var(--color-bs-rule)] pt-4">
+                    <BsEyebrow>your listings</BsEyebrow>
+                    <ul className="mt-3 space-y-3 text-sm">
                       {mine.map((l) => (
-                        <li key={l.id} className="border border-[var(--border)] p-3">
-                          <div className="font-body text-bone">{l.song_title}</div>
-                          <div className="text-xs text-bone-soft">{l.artist_name}</div>
-                          <div className="terminal mt-1 text-xs text-silver">{l.status.replace(/_/g, " ")}</div>
+                        <li key={l.id} className="border border-[var(--color-bs-rule)] p-3">
+                          <div className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">{l.song_title}</div>
+                          <div className="text-xs text-[var(--color-bs-ink-mute)]">{l.artist_name}</div>
+                          <BsBadge className="mt-2">{l.status.replace(/_/g, " ")}</BsBadge>
                           {l.expires_at ? (
-                            <div className="text-xs text-bone-soft">until {new Date(l.expires_at).toLocaleDateString()}</div>
+                            <div className="mt-1 text-xs text-[var(--color-bs-ink-mute)]">
+                              until {new Date(l.expires_at).toLocaleDateString()}
+                            </div>
                           ) : null}
                         </li>
                       ))}
                     </ul>
                   </div>
                 ) : null}
-              </aside>
-            </div>
-          )}
-        </div>
+              </BsCard>
+            </aside>
+          </div>
+        )}
       </section>
     </div>
   );
@@ -218,10 +204,10 @@ function Field({ label, hint, required, children }: { label: string; hint?: stri
   return (
     <label className="block">
       <div className="mb-1 flex items-baseline justify-between">
-        <span className="label-cap text-silver">
+        <BsEyebrow>
           {label}{required ? " *" : ""}
-        </span>
-        {hint ? <span className="text-xs text-bone-soft">{hint}</span> : null}
+        </BsEyebrow>
+        {hint ? <span className="text-xs text-[var(--color-bs-ink-mute)]">{hint}</span> : null}
       </div>
       {children}
     </label>
