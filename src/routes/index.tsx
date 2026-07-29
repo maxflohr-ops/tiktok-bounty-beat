@@ -98,9 +98,27 @@ function LandingPage() {
               Sounds, streams, keynote speeches. Post the clip — verified views pay out.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link to="/board" className="bs-btn">Open the Bounty Board</Link>
-              <Link to="/list-sound" className="bs-btn bs-btn-ghost">List a sound</Link>
+            <div className="mt-8 flex justify-center">
+              <div className="flex items-center -space-x-3">
+                <Link
+                  to="/board"
+                  className="relative z-30 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-ink)] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-bs-paper)] shadow-[0_6px_0_rgba(13,13,13,0.35)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
+                >
+                  Open Bounty Board
+                </Link>
+                <Link
+                  to="/list-sound"
+                  className="relative z-20 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-accent)] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-[0_6px_0_rgba(233,79,46,0.45)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
+                >
+                  List a sound
+                </Link>
+                <Link
+                  to="/how-it-works"
+                  className="relative z-10 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-paper)] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-bs-ink)] shadow-[0_6px_0_rgba(13,13,13,0.2)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
+                >
+                  How it works
+                </Link>
+              </div>
             </div>
 
             <div className="bs-rule mt-10 pt-6">
