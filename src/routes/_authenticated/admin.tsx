@@ -144,6 +144,8 @@ function BountiesPanel() {
           max_submissions: editing.max_submissions ?? null,
           deadline: editing.deadline || null,
           featured_until: (editing as any).featured_until || null,
+          hashtags: (editing as any).hashtags ?? [],
+          rules: (editing as any).rules || null,
           status: (editing.status ?? "active") as "draft" | "active" | "claimed" | "in_review" | "fulfilled" | "expired" | "closed",
         },
       });
@@ -261,6 +263,31 @@ function BountiesPanel() {
               </select>
             </Field>
           </div>
+          <Field label="campaign hashtags (space or comma separated)">
+            <input
+              value={((editing as any).hashtags ?? []).map((t: string) => `#${t}`).join(" ")}
+              onChange={(e) =>
+                setEditing({
+                  ...editing,
+                  hashtags: e.target.value
+                    .split(/[\s,]+/)
+                    .map((t) => t.replace(/^#/, "").toLowerCase())
+                    .filter((t) => /^[a-z0-9_]{2,40}$/.test(t))
+                    .slice(0, 10),
+                } as any)
+              }
+              className="dark-input"
+              placeholder="#yoursound #yourname"
+            />
+          </Field>
+          <Field label="campaign rules (clippers see these in a dropdown)">
+            <textarea
+              value={(editing as any).rules ?? ""}
+              onChange={(e) => setEditing({ ...editing, rules: e.target.value } as any)}
+              className="dark-input min-h-[80px]"
+              placeholder="9:16 only. Subtitles on. No logo overlays…"
+            />
+          </Field>
           <p className="script-note text-bone-soft">Payment tracked here manually · PayPal/Stripe later.</p>
           <div className="flex gap-2 pt-2">
             <button className="silver-btn">post</button>
