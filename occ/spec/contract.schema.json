@@ -30,6 +30,7 @@
         "type": { "enum": ["audio", "video", "image_set", "other"] },
         "attribution": { "type": "string" }
       },
+      "patternProperties": { "^x_": {} },
       "additionalProperties": false
     },
     "platforms": {
@@ -48,6 +49,7 @@
         "floor": { "type": "number", "minimum": 0 },
         "cap": { "type": "number", "minimum": 0 }
       },
+      "patternProperties": { "^x_": {} },
       "additionalProperties": false
     },
     "budget": {
@@ -59,6 +61,7 @@
         "escrow": { "type": "boolean" },
         "paid_out": { "type": "number", "minimum": 0 }
       },
+      "patternProperties": { "^x_": {} },
       "additionalProperties": false,
       "if": { "properties": { "escrow": { "const": true } }, "required": ["escrow"] },
       "then": { "properties": { "funded": { "const": true } } }
@@ -79,6 +82,7 @@
         "verified_after_hours": { "type": "integer", "minimum": 0 },
         "min_retention_days": { "type": "integer", "minimum": 0 }
       },
+      "patternProperties": { "^x_": {} },
       "additionalProperties": false
     },
     "status": {
