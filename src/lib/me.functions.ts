@@ -8,7 +8,7 @@ export const getMe = createServerFn({ method: "GET" })
     const [{ data: profile }, { data: roles }] = await Promise.all([
       context.supabase
         .from("profiles")
-        .select("id,display_name,tiktok_handle,avatar_url,points")
+        .select("id,display_name,tiktok_handle,avatar_url,points,wallet_address")
         .eq("id", context.userId)
         .maybeSingle(),
       context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
@@ -35,6 +35,12 @@ export const updateMyProfile = createServerFn({ method: "POST" })
           .max(60)
           .transform((v) => v.replace(/^@/, "").toLowerCase())
           .optional(),
+        wallet_address: z
+          .string()
+          .trim()
+          .regex(/^(0x[0-9a-fA-F]{40})?$/, "Enter a valid EVM address (0x…).")
+          .transform((v) => v || null)
+          .optional(),
       })
       .parse(d),
   )
@@ -44,6 +50,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       .update({
         display_name: data.display_name,
         tiktok_handle: data.tiktok_handle,
+        ...(data.wallet_address !== undefined ? { wallet_address: data.wallet_address } : {}),
       })
       .eq("id", context.userId);
     if (error) throw new Error(error.message);

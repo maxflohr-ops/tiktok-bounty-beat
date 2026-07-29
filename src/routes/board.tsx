@@ -253,7 +253,7 @@ function BoardPage() {
                 <Link to="/for-editors" className="font-display text-lg text-bone hover:text-silver-glow">
                   UGC creator jobs for editors →
                 </Link>
-                <p className="mt-1 text-sm text-bone-soft">Claim contracts, post TikToks, cash in via PayPal or Stripe.</p>
+                <p className="mt-1 text-sm text-bone-soft">Claim contracts, post TikToks, cash in via PayPal, Stripe, or USDC.</p>
               </li>
               <li className="border border-[var(--iron)] bg-black/30 p-4">
                 <Link to="/clipping-campaigns" className="font-display text-lg text-bone hover:text-silver-glow">

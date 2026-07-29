@@ -4,7 +4,7 @@ import { LandingLayout, LandingSection, FaqList } from "@/components/LandingLayo
 const CANONICAL = "https://bountysounds.com/for-editors";
 const TITLE = "UGC Creator Jobs & TikTok Editing Bounties — Get Paid Per View";
 const DESCRIPTION =
-  "Real UGC creator jobs for TikTok editors. Claim a music bounty, post an edit using the artist's sound, and get paid per verified view via PayPal or Stripe.";
+  "Real UGC creator jobs for TikTok editors. Claim a music bounty, post an edit using the artist's sound, and get paid per verified view via PayPal, Stripe, or USDC.";
 
 const FAQ = [
   {
@@ -13,7 +13,7 @@ const FAQ = [
   },
   {
     q: "How do I get paid?",
-    a: "Add your TikTok handle and PayPal email when you claim a contract. Once your video hits view thresholds and the payout is approved, funds go to your PayPal or Stripe payout method.",
+    a: "Add your TikTok handle and PayPal email when you claim a contract. Once your video hits view thresholds and the payout is approved, funds go to your PayPal or Stripe payout method — or as USDC to a wallet you connect on your dashboard.",
   },
   {
     q: "Is there a minimum follower count?",
@@ -75,7 +75,7 @@ function ForEditors() {
           <li>Per-view payouts, usually $1 per 100,000 TikTok views</li>
           <li>Flat rewards on some bounties for guaranteed baseline pay</li>
           <li>Dispute flow if the view count on your TikTok doesn't match what the board shows</li>
-          <li>Payouts via PayPal or Stripe — you pick when you sign up</li>
+          <li>Payouts via PayPal, Stripe, or USDC to your wallet — you pick</li>
         </ul>
       </LandingSection>
       <LandingSection title="How the workflow goes">
