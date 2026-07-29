@@ -5,6 +5,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const BOUNTY_COLS =
   "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents";
+// Columns safe to expose publicly (excludes funded_cash_cents and any Stripe identifiers).
+const PUBLIC_BOUNTY_COLS =
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at";
 
 // Public: all bounties (any status) — the board never deletes, expired stays visible.
 export const listPublicBounties = createServerFn({ method: "GET" }).handler(async () => {
