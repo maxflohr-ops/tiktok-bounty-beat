@@ -29,10 +29,10 @@ const Email = ({
 }: Props) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>{`THE BOARD · ${event}${reference ? ` · ${reference}` : ''}`}</Preview>
+    <Preview>{`BOUNTY SOUNDS · ${event}${reference ? ` · ${reference}` : ''}`}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>THE BOARD // action log</Heading>
+        <Heading style={h1}>BOUNTY SOUNDS // action log</Heading>
         <Text style={eventLine}>{event}</Text>
 
         <Section style={metaBox}>
@@ -63,7 +63,7 @@ const Email = ({
 
         <Hr style={hr} />
         <Text style={footer}>
-          Auto-logged by the harbormaster. Mirrored to Airtable + Google Sheets.
+          Auto-logged by the board. Mirrored to Airtable + Google Sheets.
         </Text>
       </Container>
     </Body>
@@ -75,9 +75,9 @@ export const template = {
   subject: (data: Record<string, unknown>) => {
     const event = typeof data.event === 'string' ? data.event : 'event'
     const ref = typeof data.reference === 'string' && data.reference ? ` · ${data.reference}` : ''
-    return `[THE BOARD] ${event}${ref}`
+    return `[BOUNTY SOUNDS] ${event}${ref}`
   },
-  displayName: 'Harbormaster action alert',
+  displayName: 'Admin action alert',
   to: 'maxflohr@allmylifeproductions.com',
   previewData: {
     event: 'proof.delivered',

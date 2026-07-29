@@ -16,7 +16,7 @@ export const fileDispute = createServerFn({ method: "POST" })
         submission_id: z.string().uuid(),
         claimed_view_count: z.number().int().min(0).max(2_000_000_000).optional(),
         evidence_url: z.string().trim().url().max(500).optional().or(z.literal("")),
-        note: z.string().trim().min(5, "Tell the harbormaster what happened.").max(2000),
+        note: z.string().trim().min(5, "Tell us what happened.").max(2000),
       })
       .parse(d),
   )

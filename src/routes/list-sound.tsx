@@ -108,14 +108,14 @@ function ListSoundPage() {
             </p>
             <p className="mx-auto mt-3 max-w-xl text-bone-soft">
               A single listing keeps your song on the board for thirty days. Editors will discover it, take contracts, and
-              deliver TikToks using your sound. The harbormaster reviews every listing before it goes live.
+              deliver TikToks using your sound. Every listing is reviewed before it goes live.
             </p>
           </div>
 
           {search.success ? (
             <div className="mx-auto mb-6 max-w-2xl border border-[var(--neon-cyan)] bg-[var(--wall-2)]/60 p-4 text-center">
               <p className="terminal text-bone">payment received · listing queued for review</p>
-              <p className="mt-1 text-sm text-bone-soft">The harbormaster will publish your notice shortly. Watch your inbox.</p>
+              <p className="mt-1 text-sm text-bone-soft">We'll review and publish your listing shortly. Watch your inbox.</p>
             </div>
           ) : null}
           {search.cancelled ? (
@@ -151,7 +151,7 @@ function ListSoundPage() {
                   <Field label="Contact email" required>
                     <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)]" />
                   </Field>
-                  <Field label="Notes for the harbormaster" hint="Genre, sync history, campaign goals, budget…">
+                  <Field label="Notes for the review team" hint="Genre, sync history, campaign goals, budget…">
                     <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="w-full border border-[var(--iron)] bg-black/40 px-3 py-2 text-bone placeholder:text-bone-soft/50 focus:outline-none focus:border-[var(--neon-cyan)] min-h-[100px]" />
                   </Field>
                 </div>
@@ -184,7 +184,7 @@ function ListSoundPage() {
                   <li>· 30 days on the public board</li>
                   <li>· Contracts editors can claim</li>
                   <li>· TikTok proof reviewed by staff</li>
-                  <li>· Payout rules set with the harbormaster</li>
+                  <li>· Payout rules agreed up front</li>
                   <li>· Airtable + email updates on every action</li>
                 </ul>
 

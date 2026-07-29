@@ -71,7 +71,7 @@ function ForArtists() {
           <li>Submit your artist name, song title, and TikTok sound link. Pay the $200 listing fee to open a 30-day campaign.</li>
           <li>We post your contract on The Board with your per-view payout rate (e.g. $1 per 100k views).</li>
           <li>Editors claim the contract, publish TikToks using your sound, and paste their video URL as proof.</li>
-          <li>The harbormaster reviews view counts, approves payouts, and disburses via PayPal or Stripe.</li>
+          <li>We verify view counts, approve payouts, and disburse via PayPal or Stripe.</li>
         </ol>
       </LandingSection>
       <LandingSection title="Why pay-per-view beats flat-fee song promotion">

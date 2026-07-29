@@ -14,8 +14,8 @@ import { ExternalLink, CheckCircle2, Link2, Flag } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Your contracts · THE BOARD" },
-      { name: "description", content: "Contracts you've taken and crowns you've earned." },
+      { title: "Your contracts · Bounty Sounds" },
+      { name: "description", content: "Contracts you've taken and what you've earned." },
     ],
   }),
   component: Dashboard,
@@ -55,10 +55,10 @@ function Dashboard() {
     e.preventDefault();
     try {
       await updFn({ data: { display_name: name, tiktok_handle: handle } });
-      toast.success("Profile marked in the ledger.");
+      toast.success("Profile saved.");
       refetchMe();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Ledger refused the change.");
+      toast.error(err instanceof Error ? err.message : "Couldn't save profile.");
     }
   };
 
@@ -77,7 +77,7 @@ function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="font-display text-4xl text-bone">Your contracts</h1>
-              <p className="script-note text-xl text-bone-soft">The board remembers.</p>
+              <p className="script-note text-xl text-bone-soft">Your track record lives here.</p>
             </div>
             <div className="system-bar">
               <span className="status-dot" />
@@ -108,7 +108,7 @@ function Dashboard() {
                   onFileDispute={async (payload) => {
                     try {
                       await fileFn({ data: { submission_id: c.id, ...payload } });
-                      toast.success("Dispute filed — the harbormaster will review.");
+                      toast.success("Dispute filed — our team will review.");
                       refetchDisputes();
                     } catch (err) {
                       toast.error(err instanceof Error ? err.message : "Failed.");
@@ -139,7 +139,7 @@ function Dashboard() {
                   <input value={handle} maxLength={60} onChange={(e) => setHandle(e.target.value)} className="w-full bg-transparent px-1 text-bone outline-none" />
                 </div>
               </label>
-              <button className="silver-btn w-full">Mark the ledger</button>
+              <button className="silver-btn w-full">Save profile</button>
             </form>
           </div>
 
@@ -148,7 +148,7 @@ function Dashboard() {
             <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
             <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
             <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
-            <h2 className="label-cap silver text-center">Paid in crowns</h2>
+            <h2 className="label-cap silver text-center">Earnings</h2>
             <div className="mt-3 grid grid-cols-2 gap-4 text-center">
               <Metric label="approved" value={money(silverEarned)} />
               <Metric label="paid" value={money(silverPaid)} />
@@ -204,7 +204,7 @@ function PaymentSetup() {
       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
       <h2 className="font-display text-2xl text-bone">Payment setup</h2>
       {isLoading ? (
-        <p className="mt-2 text-bone-soft">Consulting the harbor bank…</p>
+        <p className="mt-2 text-bone-soft">Loading payout account…</p>
       ) : status === "enabled" ? (
         <div className="mt-3 flex items-center gap-2">
           <span className="status-dot" />
@@ -224,7 +224,7 @@ function PaymentSetup() {
         </div>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="text-bone-soft">Link a Stripe account so the board can pay you in crowns directly.</p>
+          <p className="text-bone-soft">Link a Stripe account so the board can pay you directly.</p>
           <button onClick={link} disabled={busy} className="silver-btn">
             <Link2 className="h-3.5 w-3.5" /> link stripe account for payouts
           </button>
@@ -359,7 +359,7 @@ function ClaimRow({
               <span className="label-cap silver mr-2">{d.status.replace("_", " ")}</span>
               <span className="italic">{d.note}</span>
               {d.reviewer_note ? (
-                <div className="mt-1 italic">harbormaster: “{d.reviewer_note}”</div>
+                <div className="mt-1 italic">reviewer: “{d.reviewer_note}”</div>
               ) : null}
             </li>
           ))}

@@ -81,8 +81,8 @@ function AuthPage() {
       <div className="scanlines fixed inset-0 z-50 opacity-40" />
       <div className="vignette fixed inset-0 z-40" />
       <aside className="relative z-10 hidden flex-col justify-between border-r border-[var(--iron)] bg-[var(--wall-2)] p-10 md:flex">
-        <Link to="/" className="font-display text-2xl text-bone">
-          THE BOARD
+        <Link to="/" className="font-display text-2xl font-bold text-bone">
+          Bounty<span className="silver">Sounds</span>
         </Link>
         <div>
           <h2 className="font-display text-4xl leading-tight text-bone">
@@ -97,8 +97,8 @@ function AuthPage() {
       <main className="relative z-10 flex items-center justify-center p-6">
         <div className="w-full max-w-sm">
           <div className="mb-6 flex md:hidden">
-            <Link to="/" className="font-display text-xl text-bone">
-              THE BOARD
+            <Link to="/" className="font-display text-xl font-bold text-bone">
+              Bounty<span className="silver">Sounds</span>
             </Link>
           </div>
           <h1 className="font-display text-3xl text-bone">

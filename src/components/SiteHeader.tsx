@@ -18,12 +18,13 @@ export function SiteHeader() {
   return (
     <header className="relative z-30 border-b border-[var(--iron)]">
       <div className="container-board flex flex-col items-center gap-2 py-5 md:flex-row md:justify-between md:py-6">
-        <Link to="/" className="flex flex-col items-center gap-0.5 md:items-start">
-          <span className="label-cap text-bone-soft">The Harbormaster's</span>
-          <span className="font-display text-3xl leading-none tracking-widest text-bone md:text-4xl">
-            T H E &nbsp; B O A R D
+        <Link to="/" className="flex flex-col items-center gap-1 md:items-start">
+          <span className="flex items-baseline gap-2">
+            <span className="font-display text-2xl font-bold leading-none text-bone md:text-3xl">
+              Bounty<span className="silver">Sounds</span>
+            </span>
           </span>
-          <span className="script-note text-silver-glow">notices posted daily</span>
+          <span className="label-cap">clip sounds · get paid per view</span>
         </Link>
         <nav className="flex flex-wrap items-center justify-center gap-1 text-bone-soft">
           <Link
@@ -32,7 +33,7 @@ export function SiteHeader() {
             activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
             activeOptions={{ exact: true }}
           >
-            the board
+            board
           </Link>
           {me?.isStaff ? (
             <Link
@@ -40,7 +41,7 @@ export function SiteHeader() {
               className="label-cap px-3 py-2 hover:text-bone"
               activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
             >
-              harbormaster
+              admin
             </Link>
           ) : null}
           {loading ? null : user ? (
@@ -50,14 +51,14 @@ export function SiteHeader() {
                 className="label-cap px-3 py-2 hover:text-bone"
                 activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
               >
-                my contracts
+                dashboard
               </Link>
               <Link
                 to="/submit"
                 className="label-cap px-3 py-2 hover:text-bone"
                 activeProps={{ className: "label-cap px-3 py-2 text-bone" }}
               >
-                cash in
+                submit clip
               </Link>
               {typeof me?.profile?.points === "number" ? (
                 <span className="digital-badge ml-1">
@@ -76,7 +77,7 @@ export function SiteHeader() {
             </>
           ) : (
             <Link to="/auth" className="silver-btn ml-2">
-              sign the ledger
+              sign in
             </Link>
           )}
         </nav>
