@@ -9,44 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TiktokClipperRouteImport } from './routes/tiktok-clipper'
-import { Route as ListSoundRouteImport } from './routes/list-sound'
-import { Route as ForEditorsRouteImport } from './routes/for-editors'
-import { Route as ForArtistsRouteImport } from './routes/for-artists'
-import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BountyIdRouteImport } from './routes/bounty.$id'
-import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
+import { Route as ForArtistsRouteImport } from './routes/for-artists'
+import { Route as ForEditorsRouteImport } from './routes/for-editors'
+import { Route as ListSoundRouteImport } from './routes/list-sound'
+import { Route as TiktokClipperRouteImport } from './routes/tiktok-clipper'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
+import { Route as BountyIdRouteImport } from './routes/bounty.$id'
+import { Route as ApiPublicOccContractsRouteImport } from './routes/api/public/occ/contracts'
 import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public/webhooks/stripe'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
-const TiktokClipperRoute = TiktokClipperRouteImport.update({
-  id: '/tiktok-clipper',
-  path: '/tiktok-clipper',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ListSoundRoute = ListSoundRouteImport.update({
-  id: '/list-sound',
-  path: '/list-sound',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForEditorsRoute = ForEditorsRouteImport.update({
-  id: '/for-editors',
-  path: '/for-editors',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForArtistsRoute = ForArtistsRouteImport.update({
-  id: '/for-artists',
-  path: '/for-artists',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClippingCampaignsRoute = ClippingCampaignsRouteImport.update({
-  id: '/clipping-campaigns',
-  path: '/clipping-campaigns',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -54,23 +39,34 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const ClippingCampaignsRoute = ClippingCampaignsRouteImport.update({
+  id: '/clipping-campaigns',
+  path: '/clipping-campaigns',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ForArtistsRoute = ForArtistsRouteImport.update({
+  id: '/for-artists',
+  path: '/for-artists',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BountyIdRoute = BountyIdRouteImport.update({
-  id: '/bounty/$id',
-  path: '/bounty/$id',
+const ForEditorsRoute = ForEditorsRouteImport.update({
+  id: '/for-editors',
+  path: '/for-editors',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedSubmitRoute = AuthenticatedSubmitRouteImport.update({
-  id: '/submit',
-  path: '/submit',
+const ListSoundRoute = ListSoundRouteImport.update({
+  id: '/list-sound',
+  path: '/list-sound',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokClipperRoute = TiktokClipperRouteImport.update({
+  id: '/tiktok-clipper',
+  path: '/tiktok-clipper',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -78,10 +74,25 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AuthenticatedSubmitRoute = AuthenticatedSubmitRouteImport.update({
+  id: '/submit',
+  path: '/submit',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const BountyIdRoute = BountyIdRouteImport.update({
+  id: '/bounty/$id',
+  path: '/bounty/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicOccContractsRoute = ApiPublicOccContractsRouteImport.update({
+  id: '/api/public/occ/contracts',
+  path: '/api/public/occ/contracts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicWebhooksStripeRoute = ApiPublicWebhooksStripeRouteImport.update({
+  id: '/api/public/webhooks/stripe',
+  path: '/api/public/webhooks/stripe',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
@@ -89,11 +100,6 @@ const LovableEmailTransactionalPreviewRoute =
     path: '/lovable/email/transactional/preview',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicWebhooksStripeRoute = ApiPublicWebhooksStripeRouteImport.update({
-  id: '/api/public/webhooks/stripe',
-  path: '/api/public/webhooks/stripe',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/submit'
     | '/bounty/$id'
+    | '/api/public/occ/contracts'
     | '/api/public/webhooks/stripe'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/submit'
     | '/bounty/$id'
+    | '/api/public/occ/contracts'
     | '/api/public/webhooks/stripe'
     | '/lovable/email/transactional/preview'
   id:
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/submit'
     | '/bounty/$id'
+    | '/api/public/occ/contracts'
     | '/api/public/webhooks/stripe'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
@@ -201,52 +213,18 @@ export interface RootRouteChildren {
   ListSoundRoute: typeof ListSoundRoute
   TiktokClipperRoute: typeof TiktokClipperRoute
   BountyIdRoute: typeof BountyIdRoute
+  ApiPublicOccContractsRoute: typeof ApiPublicOccContractsRoute
   ApiPublicWebhooksStripeRoute: typeof ApiPublicWebhooksStripeRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/tiktok-clipper': {
-      id: '/tiktok-clipper'
-      path: '/tiktok-clipper'
-      fullPath: '/tiktok-clipper'
-      preLoaderRoute: typeof TiktokClipperRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/list-sound': {
-      id: '/list-sound'
-      path: '/list-sound'
-      fullPath: '/list-sound'
-      preLoaderRoute: typeof ListSoundRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/for-editors': {
-      id: '/for-editors'
-      path: '/for-editors'
-      fullPath: '/for-editors'
-      preLoaderRoute: typeof ForEditorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/for-artists': {
-      id: '/for-artists'
-      path: '/for-artists'
-      fullPath: '/for-artists'
-      preLoaderRoute: typeof ForArtistsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/clipping-campaigns': {
-      id: '/clipping-campaigns'
-      path: '/clipping-campaigns'
-      fullPath: '/clipping-campaigns'
-      preLoaderRoute: typeof ClippingCampaignsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -256,25 +234,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bounty/$id': {
-      id: '/bounty/$id'
-      path: '/bounty/$id'
-      fullPath: '/bounty/$id'
-      preLoaderRoute: typeof BountyIdRouteImport
+    '/clipping-campaigns': {
+      id: '/clipping-campaigns'
+      path: '/clipping-campaigns'
+      fullPath: '/clipping-campaigns'
+      preLoaderRoute: typeof ClippingCampaignsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/submit': {
-      id: '/_authenticated/submit'
-      path: '/submit'
-      fullPath: '/submit'
-      preLoaderRoute: typeof AuthenticatedSubmitRouteImport
+    '/for-artists': {
+      id: '/for-artists'
+      path: '/for-artists'
+      fullPath: '/for-artists'
+      preLoaderRoute: typeof ForArtistsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-editors': {
+      id: '/for-editors'
+      path: '/for-editors'
+      fullPath: '/for-editors'
+      preLoaderRoute: typeof ForEditorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/list-sound': {
+      id: '/list-sound'
+      path: '/list-sound'
+      fullPath: '/list-sound'
+      preLoaderRoute: typeof ListSoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-clipper': {
+      id: '/tiktok-clipper'
+      path: '/tiktok-clipper'
+      fullPath: '/tiktok-clipper'
+      preLoaderRoute: typeof TiktokClipperRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -284,18 +290,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+    '/_authenticated/submit': {
+      id: '/_authenticated/submit'
+      path: '/submit'
+      fullPath: '/submit'
+      preLoaderRoute: typeof AuthenticatedSubmitRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/lovable/email/transactional/preview': {
-      id: '/lovable/email/transactional/preview'
-      path: '/lovable/email/transactional/preview'
-      fullPath: '/lovable/email/transactional/preview'
-      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+    '/bounty/$id': {
+      id: '/bounty/$id'
+      path: '/bounty/$id'
+      fullPath: '/bounty/$id'
+      preLoaderRoute: typeof BountyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/occ/contracts': {
+      id: '/api/public/occ/contracts'
+      path: '/api/public/occ/contracts'
+      fullPath: '/api/public/occ/contracts'
+      preLoaderRoute: typeof ApiPublicOccContractsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/webhooks/stripe': {
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/webhooks/stripe'
       fullPath: '/api/public/webhooks/stripe'
       preLoaderRoute: typeof ApiPublicWebhooksStripeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -333,9 +353,20 @@ const rootRouteChildren: RootRouteChildren = {
   ListSoundRoute: ListSoundRoute,
   TiktokClipperRoute: TiktokClipperRoute,
   BountyIdRoute: BountyIdRoute,
+  ApiPublicOccContractsRoute: ApiPublicOccContractsRoute,
   ApiPublicWebhooksStripeRoute: ApiPublicWebhooksStripeRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
