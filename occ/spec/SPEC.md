@@ -52,6 +52,8 @@ An editor MAY deliver to any listed platform unless the brief narrows it.
 
 ### 3.4 Reward
 
+All monetary amounts in a contract — `reward.rate`, `reward.floor`, `reward.cap`, `budget.total`, `budget.paid_out` — are **integers in the currency's minor unit** (cents for USD, per ISO 4217). `2000` with `"currency": "USD"` means $20.00. JSON numbers are floats in most parsers, and money that depends on the parser is a dispute waiting to happen.
+
 `reward.type` ✓ — one of:
 
 **`per_clip`** · A flat amount per approved clip. `rate` is the amount. Predictable cost, predictable volume.
@@ -63,21 +65,21 @@ An editor MAY deliver to any listed platform unless the brief narrows it.
 | Field | Type | ✓ | Notes |
 | --- | --- | --- | --- |
 | `reward.type` | enum | ✓ | As above |
-| `reward.rate` | number | ✓ | Non-negative |
+| `reward.rate` | integer | ✓ | Minor units, non-negative |
 | `reward.currency` | string | ✓ | ISO 4217, e.g. `"USD"` |
-| `reward.floor` | number | | Guaranteed minimum per approved clip |
-| `reward.cap` | number | | Maximum payable to one editor |
+| `reward.floor` | integer | | Guaranteed minimum per approved clip, minor units |
+| `reward.cap` | integer | | Maximum payable to one editor, minor units |
 
-`reward.floor` combined with `per_100k_views` expresses the hybrid structure most editors prefer: certainty underneath, upside above.
+`reward.floor` combined with `per_100k_views` expresses the hybrid structure most editors prefer: certainty underneath, upside above. `floor` MUST NOT be used with `per_clip` or `flat` — the rate already is the guaranteed amount there, and a second number would only invite disagreement about which one governs.
 
 ### 3.5 Budget
 
 | Field | Type | ✓ | Notes |
 | --- | --- | --- | --- |
-| `budget.total` | number | ✓ | Ceiling on total payout |
+| `budget.total` | integer | ✓ | Ceiling on total payout, minor units |
 | `budget.funded` | boolean | ✓ | Whether money is actually committed |
 | `budget.escrow` | boolean | | Whether funds are held by a third party |
-| `budget.paid_out` | number | | Released to date |
+| `budget.paid_out` | integer | | Released to date, minor units |
 
 **`funded` is the single most consequential field in the spec.** An unfunded contract is an advertisement. Implementations SHOULD display funded and unfunded contracts distinguishably, and SHOULD NOT allow an unfunded contract to be claimed without the editor being shown its status.
 
@@ -112,7 +114,18 @@ A contract without a deadline cannot expire, and a contract that cannot expire c
 
 ### 3.8 Status
 
-`status` ✓ — one of `draft` · `open` · `claimed` · `in_review` · `settled` · `expired` · `cancelled`
+`status` ✓ — one of `draft` · `open` · `closed` · `settled` · `expired` · `cancelled`
+
+| Value | Meaning |
+| --- | --- |
+| `draft` | Not yet accepting claims |
+| `open` | Accepting claims and deliveries |
+| `closed` | No longer accepting claims or deliveries; settlement pending |
+| `settled` | Every approved delivery has been paid |
+| `expired` | Deadline passed |
+| `cancelled` | Withdrawn by the funder |
+
+These are states of the **contract**, not of any editor's claim. A contract with active claims is still `open` if another editor could claim it. The lifecycle of an individual claim — claimed, delivered, in review, approved — is platform behavior and out of scope (§1); the optional counters in §3.9 are the contract-level view of it.
 
 ### 3.9 Optional counters
 
@@ -134,3 +147,5 @@ Implementations MAY add fields under an `x_` prefix. Consumers MUST ignore unrec
 ## 6. Changelog
 
 **0.1** — Initial draft. Extracted from the Bounty Sounds contract ledger.
+
+Amended while unstable (still 0.1): monetary amounts are integers in minor units rather than decimal numbers; `status` trimmed to contract-scoped states (`claimed` and `in_review` removed, `closed` added); `reward.floor` restricted to `per_100k_views`; `x_` extension fields permitted inside nested objects.

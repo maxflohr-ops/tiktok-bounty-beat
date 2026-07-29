@@ -18,7 +18,7 @@ The spec is v0.1 and unstable. That's an invitation, not a warning.
 4. Run the validator.
 
 ```bash
-pip install jsonschema
+pip install "jsonschema[format-nongpl]"
 python3 tools/validate.py
 ```
 

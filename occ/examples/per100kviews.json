@@ -7,12 +7,12 @@
   "platforms": ["tiktok", "reels"],
   "reward": {
     "type": "per_100k_views",
-    "rate": 25.00,
+    "rate": 2500,
     "currency": "USD",
-    "floor": 5.00,
-    "cap": 500.00
+    "floor": 500,
+    "cap": 50000
   },
-  "budget": { "total": 2500.00, "funded": true, "escrow": true },
+  "budget": { "total": 250000, "funded": true, "escrow": true },
   "posted": "2026-07-24",
   "deadline": "2026-09-01",
   "review_window_hours": 72,
