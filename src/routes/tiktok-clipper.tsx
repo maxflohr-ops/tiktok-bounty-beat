@@ -83,6 +83,13 @@ function TiktokClipperPage() {
       <LandingSection title="Frequently asked questions">
         <FaqList items={FAQ} />
       </LandingSection>
+      <LandingSection title="Related">
+        <ul className="list-disc space-y-1 pl-6">
+          <li><a href="/for-editors" className="underline hover:text-bone">UGC creator jobs for editors</a></li>
+          <li><a href="/clipping-campaigns" className="underline hover:text-bone">How clipping campaigns work</a></li>
+          <li><a href="/for-artists" className="underline hover:text-bone">For music artists & labels</a></li>
+        </ul>
+      </LandingSection>
     </LandingLayout>
   );
 }
