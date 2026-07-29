@@ -49,7 +49,7 @@ function Admin() {
           <p className="script-note mt-2 text-xl text-bone-soft">
             Request a seal from an admin.
           </p>
-          <Link to="/" className="silver-btn mt-6 inline-flex">Back to the board</Link>
+          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the board</Link>
         </div>
       </Frame>
     );

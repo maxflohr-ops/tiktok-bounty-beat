@@ -92,7 +92,7 @@ function Dashboard() {
               <p className="script-note text-3xl text-bone-soft">
                 You've taken nothing. The board notices.
               </p>
-              <Link to="/" className="silver-btn mt-6 inline-flex">Visit the board</Link>
+              <Link to="/board" className="silver-btn mt-6 inline-flex">Visit the board</Link>
             </div>
           ) : (
             <ul className="mt-6 space-y-3">
