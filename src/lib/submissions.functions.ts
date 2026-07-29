@@ -108,7 +108,7 @@ export const deliverProof = createServerFn({ method: "POST" })
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
       .select(
-        "id,editor_id,status,tiktok_handle,bounty_id,bounties:bounty_id(platform_target,tiktok_sound_url,sound_name)",
+        "id,editor_id,status,tiktok_handle,bounty_id,bounties:bounty_id(platform_target,tiktok_sound_url,sound_name,hashtags)",
       )
       .eq("id", data.submission_id)
       .single();
@@ -118,7 +118,7 @@ export const deliverProof = createServerFn({ method: "POST" })
       throw new Error("This claim already has delivered proof.");
 
     const bounty = (sub as unknown as {
-      bounties: { platform_target: string; tiktok_sound_url: string | null; sound_name: string };
+      bounties: { platform_target: string; tiktok_sound_url: string | null; sound_name: string; hashtags?: string[] | null };
     }).bounties;
     const { parseMusicId, handleFromAuthorUrl, musicIdInHtml } = await import("@/lib/tiktok-verify");
 
@@ -160,9 +160,12 @@ export const deliverProof = createServerFn({ method: "POST" })
       soundOk = html ? musicIdInHtml(html, wantMusicId) : null;
     }
     // No hard block on sound: TikTok remaps audio often enough that a
-    // mismatch is a review flag, not a rejection. The campaign hashtag in
-    // the caption is an alternate signal.
-    const hasTag = /#bountysounds/i.test(oembed?.title ?? "");
+    // mismatch is a review flag, not a rejection. The site hashtag or any
+    // campaign hashtag in the caption is an alternate signal.
+    const caption = oembed?.title ?? "";
+    const campaignTags = (bounty?.hashtags ?? []).filter(Boolean);
+    const matchedTags = campaignTags.filter((t) => new RegExp(`#${t}\\b`, "i").test(caption));
+    const hasTag = /#bountysounds/i.test(caption) || matchedTags.length > 0;
 
     const soundSignal = soundOk === true || (soundOk === null && hasTag);
     const passed = Boolean(oembed && accountTrusted && soundSignal);
@@ -170,9 +173,9 @@ export const deliverProof = createServerFn({ method: "POST" })
       soundOk === true
         ? "using the contract's sound"
         : soundOk === false
-          ? `sound looks different from the contract's (TikTok sometimes remaps audio) — confirm manually${hasTag ? "; #bountysounds tag present" : ""}`
+          ? `sound looks different from the contract's (TikTok sometimes remaps audio) — confirm manually${hasTag ? `; campaign tag present (${matchedTags.length > 0 ? matchedTags.map((t) => `#${t}`).join(" ") : "#bountysounds"})` : ""}`
           : hasTag
-            ? "#bountysounds tag in caption"
+            ? `campaign tag in caption (${matchedTags.length > 0 ? matchedTags.map((t) => `#${t}`).join(" ") : "#bountysounds"})`
             : wantMusicId
               ? "sound not auto-verified (manual confirm)"
               : "no sound link on contract (manual confirm)";

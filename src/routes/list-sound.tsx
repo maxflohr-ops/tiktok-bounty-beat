@@ -60,6 +60,8 @@ function ListSoundPage() {
   const [streamAt, setStreamAt] = useState("");
   const [email, setEmail] = useState(user?.email ?? "");
   const [notes, setNotes] = useState("");
+  const [hashtags, setHashtags] = useState("");
+  const [rules, setRules] = useState("");
   const [featured, setFeatured] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -82,6 +84,8 @@ function ListSoundPage() {
               : undefined,
           contact_email: email,
           notes: notes || undefined,
+          hashtags: hashtags || undefined,
+          rules: rules || undefined,
           featured,
           attribution: getAttribution() ?? undefined,
         },
@@ -206,6 +210,12 @@ function ListSoundPage() {
                       </Field>
                     </>
                   )}
+                  <Field label="Campaign hashtags" hint="Clippers put these in their captions">
+                    <input value={hashtags} onChange={(e) => setHashtags(e.target.value)} className="bs-input" placeholder="#yoursound #yourname" />
+                  </Field>
+                  <Field label="Campaign rules" hint="Shown to every clipper before they post">
+                    <textarea value={rules} onChange={(e) => setRules(e.target.value)} className="bs-input min-h-[80px]" placeholder="9:16 only. Subtitles on. No logo overlays. Keep the drop at full volume…" />
+                  </Field>
                   <Field label="Contact email" required>
                     <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bs-input" />
                   </Field>

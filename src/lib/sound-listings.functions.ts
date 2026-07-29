@@ -40,6 +40,8 @@ const listingInput = z.object({
   stream_at: z.string().datetime({ offset: true }).optional().or(z.literal("").transform(() => undefined)),
   contact_email: z.string().trim().email("Enter a valid email"),
   notes: z.string().trim().max(2000).optional().or(z.literal("").transform(() => undefined)),
+  hashtags: z.string().trim().max(400).optional().or(z.literal("").transform(() => undefined)),
+  rules: z.string().trim().max(2000).optional().or(z.literal("").transform(() => undefined)),
   featured: z.boolean().default(false),
   attribution: z
     .object({
@@ -81,6 +83,8 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
         stream_at: data.stream_at ?? null,
         contact_email: data.contact_email,
         notes: data.notes ?? null,
+        hashtags: data.hashtags ?? null,
+        rules: data.rules ?? null,
         featured_requested: data.featured,
         amount_cents: data.featured ? LISTING_FEE_CENTS + FEATURED_FEE_CENTS : LISTING_FEE_CENTS,
         currency: "USD",
@@ -160,6 +164,8 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
         spotify_url: data.spotify_url ?? null,
         stream_url: data.stream_url ?? null,
         stream_at: data.stream_at ?? null,
+        hashtags: data.hashtags ?? null,
+        rules: data.rules ?? null,
         notes: data.notes ?? null,
         attribution: data.attribution ?? null,
       },

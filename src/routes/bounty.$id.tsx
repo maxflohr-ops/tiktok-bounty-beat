@@ -188,6 +188,31 @@ function BountyDetail() {
               <p className="mt-2 whitespace-pre-wrap font-body leading-relaxed text-ink-soft">{bounty.description}</p>
             </div>
 
+            {((bounty as any).hashtags ?? []).length > 0 ? (
+              <div className="mt-4">
+                <div className="label-cap text-ink-soft">Caption tags</div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {((bounty as any).hashtags as string[]).map((t) => (
+                    <span key={t} className="border border-[var(--paper-dark)] px-2 py-0.5 font-body text-sm text-ink">
+                      #{t}
+                    </span>
+                  ))}
+                </div>
+                <p className="mt-1 text-xs text-ink-soft">Put these in your caption — they count toward verification.</p>
+              </div>
+            ) : null}
+
+            {(bounty as any).rules ? (
+              <details className="mt-4 border border-[var(--paper-dark)]">
+                <summary className="cursor-pointer select-none px-3 py-2 font-display text-ink hover:bg-black/5">
+                  Campaign rules ▾
+                </summary>
+                <p className="whitespace-pre-wrap border-t border-[var(--paper-dark)] px-3 py-3 font-body text-sm leading-relaxed text-ink-soft">
+                  {(bounty as any).rules}
+                </p>
+              </details>
+            ) : null}
+
             <div className="mt-6 grid gap-4 border-t border-[var(--paper-dark)] pt-4 sm:grid-cols-2">
               <div>
                 <div className="label-cap text-ink-soft">Reward</div>
@@ -260,6 +285,48 @@ function BountyDetail() {
                   </li>
                 ) : null}
               </ul>
+            </div>
+
+            <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
+              <div className="label-cap text-ink-soft">Send it to your community</div>
+              <p className="mt-1 text-xs text-ink-soft">
+                Running this campaign? Drop it in your Discord, subreddit, or group chat — every clipper it recruits works your pot.
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const tags = (((bounty as any).hashtags ?? []) as string[]).map((t) => `#${t}`).join(" ");
+                    const url = `https://bountysounds.com/bounty/${bounty.id}`;
+                    const text = `Clipping bounty: ${bounty.title} — ${reward}. Post a TikTok${tags ? ` with ${tags}` : " with the sound"} and verified views pay out. ${url}`;
+                    try {
+                      await navigator.clipboard.writeText(text);
+                      toast.success("Copied — paste it anywhere your fans hang out.");
+                    } catch {
+                      toast.error("Couldn't copy. Long-press the page URL instead.");
+                    }
+                  }}
+                  className="ink-btn px-4 py-1.5 text-xs"
+                >
+                  copy the callout
+                </button>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Clipping bounty: ${bounty.title} — ${reward}. Verified views pay out.`)}&url=${encodeURIComponent(`https://bountysounds.com/bounty/${bounty.id}`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ink-btn px-4 py-1.5 text-xs"
+                >
+                  post on X
+                </a>
+                <a
+                  href={`https://www.reddit.com/submit?url=${encodeURIComponent(`https://bountysounds.com/bounty/${bounty.id}`)}&title=${encodeURIComponent(`Clipping bounty: ${bounty.title} — ${reward}`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ink-btn px-4 py-1.5 text-xs"
+                >
+                  post to reddit
+                </a>
+              </div>
             </div>
 
             <p className="script-note mt-8 text-center text-base text-ink-soft">
