@@ -19,6 +19,7 @@ import { Money } from "@/components/Money";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag } from "lucide-react";
+import { BsEmpty, BsLoading } from "@/components/bs";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -40,7 +41,7 @@ function Admin() {
   const { data: me, isLoading } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
 
   if (isLoading)
-    return <Frame><p className="script-note text-2xl text-bone-soft">loading…</p></Frame>;
+    return <Frame><BsLoading label="opening the ledger" variant="well" /></Frame>;
   if (!me?.isStaff)
     return (
       <Frame>
@@ -665,7 +666,7 @@ function DisputesPanel() {
       </div>
 
       {open.length === 0 ? (
-        <p className="script-note mt-3 text-lg text-bone-soft">No open disputes.</p>
+        <div className="mt-4"><BsEmpty eyebrow="disputes" title="No open disputes." body="Editor-flagged mismatches will land here." /></div>
       ) : (
         <ul className="mt-4 space-y-4">
           {open.map((d) => {

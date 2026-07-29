@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
-import { Reveal } from "@/components/Reveal";
+import { BsEmpty, BsLoading } from "@/components/bs";
 
 const HOME_TITLE = "The Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
@@ -182,18 +182,14 @@ function BoardPage() {
 
           {/* Board grid */}
           {isLoading ? (
-            <BoardSkeleton />
+            <DelayedLoading />
           ) : filtered.length === 0 ? (
-            <div className="py-20 text-center">
-              <p className="font-display text-2xl font-bold text-bone">No live contracts right now.</p>
-              <p className="mt-2 text-bone-soft">
-                Check back soon — or{" "}
-                <Link to="/list-sound" className="silver underline">
-                  list your own sound
-                </Link>{" "}
-                and fund the first pot.
-              </p>
-            </div>
+            <BsEmpty
+              eyebrow="the board"
+              title="No live contracts right now."
+              body={<>Check back soon — or fund the first pot yourself.</>}
+              action={<Link to="/list-sound" className="bs-btn bs-btn-accent">list your sound</Link>}
+            />
           ) : (
             <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map(({ b, score }) => {
@@ -418,20 +414,14 @@ function ContractCard({
 }
 
 
-// Skeleton cards shown only after 240ms, so fast responses never flash a
-// loader (pattern from Instatic's spotlight skeletons).
-function BoardSkeleton() {
+// Loader appears only after 240ms so fast responses never flash it
+// (pattern from Instatic's spotlight skeletons); visual is BsLoading.
+function DelayedLoading() {
   const [show, setShow] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setShow(true), 240);
     return () => clearTimeout(t);
   }, []);
   if (!show) return <div className="py-20" />;
-  return (
-    <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" aria-hidden>
-      {Array.from({ length: 6 }, (_, i) => (
-        <li key={i} className="skeleton h-64 rounded-2xl" />
-      ))}
-    </ul>
-  );
+  return <BsLoading label="loading contracts" variant="card" />;
 }
