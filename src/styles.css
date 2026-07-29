@@ -50,10 +50,22 @@
   --color-ring: var(--gold);
   --color-ring-offset-background: var(--wall);
 
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
-  --font-script: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
-  --font-terminal: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-marker: "Permanent Marker", "Space Grotesk", ui-sans-serif, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-script: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-terminal: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-bs-paper: #f5f3ee;
+  --color-bs-paper-soft: #faf9f5;
+  --color-bs-ink: #0d0d0d;
+  --color-bs-ink-soft: #2d2d2d;
+  --color-bs-ink-mute: #6b6b6b;
+  --color-bs-rule: rgba(13, 13, 13, 0.15);
+  --color-bs-rule-strong: rgba(13, 13, 13, 0.35);
+  --color-bs-accent: #e94f2e;
+  --color-bs-accent-soft: rgba(233, 79, 46, 0.25);
 }
 
 :root {
