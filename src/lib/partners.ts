@@ -23,6 +23,24 @@ export const PARTNERS: Record<string, Partner> = {
     url: "https://www.opus.pro",
     affiliateUrl: null, // has an affiliate program — paste the tracking URL once approved
   },
+  capcut: {
+    name: "CapCut",
+    blurb: "edit and caption, mobile or desktop",
+    url: "https://www.capcut.com",
+    affiliateUrl: null, // affiliate program runs through impact.com — paste the tracking URL once approved
+  },
+  descript: {
+    name: "Descript",
+    blurb: "cut long recordings by editing the transcript",
+    url: "https://www.descript.com",
+    affiliateUrl: null, // affiliate program via PartnerStack — paste the tracking URL once approved
+  },
+  riverside: {
+    name: "Riverside",
+    blurb: "record your own show, auto-clip the highlights",
+    url: "https://riverside.fm",
+    affiliateUrl: null, // affiliate program on their site — paste the tracking URL once approved
+  },
 };
 
 export function partnerGoHref(id: keyof typeof PARTNERS | string) {
