@@ -151,7 +151,7 @@ function BountiesPanel() {
       refetch();
       qc.invalidateQueries({ queryKey: ["bounties", "public"] });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "The board refused this notice.");
+      toast.error(err instanceof Error ? err.message : "The Bounty Board refused this notice.");
     }
   };
 
@@ -328,7 +328,7 @@ function SubmissionsPanel() {
       toast.success(decision === "approved" ? "Contract honored." : "Contract disputed.");
       refetch();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "The board refused this ruling.");
+      toast.error(err instanceof Error ? err.message : "The Bounty Board refused this ruling.");
     }
   };
 

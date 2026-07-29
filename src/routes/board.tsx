@@ -117,7 +117,7 @@ function BoardPage() {
               <div className="h-px w-20 bg-gradient-to-l from-transparent via-[var(--neon-cyan)] to-transparent opacity-60" />
             </div>
             <h1 className="mt-4 font-display text-3xl leading-tight text-bone md:text-4xl">
-              The board
+              The Bounty Board
             </h1>
             <p className="mx-auto mt-2 max-w-xl text-bone-soft">
               Public to anyone. No invite, no Discord. Every contract shows its rate, pot,

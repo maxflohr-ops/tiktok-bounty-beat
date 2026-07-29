@@ -327,7 +327,7 @@ function BountyDetail() {
                   </span>
                 </button>
                 <p className="script-note text-center text-lg text-bone-soft">
-                  The board keeps a record.
+                  The Bounty Board keeps a record.
                 </p>
               </form>
 
