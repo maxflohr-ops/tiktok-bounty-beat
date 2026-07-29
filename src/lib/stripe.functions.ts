@@ -180,11 +180,14 @@ export const createBountyTopUp = createServerFn({ method: "POST" })
   });
 
 // Compute the payout amount for a submission based on its bounty's rules.
-async function computePayoutAmount(supabase: any, submissionId: string) {
-  const { data: sub, error } = await supabase
+// Uses supabaseAdmin so we can read sensitive bounty columns (funded_cash_cents) after
+// column-level revoke, and reads the staff-verified view count — never the self-reported one.
+async function computePayoutAmount(_supabase: unknown, submissionId: string) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: sub, error } = await supabaseAdmin
     .from("submissions")
     .select(
-      "id,editor_id,status,awarded_cash_cents,view_count,paid_cash_cents,stripe_transfer_id,bounty_id,bounties:bounty_id(id,currency,payout_type,reward_cash_cents,funded_cash_cents)",
+      "id,editor_id,status,awarded_cash_cents,view_count,verified_view_count,paid_cash_cents,stripe_transfer_id,bounty_id,bounties:bounty_id(id,currency,payout_type,reward_cash_cents,funded_cash_cents)",
     )
     .eq("id", submissionId)
     .single();
@@ -197,7 +200,11 @@ async function computePayoutAmount(supabase: any, submissionId: string) {
 
   let amountCents = 0;
   if (bounty.payout_type === "per_1k_views") {
-    amountCents = Math.floor((sub.view_count || 0) / 100000) * bounty.reward_cash_cents;
+    const verified = (sub as { verified_view_count: number | null }).verified_view_count;
+    if (verified === null || verified === undefined) {
+      throw new Error("Staff must verify the view count before this payout can be released.");
+    }
+    amountCents = Math.floor(verified / 100000) * bounty.reward_cash_cents;
   } else {
     amountCents = sub.awarded_cash_cents ?? bounty.reward_cash_cents;
   }
