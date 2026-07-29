@@ -13,8 +13,8 @@ OCC is one JSON object that answers them the same way every time.
   "title": "Loop cut bounty — instrumental",
   "asset": { "url": "https://example.com/track", "type": "audio" },
   "platforms": ["tiktok", "reels"],
-  "reward": { "type": "per_100k_views", "rate": 25.00, "currency": "USD" },
-  "budget": { "total": 500.00, "funded": true, "escrow": true },
+  "reward": { "type": "per_100k_views", "rate": 2500, "currency": "USD" },
+  "budget": { "total": 50000, "funded": true, "escrow": true },
   "posted": "2026-07-24",
   "deadline": "2026-08-08",
   "proof": { "requires": ["live_url", "view_count"], "verified_after_hours": 72 }
@@ -50,7 +50,7 @@ Concretely, a standard means:
 ## Validate a contract
 
 ```bash
-pip install jsonschema
+pip install "jsonschema[format-nongpl]"
 python3 tools/validate.py
 ```
 

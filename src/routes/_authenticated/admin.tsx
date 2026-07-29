@@ -177,7 +177,7 @@ function BountiesPanel() {
               <div className="min-w-0">
                 <div className="label-cap silver">No. {pad(b.contract_no)}</div>
                 <div className="truncate text-bone">{b.title}</div>
-                <div className="text-xs italic text-bone-soft">
+                <div className="text-xs text-bone-soft">
                   {b.sound_name} · {b.status} · Pot: <Money cents={(b as any).funded_cash_cents ?? 0} currency={b.currency} />
                 </div>
               </div>
@@ -364,12 +364,12 @@ function ReviewCard({
         {s.oembed_thumbnail ? (
           <img src={s.oembed_thumbnail} alt="" className="h-24 w-20 object-cover" />
         ) : (
-          <div className="flex h-24 w-20 items-center justify-center border border-[var(--border)] text-xs italic text-bone-soft">no thumb</div>
+          <div className="flex h-24 w-20 items-center justify-center border border-[var(--border)] text-xs text-bone-soft">no thumb</div>
         )}
         <div className="min-w-0 flex-1">
           <div className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</div>
           <div className="truncate text-bone">{s.bounty?.title}</div>
-          <div className="text-xs italic text-bone-soft">
+          <div className="text-xs text-bone-soft">
             by {s.editor?.display_name || "editor"} · @{s.tiktok_handle}
           </div>
           {s.tiktok_video_url ? (
@@ -381,7 +381,7 @@ function ReviewCard({
             <span className={`label-cap ${s.auto_check_passed ? "silver border border-[var(--gold)]/40 px-2 py-1" : "text-bone-soft"}`}>
               {s.auto_check_passed ? "auto-check ✓" : "needs eyes"}
             </span>
-            {s.auto_check_notes ? <p className="mt-1 text-xs italic text-bone-soft">{s.auto_check_notes}</p> : null}
+            {s.auto_check_notes ? <p className="mt-1 text-xs text-bone-soft">{s.auto_check_notes}</p> : null}
           </div>
         </div>
       </div>
@@ -452,7 +452,7 @@ function Ledger() {
         <div>
           <h2 className="label-cap silver">Paid in crowns</h2>
           <p className="script-note text-lg text-bone-soft">A running weight of honored contracts.</p>
-          <p className="mt-1 text-xs italic text-bone-soft">Payouts are sent via Stripe to the clipper's linked account.</p>
+          <p className="mt-1 text-xs text-bone-soft">Payouts are sent via Stripe to the clipper's linked account.</p>
         </div>
         <div className="flex gap-6 text-right">
           <div><div className="label-cap text-bone-soft">owed</div><div className="font-display text-xl silver">{money(owed)}</div></div>
@@ -465,9 +465,9 @@ function Ledger() {
             <div className="min-w-0">
               <span className="label-cap silver mr-2">No. {r.bounty?.contract_no != null ? pad(r.bounty.contract_no) : "—"}</span>
               <span className="text-bone">{r.bounty?.title}</span>
-              <span className="ml-2 italic text-bone-soft">to {r.editor?.display_name || "editor"} @{r.tiktok_handle}</span>
+              <span className="ml-2 text-bone-soft">to {r.editor?.display_name || "editor"} @{r.tiktok_handle}</span>
               {r.status === "paid" && (r as any).stripe_transfer_id ? (
-                <div className="mt-1 text-xs italic text-bone-soft">
+                <div className="mt-1 text-xs text-bone-soft">
                   transfer: {(r as any).stripe_transfer_id} · paid <Money cents={(r as any).paid_cash_cents ?? r.awarded_cash_cents ?? 0} currency={r.bounty?.currency || "USD"} />
                 </div>
               ) : null}
@@ -543,7 +543,7 @@ function PayoutApprovalsPanel() {
         <div>
           <h2 className="label-cap silver">Payout approvals</h2>
           <p className="script-note text-lg text-bone-soft">No silver leaves the harbor without a second seal.</p>
-          <p className="mt-1 text-xs italic text-bone-soft">Any staff can request. Only admins can approve; approval sends the Stripe transfer.</p>
+          <p className="mt-1 text-xs text-bone-soft">Any staff can request. Only admins can approve; approval sends the Stripe transfer.</p>
         </div>
         <div className="text-right">
           <div className="label-cap text-bone-soft">pending</div>
@@ -557,8 +557,8 @@ function PayoutApprovalsPanel() {
             <div className="min-w-0">
               <span className="label-cap silver mr-2">No. {a.submission?.bounty?.contract_no != null ? pad(a.submission.bounty.contract_no) : "—"}</span>
               <span className="text-bone">{a.submission?.bounty?.title}</span>
-              <span className="ml-2 italic text-bone-soft">@{a.submission?.tiktok_handle}</span>
-              <div className="mt-1 text-xs italic text-bone-soft">
+              <span className="ml-2 text-bone-soft">@{a.submission?.tiktok_handle}</span>
+              <div className="mt-1 text-xs text-bone-soft">
                 requested by {a.requested_by_name || "staff"} · {new Date(a.created_at).toLocaleString()}
               </div>
             </div>
@@ -583,7 +583,7 @@ function PayoutApprovalsPanel() {
           <div className="label-cap text-bone-soft mb-2">Recent decisions</div>
           <ul className="divide-y divide-[var(--border)]">
             {recent.map((a: any) => (
-              <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-2 text-xs italic text-bone-soft">
+              <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-2 text-xs text-bone-soft">
                 <div className="min-w-0">
                   <span className="label-cap silver mr-2">No. {a.submission?.bounty?.contract_no != null ? pad(a.submission.bounty.contract_no) : "—"}</span>
                   <span className="text-bone">{a.submission?.bounty?.title}</span>

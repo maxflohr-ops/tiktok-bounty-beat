@@ -9,8 +9,8 @@
     "attribution": "credit the artist handle in caption"
   },
   "platforms": ["tiktok", "reels", "shorts"],
-  "reward": { "type": "per_clip", "rate": 20.00, "currency": "USD", "cap": 200.00 },
-  "budget": { "total": 1000.00, "funded": true, "escrow": true, "paid_out": 340.00 },
+  "reward": { "type": "per_clip", "rate": 2000, "currency": "USD", "cap": 20000 },
+  "budget": { "total": 100000, "funded": true, "escrow": true, "paid_out": 34000 },
   "posted": "2026-07-20",
   "deadline": "2026-08-10",
   "review_window_hours": 48,
@@ -19,7 +19,7 @@
     "verified_after_hours": 72,
     "min_retention_days": 30
   },
-  "status": "claimed",
+  "status": "open",
   "claims": 11,
   "delivered": 17,
   "approved": 12
