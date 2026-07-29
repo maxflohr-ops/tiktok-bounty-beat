@@ -64,6 +64,9 @@ function Admin() {
           <div>
             <h1 className="font-display text-4xl text-bone">Admin desk</h1>
             <p className="script-note text-xl text-bone-soft">Post contracts. Review deliveries. Approve payouts.</p>
+            <Link to="/analytics" className="mt-2 inline-block text-sm underline underline-offset-4">
+              Analytics →
+            </Link>
           </div>
           <div className="system-bar">
             <span className="status-dot" />
