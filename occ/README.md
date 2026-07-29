@@ -36,7 +36,7 @@ Concretely, a standard means:
 
 ## Status
 
-**v0.1 — draft.** Unstable. Fields will change. Implemented in production by [Bounty Sounds](https://bountysounds.com), which is where the schema was pressure-tested, but the spec is deliberately not tied to it.
+**v0.1 — draft.** Unstable. Fields will change. Implemented in production by [Bounty Sounds](https://bountysounds.com), which is where the schema was pressure-tested, but the spec is deliberately not tied to it. The board serves its live contracts as OCC at [`/api/public/occ/contracts`](https://bountysounds.com/api/public/occ/contracts) — a reference feed to build against.
 
 ## What's here
 
