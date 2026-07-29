@@ -90,7 +90,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:site_name", content: "Bounty Sounds" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://bountysounds.com/og.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://bountysounds.com/og.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -101,6 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
     scripts: [
       {
