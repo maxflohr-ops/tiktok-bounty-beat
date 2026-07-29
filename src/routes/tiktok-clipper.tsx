@@ -8,16 +8,16 @@ const DESCRIPTION =
 
 const FAQ = [
   {
-    q: "What does a TikTok clipper do?",
-    a: "A clipper takes existing content — songs, movie scenes, podcast moments, gameplay — and edits it into short-form TikTok videos, usually built around a specific trending sound.",
+    q: "What does a clipper do?",
+    a: "Cuts songs, streams, keynotes, or gameplay into short TikToks — usually built around a specific sound.",
   },
   {
-    q: "Do I need my own TikTok account?",
-    a: "Yes. You'll enter your TikTok handle when you claim a contract so we can verify your posts and view counts.",
+    q: "Do I need my own TikTok?",
+    a: "Yes. Your handle goes on the claim so we can verify your posts. You can add several accounts.",
   },
   {
-    q: "How much can I make as a TikTok clipper?",
-    a: "It scales with views. On a $1 per 100k views contract, a clip with 500k views pays $5; a viral edit at 5M views pays $50. Stack multiple contracts and one good week of edits can pay serious money.",
+    q: "How much can I make?",
+    a: "It scales with views: on a $5 per 100k contract, a 2M-view edit pays $100. Stack contracts and a good week adds up.",
   },
 ];
 
@@ -56,38 +56,35 @@ function TiktokClipperPage() {
     <LandingLayout
       eyebrow="paid tiktok clippers"
       h1="Get paid to clip — TikTok music bounties on Bounty Board"
-      intro="If you already make TikTok edits, you're leaving money on the table. Claim music bounties, post your clip, and cash in per verified view."
+      intro="If you already make TikTok edits, you're leaving money on the table. Claim a bounty, post your clip, cash in per verified view."
       primaryCta="sign in and claim a bounty"
       primaryHref="/auth"
       secondaryCta="browse open bounties"
-      secondaryHref="/"
+      secondaryHref="/board"
     >
       <LandingSection title="Why clippers use Bounty Sounds">
-        <ul className="list-disc space-y-2 pl-6">
-          <li>Bounties are open — first-come-first-served, no application form</li>
-          <li>Per-view payouts, so a single viral edit is a serious payday</li>
-          <li>Payouts via PayPal, Stripe, or USDC, on your schedule</li>
-          <li>Dispute flow if the TikTok view count doesn't match the Bounty Board</li>
-          <li>Leaderboard so consistent clippers build a public track record</li>
+        <ul className="list-disc space-y-3 pl-6">
+          <li>Open bounties — first come, first served, no application</li>
+          <li>Per-view payouts, so one viral edit is a real payday</li>
+          <li>PayPal or USDC, your pick</li>
+          <li>A public leaderboard for consistent clippers</li>
         </ul>
       </LandingSection>
-      <LandingSection title="How to start clipping today">
-        <ol className="list-decimal space-y-2 pl-6">
-          <li>Sign in with Google — takes ten seconds.</li>
-          <li>Browse open contracts and take one that fits your style.</li>
-          <li>Add your TikTok handle and PayPal email.</li>
-          <li>Post your edit using the campaign's official TikTok sound.</li>
-          <li>Paste the TikTok URL as proof and wait for approval.</li>
+      <LandingSection title="Start today">
+        <ol className="list-decimal space-y-3 pl-6">
+          <li>Sign in with Google.</li>
+          <li>Take a contract that fits your style.</li>
+          <li>Post your edit with the campaign's sound.</li>
+          <li>Paste the link as proof. Approval, then payout.</li>
         </ol>
       </LandingSection>
-      <LandingSection title="Frequently asked questions">
+      <LandingSection title="Questions">
         <FaqList items={FAQ} />
       </LandingSection>
       <LandingSection title="Related">
-        <ul className="list-disc space-y-1 pl-6">
-          <li><a href="/for-editors" className="underline hover:text-bone">UGC creator jobs for editors</a></li>
-          <li><a href="/clipping-campaigns" className="underline hover:text-bone">How clipping campaigns work</a></li>
-          <li><a href="/for-artists" className="underline hover:text-bone">For music artists & labels</a></li>
+        <ul className="list-disc space-y-2 pl-6">
+          <li><a href="/for-editors" className="underline hover:text-bone">For editors — live campaigns</a></li>
+          <li><a href="/clipping-campaigns" className="underline hover:text-bone">How campaigns work</a></li>
         </ul>
       </LandingSection>
     </LandingLayout>

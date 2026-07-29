@@ -28,6 +28,32 @@ export function InkCardinal({ accent = false, className = "" }: MarkProps & { ac
   );
 }
 
+export function InkSeal({ accent = false, className = "" }: MarkProps & { accent?: boolean }) {
+  return (
+    <img
+      src={accent ? "/art/great-seal-accent.png" : "/art/great-seal.png"}
+      alt=""
+      aria-hidden
+      loading="lazy"
+      draggable={false}
+      className={`pointer-events-none select-none ${className}`}
+    />
+  );
+}
+
+export function InkDrips({ className = "" }: MarkProps) {
+  return (
+    <img
+      src="/art/drips.png"
+      alt=""
+      aria-hidden
+      loading="lazy"
+      draggable={false}
+      className={`pointer-events-none select-none ${className}`}
+    />
+  );
+}
+
 export function InkScrawl({ className = "" }: MarkProps) {
   return (
     <img
