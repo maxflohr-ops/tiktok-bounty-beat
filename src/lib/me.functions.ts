@@ -156,3 +156,33 @@ export const weeklyPayouts = createServerFn({ method: "GET" }).handler(async () 
     .sort((a, b) => b.paid_cents - a.paid_cents)
     .slice(0, 10);
 });
+
+const attributionInput = z.object({
+  utm_source: z.string().max(200).optional(),
+  utm_medium: z.string().max(200).optional(),
+  utm_campaign: z.string().max(200).optional(),
+  utm_term: z.string().max(200).optional(),
+  utm_content: z.string().max(200).optional(),
+  gclid: z.string().max(200).optional(),
+  ttclid: z.string().max(200).optional(),
+  fbclid: z.string().max(200).optional(),
+  referrer: z.string().max(300).optional(),
+  landing: z.string().max(200).optional(),
+  captured_at: z.string().max(40).optional(),
+});
+
+// First-touch ad attribution, logged once per user after sign-in. Lands in
+// the event stream so signups in the Sheet can be tied back to the ad.
+export const recordAttribution = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => attributionInput.parse(d))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ data, context }) => {
+    const { data: userData } = await context.supabase.auth.getUser();
+    notifyAsync({
+      event: "user.attribution",
+      actor: userData?.user?.email ?? context.userId,
+      reference: data.utm_source ?? data.referrer ?? "direct",
+      details: data,
+    });
+    return { ok: true };
+  });

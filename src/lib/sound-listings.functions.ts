@@ -4,6 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { notifyAsync } from "@/lib/notify.server";
 
 const LISTING_FEE_CENTS = 20000; // $200
+const FEATURED_FEE_CENTS = 100000; // $1,000 / month, pinned #1 on the board
 const LISTING_DAYS = 30;
 
 function appOrigin() {
@@ -39,6 +40,22 @@ const listingInput = z.object({
   stream_at: z.string().datetime({ offset: true }).optional().or(z.literal("").transform(() => undefined)),
   contact_email: z.string().trim().email("Enter a valid email"),
   notes: z.string().trim().max(2000).optional().or(z.literal("").transform(() => undefined)),
+  featured: z.boolean().default(false),
+  attribution: z
+    .object({
+      utm_source: z.string().max(200).optional(),
+      utm_medium: z.string().max(200).optional(),
+      utm_campaign: z.string().max(200).optional(),
+      utm_term: z.string().max(200).optional(),
+      utm_content: z.string().max(200).optional(),
+      gclid: z.string().max(200).optional(),
+      ttclid: z.string().max(200).optional(),
+      fbclid: z.string().max(200).optional(),
+      referrer: z.string().max(300).optional(),
+      landing: z.string().max(200).optional(),
+      captured_at: z.string().max(40).optional(),
+    })
+    .optional(),
 }).refine((d) => d.listing_type !== "stream" || d.stream_url, {
   message: "A stream listing needs a channel or VOD link",
   path: ["stream_url"],
@@ -64,7 +81,8 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
         stream_at: data.stream_at ?? null,
         contact_email: data.contact_email,
         notes: data.notes ?? null,
-        amount_cents: LISTING_FEE_CENTS,
+        featured_requested: data.featured,
+        amount_cents: data.featured ? LISTING_FEE_CENTS + FEATURED_FEE_CENTS : LISTING_FEE_CENTS,
         currency: "USD",
         status: "pending_payment",
       })
@@ -76,27 +94,45 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
     const stripe = getStripe();
     const origin = appOrigin();
 
+    const lineItems = [
+      {
+        price_data: {
+          currency: "usd",
+          unit_amount: LISTING_FEE_CENTS,
+          product_data: {
+            name:
+              data.listing_type === "stream"
+                ? `Stream listing — ${data.song_title} by ${data.artist_name}`
+                : `Sound listing — ${data.song_title} by ${data.artist_name}`,
+            description: `30-day campaign listing on Bounty Sounds`,
+          },
+        },
+        quantity: 1,
+      },
+    ];
+    if (data.featured) {
+      lineItems.push({
+        price_data: {
+          currency: "usd",
+          unit_amount: FEATURED_FEE_CENTS,
+          product_data: {
+            name: "Featured placement — first month",
+            description: "Pinned #1 on the Bounty Board with the featured stamp",
+          },
+        },
+        quantity: 1,
+      });
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            unit_amount: LISTING_FEE_CENTS,
-            product_data: {
-              name:
-                data.listing_type === "stream"
-                  ? `Stream listing — ${data.song_title} by ${data.artist_name}`
-                  : `Sound listing — ${data.song_title} by ${data.artist_name}`,
-              description: `30-day campaign listing on Bounty Sounds`,
-            },
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: lineItems,
       metadata: {
         sound_listing_id: listing.id,
         kind: "sound_listing",
+        featured: data.featured ? "1" : "0",
+        utm_source: data.attribution?.utm_source ?? "",
+        utm_campaign: data.attribution?.utm_campaign ?? "",
       },
       payment_intent_data: {
         metadata: { sound_listing_id: listing.id, kind: "sound_listing" },
@@ -118,12 +154,14 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
       details: {
         listing_id: listing.id,
         listing_type: data.listing_type,
-        amount_cents: LISTING_FEE_CENTS,
+        featured: data.featured,
+        amount_cents: data.featured ? LISTING_FEE_CENTS + FEATURED_FEE_CENTS : LISTING_FEE_CENTS,
         tiktok_sound_url: data.tiktok_sound_url ?? null,
         spotify_url: data.spotify_url ?? null,
         stream_url: data.stream_url ?? null,
         stream_at: data.stream_at ?? null,
         notes: data.notes ?? null,
+        attribution: data.attribution ?? null,
       },
     });
 
