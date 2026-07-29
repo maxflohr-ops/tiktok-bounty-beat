@@ -230,7 +230,88 @@ function PaymentSetup() {
           </button>
         </div>
       )}
+      <CryptoPayout />
       <p className="mt-3 text-xs text-bone-soft">PayPal support coming soon.</p>
+    </div>
+  );
+}
+
+// USDC payout destination — same self-declared trust model as the PayPal
+// email on claims. Wallet connect just fills the address without typos.
+function CryptoPayout() {
+  const meFn = useServerFn(getMe);
+  const saveFn = useServerFn(updateMyProfile);
+  const { data: me, refetch } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
+  const [addr, setAddr] = useState("");
+  const [busy, setBusy] = useState(false);
+  const saved = me?.profile?.wallet_address as string | null | undefined;
+
+  const connect = async () => {
+    const eth = (window as { ethereum?: { request: (a: { method: string }) => Promise<string[]> } }).ethereum;
+    if (!eth) {
+      toast.error("No wallet extension found — paste your address instead.");
+      return;
+    }
+    try {
+      const accounts = await eth.request({ method: "eth_requestAccounts" });
+      if (accounts?.[0]) setAddr(accounts[0]);
+    } catch {
+      toast.error("Wallet connection was declined.");
+    }
+  };
+
+  const save = async (value: string) => {
+    setBusy(true);
+    try {
+      await saveFn({ data: { wallet_address: value } });
+      toast.success(value ? "USDC payout address saved." : "USDC payout address removed.");
+      setAddr("");
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save address.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="mt-5 border-t border-[var(--border)] pt-4">
+      <h3 className="font-display text-lg text-bone">Or get paid in USDC</h3>
+      {saved ? (
+        <div className="mt-2 space-y-2">
+          <p className="break-all text-sm text-bone-soft">
+            Payouts can be sent to <span className="text-bone">{saved}</span>
+          </p>
+          <button onClick={() => save("")} disabled={busy} className="ink-btn">
+            remove address
+          </button>
+        </div>
+      ) : (
+        <div className="mt-2 space-y-2">
+          <p className="text-sm text-bone-soft">
+            Connect a wallet or paste an EVM address. USDC payouts are sent manually by the board after approval.
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={connect} disabled={busy} className="ink-btn">
+              connect wallet
+            </button>
+            <input
+              value={addr}
+              onChange={(e) => setAddr(e.target.value.trim())}
+              placeholder="0x…"
+              maxLength={42}
+              className="dark-input max-w-xs flex-1"
+            />
+            <button
+              onClick={() => save(addr)}
+              disabled={busy || !/^0x[0-9a-fA-F]{40}$/.test(addr)}
+              className="silver-btn"
+            >
+              save
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

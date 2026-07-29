@@ -4,7 +4,7 @@ import { LandingLayout, LandingSection, FaqList } from "@/components/LandingLayo
 const CANONICAL = "https://bountysounds.com/tiktok-clipper";
 const TITLE = "Become a Paid TikTok Clipper — Bounties Posted Daily";
 const DESCRIPTION =
-  "Become a paid TikTok clipper. Claim music bounties, post edits, and cash in per verified view. Independent, remote, and paid via PayPal or Stripe.";
+  "Become a paid TikTok clipper. Claim music bounties, post edits, and cash in per verified view. Independent, remote, and paid via PayPal, Stripe, or USDC.";
 
 const FAQ = [
   {
@@ -66,7 +66,7 @@ function TiktokClipperPage() {
         <ul className="list-disc space-y-2 pl-6">
           <li>Bounties are open — first-come-first-served, no application form</li>
           <li>Per-view payouts, so a single viral edit is a serious payday</li>
-          <li>Payouts via PayPal or Stripe, on your schedule</li>
+          <li>Payouts via PayPal, Stripe, or USDC, on your schedule</li>
           <li>Dispute flow if the TikTok view count doesn't match the board</li>
           <li>Leaderboard so consistent clippers build a public track record</li>
         </ul>

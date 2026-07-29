@@ -13,7 +13,7 @@ export const getAdminAnalytics = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const [profilesQ, subsQ, bountiesQ, listingsQ, disputesQ] = await Promise.all([
-      supabaseAdmin.from("profiles").select("id,display_name,tiktok_handle,points,created_at"),
+      supabaseAdmin.from("profiles").select("id,display_name,tiktok_handle,points,created_at,wallet_address"),
       supabaseAdmin
         .from("submissions")
         .select(
@@ -84,6 +84,7 @@ export const getAdminAnalytics = createServerFn({ method: "GET" })
           name: p?.display_name ?? null,
           handle: p?.tiktok_handle ?? null,
           email: a?.email ?? null,
+          wallet: p?.wallet_address ?? null,
           joined: a?.created_at ?? p?.created_at ?? null,
           last_seen: a?.last_sign_in_at ?? null,
           points: p?.points ?? 0,

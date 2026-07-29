@@ -189,7 +189,14 @@ function AnalyticsPage() {
                         <span className="font-medium">{p.name ?? "—"}</span>
                         {p.handle ? <span className="ml-2 text-bone-soft">@{p.handle}</span> : null}
                       </td>
-                      <td className="py-2.5 pr-3 text-bone-soft">{p.email ?? "—"}</td>
+                      <td className="py-2.5 pr-3 text-bone-soft">
+                        {p.email ?? "—"}
+                        {p.wallet ? (
+                          <span className="mt-0.5 block font-mono text-[10px]" title={p.wallet}>
+                            usdc {p.wallet.slice(0, 6)}…{p.wallet.slice(-4)}
+                          </span>
+                        ) : null}
+                      </td>
                       <td className="py-2.5 pr-3 text-bone-soft">{ago(p.joined)}</td>
                       <td className="py-2.5 pr-3 text-bone-soft">{ago(p.last_seen)}</td>
                       <td className="py-2.5 pr-3 text-right tabular-nums">{p.claims}</td>
