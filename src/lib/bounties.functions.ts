@@ -5,13 +5,16 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const BOUNTY_COLS =
   "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents";
+// Columns safe to expose publicly (excludes funded_cash_cents and any Stripe identifiers).
+const PUBLIC_BOUNTY_COLS =
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at";
 
 // Public: all bounties (any status) — the board never deletes, expired stays visible.
 export const listPublicBounties = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: bounties, error } = await supabaseAdmin
     .from("bounties")
-    .select(BOUNTY_COLS)
+    .select(PUBLIC_BOUNTY_COLS)
     .neq("status", "draft")
     .order("contract_no", { ascending: false });
   if (error) throw new Error(error.message);
@@ -111,7 +114,10 @@ export const listAllBountiesStaff = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
-    const { data, error } = await context.supabase
+    // Uses admin client: BOUNTY_COLS includes funded_cash_cents which is column-level
+    // revoked from authenticated. Staff gate above authorizes the read.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
       .from("bounties")
       .select(BOUNTY_COLS)
       .order("contract_no", { ascending: false });
