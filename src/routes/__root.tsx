@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "sonner";
 import { attributionSent, captureAttribution, getAttribution, markAttributionSent } from "@/lib/attribution";
+import { consumeReturnTo } from "@/lib/return-to";
 import { recordAttribution } from "@/lib/me.functions";
 
 function NotFoundComponent() {
@@ -161,6 +162,12 @@ function RootComponent() {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      // OAuth drops everyone at the origin; send them back where they were.
+      // (/auth handles its own post-sign-in navigation for email flows.)
+      if (event === "SIGNED_IN" && window.location.pathname === "/") {
+        const dest = consumeReturnTo();
+        if (dest && dest !== "/") router.navigate({ to: dest } as never);
+      }
       if (event === "SIGNED_IN" && !attributionSent()) {
         const a = getAttribution();
         if (a) {

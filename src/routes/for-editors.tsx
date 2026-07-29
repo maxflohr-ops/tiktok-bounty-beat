@@ -99,6 +99,7 @@ function ForEditors() {
       intro="Claim a contract, post from your own TikTok, cash in on verified views. No pitching, no invite — the work is already on the board."
       primaryCta="claim a contract"
       primaryHref="/auth"
+      primaryReturnTo="/board"
       secondaryCta="see the board"
       secondaryHref="/board"
     >

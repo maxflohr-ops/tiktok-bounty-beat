@@ -6,6 +6,7 @@ import { getMe } from "@/lib/me.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut } from "lucide-react";
 import { BsBadge, BsEyebrow, BsMono } from "@/components/bs";
+import { setReturnTo } from "@/lib/return-to";
 
 export function SiteHeader() {
   const { user, loading } = useSession();
@@ -57,7 +58,13 @@ export function SiteHeader() {
               </button>
             </>
           ) : (
-            <Link to="/auth" className="bs-btn ml-2">sign in</Link>
+            <Link
+              to="/auth"
+              className="bs-btn ml-2"
+              onClick={() => setReturnTo(window.location.pathname + window.location.search)}
+            >
+              sign in
+            </Link>
           )}
         </nav>
       </div>

@@ -9,6 +9,7 @@ import {
 } from "@/lib/submissions.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PARTNERS, partnerGoHref } from "@/lib/partners";
+import { setReturnTo } from "@/lib/return-to";
 import { Money } from "@/components/Money";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
@@ -85,7 +86,7 @@ function BountyDetail() {
 
   const take = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) { navigate({ to: "/auth" }); return; }
+    if (!user) { setReturnTo(`/bounty/${id}`); navigate({ to: "/auth" }); return; }
     const { validateClaimFields } = await import("@/lib/claim-validation");
     const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal });
     setTouched({ tiktok_handle: true, paypal_email: true });
@@ -348,7 +349,13 @@ function BountyDetail() {
                 <p className="mt-3 text-bone-soft">
                   Sign in to take this contract.
                 </p>
-                <Link to="/auth" className="silver-btn mt-5 w-full">sign in</Link>
+                <Link
+                  to="/auth"
+                  className="silver-btn mt-5 w-full"
+                  onClick={() => setReturnTo(`/bounty/${id}`)}
+                >
+                  sign in
+                </Link>
               </>
             ) : !myClaim ? (
               <form onSubmit={take} noValidate className="mt-4 space-y-4">
