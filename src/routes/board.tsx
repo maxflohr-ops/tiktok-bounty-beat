@@ -286,6 +286,7 @@ function BoardPage() {
             <Link to="/board" className="hover:text-bone">board</Link>
             <Link to="/for-artists" className="hover:text-bone">for artists</Link>
             <Link to="/for-editors" className="hover:text-bone">for editors</Link>
+            <Link to="/keynotes" className="hover:text-bone">keynotes</Link>
             <Link to="/clipping-campaigns" className="hover:text-bone">clipping campaigns</Link>
             <Link to="/tiktok-clipper" className="hover:text-bone">tiktok clippers</Link>
             <Link to="/list-sound" className="hover:text-bone">list a sound</Link>
