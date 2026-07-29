@@ -8,6 +8,7 @@ import {
   listMyClaims,
 } from "@/lib/submissions.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { PARTNERS, partnerGoHref } from "@/lib/partners";
 import { Money } from "@/components/Money";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
@@ -236,18 +237,19 @@ function BountyDetail() {
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Clipper toolkit</div>
               <ul className="mt-2 space-y-1 text-sm text-ink-soft">
-                <li>
-                  <a href="https://cobalt.tools" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline">
-                    cobalt <ExternalLink className="h-3 w-3" />
-                  </a>{" "}
-                  — grab the source video or VOD
-                </li>
-                <li>
-                  <a href="https://www.opus.pro" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline">
-                    opus clip <ExternalLink className="h-3 w-3" />
-                  </a>{" "}
-                  — rough-cut long streams into candidates
-                </li>
+                {Object.entries(PARTNERS).map(([id, p]) => (
+                  <li key={id}>
+                    <a
+                      href={partnerGoHref(id)}
+                      target="_blank"
+                      rel="sponsored noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-ink underline"
+                    >
+                      {p.name.toLowerCase()} <ExternalLink className="h-3 w-3" />
+                    </a>{" "}
+                    — {p.blurb}
+                  </li>
+                ))}
                 {bounty.tiktok_sound_url ? (
                   <li>
                     then swap in{" "}

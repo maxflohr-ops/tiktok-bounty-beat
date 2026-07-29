@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { LandingLayout, LandingSection, FaqList } from "@/components/LandingLayout";
 import { InkSeal } from "@/components/ArtMarks";
+import { PARTNERS, partnerGoHref } from "@/lib/partners";
 import { BsMono } from "@/components/bs";
 
 const CANONICAL = "https://bountysounds.com/for-editors";
@@ -138,14 +139,19 @@ function ForEditors() {
 
       <LandingSection title="Toolkit">
         <ul className="list-disc space-y-2 pl-6">
-          <li>
-            <a href="https://cobalt.tools" target="_blank" rel="noreferrer" className="underline hover:text-bone">Cobalt</a>{" "}
-            — grab the source video or stream VOD
-          </li>
-          <li>
-            <a href="https://www.opus.pro" target="_blank" rel="noreferrer" className="underline hover:text-bone">Opus Clip</a>{" "}
-            — rough-cut a long stream into candidates
-          </li>
+          {Object.entries(PARTNERS).map(([id, p]) => (
+            <li key={id}>
+              <a
+                href={partnerGoHref(id)}
+                target="_blank"
+                rel="sponsored noopener noreferrer"
+                className="underline hover:text-bone"
+              >
+                {p.name}
+              </a>{" "}
+              — {p.blurb}
+            </li>
+          ))}
           <li>Every contract links its exact TikTok sound — post with that one</li>
         </ul>
       </LandingSection>
