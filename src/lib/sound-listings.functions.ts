@@ -13,8 +13,9 @@ function appOrigin() {
 }
 
 const listingInput = z.object({
-  artist_name: z.string().trim().min(1, "Artist name is required").max(120),
-  song_title: z.string().trim().min(1, "Song title is required").max(200),
+  listing_type: z.enum(["sound", "stream"]).default("sound"),
+  artist_name: z.string().trim().min(1, "Name is required").max(120),
+  song_title: z.string().trim().min(1, "Title is required").max(200),
   tiktok_sound_url: z
     .string()
     .trim()
@@ -28,8 +29,19 @@ const listingInput = z.object({
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("").transform(() => undefined)),
+  stream_url: z
+    .string()
+    .trim()
+    .url("Must be a valid URL")
+    .refine((v) => /twitch\.tv|youtube\.com|youtu\.be|kick\.com/i.test(v), "Use a Twitch, YouTube, or Kick link")
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  stream_at: z.string().datetime({ offset: true }).optional().or(z.literal("").transform(() => undefined)),
   contact_email: z.string().trim().email("Enter a valid email"),
   notes: z.string().trim().max(2000).optional().or(z.literal("").transform(() => undefined)),
+}).refine((d) => d.listing_type !== "stream" || d.stream_url, {
+  message: "A stream listing needs a channel or VOD link",
+  path: ["stream_url"],
 });
 
 // Create a Stripe Checkout session for a $200 / 30-day sound listing.
@@ -43,10 +55,13 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
       .from("sound_listings")
       .insert({
         user_id: context.userId,
+        listing_type: data.listing_type,
         artist_name: data.artist_name,
         song_title: data.song_title,
         tiktok_sound_url: data.tiktok_sound_url ?? null,
         spotify_url: data.spotify_url ?? null,
+        stream_url: data.stream_url ?? null,
+        stream_at: data.stream_at ?? null,
         contact_email: data.contact_email,
         notes: data.notes ?? null,
         amount_cents: LISTING_FEE_CENTS,
@@ -69,7 +84,10 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
             currency: "usd",
             unit_amount: LISTING_FEE_CENTS,
             product_data: {
-              name: `Sound listing — ${data.song_title} by ${data.artist_name}`,
+              name:
+                data.listing_type === "stream"
+                  ? `Stream listing — ${data.song_title} by ${data.artist_name}`
+                  : `Sound listing — ${data.song_title} by ${data.artist_name}`,
               description: `30-day campaign listing on Bounty Sounds`,
             },
           },
@@ -99,9 +117,12 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
       reference: `${data.artist_name} — ${data.song_title}`,
       details: {
         listing_id: listing.id,
+        listing_type: data.listing_type,
         amount_cents: LISTING_FEE_CENTS,
         tiktok_sound_url: data.tiktok_sound_url ?? null,
         spotify_url: data.spotify_url ?? null,
+        stream_url: data.stream_url ?? null,
+        stream_at: data.stream_at ?? null,
         notes: data.notes ?? null,
       },
     });
@@ -115,7 +136,7 @@ export const listMySoundListings = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("sound_listings")
-      .select("id,artist_name,song_title,status,listed_at,expires_at,amount_cents,currency,created_at,tiktok_sound_url,spotify_url")
+      .select("id,listing_type,artist_name,song_title,status,listed_at,expires_at,amount_cents,currency,created_at,tiktok_sound_url,spotify_url,stream_url,stream_at")
       .eq("user_id", context.userId)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);

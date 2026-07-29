@@ -136,6 +136,20 @@ function ForEditors() {
         </ul>
       </LandingSection>
 
+      <LandingSection title="Toolkit">
+        <ul className="list-disc space-y-2 pl-6">
+          <li>
+            <a href="https://cobalt.tools" target="_blank" rel="noreferrer" className="underline hover:text-bone">Cobalt</a>{" "}
+            — grab the source video or stream VOD
+          </li>
+          <li>
+            <a href="https://www.opus.pro" target="_blank" rel="noreferrer" className="underline hover:text-bone">Opus Clip</a>{" "}
+            — rough-cut a long stream into candidates
+          </li>
+          <li>Every contract links its exact TikTok sound — post with that one</li>
+        </ul>
+      </LandingSection>
+
       <LandingSection title="Questions">
         <FaqList items={FAQ} />
       </LandingSection>

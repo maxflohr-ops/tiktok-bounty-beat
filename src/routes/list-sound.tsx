@@ -11,8 +11,8 @@ import { BsBadge, BsButton, BsCard, BsDisplay, BsEyebrow, BsMono } from "@/compo
 import { InkDrips } from "@/components/ArtMarks";
 
 const LIST_URL = "https://bountysounds.com/list-sound";
-const LIST_TITLE = "List Your Sound for a TikTok Campaign — $200 / 30 Days | Bounty Sounds";
-const LIST_DESC = "Get your song in front of TikTok clippers. $200 lists your sound on Bounty Sounds for a 30-day pay-per-view clipping campaign.";
+const LIST_TITLE = "List a Sound or a Livestream for Clipping — $200 / 30 Days | Bounty Sounds";
+const LIST_DESC = "Get your song or stream in front of TikTok clippers. $200 lists it on Bounty Sounds for a 30-day pay-per-view clipping campaign — upcoming streams and VODs welcome.";
 
 export const Route = createFileRoute("/list-sound")({
   head: () => ({
@@ -49,10 +49,14 @@ function ListSoundPage() {
     enabled: !!user,
   });
 
+  const [kind, setKind] = useState<"sound" | "stream">("sound");
+  const [when, setWhen] = useState<"upcoming" | "previous">("upcoming");
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
   const [tiktok, setTiktok] = useState("");
   const [spotify, setSpotify] = useState("");
+  const [streamUrl, setStreamUrl] = useState("");
+  const [streamAt, setStreamAt] = useState("");
   const [email, setEmail] = useState(user?.email ?? "");
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
@@ -64,10 +68,16 @@ function ListSoundPage() {
     try {
       const res = await createFn({
         data: {
+          listing_type: kind,
           artist_name: artist,
           song_title: song,
-          tiktok_sound_url: tiktok || undefined,
-          spotify_url: spotify || undefined,
+          tiktok_sound_url: kind === "sound" ? tiktok || undefined : undefined,
+          spotify_url: kind === "sound" ? spotify || undefined : undefined,
+          stream_url: kind === "stream" ? streamUrl || undefined : undefined,
+          stream_at:
+            kind === "stream" && when === "upcoming" && streamAt
+              ? new Date(streamAt).toISOString()
+              : undefined,
           contact_email: email,
           notes: notes || undefined,
         },
@@ -91,13 +101,14 @@ function ListSoundPage() {
 
       <section className="container-board relative py-10">
         <div className="mx-auto max-w-3xl text-center">
-          <BsEyebrow>sound listings · $200 / 30 days</BsEyebrow>
+          <BsEyebrow>listings · $200 / 30 days</BsEyebrow>
           <BsDisplay as="h1" size="lg" className="mt-3">
-            List your sound for a campaign
+            List a sound — or a livestream
           </BsDisplay>
           <InkDrips className="mx-auto -mt-1 w-44 opacity-50" />
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
-            Thirty days on the Bounty Board. Editors take contracts and deliver TikToks with your sound.{" "}
+            Thirty days on the Bounty Board. Editors take contracts and deliver TikToks cut from
+            your sound or your stream — upcoming or previous.{" "}
             <a href="/for-artists" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
               the full breakdown →
             </a>
@@ -120,31 +131,81 @@ function ListSoundPage() {
 
         {!ready ? null : !user ? (
           <div className="mx-auto mt-8 max-w-2xl text-center">
-            <p className="mb-4 text-[var(--color-bs-ink-soft)]">Sign in to list a sound.</p>
+            <p className="mb-4 text-[var(--color-bs-ink-soft)]">Sign in to list a sound or a stream.</p>
             <BsButton onClick={() => navigate({ to: "/auth" })}>sign in</BsButton>
           </div>
         ) : (
           <div className="mx-auto mt-10 grid max-w-5xl gap-8 md:grid-cols-[2fr,1fr]">
             <form onSubmit={submit}>
               <BsCard variant="flat">
-                <BsEyebrow>the notice</BsEyebrow>
+                <div className="flex items-center justify-between">
+                  <BsEyebrow>the notice</BsEyebrow>
+                  <div className="flex gap-2" role="tablist" aria-label="Listing type">
+                    {(["sound", "stream"] as const).map((k) => (
+                      <button
+                        key={k}
+                        type="button"
+                        role="tab"
+                        aria-selected={kind === k}
+                        onClick={() => setKind(k)}
+                        className={kind === k ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
+                      >
+                        {k === "sound" ? "a sound" : "a livestream"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <div className="mt-4 grid gap-4">
-                  <Field label="Artist name" required>
-                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder="Ridgeclub" />
+                  <Field label={kind === "sound" ? "Artist name" : "Streamer name"} required>
+                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Ridgeclub" : "ebbionline"} />
                   </Field>
-                  <Field label="Song title" required>
-                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder="Do I Clench My Fist" />
+                  <Field label={kind === "sound" ? "Song title" : "Stream title"} required>
+                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Do I Clench My Fist" : "Thursday variety stream"} />
                   </Field>
-                  <Field label="TikTok sound URL" hint="Optional but strongly recommended">
-                    <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="bs-input" placeholder="https://www.tiktok.com/music/..." />
-                  </Field>
-                  <Field label="Spotify / streaming link" hint="Optional">
-                    <input value={spotify} onChange={(e) => setSpotify(e.target.value)} className="bs-input" placeholder="https://open.spotify.com/track/..." />
-                  </Field>
+                  {kind === "sound" ? (
+                    <>
+                      <Field label="TikTok sound URL" hint="Optional but strongly recommended">
+                        <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="bs-input" placeholder="https://www.tiktok.com/music/..." />
+                      </Field>
+                      <Field label="Spotify / streaming link" hint="Optional">
+                        <input value={spotify} onChange={(e) => setSpotify(e.target.value)} className="bs-input" placeholder="https://open.spotify.com/track/..." />
+                      </Field>
+                    </>
+                  ) : (
+                    <>
+                      <Field label="Channel or VOD link" required hint="Twitch, YouTube, or Kick">
+                        <input required value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} className="bs-input" placeholder="https://twitch.tv/ebbionline" />
+                      </Field>
+                      <Field label="When">
+                        <div className="flex flex-wrap items-center gap-2">
+                          {(["upcoming", "previous"] as const).map((w) => (
+                            <button
+                              key={w}
+                              type="button"
+                              aria-pressed={when === w}
+                              onClick={() => setWhen(w)}
+                              className={when === w ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
+                            >
+                              {w === "upcoming" ? "upcoming stream" : "previous stream / VOD"}
+                            </button>
+                          ))}
+                          {when === "upcoming" ? (
+                            <input
+                              type="datetime-local"
+                              value={streamAt}
+                              onChange={(e) => setStreamAt(e.target.value)}
+                              className="bs-input w-auto"
+                              aria-label="Stream date and time"
+                            />
+                          ) : null}
+                        </div>
+                      </Field>
+                    </>
+                  )}
                   <Field label="Contact email" required>
                     <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bs-input" />
                   </Field>
-                  <Field label="Notes for the review team" hint="Genre, sync history, campaign goals, budget…">
+                  <Field label="Notes for the review team" hint={kind === "sound" ? "Genre, sync history, campaign goals, budget…" : "Which moments to cut, what to avoid, budget…"}>
                     <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="bs-input min-h-[100px]" />
                   </Field>
                 </div>
