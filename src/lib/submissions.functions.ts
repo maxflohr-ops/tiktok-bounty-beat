@@ -255,7 +255,7 @@ export const reviewSubmission = createServerFn({ method: "POST" })
 
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
-      .select("id,editor_id,status,view_count,bounties:bounty_id(payout_type,reward_cash_cents)")
+      .select("id,editor_id,status,view_count,verified_view_count,bounties:bounty_id(payout_type,reward_cash_cents)")
       .eq("id", data.id)
       .single();
     if (se || !sub) throw new Error("Not found.");
@@ -266,10 +266,15 @@ export const reviewSubmission = createServerFn({ method: "POST" })
     const bounty = (sub as unknown as { bounties: { payout_type: string; reward_cash_cents: number } }).bounties;
     let computedCash = data.awarded_cash_cents;
     if (data.decision === "approved" && bounty) {
-      computedCash =
-        bounty.payout_type === "per_1k_views"
-          ? Math.floor((sub.view_count || 0) / 100000) * bounty.reward_cash_cents
-          : (data.awarded_cash_cents || bounty.reward_cash_cents);
+      if (bounty.payout_type === "per_1k_views") {
+        const verified = (sub as { verified_view_count: number | null }).verified_view_count;
+        if (verified === null || verified === undefined) {
+          throw new Error("Verify the view count (staff) before approving a per-view payout.");
+        }
+        computedCash = Math.floor(verified / 100000) * bounty.reward_cash_cents;
+      } else {
+        computedCash = data.awarded_cash_cents || bounty.reward_cash_cents;
+      }
     }
 
     const { error: ue } = await context.supabase
