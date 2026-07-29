@@ -457,3 +457,185 @@
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ============================================================
+ * BOUNTY SOUNDS — light design system (paper & ink)
+ * Reusable tokens/utilities that match the homepage.
+ * Use these on light surfaces via `.bs` sections & components.
+ * ============================================================ */
+
+@utility bs-surface {
+  background: var(--color-bs-paper);
+  color: var(--color-bs-ink);
+  font-family: var(--font-body);
+}
+
+@utility bs-surface-soft {
+  background: var(--color-bs-paper-soft);
+  color: var(--color-bs-ink);
+  font-family: var(--font-body);
+}
+
+/* Typography */
+@utility bs-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  color: var(--color-bs-ink);
+}
+
+@utility bs-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-bs-ink) 60%, transparent);
+}
+
+@utility bs-marker {
+  font-family: var(--font-marker);
+  color: var(--color-bs-accent);
+  letter-spacing: 0.01em;
+}
+
+@utility bs-mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+/* Buttons — three variants share the same base */
+@utility bs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-bs-ink);
+  border-radius: 0;
+  background: var(--color-bs-ink);
+  color: var(--color-bs-paper);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease, transform 140ms ease;
+  &:hover:not(:disabled) { background: var(--color-bs-accent); border-color: var(--color-bs-accent); }
+  &:active:not(:disabled) { transform: translateY(1px); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+@utility bs-btn-ghost {
+  background: transparent;
+  color: var(--color-bs-ink);
+  &:hover:not(:disabled) { background: var(--color-bs-ink); color: var(--color-bs-paper); border-color: var(--color-bs-ink); }
+}
+
+@utility bs-btn-accent {
+  background: var(--color-bs-accent);
+  color: var(--color-bs-paper);
+  border-color: var(--color-bs-accent);
+  &:hover:not(:disabled) { background: var(--color-bs-ink); border-color: var(--color-bs-ink); }
+}
+
+/* Badges — compact, mono, no radius drama */
+@utility bs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--color-bs-rule);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--color-bs-ink) 70%, transparent);
+  background: transparent;
+}
+
+@utility bs-badge-solid {
+  background: var(--color-bs-ink);
+  color: var(--color-bs-paper);
+  border-color: var(--color-bs-ink);
+}
+
+@utility bs-badge-live {
+  color: var(--color-bs-accent);
+  border-color: color-mix(in oklab, var(--color-bs-accent) 45%, transparent);
+  background: color-mix(in oklab, var(--color-bs-accent) 8%, transparent);
+}
+
+@utility bs-badge-dot {
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+/* Cards — clean paper, sharp corners, hairline rule */
+@utility bs-card {
+  position: relative;
+  background: var(--color-bs-paper-soft);
+  color: var(--color-bs-ink);
+  border: 1px solid var(--color-bs-rule);
+  padding: 1.25rem 1.5rem;
+  transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  &:hover {
+    border-color: var(--color-bs-rule-strong);
+    box-shadow: 4px 4px 0 var(--color-bs-ink);
+    transform: translate(-2px, -2px);
+  }
+}
+
+@utility bs-card-flat {
+  background: var(--color-bs-paper-soft);
+  border: 1px solid var(--color-bs-rule);
+  padding: 1.25rem 1.5rem;
+}
+
+/* Concentric well — reusable version of the homepage frame */
+@utility bs-well {
+  border: 2px solid var(--color-bs-ink);
+  background: var(--color-bs-paper-soft);
+  padding: 1.5rem;
+}
+
+@utility bs-well-frame {
+  border: 1px solid var(--color-bs-rule-strong);
+  padding: 1rem;
+}
+
+@utility bs-well-outer {
+  border: 1px solid var(--color-bs-rule);
+  padding: 1rem;
+}
+
+/* Divider rule used inside cards / wells */
+@utility bs-rule {
+  border-top: 1px solid var(--color-bs-rule);
+}
+
+/* Input on paper */
+@utility bs-input {
+  width: 100%;
+  background: var(--color-bs-paper);
+  border: 1px solid var(--color-bs-rule-strong);
+  border-radius: 0;
+  color: var(--color-bs-ink);
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+  &:focus { border-color: var(--color-bs-ink); box-shadow: 3px 3px 0 var(--color-bs-ink); }
+  &::placeholder { color: color-mix(in oklab, var(--color-bs-ink) 40%, transparent); }
+}
