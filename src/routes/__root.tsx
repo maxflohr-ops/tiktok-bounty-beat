@@ -80,23 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0d0905" },
-      { title: "THE BOARD — contracts posted from the harbor" },
+      { title: "Bounty Sounds — TikTok clipping bounties posted daily" },
       {
         name: "description",
         content:
-          "A notice board of clipping contracts for video editors. Take a contract, deliver proof, be paid in crowns.",
+          "Bounty Sounds is a pay-per-view TikTok clipping board. Artists list sounds, editors claim contracts and get paid per verified view.",
       },
-      { property: "og:title", content: "THE BOARD — contracts posted from the harbor" },
-      {
-        property: "og:description",
-        content: "A notice board of clipping contracts for video editors. Take a contract, deliver proof, be paid in crowns.",
-      },
+      { property: "og:site_name", content: "Bounty Sounds" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "THE BOARD — contracts posted from the harbor" },
-      { name: "twitter:description", content: "A notice board of clipping contracts for video editors. Take a contract, deliver proof, be paid in crowns." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/647e4035-b75b-4dd6-a38b-14e2b9958ce6/id-preview-ab5836c3--e9c30e42-72cd-48c2-8de7-f2c8325ca2a1.lovable.app-1784868756687.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/647e4035-b75b-4dd6-a38b-14e2b9958ce6/id-preview-ab5836c3--e9c30e42-72cd-48c2-8de7-f2c8325ca2a1.lovable.app-1784868756687.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -107,6 +99,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Bounty Sounds",
+          url: "https://bountysounds.com",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Bounty Sounds",
+          url: "https://bountysounds.com",
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,

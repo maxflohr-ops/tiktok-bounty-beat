@@ -7,23 +7,25 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useMemo, useState } from "react";
 
+const HOME_TITLE = "Bounty Sounds — Pay-Per-View TikTok Clipping Bounties";
+const HOME_DESC =
+  "Live TikTok clipping bounties for video editors. Artists post music campaigns, editors take contracts and get paid per verified view via PayPal or Stripe.";
+const HOME_URL = "https://bountysounds.com/";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "THE BOARD — clipping contracts posted daily" },
-      {
-        name: "description",
-        content:
-          "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in crowns.",
-      },
-      { property: "og:title", content: "THE BOARD — clipping contracts posted daily" },
-      {
-        property: "og:description",
-        content: "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in crowns.",
-      },
+      { title: HOME_TITLE },
+      { name: "description", content: HOME_DESC },
+      { property: "og:title", content: HOME_TITLE },
+      { property: "og:description", content: HOME_DESC },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: HOME_URL },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: HOME_TITLE },
+      { name: "twitter:description", content: HOME_DESC },
     ],
+    links: [{ rel: "canonical", href: HOME_URL }],
   }),
   component: HomePage,
 });
