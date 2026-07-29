@@ -4,19 +4,20 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * BOUNTY SOUNDS — dark ops-console for a money marketplace.
- * Near-black blue-grey surfaces, hairline borders, one emerald money accent,
- * cyan HUD details, mono labels. Trust reads as precision, not decoration.
+ * BOUNTY SOUNDS — monochrome, typography-led.
+ * White pages, black type, gray only as a shade of black. No accent colors,
+ * no glows, no texture. The classic grotesque does the talking: the system
+ * stack led by Helvetica Neue (SF on Apple devices), Inter as the webfont
+ * stand-in elsewhere.
  *
- * Variable names are kept from the previous theme (paper/ink/bone/gold…) so
- * existing markup keeps working: "paper" is now an elevated dark card and
- * "ink" is the light text that sits on it.
+ * Variable names carry over from earlier themes so existing markup keeps
+ * working: "paper" is a card surface, "ink" its text, "gold" is now black.
  */
 
 @theme inline {
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -32,15 +33,15 @@
   --color-border: var(--border);
   --color-rule: var(--rule);
   --color-primary: var(--gold);
-  --color-primary-foreground: var(--wall);
+  --color-primary-foreground: #ffffff;
   --color-secondary: var(--paper-shade);
   --color-secondary-foreground: var(--ink);
   --color-muted: var(--paper-shade);
   --color-muted-foreground: var(--ink-soft);
   --color-accent: var(--wax-red);
-  --color-accent-foreground: var(--wall);
-  --color-destructive: #e5484d;
-  --color-destructive-foreground: var(--bone);
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #1d1d1f;
+  --color-destructive-foreground: #ffffff;
   --color-card: var(--paper);
   --color-card-foreground: var(--ink);
   --color-popover: var(--paper);
@@ -49,54 +50,54 @@
   --color-ring: var(--gold);
   --color-ring-offset-background: var(--wall);
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-script: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-terminal: "Space Mono", "Share Tech Mono", "JetBrains Mono", monospace;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
+  --font-script: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
+  --font-terminal: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
 }
 
 :root {
-  --wall: #0a0d12;
-  --wall-2: #0e1319;
-  --background: #0a0d12;
-  --foreground: #e8edf4;
+  --wall: #ffffff;
+  --wall-2: #f5f5f7;
+  --background: #ffffff;
+  --foreground: #1d1d1f;
 
-  /* elevated card surfaces (formerly parchment) */
-  --paper: #12181f;
-  --paper-shade: #161d28;
-  --paper-dark: #223042;
+  /* card surfaces */
+  --paper: #ffffff;
+  --paper-shade: #f5f5f7;
+  --paper-dark: #d2d2d7;
 
-  --ink: #e8edf4;
-  --ink-soft: #94a2b5;
+  --ink: #1d1d1f;
+  --ink-soft: #6e6e73;
 
-  --bone: #e8edf4;
-  --bone-soft: #8fa0b3;
+  --bone: #1d1d1f;
+  --bone-soft: #6e6e73;
 
-  /* the money accent */
-  --gold: #3ecf8e;
-  --gold-bright: #5fe3a6;
-  --silver: #3ecf8e;
-  --silver-glow: #5fe3a6;
+  /* the accent is black */
+  --gold: #1d1d1f;
+  --gold-bright: #000000;
+  --silver: #1d1d1f;
+  --silver-glow: #6e6e73;
 
-  --wax-red: #f0536b;
-  --wax-dark: #c03b52;
-  --iron: #232d3d;
+  --wax-red: #1d1d1f;
+  --wax-dark: #000000;
+  --iron: #d2d2d7;
 
-  /* HUD accents */
-  --neon-cyan: #22d3ee;
-  --neon-magenta: #ff5c8a;
-  --neon-amber: #f5b94a;
-  --neon-purple: #a78bfa;
+  /* former neon slots — shades of gray now */
+  --neon-cyan: #1d1d1f;
+  --neon-magenta: #6e6e73;
+  --neon-amber: #86868b;
+  --neon-purple: #6e6e73;
 
-  --rule: rgba(148, 166, 190, 0.18);
-  --border: rgba(148, 166, 190, 0.12);
+  --rule: rgba(0, 0, 0, 0.14);
+  --border: rgba(0, 0, 0, 0.09);
 
   --wood-grain: none;
   --paper-grain: none;
 }
 
 .dark {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 @layer base {
@@ -108,56 +109,51 @@
     background: var(--wall);
     color: var(--bone);
     font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-  }
-  body {
-    background-color: var(--wall);
-    background-image:
-      radial-gradient(1100px 500px at 50% -12%, rgba(62, 207, 142, 0.07), transparent 60%),
-      radial-gradient(900px 420px at 85% -8%, rgba(34, 211, 238, 0.05), transparent 55%);
-    background-repeat: no-repeat;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.015em;
-    font-weight: 700;
+    letter-spacing: -0.021em;
+    font-weight: 600;
     color: var(--bone);
   }
   a { color: inherit; }
-  ::selection { background: var(--gold); color: var(--wall); }
+  ::selection { background: #1d1d1f; color: #ffffff; }
   input, textarea, select, button { font-family: inherit; }
 }
 
 @utility container-board {
-  max-width: 1180px;
+  max-width: 1080px;
   margin-inline: auto;
-  padding-inline: 1.25rem;
+  padding-inline: 1.375rem;
 }
 
 @utility label-cap {
-  font-family: var(--font-terminal);
-  letter-spacing: 0.14em;
+  font-family: var(--font-body);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  font-size: 0.66rem;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: var(--bone-soft);
 }
 
 @utility script-note {
   font-family: var(--font-body);
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
-  line-height: 1.35;
+  line-height: 1.4;
   letter-spacing: 0;
   color: var(--bone-soft);
 }
 
 @utility terminal {
-  font-family: var(--font-terminal);
+  font-family: var(--font-body);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 
 @utility rule-double {
@@ -171,8 +167,7 @@
 }
 
 @utility scanlines {
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.03) 50%);
-  background-size: 100% 4px;
+  background: none;
   pointer-events: none;
 }
 
@@ -180,106 +175,55 @@
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: var(--gold);
-  box-shadow: 0 0 8px var(--gold);
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: var(--ink);
 }
 
 @utility status-dot-amber {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: var(--neon-amber);
-  box-shadow: 0 0 8px var(--neon-amber);
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: var(--ink-soft);
 }
 
 @utility status-dot-magenta {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: var(--neon-magenta);
-  box-shadow: 0 0 8px var(--neon-magenta);
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: var(--ink-soft);
 }
 
-/* Contract card — elevated dark panel with a hairline and a lift on hover */
+/* Contract card — white, hairline, quiet lift */
 @utility contract {
   position: relative;
   background-color: var(--paper);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 40%);
   color: var(--ink);
-  padding: 1.5rem 1.5rem 1.25rem;
+  padding: 1.75rem 1.5rem 1.4rem;
   border: 1px solid var(--paper-dark);
   border-radius: var(--radius-lg);
-  box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.6);
-  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 180ms ease, box-shadow 180ms ease;
   &:hover {
     transform: translateY(-2px);
-    border-color: rgba(62, 207, 142, 0.45);
-    box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
   }
 }
 
-/* formerly the iron nail — now a thin signal bar across the card's top edge */
 @utility contract-nail {
   &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: var(--radius-lg);
-    right: var(--radius-lg);
-    height: 2px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, transparent, rgba(62, 207, 142, 0.7), rgba(34, 211, 238, 0.5), transparent);
-    z-index: 2;
+    content: none;
   }
 }
 
 @utility holo-glow {
   position: relative;
-  z-index: 1;
-  &::after {
-    content: "";
-    position: absolute;
-    inset: -8px;
-    border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, var(--gold), var(--neon-cyan));
-    opacity: 0;
-    filter: blur(20px);
-    z-index: -1;
-    transition: opacity 250ms ease;
-    pointer-events: none;
-  }
-  &:hover::after,
-  &:focus-within::after {
-    opacity: 0.14;
-  }
 }
 
 @utility holo-glow-amber {
   position: relative;
-  z-index: 1;
-  &::after {
-    content: "";
-    position: absolute;
-    inset: -8px;
-    border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, var(--neon-amber), var(--neon-purple));
-    opacity: 0;
-    filter: blur(20px);
-    z-index: -1;
-    transition: opacity 250ms ease;
-    pointer-events: none;
-  }
-  &:hover::after,
-  &:focus-within::after {
-    opacity: 0.14;
-  }
 }
 
 @utility silver {
-  color: var(--gold);
+  color: var(--ink);
 }
 
 @utility ink-btn {
@@ -287,24 +231,24 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-sm);
+  padding: 0.65rem 1.4rem;
+  border: 1px solid var(--ink);
+  border-radius: 980px;
   color: var(--ink);
   background: transparent;
-  font-family: var(--font-display);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-family: var(--font-body);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-size: 0.95rem;
+  font-weight: 500;
   min-height: 44px;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  transition: background 120ms ease, color 120ms ease;
   &:hover:not(:disabled) {
-    background: rgba(232, 237, 244, 0.06);
-    border-color: var(--ink-soft);
+    background: var(--ink);
+    color: #ffffff;
   }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
 @utility silver-btn {
@@ -312,105 +256,105 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.25rem;
-  border: 1px solid var(--gold);
-  border-radius: var(--radius-sm);
-  color: #05231a;
-  background: var(--gold);
-  font-family: var(--font-display);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  font-weight: 700;
+  padding: 0.65rem 1.5rem;
+  border: 1px solid var(--ink);
+  border-radius: 980px;
+  color: #ffffff;
+  background: var(--ink);
+  font-family: var(--font-body);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-size: 0.95rem;
+  font-weight: 500;
   min-height: 44px;
   cursor: pointer;
-  box-shadow: 0 0 24px rgba(62, 207, 142, 0.18);
-  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+  transition: opacity 120ms ease, transform 120ms ease;
   &:hover:not(:disabled) {
-    background: var(--gold-bright);
-    border-color: var(--gold-bright);
+    opacity: 0.85;
     transform: translateY(-1px);
-    box-shadow: 0 0 32px rgba(62, 207, 142, 0.28);
   }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
 @utility digital-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: rgba(34, 211, 238, 0.08);
-  color: var(--neon-cyan);
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  gap: 0.45rem;
+  background: var(--paper-shade);
+  color: var(--ink);
+  border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0.25rem 0.7rem;
-  font-family: var(--font-terminal);
-  font-size: 0.65rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 @utility digital-badge-amber {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: rgba(245, 185, 74, 0.08);
-  color: var(--neon-amber);
-  border: 1px solid rgba(245, 185, 74, 0.3);
+  gap: 0.45rem;
+  background: var(--paper-shade);
+  color: var(--ink-soft);
+  border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0.25rem 0.7rem;
-  font-family: var(--font-terminal);
-  font-size: 0.65rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 @utility digital-badge-magenta {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: rgba(255, 92, 138, 0.08);
-  color: var(--neon-magenta);
-  border: 1px solid rgba(255, 92, 138, 0.3);
+  gap: 0.45rem;
+  background: var(--paper-shade);
+  color: var(--ink-soft);
+  border: 1px solid var(--paper-dark);
   border-radius: 999px;
-  padding: 0.25rem 0.7rem;
-  font-family: var(--font-terminal);
-  font-size: 0.65rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 @utility bone-input {
   width: 100%;
-  background: rgba(232, 237, 244, 0.04);
-  border: 1px solid var(--rule);
+  background: var(--paper-shade);
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
   color: var(--ink);
-  padding: 0.55rem 0.75rem;
+  padding: 0.6rem 0.85rem;
   font-family: var(--font-body);
   font-size: 1rem;
   outline: none;
-  transition: border-color 120ms ease, box-shadow 120ms ease;
-  &:focus { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
-  &::placeholder { color: rgba(148, 162, 181, 0.55); }
+  transition: border-color 120ms ease, background 120ms ease;
+  &:focus { border-color: var(--ink); background: #ffffff; }
+  &::placeholder { color: rgba(110, 110, 115, 0.7); }
 }
 
 @utility dark-input {
   width: 100%;
-  background: rgba(232, 237, 244, 0.04);
-  border: 1px solid var(--rule);
+  background: var(--paper-shade);
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  color: var(--bone);
-  padding: 0.6rem 0.75rem;
+  color: var(--ink);
+  padding: 0.65rem 0.85rem;
   font-family: var(--font-body);
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 120ms ease, box-shadow 120ms ease;
-  &:focus { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
-  &::placeholder { color: rgba(143, 160, 179, 0.55); }
+  transition: border-color 120ms ease, background 120ms ease;
+  &:focus { border-color: var(--ink); background: #ffffff; }
+  &::placeholder { color: rgba(110, 110, 115, 0.7); }
 }
 
-/* Status stamp for FULFILLED / URGENT contracts — clean chip, no cosplay */
+/* Status stamp — quiet outlined chip */
 @utility wax-seal {
   position: absolute;
   top: 14px;
@@ -418,18 +362,18 @@
   width: auto;
   height: auto;
   border-radius: 999px;
-  background: rgba(62, 207, 142, 0.12);
-  border: 1px solid rgba(62, 207, 142, 0.45);
-  box-shadow: 0 0 16px rgba(62, 207, 142, 0.15);
+  background: #ffffff;
+  border: 1px solid var(--ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.3rem 0.7rem;
-  font-family: var(--font-terminal);
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
+  padding: 0.3rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   line-height: 1.1;
-  color: var(--gold-bright);
+  color: var(--ink);
   text-transform: uppercase;
   text-align: center;
   transform: none;
@@ -442,36 +386,30 @@
 
 @utility board-frame {
   background: var(--wall-2);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 30%);
-  border: 1px solid var(--iron);
-  border-radius: 20px;
-  box-shadow:
-    0 30px 80px -30px rgba(0, 0, 0, 0.7),
-    inset 0 0 90px rgba(34, 211, 238, 0.025);
+  border: none;
+  border-radius: 28px;
+  box-shadow: none;
 }
 
 @utility filter-chip {
-  padding: 0.45rem 1rem;
-  border: 1px solid var(--iron);
+  padding: 0.45rem 1.05rem;
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: transparent;
-  color: var(--bone-soft);
-  font-family: var(--font-terminal);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  background: var(--paper-shade);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: all 120ms ease;
   &:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(62, 207, 142, 0.07);
+    background: #e8e8ed;
   }
   &[aria-pressed="true"] {
-    background: var(--gold);
-    color: #05231a;
-    border-color: var(--gold);
-    box-shadow: 0 0 14px rgba(62, 207, 142, 0.25);
+    background: var(--ink);
+    color: #ffffff;
   }
 }
 
@@ -479,27 +417,28 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(34, 211, 238, 0.06);
-  border: 1px solid rgba(34, 211, 238, 0.25);
+  background: var(--paper-shade);
+  border: none;
   border-radius: 999px;
-  color: var(--neon-cyan);
-  padding: 0.35rem 0.9rem;
-  font-family: var(--font-terminal);
-  font-size: 0.65rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  box-shadow: 0 0 18px rgba(34, 211, 238, 0.1);
+  color: var(--ink-soft);
+  padding: 0.35rem 0.95rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  box-shadow: none;
 }
 
 @utility corner-bracket {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: rgba(34, 211, 238, 0.3);
+  width: 0;
+  height: 0;
+  border-color: transparent;
 }
 
 @utility vignette {
-  box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.4);
+  box-shadow: none;
   pointer-events: none;
 }
 
