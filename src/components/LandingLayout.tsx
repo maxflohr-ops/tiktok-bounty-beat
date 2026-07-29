@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
-import { BsButtonLink, BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
+import { BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
 import type { ReactNode } from "react";
 
 export function LandingLayout({
