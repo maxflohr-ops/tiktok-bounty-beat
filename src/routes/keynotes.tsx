@@ -58,7 +58,7 @@ function KeynotesPage() {
             Launch day is a clip economy.
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg text-[#a1a1a6]">
-            Every big announcement gets clipped within hours — by strangers, for free,
+            Every big announcement gets clipped within hours, by strangers, for free,
             with no brief and no rights. A campaign puts you in charge of it:
             your footage, your talking points, a hundred editors racing to make
             the version that travels.
@@ -88,7 +88,7 @@ function KeynotesPage() {
             <h2 className="text-4xl md:text-5xl">What a fulfilled campaign looks like.</h2>
             <p className="mx-auto mt-4 max-w-xl text-bone-soft">
               An illustrative example.{" "}
-              <span className="font-semibold">Meridian is a fictional company</span> — when the
+              <span className="font-semibold">Meridian is a fictional company</span>. When the
               first real keynote campaign settles, its numbers replace these.
             </p>
           </div>
@@ -146,7 +146,7 @@ function KeynotesPage() {
           We handle the clipping.
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg text-bone-soft">
-          Keynote campaigns run on footage you own or control — your launch, your
+          Keynote campaigns run on footage you own or control: your launch, your
           conference, your talk. The brief travels with the contract, so every clipper
           knows the rules before the first cut.
         </p>

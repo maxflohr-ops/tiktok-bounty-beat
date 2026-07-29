@@ -159,18 +159,23 @@ export const deliverProof = createServerFn({ method: "POST" })
       const html = await fetchVideoHtml(data.clip_url);
       soundOk = html ? musicIdInHtml(html, wantMusicId) : null;
     }
-    if (soundOk === false)
-      throw new Error(
-        `This video doesn't appear to use the contract's sound ("${bounty?.sound_name}"). Post with the official sound linked on the contract, then deliver again.`,
-      );
+    // No hard block on sound: TikTok remaps audio often enough that a
+    // mismatch is a review flag, not a rejection. The campaign hashtag in
+    // the caption is an alternate signal.
+    const hasTag = /#bountysounds/i.test(oembed?.title ?? "");
 
-    const passed = Boolean(oembed && accountTrusted && soundOk === true);
+    const soundSignal = soundOk === true || (soundOk === null && hasTag);
+    const passed = Boolean(oembed && accountTrusted && soundSignal);
     const soundNote =
       soundOk === true
         ? "using the contract's sound"
-        : wantMusicId
-          ? "sound not auto-verified (manual confirm)"
-          : "no sound link on contract (manual confirm)";
+        : soundOk === false
+          ? `sound looks different from the contract's (TikTok sometimes remaps audio) — confirm manually${hasTag ? "; #bountysounds tag present" : ""}`
+          : hasTag
+            ? "#bountysounds tag in caption"
+            : wantMusicId
+              ? "sound not auto-verified (manual confirm)"
+              : "no sound link on contract (manual confirm)";
     const notes = !isTikTok
       ? "Non-TikTok delivery — will be verified manually."
       : !oembed

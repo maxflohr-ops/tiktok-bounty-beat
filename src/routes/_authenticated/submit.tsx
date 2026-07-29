@@ -195,7 +195,7 @@ function SubmitPage() {
                 </p>
               ) : (
                 <p className="mt-1 text-xs text-bone-soft">
-                  post from any TikTok account linked to your profile, using the contract's sound — new accounts are fine, first delivery just gets reviewed
+                  post from any TikTok account on your profile. Use the contract's sound and put #bountysounds in the caption so checks pass instantly. New accounts are fine, the first delivery just gets a review.
                 </p>
               )}
             </label>
