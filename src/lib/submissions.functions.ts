@@ -166,6 +166,33 @@ export const updateViewCount = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// Staff: verify (or correct) a submission's view count. This value — not the editor's
+// self-reported view_count — is what per-view payouts are computed from.
+export const verifyViewCount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({
+      submission_id: z.string().uuid(),
+      verified_view_count: z.number().int().min(0).max(2_000_000_000),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const staff = await isStaff(context.supabase, context.userId);
+    if (!staff) throw new Error("Forbidden");
+    const { error } = await context.supabase
+      .from("submissions")
+      .update({ verified_view_count: data.verified_view_count })
+      .eq("id", data.submission_id);
+    if (error) throw new Error(error.message);
+    notifyAsync({
+      event: "views.verified",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.submission_id,
+      details: { verified_view_count: data.verified_view_count },
+    });
+    return { ok: true };
+  });
+
 const SUB_COLS =
   "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,paypal_email,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at";
 
