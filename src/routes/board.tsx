@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
-import { leaderboard } from "@/lib/me.functions";
+import { leaderboard, weeklyPayouts } from "@/lib/me.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useEffect, useMemo, useState } from "react";
@@ -64,6 +64,8 @@ function BoardPage() {
     queryFn: () => listFn(),
   });
   const { data: top = [] } = useQuery({ queryKey: ["leaderboard"], queryFn: () => boardFn() });
+  const weeklyFn = useServerFn(weeklyPayouts);
+  const { data: weekly = [] } = useQuery({ queryKey: ["weeklyPayouts"], queryFn: () => weeklyFn() });
 
   const [taste, setTaste] = useState<TasteProfile | null>(null);
   useEffect(() => setTaste(loadTaste()), []);
@@ -214,9 +216,11 @@ function BoardPage() {
           {top.length > 0 ? (
             <div className="mt-16">
               <div className="mx-auto max-w-md border border-[var(--iron)] bg-[var(--wall-2)]/50 p-6">
-                <div className="label-cap text-center text-silver">Top clippers</div>
+                <div className="label-cap text-center text-silver">
+                  {weekly.length > 0 ? "Paid this week" : "Top clippers"}
+                </div>
                 <ol className="mt-4 divide-y divide-[var(--border)]">
-                  {top.map((p, i) => (
+                  {(weekly.length > 0 ? weekly : top).map((p: any, i: number) => (
                     <li key={i} className="flex items-center justify-between py-2 text-sm">
                       <span className="flex items-center gap-3 text-bone">
                         <span className="w-4 tabular-nums text-gold">{pad(i + 1)}</span>
@@ -225,10 +229,17 @@ function BoardPage() {
                           <span className="text-bone-soft">@{p.tiktok_handle}</span>
                         ) : null}
                       </span>
-                      <span className="silver label-cap">{p.points} pts</span>
+                      <span className="silver label-cap tabular-nums">
+                        {p.paid_cents != null ? <Money cents={p.paid_cents} /> : `${p.points} pts`}
+                      </span>
                     </li>
                   ))}
                 </ol>
+                {weekly.length > 0 ? (
+                  <p className="mt-3 text-center text-xs text-bone-soft">
+                    <Money cents={weekly.reduce((s: number, p: any) => s + p.paid_cents, 0)} /> paid out in the last 7 days
+                  </p>
+                ) : null}
               </div>
             </div>
           ) : null}
@@ -376,6 +387,9 @@ function ContractCard({
         {(b as any).funded_cash_cents > 0 ? (
           <span className="label-cap silver">
             Pot: <Money cents={(b as any).funded_cash_cents} currency={b.currency} />
+            {(b as any).paid_out_cents > 0 ? (
+              <> · <Money cents={(b as any).paid_out_cents} currency={b.currency} /> paid out</>
+            ) : null}
           </span>
         ) : (
           <span className="text-xs italic text-ink-soft">pot empty</span>

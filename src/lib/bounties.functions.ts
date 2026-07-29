@@ -24,20 +24,22 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
   const ids = list.map((b) => b.id);
   const { data: claims } = await supabaseAdmin
     .from("submissions")
-    .select("bounty_id,status")
+    .select("bounty_id,status,paid_cash_cents")
     .in("bounty_id", ids);
-  const counts = new Map<string, { claims: number; approved: number }>();
-  for (const id of ids) counts.set(id, { claims: 0, approved: 0 });
+  const counts = new Map<string, { claims: number; approved: number; paid: number }>();
+  for (const id of ids) counts.set(id, { claims: 0, approved: 0, paid: 0 });
   for (const c of claims ?? []) {
     const row = counts.get(c.bounty_id)!;
     row.claims += 1;
     if (c.status === "approved" || c.status === "paid") row.approved += 1;
+    row.paid += c.paid_cash_cents ?? 0;
   }
 
   return list.map((b) => ({
     ...b,
     claims_count: counts.get(b.id)?.claims ?? 0,
     approved_count: counts.get(b.id)?.approved ?? 0,
+    paid_out_cents: counts.get(b.id)?.paid ?? 0,
   }));
 });
 

@@ -127,3 +127,32 @@ export const removeTiktokAccount = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+
+// Public leaderboard: who got paid in the last 7 days, from real payout
+// records (paid_cash_cents), not points.
+export const weeklyPayouts = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const since = new Date(Date.now() - 7 * 86400000).toISOString();
+  const { data: subs } = await supabaseAdmin
+    .from("submissions")
+    .select("editor_id,paid_cash_cents,paid_at")
+    .gte("paid_at", since)
+    .gt("paid_cash_cents", 0);
+  const byEditor = new Map<string, number>();
+  for (const s of subs ?? []) byEditor.set(s.editor_id, (byEditor.get(s.editor_id) ?? 0) + (s.paid_cash_cents ?? 0));
+  if (byEditor.size === 0) return [];
+  const { data: profs } = await supabaseAdmin
+    .from("profiles")
+    .select("id,display_name,tiktok_handle")
+    .in("id", [...byEditor.keys()]);
+  const profById = new Map((profs ?? []).map((p) => [p.id, p]));
+  return [...byEditor.entries()]
+    .map(([id, cents]) => ({
+      display_name: profById.get(id)?.display_name ?? null,
+      tiktok_handle: profById.get(id)?.tiktok_handle ?? null,
+      paid_cents: cents,
+    }))
+    .sort((a, b) => b.paid_cents - a.paid_cents)
+    .slice(0, 10);
+});
