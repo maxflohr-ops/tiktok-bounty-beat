@@ -1,0 +1,14 @@
+{
+  "occ_version": "0.1",
+  "contract_id": "BC-16",
+  "title": "Single prize — best cut of the campaign",
+  "brief": "One prize, awarded to the highest-performing approved clip at deadline. Ties broken by earliest post time.",
+  "asset": { "url": "https://example.com/video/session-take", "type": "video" },
+  "platforms": ["tiktok"],
+  "reward": { "type": "flat", "rate": 750.00, "currency": "USD" },
+  "budget": { "total": 750.00, "funded": false },
+  "posted": "2026-07-26",
+  "deadline": "2026-08-26",
+  "proof": { "requires": ["live_url", "view_count"], "verified_after_hours": 72 },
+  "status": "draft"
+}

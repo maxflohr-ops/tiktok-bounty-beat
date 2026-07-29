@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bountysounds/open-clipping-contract/spec/contract.schema.json",
+  "title": "Open Clipping Contract",
+  "description": "A vendor-neutral description of paid short-form clipping work.",
+  "type": "object",
+  "required": [
+    "occ_version",
+    "contract_id",
+    "title",
+    "asset",
+    "platforms",
+    "reward",
+    "budget",
+    "posted",
+    "deadline",
+    "proof",
+    "status"
+  ],
+  "properties": {
+    "occ_version": { "type": "string", "const": "0.1" },
+    "contract_id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "brief": { "type": "string" },
+    "asset": {
+      "type": "object",
+      "required": ["url", "type"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "type": { "enum": ["audio", "video", "image_set", "other"] },
+        "attribution": { "type": "string" }
+      },
+      "patternProperties": { "^x_": {} },
+      "additionalProperties": false
+    },
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["tiktok", "reels", "shorts", "x", "other"] }
+    },
+    "reward": {
+      "type": "object",
+      "required": ["type", "rate", "currency"],
+      "properties": {
+        "type": { "enum": ["per_clip", "per_100k_views", "flat"] },
+        "rate": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "floor": { "type": "number", "minimum": 0 },
+        "cap": { "type": "number", "minimum": 0 }
+      },
+      "patternProperties": { "^x_": {} },
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "required": ["total", "funded"],
+      "properties": {
+        "total": { "type": "number", "minimum": 0 },
+        "funded": { "type": "boolean" },
+        "escrow": { "type": "boolean" },
+        "paid_out": { "type": "number", "minimum": 0 }
+      },
+      "patternProperties": { "^x_": {} },
+      "additionalProperties": false,
+      "if": { "properties": { "escrow": { "const": true } }, "required": ["escrow"] },
+      "then": { "properties": { "funded": { "const": true } } }
+    },
+    "posted": { "type": "string", "format": "date" },
+    "deadline": { "type": "string", "format": "date" },
+    "review_window_hours": { "type": "integer", "minimum": 0 },
+    "proof": {
+      "type": "object",
+      "required": ["requires"],
+      "properties": {
+        "requires": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["live_url", "view_count", "screenshot", "analytics_export"] }
+        },
+        "verified_after_hours": { "type": "integer", "minimum": 0 },
+        "min_retention_days": { "type": "integer", "minimum": 0 }
+      },
+      "patternProperties": { "^x_": {} },
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": ["draft", "open", "claimed", "in_review", "settled", "expired", "cancelled"]
+    },
+    "claims": { "type": "integer", "minimum": 0 },
+    "delivered": { "type": "integer", "minimum": 0 },
+    "approved": { "type": "integer", "minimum": 0 }
+  },
+  "patternProperties": {
+    "^x_": {}
+  },
+  "additionalProperties": false
+}

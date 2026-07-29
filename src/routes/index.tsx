@@ -372,7 +372,7 @@ function ContractCard({
         <p className="mt-1 font-body italic text-ink-soft">sound: {b.sound_name}</p>
       )}
 
-      <p className="mt-4 line-clamp-4 font-body italic leading-relaxed text-ink-soft">{b.description}</p>
+      <p className="mt-4 line-clamp-4 font-body leading-relaxed text-ink-soft">{b.description}</p>
 
       <div className="mt-5 border-t border-[var(--paper-dark)] pt-3">
         <div className="label-cap text-ink-soft">Reward</div>

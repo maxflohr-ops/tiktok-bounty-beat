@@ -1,0 +1,25 @@
+{
+  "occ_version": "0.1",
+  "contract_id": "BC-15",
+  "title": "Instrumental loop push — pay on reach",
+  "brief": "Any use of the loop. Performance-weighted: a floor per approved clip, then paid on verified views above that.",
+  "asset": { "url": "https://example.com/tracks/loop-01", "type": "audio" },
+  "platforms": ["tiktok", "reels"],
+  "reward": {
+    "type": "per_100k_views",
+    "rate": 25.00,
+    "currency": "USD",
+    "floor": 5.00,
+    "cap": 500.00
+  },
+  "budget": { "total": 2500.00, "funded": true, "escrow": true },
+  "posted": "2026-07-24",
+  "deadline": "2026-09-01",
+  "review_window_hours": 72,
+  "proof": {
+    "requires": ["live_url", "view_count", "analytics_export"],
+    "verified_after_hours": 168,
+    "min_retention_days": 60
+  },
+  "status": "open"
+}

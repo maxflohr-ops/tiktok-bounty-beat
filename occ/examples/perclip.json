@@ -1,0 +1,26 @@
+{
+  "occ_version": "0.1",
+  "contract_id": "BC-14",
+  "title": "Release week cutdowns — flat per clip",
+  "brief": "Cut from the 0:42-1:10 section. Keep the hook audible in the first two seconds. No lyric overlays. Do not use the official artwork.",
+  "asset": {
+    "url": "https://example.com/tracks/reckless-attitude",
+    "type": "audio",
+    "attribution": "credit the artist handle in caption"
+  },
+  "platforms": ["tiktok", "reels", "shorts"],
+  "reward": { "type": "per_clip", "rate": 20.00, "currency": "USD", "cap": 200.00 },
+  "budget": { "total": 1000.00, "funded": true, "escrow": true, "paid_out": 340.00 },
+  "posted": "2026-07-20",
+  "deadline": "2026-08-10",
+  "review_window_hours": 48,
+  "proof": {
+    "requires": ["live_url", "view_count"],
+    "verified_after_hours": 72,
+    "min_retention_days": 30
+  },
+  "status": "claimed",
+  "claims": 11,
+  "delivered": 17,
+  "approved": 12
+}
