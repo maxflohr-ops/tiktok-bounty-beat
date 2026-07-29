@@ -47,7 +47,7 @@
   --color-ring-offset-background: var(--wall);
 
   --font-display: "Cinzel Decorative", "Cinzel", "Trajan Pro", serif;
-  --font-body: "Almendra", "EB Garamond", Georgia, serif;
+  --font-body: "EB Garamond", Georgia, serif;
   --font-script: "MedievalSharp", "Cinzel", cursive;
   --font-terminal: "Space Mono", "Share Tech Mono", "JetBrains Mono", monospace;
 }
