@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
@@ -61,132 +62,104 @@ function LandingPage() {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-[var(--tar)] text-bone">
+    <div className="min-h-screen bg-[var(--wall)] text-bone">
       <SiteHeader />
 
-      {/* Light band — concentric focus well */}
-      <section className="relative overflow-hidden bg-[#f5f3ee] py-16 md:py-24">
-        {/* Street-art flair: hand-sprayed diagonal marks in the corners */}
-        <SprayMark className="absolute -top-6 -left-10 rotate-[-14deg] text-[#e94f2e]/70" />
-        <SprayMark className="absolute -bottom-8 -right-8 rotate-[12deg] text-[#0d0d0d]/40" />
+      <section className="bs-surface relative overflow-hidden py-16 md:py-24">
+        <SprayMark className="absolute -top-6 -left-10 rotate-[-14deg] text-[var(--color-bs-accent)]/70" />
+        <SprayMark className="absolute -bottom-8 -right-8 rotate-[12deg] text-[var(--color-bs-ink)]/40" />
 
         <div className="container-board relative">
-          {/* Ring 1 — outermost frame */}
-          <div className="mx-auto max-w-4xl border border-[#0d0d0d]/15 p-4 md:p-8">
-            {/* Ring 2 — middle frame */}
-            <div className="border border-[#0d0d0d]/30 p-4 md:p-10">
-              {/* Ring 3 — the well */}
-              <div className="border-2 border-[#0d0d0d] bg-[#faf9f5] p-6 md:p-12">
-                <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-[#0d0d0d]/60">
-                  <span>Issue No. {pad(open.length + 42)}</span>
-                  <span className="hidden sm:inline">— The Board —</span>
-                  <span>{new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" })}</span>
-                </div>
+          <BsWell className="mx-auto max-w-4xl">
+            <div className="flex items-center justify-between">
+              <BsMono>Issue No. {pad(open.length + 42)}</BsMono>
+              <BsMono className="hidden sm:inline">— The Board —</BsMono>
+              <BsMono>
+                {new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" })}
+              </BsMono>
+            </div>
 
-                <div className="relative mt-6 text-center">
-                  {/* Marker underline behind headline */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-x-6 bottom-2 h-4 -rotate-1 bg-[#e94f2e]/25 md:bottom-4 md:h-6"
-                  />
-                  <h1
-                    className="relative font-[Space_Grotesk] text-[2.6rem] font-bold leading-[0.95] tracking-tight text-[#0d0d0d] md:text-[5rem]"
-                  >
-                    Clip it.<br />
-                    <span className="italic">Claim it.</span><br />
-                    Cash it.
-                  </h1>
-                </div>
+            <div className="relative mt-6 text-center">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-6 bottom-2 h-4 -rotate-1 bg-[var(--color-bs-accent-soft)] md:bottom-4 md:h-6"
+              />
+              <BsDisplay as="h1" size="xl" className="relative">
+                Clip it.<br />
+                <span className="italic">Claim it.</span><br />
+                Cash it.
+              </BsDisplay>
+            </div>
 
-                <p className="mx-auto mt-6 max-w-md text-center font-[DM_Sans] text-base text-[#2d2d2d] md:text-lg">
-                  Public bounty board for TikTok clippers.
-                  Post the clip — verified views pay out.
-                </p>
+            <p className="mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] md:text-lg">
+              Public bounty board for TikTok clippers. Post the clip — verified views pay out.
+            </p>
 
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                  <Link
-                    to="/board"
-                    className="inline-flex items-center justify-center bg-[#0d0d0d] px-6 py-3 font-[Space_Grotesk] text-sm font-semibold uppercase tracking-wider text-[#f5f3ee] transition hover:bg-[#e94f2e]"
-                  >
-                    Open the board
-                  </Link>
-                  <Link
-                    to="/list-sound"
-                    className="inline-flex items-center justify-center border border-[#0d0d0d] px-6 py-3 font-[Space_Grotesk] text-sm font-semibold uppercase tracking-wider text-[#0d0d0d] transition hover:bg-[#0d0d0d] hover:text-[#f5f3ee]"
-                  >
-                    List a sound
-                  </Link>
-                </div>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link to="/board" className="bs-btn">Open the board</Link>
+              <Link to="/list-sound" className="bs-btn bs-btn-ghost">List a sound</Link>
+            </div>
 
-                {/* Live ledger — the center of the well */}
-                <div className="mt-10 border-t border-[#0d0d0d]/20 pt-6">
-                  <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-[#0d0d0d]/60">
-                    <span className="flex items-center gap-2">
-                      <span className="inline-block h-2 w-2 rounded-full bg-[#e94f2e]" />
-                      Live · {open.length} open
-                    </span>
-                    <Link to="/board" className="underline underline-offset-2 hover:text-[#0d0d0d]">
-                      see all →
-                    </Link>
-                  </div>
-
-                  {open.length === 0 ? (
-                    <p className="py-6 text-center font-[DM_Sans] italic text-[#2d2d2d]/70">
-                      No contracts posted right now. Check the board.
-                    </p>
-                  ) : (
-                    <ul className="divide-y divide-[#0d0d0d]/15">
-                      {open.map((b) => (
-                        <li key={b.id}>
-                          <Link
-                            to="/bounty/$id"
-                            params={{ id: b.id }}
-                            className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 py-3 transition hover:bg-[#0d0d0d]/[0.04]"
-                          >
-                            <span className="font-mono text-xs text-[#0d0d0d]/50">#{pad(b.contract_no)}</span>
-                            <span className="min-w-0 truncate font-[Space_Grotesk] text-base font-medium text-[#0d0d0d] md:text-lg">
-                              {b.title}
-                            </span>
-                            <span className="font-mono text-xs font-semibold text-[#e94f2e] md:text-sm">
-                              {rewardLabel(b)}
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+            <div className="bs-rule mt-10 pt-6">
+              <div className="mb-3 flex items-center justify-between">
+                <BsBadge variant="live">Live · {open.length} open</BsBadge>
+                <Link to="/board" className="bs-mono underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+                  see all →
+                </Link>
               </div>
 
-              {/* stenciled corner tag */}
-              <p className="mt-3 text-right font-[Permanent_Marker] text-sm text-[#e94f2e]">
-                no invites · no gated discord
-              </p>
+              {open.length === 0 ? (
+                <p className="py-6 text-center italic text-[var(--color-bs-ink-mute)]">
+                  No contracts posted right now. Check the board.
+                </p>
+              ) : (
+                <ul className="divide-y divide-[var(--color-bs-rule)]">
+                  {open.map((b) => (
+                    <li key={b.id}>
+                      <Link
+                        to="/bounty/$id"
+                        params={{ id: b.id }}
+                        className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 py-3 transition hover:bg-[var(--color-bs-ink)]/[0.04]"
+                      >
+                        <BsMono className="text-[var(--color-bs-ink-mute)]">#{pad(b.contract_no)}</BsMono>
+                        <span className="min-w-0 truncate font-[var(--font-display)] text-base font-medium text-[var(--color-bs-ink)] md:text-lg">
+                          {b.title}
+                        </span>
+                        <BsMono className="font-semibold text-[var(--color-bs-accent)]">
+                          {rewardLabel(b)}
+                        </BsMono>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-          </div>
+          </BsWell>
 
-          {/* Three-word how-it-works, under the well */}
-          <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4 text-center font-[Space_Grotesk] text-[#0d0d0d]">
-            <div>
-              <p className="font-mono text-xs text-[#0d0d0d]/50">01</p>
-              <p className="mt-1 text-lg font-semibold md:text-xl">Claim</p>
-            </div>
-            <div>
-              <p className="font-mono text-xs text-[#0d0d0d]/50">02</p>
-              <p className="mt-1 text-lg font-semibold md:text-xl">Post</p>
-            </div>
-            <div>
-              <p className="font-mono text-xs text-[#0d0d0d]/50">03</p>
-              <p className="mt-1 text-lg font-semibold md:text-xl">Get paid</p>
-            </div>
+          <p className="mx-auto mt-3 max-w-4xl pr-2 text-right">
+            <BsMarker>no invites · no gated discord</BsMarker>
+          </p>
+
+          <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4 text-center">
+            {[
+              { n: "01", l: "Claim" },
+              { n: "02", l: "Post" },
+              { n: "03", l: "Get paid" },
+            ].map((s) => (
+              <div key={s.n}>
+                <BsMono className="text-[var(--color-bs-ink-mute)]">{s.n}</BsMono>
+                <p className="mt-1 font-[var(--font-display)] text-lg font-semibold text-[var(--color-bs-ink)] md:text-xl">
+                  {s.l}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Small explore rail — deliberately quiet */}
       <section className="container-board py-14">
         <nav aria-label="Explore Bounty Sounds" className="mx-auto max-w-3xl">
-          <p className="label-cap text-center">Explore</p>
+          <BsEyebrow className="block text-center">Explore</BsEyebrow>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {[
               { to: "/for-artists", label: "For artists" },
@@ -199,7 +172,7 @@ function LandingPage() {
                   to={l.to}
                   className="flex items-center justify-between border-b border-[var(--iron)] py-2 text-bone hover:text-bone-soft"
                 >
-                  <span className="font-[Space_Grotesk] text-base">{l.label}</span>
+                  <span className="font-display text-base">{l.label}</span>
                   <span className="font-mono text-xs text-bone-soft">→</span>
                 </Link>
               </li>
@@ -240,7 +213,6 @@ function SprayMark({ className = "" }: { className?: string }) {
         strokeLinecap="round"
         opacity="0.4"
       />
-      {/* speckles */}
       {Array.from({ length: 18 }).map((_, i) => (
         <circle
           key={i}
