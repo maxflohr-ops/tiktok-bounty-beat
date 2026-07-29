@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
+import { InkDogwood, InkScrawl } from "@/components/ArtMarks";
 
 const TITLE = "Payouts · Bounty Sounds";
 const DESC =
@@ -38,6 +39,7 @@ function PayoutsPage() {
         <p className="mx-auto mt-5 max-w-md text-lg text-bone-soft">
           Every pot is funded before you claim. Every rate is printed before you post.
         </p>
+        <InkScrawl className="mx-auto mt-6 w-56 opacity-70" />
       </section>
 
       <section className="container-board pb-16">
@@ -87,7 +89,8 @@ function PayoutsPage() {
         </div>
       </section>
 
-      <section className="container-board py-16 text-center">
+      <section className="container-board relative overflow-hidden py-16 text-center">
+        <InkDogwood className="absolute -bottom-8 right-0 w-44 rotate-[5deg] opacity-[0.08] md:w-56" />
         <h2 className="mx-auto max-w-xl text-3xl md:text-4xl">Getting paid in USDC</h2>
         <p className="mx-auto mt-4 max-w-md text-bone-soft">
           Connect a wallet on your dashboard — or paste an address — and approved payouts can

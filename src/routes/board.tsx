@@ -8,6 +8,7 @@ import { Money } from "@/components/Money";
 import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
 import { BsEmpty, BsLoading } from "@/components/bs";
+import { InkCardinal } from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
@@ -276,6 +277,7 @@ function BoardPage() {
 
           {/* Footer branding */}
           <div className="mt-12 text-center opacity-60">
+            <InkCardinal className="mx-auto w-32" />
             <div className="inline-block border-t border-[var(--iron)] p-4">
               <p className="label-cap text-bone-soft">Funded pots · verified views · real payouts</p>
             </div>
