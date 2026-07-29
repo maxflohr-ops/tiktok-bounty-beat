@@ -111,7 +111,10 @@ export const listAllBountiesStaff = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
-    const { data, error } = await context.supabase
+    // Uses admin client: BOUNTY_COLS includes funded_cash_cents which is column-level
+    // revoked from authenticated. Staff gate above authorizes the read.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
       .from("bounties")
       .select(BOUNTY_COLS)
       .order("contract_no", { ascending: false });
