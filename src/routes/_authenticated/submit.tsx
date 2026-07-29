@@ -9,6 +9,7 @@ import { getMe } from "@/lib/me.functions";
 import { listMyClaims, deliverProof, updateViewCount } from "@/lib/submissions.functions";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { ExternalLink, Link2 } from "lucide-react";
+import { BsEmpty } from "@/components/bs";
 
 export const Route = createFileRoute("/_authenticated/submit")({
   head: () => ({
