@@ -119,7 +119,8 @@ function BoardPage() {
               The board
             </h1>
             <p className="mx-auto mt-2 max-w-xl text-bone-soft">
-              Every contract shows its rate, pot, and deadline. Claim one, post your clip, get paid for verified views.
+              Public to anyone — no invite, no Discord. Every contract shows its rate, pot,
+              and deadline. Claim one, post your clip, get paid for verified views.
             </p>
             <p className="mt-3">
               <Link to="/" className="terminal text-xs text-bone-soft underline hover:text-bone">

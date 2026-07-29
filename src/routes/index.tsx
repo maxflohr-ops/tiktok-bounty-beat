@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
-  "Artists fund a pot for their sound. You post the clip. Verified views pay out — via PayPal or Stripe. Funded pots, checked deliveries, real payouts.";
+  "A public clipping and sound bounty board — no invites, no gated Discord. Artists fund a pot for their sound. You post the clip. Verified views pay out via PayPal or Stripe.";
 const HOME_URL = "https://bountysounds.com/";
 
 export const Route = createFileRoute("/")({
@@ -64,7 +64,7 @@ function LandingPage() {
             {openCount > 0 ? `Browse all ${openCount}` : "Browse the board"}
           </Link>
         </div>
-        <p className="mt-4 text-sm text-bone-soft">Three taps. No account needed.</p>
+        <p className="mt-4 text-sm text-bone-soft">Public board. No invites. No gated Discord.</p>
       </section>
 
       {/* Clippers — black band */}
@@ -151,6 +151,23 @@ function LandingPage() {
           </div>
           <Link to="/board" className="silver-btn mt-12 px-8">
             Open the board
+          </Link>
+        </div>
+      </section>
+
+      {/* Open board — black statement band */}
+      <section className="bg-[#000] py-24 text-center text-white md:py-28">
+        <div className="container-board">
+          <h2 className="mx-auto max-w-2xl text-4xl leading-tight text-white md:text-6xl">
+            No invite required.
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-[#a1a1a6]">
+            Most clipping gigs hide in gated Discords — rates in DMs, payouts on trust.
+            This board is public. Every rate, pot, and deadline in the open.
+            Anyone can look. Anyone can claim.
+          </p>
+          <Link to="/board" className="mt-9 inline-flex items-center justify-center rounded-[980px] bg-white px-8 py-3 text-[0.95rem] font-medium text-black transition hover:opacity-85">
+            See the board — no sign-up
           </Link>
         </div>
       </section>
