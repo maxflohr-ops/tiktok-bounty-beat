@@ -27,6 +27,7 @@ import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
 import { Route as BountyIdRouteImport } from './routes/bounty.$id'
+import { Route as ApiGoToolRouteImport } from './routes/api/go.$tool'
 import { Route as ApiPublicOccContractsRouteImport } from './routes/api/public/occ/contracts'
 import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public/webhooks/stripe'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -120,6 +121,11 @@ const BountyIdRoute = BountyIdRouteImport.update({
   path: '/bounty/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGoToolRoute = ApiGoToolRouteImport.update({
+  id: '/api/go/$tool',
+  path: '/api/go/$tool',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOccContractsRoute = ApiPublicOccContractsRouteImport.update({
   id: '/api/public/occ/contracts',
   path: '/api/public/occ/contracts',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/api/go/$tool': typeof ApiGoToolRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/api/go/$tool': typeof ApiGoToolRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/api/go/$tool': typeof ApiGoToolRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/submit'
     | '/bounty/$id'
+    | '/api/go/$tool'
     | '/api/public/occ/contracts'
     | '/api/public/webhooks/stripe'
     | '/lovable/email/transactional/preview'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/submit'
     | '/bounty/$id'
+    | '/api/go/$tool'
     | '/api/public/occ/contracts'
     | '/api/public/webhooks/stripe'
     | '/lovable/email/transactional/preview'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/submit'
     | '/bounty/$id'
+    | '/api/go/$tool'
     | '/api/public/occ/contracts'
     | '/api/public/webhooks/stripe'
     | '/lovable/email/transactional/preview'
@@ -290,6 +302,7 @@ export interface RootRouteChildren {
   TasteRoute: typeof TasteRoute
   TiktokClipperRoute: typeof TiktokClipperRoute
   BountyIdRoute: typeof BountyIdRoute
+  ApiGoToolRoute: typeof ApiGoToolRoute
   ApiPublicOccContractsRoute: typeof ApiPublicOccContractsRoute
   ApiPublicWebhooksStripeRoute: typeof ApiPublicWebhooksStripeRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -423,6 +436,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BountyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/go/$tool': {
+      id: '/api/go/$tool'
+      path: '/api/go/$tool'
+      fullPath: '/api/go/$tool'
+      preLoaderRoute: typeof ApiGoToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/occ/contracts': {
       id: '/api/public/occ/contracts'
       path: '/api/public/occ/contracts'
@@ -479,6 +499,7 @@ const rootRouteChildren: RootRouteChildren = {
   TasteRoute: TasteRoute,
   TiktokClipperRoute: TiktokClipperRoute,
   BountyIdRoute: BountyIdRoute,
+  ApiGoToolRoute: ApiGoToolRoute,
   ApiPublicOccContractsRoute: ApiPublicOccContractsRoute,
   ApiPublicWebhooksStripeRoute: ApiPublicWebhooksStripeRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
