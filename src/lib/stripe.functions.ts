@@ -123,9 +123,10 @@ export const createBountyTopUp = createServerFn({ method: "POST" })
       .single();
     if (be || !bounty) throw new Error("Bounty not found.");
 
-    const { data: bountyExtraRaw } = await context.supabase
+    const { supabaseAdmin: sbAdminForCustomer } = await import("@/integrations/supabase/client.server");
+    const { data: bountyExtraRaw } = await sbAdminForCustomer
       .from("bounties")
-      .select("*")
+      .select("stripe_customer_id")
       .eq("id", data.bountyId)
       .single();
     const bountyExtra = bountyExtraRaw as unknown as { stripe_customer_id: string | null } | null;
