@@ -8,9 +8,13 @@ import { z } from "zod";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — THE BOARD" },
-      { name: "description", content: "Sign in or create an editor account to claim contracts." },
+      { title: "Sign in — Bounty Sounds" },
+      { name: "description", content: "Sign in or create an editor account to claim TikTok clipping bounties on Bounty Sounds." },
+      { name: "robots", content: "noindex, follow" },
+      { property: "og:title", content: "Sign in — Bounty Sounds" },
+      { property: "og:url", content: "https://bountysounds.com/auth" },
     ],
+    links: [{ rel: "canonical", href: "https://bountysounds.com/auth" }],
   }),
   component: AuthPage,
 });

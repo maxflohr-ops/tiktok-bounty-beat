@@ -7,23 +7,25 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useMemo, useState } from "react";
 
+const HOME_TITLE = "Bounty Sounds — Pay-Per-View TikTok Clipping Bounties";
+const HOME_DESC =
+  "Live TikTok clipping bounties for video editors. Artists post music campaigns, editors take contracts and get paid per verified view via PayPal or Stripe.";
+const HOME_URL = "https://bountysounds.com/";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "THE BOARD — clipping contracts posted daily" },
-      {
-        name: "description",
-        content:
-          "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in crowns.",
-      },
-      { property: "og:title", content: "THE BOARD — clipping contracts posted daily" },
-      {
-        property: "og:description",
-        content: "A harbor notice board of clipping bounties for video editors. Take a contract, deliver proof, be paid in crowns.",
-      },
+      { title: HOME_TITLE },
+      { name: "description", content: HOME_DESC },
+      { property: "og:title", content: HOME_TITLE },
+      { property: "og:description", content: HOME_DESC },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: HOME_URL },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: HOME_TITLE },
+      { name: "twitter:description", content: HOME_DESC },
     ],
+    links: [{ rel: "canonical", href: HOME_URL }],
   }),
   component: HomePage,
 });
@@ -218,6 +220,37 @@ function HomePage() {
             </div>
           ) : null}
 
+          {/* Internal links / SEO hub */}
+          <nav aria-label="Explore Bounty Sounds" className="mt-16">
+            <h2 className="text-center font-display text-2xl text-bone">Explore Bounty Sounds</h2>
+            <ul className="mx-auto mt-6 grid max-w-4xl gap-4 sm:grid-cols-2">
+              <li className="border border-[var(--iron)] bg-black/30 p-4">
+                <Link to="/for-artists" className="font-display text-lg text-bone hover:text-silver-glow">
+                  TikTok music promotion for artists →
+                </Link>
+                <p className="mt-1 text-sm text-bone-soft">List your song, set a per-view rate, only pay for verified views.</p>
+              </li>
+              <li className="border border-[var(--iron)] bg-black/30 p-4">
+                <Link to="/for-editors" className="font-display text-lg text-bone hover:text-silver-glow">
+                  UGC creator jobs for editors →
+                </Link>
+                <p className="mt-1 text-sm text-bone-soft">Claim contracts, post TikToks, cash in via PayPal or Stripe.</p>
+              </li>
+              <li className="border border-[var(--iron)] bg-black/30 p-4">
+                <Link to="/clipping-campaigns" className="font-display text-lg text-bone hover:text-silver-glow">
+                  Clipping campaigns →
+                </Link>
+                <p className="mt-1 text-sm text-bone-soft">How pay-per-view clipping campaigns work end to end.</p>
+              </li>
+              <li className="border border-[var(--iron)] bg-black/30 p-4">
+                <Link to="/tiktok-clipper" className="font-display text-lg text-bone hover:text-silver-glow">
+                  Become a TikTok clipper →
+                </Link>
+                <p className="mt-1 text-sm text-bone-soft">Turn your edits into per-view income. No follower minimum.</p>
+              </li>
+            </ul>
+          </nav>
+
           {/* Footer branding */}
           <div className="mt-12 text-center opacity-60">
             <div className="inline-block border-t border-[var(--iron)] p-4">
@@ -228,15 +261,17 @@ function HomePage() {
       </section>
 
       <footer className="relative z-10 border-t border-[var(--iron)]">
-        <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
+        <div className="container-board flex flex-col items-center gap-3 py-8 text-center text-xs text-bone-soft">
+          <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <Link to="/" className="hover:text-bone">the board</Link>
+            <Link to="/for-artists" className="hover:text-bone">for artists</Link>
+            <Link to="/for-editors" className="hover:text-bone">for editors</Link>
+            <Link to="/clipping-campaigns" className="hover:text-bone">clipping campaigns</Link>
+            <Link to="/tiktok-clipper" className="hover:text-bone">tiktok clippers</Link>
+            <Link to="/list-sound" className="hover:text-bone">list a sound</Link>
+          </nav>
           <span className="script-note text-lg text-silver-glow">The board assumes no liability for what answers.</span>
-          <div className="terminal flex items-center gap-4 opacity-70">
-            <span className="flex items-center gap-2">
-              <span className="status-dot" /> encrypted link established
-            </span>
-            <span>v.04.22-alpha</span>
-          </div>
-          <span>© {new Date().getFullYear()} · posted by the harbormaster</span>
+          <span>© {new Date().getFullYear()} · Bounty Sounds</span>
         </div>
       </footer>
     </div>

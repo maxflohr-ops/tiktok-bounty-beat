@@ -90,6 +90,13 @@ function ForArtists() {
       <LandingSection title="Frequently asked questions">
         <FaqList items={FAQ} />
       </LandingSection>
+      <LandingSection title="Related">
+        <ul className="list-disc space-y-1 pl-6">
+          <li><a href="/clipping-campaigns" className="underline hover:text-bone">How clipping campaigns work</a></li>
+          <li><a href="/for-editors" className="underline hover:text-bone">For TikTok editors & UGC creators</a></li>
+          <li><a href="/list-sound" className="underline hover:text-bone">List your sound — $200 / 30 days</a></li>
+        </ul>
+      </LandingSection>
     </LandingLayout>
   );
 }
