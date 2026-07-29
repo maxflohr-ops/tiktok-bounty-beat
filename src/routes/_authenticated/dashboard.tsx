@@ -204,7 +204,7 @@ function PaymentSetup() {
       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
       <h2 className="font-display text-2xl text-bone">Payment setup</h2>
       {isLoading ? (
-        <p className="mt-2 italic text-bone-soft">Consulting the harbor bank…</p>
+        <p className="mt-2 text-bone-soft">Consulting the harbor bank…</p>
       ) : status === "enabled" ? (
         <div className="mt-3 flex items-center gap-2">
           <span className="status-dot" />
@@ -212,7 +212,7 @@ function PaymentSetup() {
         </div>
       ) : status === "pending" ? (
         <div className="mt-3 space-y-3">
-          <p className="italic text-bone-soft">Stripe onboarding is incomplete.</p>
+          <p className="text-bone-soft">Stripe onboarding is incomplete.</p>
           <div className="flex flex-wrap gap-2">
             <button onClick={link} disabled={busy} className="silver-btn">
               <Link2 className="h-3.5 w-3.5" /> complete stripe setup
@@ -224,13 +224,13 @@ function PaymentSetup() {
         </div>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="italic text-bone-soft">Link a Stripe account so the board can pay you in crowns directly.</p>
+          <p className="text-bone-soft">Link a Stripe account so the board can pay you in crowns directly.</p>
           <button onClick={link} disabled={busy} className="silver-btn">
             <Link2 className="h-3.5 w-3.5" /> link stripe account for payouts
           </button>
         </div>
       )}
-      <p className="mt-3 text-xs italic text-bone-soft">PayPal support coming soon.</p>
+      <p className="mt-3 text-xs text-bone-soft">PayPal support coming soon.</p>
     </div>
   );
 }
@@ -284,7 +284,7 @@ function ClaimRow({
             No. {b?.contract_no != null ? pad(b.contract_no) : "—"}
           </div>
           <div className="font-display text-xl text-bone">{b?.title}</div>
-          <div className="mt-0.5 text-sm italic text-bone-soft">
+          <div className="mt-0.5 text-sm text-bone-soft">
             {b?.artist_song || b?.sound_name}
             {b?.deadline ? ` · by ${new Date(b.deadline).toLocaleDateString()}` : ""}
           </div>
@@ -293,7 +293,7 @@ function ClaimRow({
               open the clip <ExternalLink className="h-3 w-3" />
             </a>
           ) : (
-            <div className="mt-2 text-xs italic text-bone-soft">No proof delivered yet</div>
+            <div className="mt-2 text-xs text-bone-soft">No proof delivered yet</div>
           )}
           {claim.review_notes ? (
             <p className="mt-2 italic text-bone-soft">“{claim.review_notes}”</p>

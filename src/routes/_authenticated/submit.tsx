@@ -149,7 +149,7 @@ function SubmitPage() {
               delivery terminal · online
             </div>
           </div>
-          <p className="mt-2 italic text-bone-soft">
+          <p className="mt-2 text-bone-soft">
             Paste your posted TikTok URL. The board matches it to your open contract,
             confirms the handle by eye, and the harbormaster honors the pot.
           </p>
@@ -189,14 +189,14 @@ function SubmitPage() {
                 />
               </div>
               {url && !urlValid ? (
-                <p className="mt-1 text-xs italic text-bone-soft">
+                <p className="mt-1 text-xs text-bone-soft">
                   must be a tiktok.com link
                 </p>
               ) : null}
             </label>
 
             {openClaims.length === 0 ? (
-              <div className="mt-4 border border-[var(--border)] p-3 text-sm italic text-bone-soft">
+              <div className="mt-4 border border-[var(--border)] p-3 text-sm text-bone-soft">
                 you have no open contracts.{" "}
                 <Link to="/" className="underline">
                   take one from the board
@@ -239,7 +239,7 @@ function SubmitPage() {
                               </span>
                             ) : null}
                           </div>
-                          <div className="mt-0.5 text-xs italic text-bone-soft">
+                          <div className="mt-0.5 text-xs text-bone-soft">
                             {b?.artist_song ? <>“{b.artist_song}” · </> : null}
                             sound {b?.sound_name} · claimed as{" "}
                             @{c.tiktok_handle}
@@ -305,7 +305,7 @@ function SubmitPage() {
                       </div>
 
                       {c.auto_check_notes ? (
-                        <p className="mt-2 text-xs italic text-bone-soft">
+                        <p className="mt-2 text-xs text-bone-soft">
                           {c.auto_check_notes}
                         </p>
                       ) : null}
@@ -360,7 +360,7 @@ function SubmitPage() {
                           >
                             update
                           </button>
-                          <span className="text-xs italic text-bone-soft">
+                          <span className="text-xs text-bone-soft">
                             logged: {(c.view_count ?? 0).toLocaleString()}
                           </span>
                         </div>
