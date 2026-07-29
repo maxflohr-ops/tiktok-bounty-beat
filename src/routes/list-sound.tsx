@@ -9,6 +9,7 @@ import { useSession } from "@/lib/session";
 import { createSoundListingCheckout, listMySoundListings } from "@/lib/sound-listings.functions";
 import { BsBadge, BsButton, BsCard, BsDisplay, BsEyebrow, BsMono } from "@/components/bs";
 import { InkDrips } from "@/components/ArtMarks";
+import { getAttribution } from "@/lib/attribution";
 
 const LIST_URL = "https://bountysounds.com/list-sound";
 const LIST_TITLE = "List a Sound or a Livestream for Clipping — $200 / 30 Days | Bounty Sounds";
@@ -59,6 +60,7 @@ function ListSoundPage() {
   const [streamAt, setStreamAt] = useState("");
   const [email, setEmail] = useState(user?.email ?? "");
   const [notes, setNotes] = useState("");
+  const [featured, setFeatured] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -80,6 +82,8 @@ function ListSoundPage() {
               : undefined,
           contact_email: email,
           notes: notes || undefined,
+          featured,
+          attribution: getAttribution() ?? undefined,
         },
       });
       if (res?.url) {
@@ -210,10 +214,29 @@ function ListSoundPage() {
                   </Field>
                 </div>
 
+                <label className="mt-6 flex cursor-pointer items-start gap-3 border border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] p-4">
+                  <input
+                    type="checkbox"
+                    checked={featured}
+                    onChange={(e) => setFeatured(e.target.checked)}
+                    className="mt-1 h-4 w-4 accent-[var(--color-bs-accent)]"
+                  />
+                  <span>
+                    <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">
+                      Feature it — $1,000 / month
+                    </span>
+                    <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">
+                      Pinned #1 on the board with the featured stamp. First month billed now.
+                    </span>
+                  </span>
+                </label>
+
                 <div className="mt-6 flex items-center justify-between border-t border-[var(--color-bs-rule)] pt-4">
                   <div>
-                    <BsEyebrow>listing fee</BsEyebrow>
-                    <div className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-bs-ink)]">$200 · 30 days</div>
+                    <BsEyebrow>due today</BsEyebrow>
+                    <div className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-bs-ink)]">
+                      {featured ? "$1,200" : "$200"} · 30 days
+                    </div>
                   </div>
                   <BsButton type="submit" variant="accent" disabled={busy} aria-busy={busy}>
                     {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
@@ -235,6 +258,7 @@ function ListSoundPage() {
                   <li>· TikTok proof reviewed by staff</li>
                   <li>· Payout rules agreed up front</li>
                   <li>· Airtable + email updates on every action</li>
+                  <li>· Optional: featured slot, pinned #1 — $1,000/mo</li>
                 </ul>
 
                 {mine.length > 0 ? (

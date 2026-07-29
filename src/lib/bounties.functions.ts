@@ -4,10 +4,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until";
 // Columns safe to expose publicly (excludes funded_cash_cents and any Stripe identifiers).
 const PUBLIC_BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until";
 
 // Public: all bounties (any status) — the board never deletes, expired stays visible.
 export const listPublicBounties = createServerFn({ method: "GET" }).handler(async () => {
@@ -59,6 +59,7 @@ const upsertBountyInput = z.object({
   platform_target: z.enum(["tiktok", "reels", "shorts"]).default("tiktok"),
   max_submissions: z.number().int().min(1).max(100000).nullable().optional(),
   deadline: z.string().datetime().nullable().optional(),
+  featured_until: z.string().datetime().nullable().optional(),
   status: z.enum(["draft", "active", "claimed", "in_review", "fulfilled", "expired", "closed"]).default("active"),
 });
 
@@ -83,6 +84,7 @@ export const upsertBounty = createServerFn({ method: "POST" })
       platform_target: data.platform_target,
       max_submissions: data.max_submissions ?? null,
       deadline: data.deadline ?? null,
+      featured_until: data.featured_until ?? null,
       status: data.status,
       created_by: context.userId,
     };

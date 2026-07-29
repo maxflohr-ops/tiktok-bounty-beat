@@ -143,6 +143,7 @@ function BountiesPanel() {
           platform_target: (editing.platform_target ?? "tiktok") as "tiktok" | "reels" | "shorts",
           max_submissions: editing.max_submissions ?? null,
           deadline: editing.deadline || null,
+          featured_until: (editing as any).featured_until || null,
           status: (editing.status ?? "active") as "draft" | "active" | "claimed" | "in_review" | "fulfilled" | "expired" | "closed",
         },
       });
@@ -245,6 +246,9 @@ function BountiesPanel() {
           <div className="grid grid-cols-2 gap-3">
             <Field label="deadline">
               <input type="datetime-local" value={editing.deadline ? editing.deadline.slice(0, 16) : ""} onChange={(e) => setEditing({ ...editing, deadline: e.target.value ? new Date(e.target.value).toISOString() : null })} className="dark-input" />
+            </Field>
+            <Field label="featured until ($1k/mo slot)">
+              <input type="datetime-local" value={(editing as any).featured_until ? (editing as any).featured_until.slice(0, 16) : ""} onChange={(e) => setEditing({ ...editing, featured_until: e.target.value ? new Date(e.target.value).toISOString() : null } as any)} className="dark-input" />
             </Field>
             <Field label="status">
               <select value={editing.status ?? "active"} onChange={(e) => setEditing({ ...editing, status: e.target.value as Bounty["status"] })} className="dark-input">

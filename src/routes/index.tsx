@@ -59,9 +59,12 @@ function LandingPage() {
     queryFn: () => listFn(),
     retry: false,
   });
-  const open = bounties
-    .filter((b) => b.status !== "expired" && b.status !== "fulfilled" && b.status !== "closed")
-    .slice(0, 5);
+  const live = bounties.filter(
+    (b) => b.status !== "expired" && b.status !== "fulfilled" && b.status !== "closed",
+  );
+  const featured = (b: Bounty) =>
+    Boolean((b as any).featured_until && new Date((b as any).featured_until).getTime() > Date.now());
+  const open = [...live.filter(featured), ...live.filter((b) => !featured(b))].slice(0, 5);
 
   return (
     <div className="min-h-screen bg-[var(--wall)] text-bone">

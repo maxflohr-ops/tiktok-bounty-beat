@@ -47,6 +47,13 @@ function isExpired(b: Bounty) {
   if (b.deadline && new Date(b.deadline).getTime() < Date.now()) return "expired";
   return null;
 }
+function isFeatured(b: Bounty) {
+  return Boolean(
+    (b as any).featured_until &&
+    new Date((b as any).featured_until).getTime() > Date.now() &&
+    !isExpired(b),
+  );
+}
 function bottomLine(b: Bounty) {
   const overridden = isExpired(b);
   if (overridden === "expired") return { text: "expired", seal: false, variant: "magenta" as const };
@@ -85,10 +92,13 @@ function BoardPage() {
       }
       return true;
     });
-    if (!taste) return base.map((b) => ({ b, score: 0 }));
-    return base
-      .map((b) => ({ b, score: scoreBounty(taste, b) }))
-      .sort((x, y) => y.score - x.score || y.b.contract_no - x.b.contract_no);
+    const scored = !taste
+      ? base.map((b) => ({ b, score: 0 }))
+      : base
+          .map((b) => ({ b, score: scoreBounty(taste, b) }))
+          .sort((x, y) => y.score - x.score || y.b.contract_no - x.b.contract_no);
+    // Paid featured slots pin above everything, keeping taste order within each group.
+    return [...scored.filter(({ b }) => isFeatured(b)), ...scored.filter(({ b }) => !isFeatured(b))];
   }, [bounties, platform, payout, status, taste]);
 
   return (
@@ -204,7 +214,7 @@ function BoardPage() {
                       params={{ id: b.id }}
                       className="block focus:outline-none"
                     >
-                      <ContractCard b={b} bl={bl} match={score >= 3} />
+                      <ContractCard b={b} bl={bl} match={score >= 3} featured={isFeatured(b)} />
                     </Link>
                   </li>
                 );
@@ -341,10 +351,12 @@ function ContractCard({
   b,
   bl,
   match,
+  featured,
 }: {
   b: Bounty;
   bl: { text: string; seal: boolean; variant: "cyan" | "amber" | "magenta" };
   match?: boolean;
+  featured?: boolean;
 }) {
   const reward =
     b.payout_type === "per_1k_views"
@@ -378,7 +390,13 @@ function ContractCard({
 
   return (
     <article className={`contract contract-nail ${glowClass} group relative cursor-pointer hover:-translate-y-1 hover:rotate-0`}>
-      {bl.seal ? <span className="wax-seal">Fulfilled</span> : match ? <span className="wax-seal">for you</span> : null}
+      {bl.seal ? (
+        <span className="wax-seal">Fulfilled</span>
+      ) : featured ? (
+        <span className="wax-seal">Featured</span>
+      ) : match ? (
+        <span className="wax-seal">for you</span>
+      ) : null}
       <span className="water-stain" style={{ top: 40, left: -20, width: 120, height: 80 }} />
       <span className="water-stain" style={{ bottom: 20, right: 10, width: 90, height: 60 }} />
 
