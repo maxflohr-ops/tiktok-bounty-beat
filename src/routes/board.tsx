@@ -5,7 +5,8 @@ import { listPublicBounties } from "@/lib/bounties.functions";
 import { leaderboard } from "@/lib/me.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
 
 const HOME_TITLE = "The Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
@@ -63,19 +64,28 @@ function BoardPage() {
   });
   const { data: top = [] } = useQuery({ queryKey: ["leaderboard"], queryFn: () => boardFn() });
 
+  const [taste, setTaste] = useState<TasteProfile | null>(null);
+  useEffect(() => setTaste(loadTaste()), []);
+
   const [platform, setPlatform] = useState<"all" | "tiktok" | "reels" | "shorts">("all");
   const [payout, setPayout] = useState<"all" | "flat" | "per_1k_views">("all");
   const [status, setStatus] = useState<"open" | "all">("open");
 
-  const filtered = bounties.filter((b) => {
-    if (platform !== "all" && b.platform_target !== platform) return false;
-    if (payout !== "all" && b.payout_type !== payout) return false;
-    if (status === "open") {
-      const done = isExpired(b);
-      if (done === "expired") return false;
-    }
-    return true;
-  });
+  const filtered = useMemo(() => {
+    const base = bounties.filter((b) => {
+      if (platform !== "all" && b.platform_target !== platform) return false;
+      if (payout !== "all" && b.payout_type !== payout) return false;
+      if (status === "open") {
+        const done = isExpired(b);
+        if (done === "expired") return false;
+      }
+      return true;
+    });
+    if (!taste) return base.map((b) => ({ b, score: 0 }));
+    return base
+      .map((b) => ({ b, score: scoreBounty(taste, b) }))
+      .sort((x, y) => y.score - x.score || y.b.contract_no - x.b.contract_no);
+  }, [bounties, platform, payout, status, taste]);
 
   return (
     <div className="relative min-h-screen">
@@ -118,6 +128,21 @@ function BoardPage() {
             </p>
           </div>
 
+
+          {/* Taste banner */}
+          <div className="mb-6 flex justify-center">
+            {taste ? (
+              <div className="digital-badge">
+                <span className="status-dot" />
+                ranked to your taste
+                <Link to="/taste" className="ml-1 underline hover:text-bone">retune</Link>
+              </div>
+            ) : (
+              <Link to="/taste" className="digital-badge hover:text-bone">
+                ✦ 30 seconds of questions → a board ranked to your taste
+              </Link>
+            )}
+          </div>
 
           {/* Filters */}
           <div className="mb-8 flex flex-wrap items-center justify-center gap-4 md:mb-10">
@@ -172,7 +197,7 @@ function BoardPage() {
             </div>
           ) : (
             <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((b) => {
+              {filtered.map(({ b, score }) => {
                 const bl = bottomLine(b);
                 const dim = isExpired(b) === "expired";
                 return (
@@ -182,7 +207,7 @@ function BoardPage() {
                       params={{ id: b.id }}
                       className="block focus:outline-none"
                     >
-                      <ContractCard b={b} bl={bl} />
+                      <ContractCard b={b} bl={bl} match={score >= 3} />
                     </Link>
                   </li>
                 );
@@ -305,9 +330,11 @@ function FilterGroup({
 function ContractCard({
   b,
   bl,
+  match,
 }: {
   b: Bounty;
   bl: { text: string; seal: boolean; variant: "cyan" | "amber" | "magenta" };
+  match?: boolean;
 }) {
   const reward =
     b.payout_type === "per_1k_views"
@@ -341,7 +368,7 @@ function ContractCard({
 
   return (
     <article className={`contract contract-nail ${glowClass} group relative cursor-pointer hover:-translate-y-1 hover:rotate-0`}>
-      {bl.seal ? <span className="wax-seal">Fulfilled</span> : null}
+      {bl.seal ? <span className="wax-seal">Fulfilled</span> : match ? <span className="wax-seal">for you</span> : null}
       <span className="water-stain" style={{ top: 40, left: -20, width: 120, height: 80 }} />
       <span className="water-stain" style={{ bottom: 20, right: 10, width: 90, height: 60 }} />
 
