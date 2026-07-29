@@ -4,5 +4,6 @@ Disallow: /_authenticated/
 Disallow: /dashboard
 Disallow: /admin
 Disallow: /submit
+Disallow: /analytics
 
 Sitemap: https://bountysounds.com/sitemap.xml
