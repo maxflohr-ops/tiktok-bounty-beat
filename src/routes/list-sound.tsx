@@ -13,8 +13,8 @@ import { getAttribution } from "@/lib/attribution";
 import { setReturnTo } from "@/lib/return-to";
 
 const LIST_URL = "https://bountysounds.com/list-sound";
-const LIST_TITLE = "List a Sound or a Livestream for Clipping — $200 / 30 Days | Bounty Sounds";
-const LIST_DESC = "Get your song or stream in front of TikTok clippers. $200 lists it on Bounty Sounds for a 30-day pay-per-view clipping campaign — upcoming streams and VODs welcome.";
+const LIST_TITLE = "List a Sound, Stream, Keynote, or Podcast for Clipping — $200 / 30 Days | Bounty Sounds";
+const LIST_DESC = "Get your song, stream, keynote, or podcast in front of TikTok clippers. $200 lists it on Bounty Sounds for a 30-day pay-per-view clipping campaign.";
 
 export const Route = createFileRoute("/list-sound")({
   head: () => ({
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/list-sound")({
     success: s.success === "1" || s.success === 1 ? true : undefined,
     cancelled: s.cancelled === "1" || s.cancelled === 1 ? true : undefined,
     id: typeof s.id === "string" ? s.id : undefined,
-    type: s.type === "stream" || s.type === "keynote" ? (s.type as "stream" | "keynote") : undefined,
+    type: s.type === "stream" || s.type === "keynote" || s.type === "podcast" ? (s.type as "stream" | "keynote" | "podcast") : undefined,
   }),
   component: ListSoundPage,
 });
@@ -52,7 +52,7 @@ function ListSoundPage() {
     enabled: !!user,
   });
 
-  const [kind, setKind] = useState<"sound" | "stream" | "keynote">(search.type ?? "sound");
+  const [kind, setKind] = useState<"sound" | "stream" | "keynote" | "podcast">(search.type ?? "sound");
   const [when, setWhen] = useState<"upcoming" | "previous">("upcoming");
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
@@ -64,7 +64,7 @@ function ListSoundPage() {
   const [notes, setNotes] = useState("");
   const [hashtags, setHashtags] = useState("");
   const [rules, setRules] = useState("");
-  const [featured, setFeatured] = useState(false);
+  const [featuredTier, setFeaturedTier] = useState<"none" | "featured" | "featured_plus">("none");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -88,7 +88,7 @@ function ListSoundPage() {
           notes: notes || undefined,
           hashtags: hashtags || undefined,
           rules: rules || undefined,
-          featured,
+          featured_tier: featuredTier,
           attribution: getAttribution() ?? undefined,
         },
       });
@@ -113,7 +113,7 @@ function ListSoundPage() {
         <div className="mx-auto max-w-3xl text-center">
           <BsEyebrow>listings · $200 / 30 days</BsEyebrow>
           <BsDisplay as="h1" size="lg" className="mt-3">
-            List a sound, a stream — or a keynote
+            List a sound, stream, keynote — or podcast
           </BsDisplay>
           <InkDrips className="mx-auto -mt-1 w-44 opacity-50" />
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
@@ -141,7 +141,7 @@ function ListSoundPage() {
 
         {!ready ? null : !user ? (
           <div className="mx-auto mt-8 max-w-2xl text-center">
-            <p className="mb-4 text-[var(--color-bs-ink-soft)]">Sign in to list a sound or a stream.</p>
+            <p className="mb-4 text-[var(--color-bs-ink-soft)]">Sign in to list your campaign.</p>
             <BsButton onClick={() => { setReturnTo(window.location.pathname + window.location.search); navigate({ to: "/auth" }); }}>sign in</BsButton>
           </div>
         ) : (
@@ -151,7 +151,7 @@ function ListSoundPage() {
                 <div className="flex items-center justify-between">
                   <BsEyebrow>the notice</BsEyebrow>
                   <div className="flex flex-wrap gap-2" role="tablist" aria-label="Listing type">
-                    {(["sound", "stream", "keynote"] as const).map((k) => (
+                    {(["sound", "stream", "keynote", "podcast"] as const).map((k) => (
                       <button
                         key={k}
                         type="button"
@@ -160,17 +160,17 @@ function ListSoundPage() {
                         onClick={() => setKind(k)}
                         className={kind === k ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
                       >
-                        {k === "sound" ? "a sound" : k === "stream" ? "a livestream" : "a keynote"}
+                        {k === "sound" ? "a sound" : k === "stream" ? "a livestream" : k === "keynote" ? "a keynote" : "a podcast"}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div className="mt-4 grid gap-4">
-                  <Field label={kind === "sound" ? "Artist name" : kind === "stream" ? "Streamer name" : "Speaker or company"} required>
-                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Ridgeclub" : kind === "stream" ? "ebbionline" : "Meridian"} />
+                  <Field label={kind === "sound" ? "Artist name" : kind === "stream" ? "Streamer name" : kind === "keynote" ? "Speaker or company" : "Podcast or host"} required>
+                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Ridgeclub" : kind === "stream" ? "ebbionline" : kind === "keynote" ? "Meridian" : "The Grind Show"} />
                   </Field>
-                  <Field label={kind === "sound" ? "Song title" : kind === "stream" ? "Stream title" : "Keynote title"} required>
-                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Do I Clench My Fist" : kind === "stream" ? "Thursday variety stream" : "Developer Keynote '26"} />
+                  <Field label={kind === "sound" ? "Song title" : kind === "stream" ? "Stream title" : kind === "keynote" ? "Keynote title" : "Episode title"} required>
+                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Do I Clench My Fist" : kind === "stream" ? "Thursday variety stream" : kind === "keynote" ? "Developer Keynote '26" : "Ep. 41 — the comeback"} />
                   </Field>
                   {kind === "sound" ? (
                     <>
@@ -186,7 +186,7 @@ function ListSoundPage() {
                       <Field
                         label={kind === "stream" ? "Channel or VOD link" : "Footage link"}
                         required
-                        hint={kind === "stream" ? "Twitch, YouTube, or Kick" : "YouTube, Drive — anywhere clippers can watch it"}
+                        hint={kind === "stream" ? "Twitch, YouTube, or Kick" : "YouTube, Spotify, Drive — anywhere clippers can watch it"}
                       >
                         <input required value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} className="bs-input" placeholder={kind === "stream" ? "https://twitch.tv/ebbionline" : "https://youtube.com/watch?v=…"} />
                       </Field>
@@ -201,8 +201,8 @@ function ListSoundPage() {
                               className={when === w ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
                             >
                               {w === "upcoming"
-                                ? kind === "stream" ? "upcoming stream" : "upcoming keynote"
-                                : kind === "stream" ? "previous stream / VOD" : "already delivered"}
+                                ? kind === "stream" ? "upcoming stream" : kind === "keynote" ? "upcoming keynote" : "upcoming episode"
+                                : kind === "stream" ? "previous stream / VOD" : "already out"}
                             </button>
                           ))}
                           {when === "upcoming" ? (
@@ -232,28 +232,34 @@ function ListSoundPage() {
                   </Field>
                 </div>
 
-                <label className="mt-6 flex cursor-pointer items-start gap-3 border border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] p-4">
-                  <input
-                    type="checkbox"
-                    checked={featured}
-                    onChange={(e) => setFeatured(e.target.checked)}
-                    className="mt-1 h-4 w-4 accent-[var(--color-bs-accent)]"
-                  />
-                  <span>
-                    <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">
-                      Feature it — $1,000 / month
-                    </span>
-                    <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">
-                      Pinned #1 on the board with the featured stamp. First month billed now.
-                    </span>
-                  </span>
-                </label>
+                <fieldset className="mt-6 border border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] p-4">
+                  <legend className="px-1 font-[var(--font-display)] text-sm font-semibold text-[var(--color-bs-ink)]">Placement</legend>
+                  {([
+                    { v: "none", label: "Standard listing", sub: "On the board with everything else." },
+                    { v: "featured", label: "Featured — $1,000 / month", sub: "Pinned #1 with the featured stamp. First month billed now." },
+                    { v: "featured_plus", label: "Featured+ — $2,500 / month", sub: "Pinned #1, plus the presented-by line on the front page. First month billed now." },
+                  ] as const).map((o) => (
+                    <label key={o.v} className="flex cursor-pointer items-start gap-3 py-2">
+                      <input
+                        type="radio"
+                        name="placement"
+                        checked={featuredTier === o.v}
+                        onChange={() => setFeaturedTier(o.v)}
+                        className="mt-1 h-4 w-4 accent-[var(--color-bs-accent)]"
+                      />
+                      <span>
+                        <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">{o.label}</span>
+                        <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">{o.sub}</span>
+                      </span>
+                    </label>
+                  ))}
+                </fieldset>
 
                 <div className="mt-6 flex items-center justify-between border-t border-[var(--color-bs-rule)] pt-4">
                   <div>
                     <BsEyebrow>due today</BsEyebrow>
                     <div className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-bs-ink)]">
-                      {featured ? "$1,200" : "$200"} · 30 days
+                      {featuredTier === "featured_plus" ? "$2,700" : featuredTier === "featured" ? "$1,200" : "$200"} · 30 days
                     </div>
                   </div>
                   <BsButton type="submit" variant="accent" disabled={busy} aria-busy={busy}>

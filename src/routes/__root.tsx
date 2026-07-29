@@ -83,11 +83,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0d0905" },
-      { title: "Bounty Sounds — clipping bounties on sounds, streams & keynotes" },
+      { title: "Bounty Sounds — clipping bounties on sounds, streams, keynotes & podcasts" },
       {
         name: "description",
         content:
-          "Bounty Sounds is a pay-per-view clipping board. Artists, streamers, and speakers fund bounties; clippers post TikToks and get paid per verified view.",
+          "Bounty Sounds is a pay-per-view clipping board. Artists, streamers, speakers, and podcasters fund bounties; clippers post TikToks and get paid per verified view.",
       },
       { property: "og:site_name", content: "Bounty Sounds" },
       { property: "og:type", content: "website" },

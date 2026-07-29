@@ -78,6 +78,8 @@ function editorsRead(b: Bounty) {
     return "Stream cut. Watch the VOD, pull the moments people quote. Energy beats polish.";
   if (/keynote|talk|conference|speech/i.test(hint))
     return "Keynote cut. Find the ninety seconds everyone will argue about.";
+  if (/podcast|episode|\bep\b/i.test(hint))
+    return "Podcast cut. Find the story inside the episode — hooks beat context.";
   return "Sound cut. The edit you'd make anyway — with this sound under it.";
 }
 
