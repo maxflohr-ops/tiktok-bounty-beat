@@ -62,9 +62,11 @@ export function bountyToOcc(b: PublicBountyRow, origin: string): Record<string, 
     },
     platforms: [b.platform_target],
     reward: {
-      // Board rates are cents per 1k views; OCC per_100k_views is cents per 100k.
+      // Despite the enum name, the board's per_1k_views rate is cents per
+      // 100k views (see the payout math: floor(views/100000) * rate), which
+      // matches OCC per_100k_views directly — no conversion.
       type: perViews ? "per_100k_views" : "flat",
-      rate: perViews ? b.reward_cash_cents * 100 : b.reward_cash_cents,
+      rate: b.reward_cash_cents,
       currency: (b.currency || "USD").toUpperCase(),
     },
     budget: {
