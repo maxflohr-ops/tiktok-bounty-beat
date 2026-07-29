@@ -224,13 +224,40 @@ function BountyDetail() {
                       href={bounty.tiktok_sound_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-body italic text-ink underline"
+                      className="inline-flex items-center gap-1 font-body font-semibold text-ink underline"
                     >
-                      sound page <ExternalLink className="h-3 w-3" />
+                      post with this exact sound <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
                 ) : null}
               </div>
+            </div>
+
+            <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
+              <div className="label-cap text-ink-soft">Clipper toolkit</div>
+              <ul className="mt-2 space-y-1 text-sm text-ink-soft">
+                <li>
+                  <a href="https://cobalt.tools" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline">
+                    cobalt <ExternalLink className="h-3 w-3" />
+                  </a>{" "}
+                  — grab the source video or VOD
+                </li>
+                <li>
+                  <a href="https://www.opus.pro" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline">
+                    opus clip <ExternalLink className="h-3 w-3" />
+                  </a>{" "}
+                  — rough-cut long streams into candidates
+                </li>
+                {bounty.tiktok_sound_url ? (
+                  <li>
+                    then swap in{" "}
+                    <a href={bounty.tiktok_sound_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline">
+                      the contract's sound <ExternalLink className="h-3 w-3" />
+                    </a>{" "}
+                    before you post
+                  </li>
+                ) : null}
+              </ul>
             </div>
 
             <p className="script-note mt-8 text-center text-base text-ink-soft">
