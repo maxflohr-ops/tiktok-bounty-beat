@@ -13,7 +13,7 @@ const FAQ = [
   },
   {
     q: "Do I need my own TikTok account?",
-    a: "Yes. You'll enter your TikTok handle when you claim a contract so the harbormaster can verify your posts and view counts.",
+    a: "Yes. You'll enter your TikTok handle when you claim a contract so we can verify your posts and view counts.",
   },
   {
     q: "How much can I make as a TikTok clipper?",

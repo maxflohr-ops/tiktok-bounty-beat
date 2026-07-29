@@ -13,7 +13,7 @@ const FAQ = [
   },
   {
     q: "How do I get paid?",
-    a: "Add your TikTok handle and PayPal email when you claim a contract. Once your video hits view thresholds and the harbormaster approves the payout, funds go to your PayPal or Stripe payout method.",
+    a: "Add your TikTok handle and PayPal email when you claim a contract. Once your video hits view thresholds and the payout is approved, funds go to your PayPal or Stripe payout method.",
   },
   {
     q: "Is there a minimum follower count?",
@@ -61,7 +61,7 @@ function ForEditors() {
       eyebrow="for tiktok editors & UGC creators"
       h1="UGC creator jobs — get paid per view for TikTok edits"
       intro="Claim a music bounty, post a TikTok using the artist's official sound, and cash in per verified view. No brand outreach, no cold pitching — the contracts are already on the board."
-      primaryCta="sign the ledger & claim a contract"
+      primaryCta="create an account & claim a contract"
       primaryHref="/auth"
       secondaryCta="browse open contracts"
       secondaryHref="/"
@@ -83,7 +83,7 @@ function ForEditors() {
           <li>Sign in and browse open contracts on The Board.</li>
           <li>Take a contract — enter your TikTok handle and PayPal email.</li>
           <li>Make and post your edit using the artist's official TikTok sound.</li>
-          <li>Paste the TikTok URL as proof. The harbormaster verifies view counts and approves your payout.</li>
+          <li>Paste the TikTok URL as proof. We verify view counts and approve your payout.</li>
         </ol>
       </LandingSection>
       <LandingSection title="Frequently asked questions">

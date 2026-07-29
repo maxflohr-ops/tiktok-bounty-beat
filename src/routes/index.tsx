@@ -67,11 +67,6 @@ function HomePage() {
   const [payout, setPayout] = useState<"all" | "flat" | "per_1k_views">("all");
   const [status, setStatus] = useState<"open" | "all">("open");
 
-  const rotations = useMemo(
-    () => bounties.map((_, i) => ((Math.sin(i * 1.618) * 1.5).toFixed(2))),
-    [bounties],
-  );
-
   const filtered = bounties.filter((b) => {
     if (platform !== "all" && b.platform_target !== platform) return false;
     if (payout !== "all" && b.payout_type !== payout) return false;
@@ -107,7 +102,7 @@ function HomePage() {
             </div>
             <div className="flex items-center justify-center gap-4">
               <div className="h-px w-20 bg-gradient-to-r from-transparent via-[var(--neon-cyan)] to-transparent opacity-60" />
-              <span className="label-cap text-bone-soft">Notices posted this season</span>
+              <span className="label-cap text-bone-soft">Live contracts</span>
               <div className="h-px w-20 bg-gradient-to-l from-transparent via-[var(--neon-cyan)] to-transparent opacity-60" />
             </div>
             <h1 className="mt-4 font-display text-3xl leading-tight text-bone md:text-5xl">
@@ -117,7 +112,7 @@ function HomePage() {
               Take one down. Deliver proof.
             </p>
             <p className="mx-auto mt-3 max-w-xl text-bone-soft">
-              The board is where the harbor's clipping work is posted. Any editor of standing may take a contract; those who deliver are paid in crowns.
+              Artists fund a pot for their sound. You post the clip. Verified views pay out — per clip or per 100k views, via PayPal or Stripe.
             </p>
             <div className="mt-6 flex flex-col items-center gap-2">
               <Link to="/list-sound" className="silver-btn">
@@ -166,24 +161,26 @@ function HomePage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--neon-cyan)] border-t-transparent" />
-              <p className="terminal mt-4 text-bone-soft">Consulting the ledger…</p>
+              <p className="terminal mt-4 text-bone-soft">loading contracts…</p>
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-20 text-center">
-              <p className="script-note text-3xl text-bone-soft">No contracts posted.</p>
-              <p className="mt-2 text-bone-soft">The harbor is quiet. Check back at the next tide.</p>
+              <p className="font-display text-2xl font-bold text-bone">No live contracts right now.</p>
+              <p className="mt-2 text-bone-soft">
+                Check back soon — or{" "}
+                <Link to="/list-sound" className="silver underline">
+                  list your own sound
+                </Link>{" "}
+                and fund the first pot.
+              </p>
             </div>
           ) : (
             <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((b, i) => {
+              {filtered.map((b) => {
                 const bl = bottomLine(b);
                 const dim = isExpired(b) === "expired";
                 return (
-                  <li
-                    key={b.id}
-                    className={dim ? "opacity-60 transition" : "transition"}
-                    style={{ transform: `rotate(${rotations[i] ?? 0}deg)` }}
-                  >
+                  <li key={b.id} className={dim ? "opacity-60 transition" : "transition"}>
                     <Link
                       to="/bounty/$id"
                       params={{ id: b.id }}
@@ -201,7 +198,7 @@ function HomePage() {
           {top.length > 0 ? (
             <div className="mt-16">
               <div className="mx-auto max-w-md border border-[var(--iron)] bg-[var(--wall-2)]/50 p-6">
-                <div className="label-cap text-center text-silver">Roster of clippers</div>
+                <div className="label-cap text-center text-silver">Top clippers</div>
                 <ol className="mt-4 divide-y divide-[var(--border)]">
                   {top.map((p, i) => (
                     <li key={i} className="flex items-center justify-between py-2 text-sm">
@@ -254,7 +251,7 @@ function HomePage() {
           {/* Footer branding */}
           <div className="mt-12 text-center opacity-60">
             <div className="inline-block border-t border-[var(--iron)] p-4">
-              <p className="label-cap text-bone-soft">By proclamation of the Harbormaster</p>
+              <p className="label-cap text-bone-soft">Funded pots · verified views · real payouts</p>
             </div>
           </div>
         </div>
@@ -270,7 +267,7 @@ function HomePage() {
             <Link to="/tiktok-clipper" className="hover:text-bone">tiktok clippers</Link>
             <Link to="/list-sound" className="hover:text-bone">list a sound</Link>
           </nav>
-          <span className="script-note text-lg text-silver-glow">The board assumes no liability for what answers.</span>
+          <span className="script-note text-sm">Every contract shows its pot, its rate, and its deadline before you claim it.</span>
           <span>© {new Date().getFullYear()} · Bounty Sounds</span>
         </div>
       </footer>
@@ -322,7 +319,7 @@ function ContractCard({
         ? `${money(b.reward_cash_cents, b.currency)} per approved clip`
         : b.reward_points > 0
           ? `${b.reward_points} pts per clip`
-          : "Crowns awarded on delivery";
+          : "Reward set on delivery";
 
   const glowClass =
     bl.variant === "cyan"

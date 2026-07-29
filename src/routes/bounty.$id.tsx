@@ -114,8 +114,8 @@ function BountyDetail() {
     try {
       const r = await deliverFn({ data: { submission_id: myClaim.id, clip_url: clipUrl } });
       toast.success(r.auto_check_passed
-        ? "Proof delivered. Auto-verified — awaiting the harbormaster."
-        : "Proof delivered. Awaiting the harbormaster.");
+        ? "Proof delivered. Auto-verified — awaiting review."
+        : "Proof delivered. Awaiting review.");
       setClipUrl("");
       refetchClaims();
     } catch (err) {
@@ -229,7 +229,7 @@ function BountyDetail() {
             </div>
 
             <p className="script-note mt-8 text-center text-base text-ink-soft">
-              Signed by the harbormaster · posted on the board.
+              Verified listing · escrow-backed pot.
             </p>
           </article>
 
@@ -245,9 +245,9 @@ function BountyDetail() {
             {!user ? (
               <>
                 <p className="mt-3 text-bone-soft">
-                  Sign the ledger to take this contract.
+                  Sign in to take this contract.
                 </p>
-                <Link to="/auth" className="silver-btn mt-5 w-full">sign the ledger</Link>
+                <Link to="/auth" className="silver-btn mt-5 w-full">sign in</Link>
               </>
             ) : !myClaim ? (
               <form onSubmit={take} noValidate className="mt-4 space-y-4">
@@ -377,15 +377,15 @@ function BountyDetail() {
                   </form>
                 ) : (["submitted", "pending", "in_review"] as string[]).includes(myClaim.status as string) ? (
                   <p className="text-bone-soft">
-                    Proof delivered. The harbormaster will honor or dispute the contract shortly.
+                    Proof delivered. It's in review — payout follows approval.
                   </p>
                 ) : myClaim.status === "approved" ? (
                   <p className="text-bone-soft">
-                    Approved. Awaiting payment in crowns.
+                    Approved. Payout on the way.
                   </p>
                 ) : myClaim.status === "paid" ? (
                   <p className="text-silver-glow">
-                    Paid in crowns. Well cut.
+                    Paid out. Nice work.
                   </p>
                 ) : null}
               </div>
@@ -403,9 +403,9 @@ function prettyStatus(s: string) {
     case "submitted":
     case "pending":
     case "in_review": return "in review";
-    case "approved": return "honored — awaiting crowns";
+    case "approved": return "approved — payout pending";
     case "rejected": return "disputed — you may re-deliver";
-    case "paid": return "paid in crowns";
+    case "paid": return "paid out";
     default: return s;
   }
 }

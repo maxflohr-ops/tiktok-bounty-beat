@@ -13,16 +13,16 @@ import { ExternalLink, Link2 } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/submit")({
   head: () => ({
     meta: [
-      { title: "Cash In · THE BOARD" },
+      { title: "Cash In · Bounty Sounds" },
       {
         name: "description",
         content:
           "Paste your posted TikTok to deliver proof against a claimed contract and cash in your bounty.",
       },
-      { property: "og:title", content: "Cash In · THE BOARD" },
+      { property: "og:title", content: "Cash In · Bounty Sounds" },
       {
         property: "og:description",
-        content: "Deliver proof of your TikTok clip and be paid in crowns.",
+        content: "Deliver proof of your TikTok clip and be paid out.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -95,8 +95,8 @@ function SubmitPage() {
       const r = await deliverFn({ data: { submission_id: id, clip_url: url.trim() } });
       toast.success(
         r.auto_check_passed
-          ? "Proof delivered. Auto-verified — awaiting the harbormaster."
-          : "Proof delivered. Awaiting the harbormaster.",
+          ? "Proof delivered. Auto-verified — awaiting review."
+          : "Proof delivered. Awaiting review.",
       );
       setUrl("");
       setSelectedId(null);
@@ -150,8 +150,8 @@ function SubmitPage() {
             </div>
           </div>
           <p className="mt-2 text-bone-soft">
-            Paste your posted TikTok URL. The board matches it to your open contract,
-            confirms the handle by eye, and the harbormaster honors the pot.
+            Paste your posted TikTok URL. It's matched to your open contract, the account
+            and sound are checked, and approved views pay out from the pot.
           </p>
           {me?.profile?.tiktok_handle ? (
             <p className="mt-2 text-sm text-bone-soft">
@@ -263,7 +263,7 @@ function SubmitPage() {
               {busyId ? "delivering…" : "deliver proof"}
             </button>
             <p className="script-note mt-3 text-center text-bone-soft">
-              The harbormaster reviews every delivery before silver is released.
+              Every delivery is reviewed before money moves.
             </p>
           </form>
 
@@ -388,9 +388,9 @@ function statusLabel(s: string) {
     case "in_review":
       return "in review";
     case "approved":
-      return "honored — awaiting crowns";
+      return "approved — payout pending";
     case "paid":
-      return "paid in crowns";
+      return "paid out";
     case "rejected":
       return "disputed — re-deliver";
     case "claimed":

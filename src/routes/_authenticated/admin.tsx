@@ -23,8 +23,8 @@ import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag } fro
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Harbormaster · THE BOARD" },
-      { name: "description", content: "Post contracts, honor or dispute deliveries, pay in crowns." },
+      { title: "Admin · Bounty Sounds" },
+      { name: "description", content: "Post contracts, review deliveries, approve payouts." },
     ],
   }),
   component: Admin,
@@ -40,12 +40,12 @@ function Admin() {
   const { data: me, isLoading } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
 
   if (isLoading)
-    return <Frame><p className="script-note text-2xl text-bone-soft">consulting the ledger…</p></Frame>;
+    return <Frame><p className="script-note text-2xl text-bone-soft">loading…</p></Frame>;
   if (!me?.isStaff)
     return (
       <Frame>
         <div className="text-center">
-          <h1 className="font-display text-3xl text-bone">Only the harbormaster may post.</h1>
+          <h1 className="font-display text-3xl text-bone">Staff only.</h1>
           <p className="script-note mt-2 text-xl text-bone-soft">
             Request a seal from an admin.
           </p>
@@ -62,8 +62,8 @@ function Admin() {
       <div className="container-board relative z-10 py-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-display text-4xl text-bone">Harbormaster's desk</h1>
-            <p className="script-note text-xl text-bone-soft">Post the contracts. Honor the true. Pay in crowns.</p>
+            <h1 className="font-display text-4xl text-bone">Admin desk</h1>
+            <p className="script-note text-xl text-bone-soft">Post contracts. Review deliveries. Approve payouts.</p>
           </div>
           <div className="system-bar">
             <span className="status-dot" />
@@ -334,7 +334,7 @@ function SubmissionsPanel() {
       <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
       <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
-      <h2 className="font-display text-2xl text-bone">Awaiting the harbormaster</h2>
+      <h2 className="font-display text-2xl text-bone">Awaiting review</h2>
       <p className="script-note text-lg text-bone-soft">Latest first. Auto-check ✓ = URL and handle agree.</p>
       <ul className="mt-4 space-y-4">
         {pending.map((s) => (
@@ -450,7 +450,7 @@ function Ledger() {
       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h2 className="label-cap silver">Paid in crowns</h2>
+          <h2 className="label-cap silver">Earnings</h2>
           <p className="script-note text-lg text-bone-soft">A running weight of honored contracts.</p>
           <p className="mt-1 text-xs text-bone-soft">Payouts are sent via Stripe to the clipper's linked account.</p>
         </div>
@@ -542,7 +542,7 @@ function PayoutApprovalsPanel() {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <h2 className="label-cap silver">Payout approvals</h2>
-          <p className="script-note text-lg text-bone-soft">No silver leaves the harbor without a second seal.</p>
+          <p className="script-note text-lg text-bone-soft">Every payout requires a second approval.</p>
           <p className="mt-1 text-xs text-bone-soft">Any staff can request. Only admins can approve; approval sends the Stripe transfer.</p>
         </div>
         <div className="text-right">

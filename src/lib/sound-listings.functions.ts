@@ -70,7 +70,7 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
             unit_amount: LISTING_FEE_CENTS,
             product_data: {
               name: `Sound listing — ${data.song_title} by ${data.artist_name}`,
-              description: `30-day campaign listing on THE BOARD`,
+              description: `30-day campaign listing on Bounty Sounds`,
             },
           },
           quantity: 1,

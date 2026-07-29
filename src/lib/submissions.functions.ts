@@ -149,14 +149,14 @@ export const deliverProof = createServerFn({ method: "POST" })
 
     const passed = Boolean(oembed && handleMatches && soundOk === true);
     const notes = !isTikTok
-      ? "Non-TikTok delivery — a harbormaster will verify by eye."
+      ? "Non-TikTok delivery — will be verified manually."
       : !oembed
         ? "Could not verify with TikTok (URL may be private, removed, or blocked)."
         : soundOk === true
           ? "Public TikTok video posted by the claimed handle, using the contract's sound."
           : wantMusicId
-            ? "Posted by the claimed handle. Sound could not be auto-verified — a harbormaster will confirm."
-            : "Posted by the claimed handle. Contract has no TikTok sound link; harbormaster confirms the sound.";
+            ? "Posted by the claimed handle. Sound could not be auto-verified — it will be confirmed manually."
+            : "Posted by the claimed handle. Contract has no TikTok sound link; the sound is confirmed manually.";
 
     const { error } = await context.supabase
       .from("submissions")
