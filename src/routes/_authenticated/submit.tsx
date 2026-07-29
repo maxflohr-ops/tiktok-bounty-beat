@@ -200,12 +200,13 @@ function SubmitPage() {
             </label>
 
             {openClaims.length === 0 ? (
-              <div className="mt-4 border border-[var(--border)] p-3 text-sm text-bone-soft">
-                you have no open contracts.{" "}
-                <Link to="/board" className="underline">
-                  take one from the board
-                </Link>{" "}
-                first.
+              <div className="mt-4">
+                <BsEmpty
+                  eyebrow="delivery office"
+                  title="No open contracts."
+                  body="Take one from the board first, then come back to deliver proof."
+                  action={<Link to="/board" className="bs-btn bs-btn-ghost">go to the board</Link>}
+                />
               </div>
             ) : (
               <fieldset className="mt-4">

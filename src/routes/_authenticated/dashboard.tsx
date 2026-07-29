@@ -88,11 +88,14 @@ function Dashboard() {
           <PaymentSetup />
 
           {claims.length === 0 ? (
-            <div className="mt-10 border border-dashed border-[var(--border)] p-10 text-center">
-              <p className="script-note text-3xl text-bone-soft">
-                You've taken nothing. The board notices.
-              </p>
-              <Link to="/board" className="silver-btn mt-6 inline-flex">Visit the board</Link>
+            <div className="mt-10">
+              <BsEmpty
+                eyebrow="your contracts"
+                title="You've taken nothing yet."
+                body="Grab a contract from the board to start earning."
+                action={<Link to="/board" className="bs-btn bs-btn-accent">Visit the board</Link>}
+                variant="well"
+              />
             </div>
           ) : (
             <ul className="mt-6 space-y-3">
@@ -204,7 +207,7 @@ function PaymentSetup() {
       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
       <h2 className="font-display text-2xl text-bone">Payment setup</h2>
       {isLoading ? (
-        <p className="mt-2 text-bone-soft">Loading payout account…</p>
+        <BsLoading label="loading payout account" variant="inline" />
       ) : status === "enabled" ? (
         <div className="mt-3 flex items-center gap-2">
           <span className="status-dot" />
