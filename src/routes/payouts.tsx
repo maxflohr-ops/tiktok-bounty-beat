@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
-import { InkDogwood, InkScrawl } from "@/components/ArtMarks";
+import { GuillocheBand, GuillocheRosette, InkDogwood, InkScrawl } from "@/components/ArtMarks";
 
 const TITLE = "Payouts · Bounty Sounds";
 const DESC =
@@ -29,7 +29,8 @@ function PayoutsPage() {
     <div className="relative min-h-screen">
       <SiteHeader />
 
-      <section className="container-board pt-16 pb-14 text-center md:pt-24">
+      <section className="container-board relative overflow-hidden pt-16 pb-14 text-center md:pt-24">
+        <GuillocheRosette className="absolute -left-28 top-6 w-80 opacity-[0.05]" />
         <p className="label-cap">Payouts</p>
         <h1 className="mx-auto mt-4 max-w-2xl text-4xl leading-[1.05] md:text-6xl">
           The money is on
@@ -76,6 +77,7 @@ function PayoutsPage() {
 
       <section className="bg-[var(--wall-2)] py-16">
         <div className="container-board text-center">
+          <GuillocheBand className="mx-auto mb-8 max-w-2xl opacity-[0.12]" />
           <Reveal>
             <p className="label-cap">Out in the open</p>
             <h2 className="mx-auto mt-3 max-w-xl text-3xl md:text-4xl">

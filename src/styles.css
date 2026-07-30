@@ -722,3 +722,17 @@
   font-family: var(--font-poster);
   font-weight: 400;
 }
+
+
+/* Microprint rule: 5px caps that read as a line at arm's length. */
+.microrule {
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0.45;
+  user-select: none;
+}
