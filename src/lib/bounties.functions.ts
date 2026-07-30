@@ -56,7 +56,7 @@ const upsertBountyInput = z.object({
   reward_cash_cents: z.number().int().min(0).max(1_000_000_00),
   currency: z.string().trim().length(3).default("USD"),
   payout_type: z.enum(["flat", "per_1k_views"]).default("flat"),
-  platform_target: z.enum(["tiktok", "reels", "shorts"]).default("tiktok"),
+  platform_target: z.enum(["tiktok", "shorts"]).default("tiktok"),
   max_submissions: z.number().int().min(1).max(100000).nullable().optional(),
   deadline: z.string().datetime().nullable().optional(),
   featured_until: z.string().datetime().nullable().optional(),
