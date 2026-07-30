@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FooterNav } from "@/components/FooterNav";
 import { BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
 import { setReturnTo } from "@/lib/return-to";
 import type { ReactNode } from "react";
@@ -55,17 +56,7 @@ export function LandingLayout({
         </section>
         <div className="mx-auto mt-12 max-w-4xl space-y-10">{children}</div>
         <footer className="mx-auto mt-16 max-w-4xl border-t border-[var(--color-bs-rule)] pt-6 text-center text-sm text-[var(--color-bs-ink-mute)]">
-          <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-            <Link to="/board" className="hover:text-[var(--color-bs-ink)]">the Bounty Board</Link>
-            <Link to="/how-it-works" className="hover:text-[var(--color-bs-ink)]">how it works</Link>
-            <Link to="/payouts" className="hover:text-[var(--color-bs-ink)]">payouts</Link>
-            <Link to="/for-artists" className="hover:text-[var(--color-bs-ink)]">for artists</Link>
-            <Link to="/for-editors" className="hover:text-[var(--color-bs-ink)]">for editors</Link>
-            <Link to="/keynotes" className="hover:text-[var(--color-bs-ink)]">keynotes</Link>
-            <Link to="/clipping-campaigns" className="hover:text-[var(--color-bs-ink)]">clipping campaigns</Link>
-            <Link to="/tiktok-clipper" className="hover:text-[var(--color-bs-ink)]">tiktok clippers</Link>
-            <Link to="/list-sound" className="hover:text-[var(--color-bs-ink)]">list a sound</Link>
-          </nav>
+          <FooterNav />
         </footer>
       </main>
     </div>

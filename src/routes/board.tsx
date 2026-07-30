@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { leaderboard, weeklyPayouts } from "@/lib/me.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FooterNav } from "@/components/FooterNav";
 import { Money } from "@/components/Money";
 import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
@@ -317,19 +318,12 @@ function BoardPage() {
 
       <footer className="relative z-10 border-t border-[var(--iron)]">
         <div className="container-board flex flex-col items-center gap-3 py-8 text-center text-xs text-bone-soft">
-          <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+          <FooterNav />
+          <span>
             <Link to="/" className="hover:text-bone">home</Link>
-            <Link to="/board" className="hover:text-bone">board</Link>
-            <Link to="/how-it-works" className="hover:text-bone">how it works</Link>
-            <Link to="/payouts" className="hover:text-bone">payouts</Link>
-            <Link to="/for-artists" className="hover:text-bone">for artists</Link>
-            <Link to="/for-editors" className="hover:text-bone">for editors</Link>
-            <Link to="/keynotes" className="hover:text-bone">keynotes</Link>
-            <Link to="/clipping-campaigns" className="hover:text-bone">clipping campaigns</Link>
-            <Link to="/tiktok-clipper" className="hover:text-bone">tiktok clippers</Link>
-            <Link to="/list-sound" className="hover:text-bone">list a sound</Link>
+            {" · "}
             <Link to="/admin" className="opacity-60 hover:text-bone hover:opacity-100">admin desk</Link>
-          </nav>
+          </span>
           <span className="script-note text-sm">Every contract shows its pot, its rate, and its deadline before you claim it.</span>
           <span>© {new Date().getFullYear()} · Bounty Sounds</span>
         </div>

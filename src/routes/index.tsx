@@ -4,13 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { formatPerViewRate } from "@/lib/rate";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FooterNav } from "@/components/FooterNav";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
 import { GuillocheRosette, InkCardinal, InkDogwood, InkSeal, MicroRule } from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
-  "A public clipping bounty board for sounds, streams, and keynotes. Someone funds a pot, you post the clip, verified views pay out.";
+  "A public clipping bounty board for sounds, streams, and keynotes. Someone posts a purse, you post the clip, verified views pay out.";
 const HOME_URL = "https://bountysounds.com/";
 
 export const Route = createFileRoute("/")({
@@ -215,6 +216,8 @@ function LandingPage() {
               { to: "/for-editors", label: "For editors" },
               { to: "/clipping-campaigns", label: "Clipping campaigns" },
               { to: "/tiktok-clipper", label: "TikTok clippers" },
+              { to: "/keynotes", label: "Keynotes" },
+              { to: "/board", label: "The Bounty Board" },
             ].map((l) => (
               <li key={l.to}>
                 <Link
@@ -235,6 +238,7 @@ function LandingPage() {
         <MicroRule className="mx-auto max-w-3xl pt-2 text-center" />
         <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
           <InkSeal className="mb-1 w-24 opacity-70" />
+          <FooterNav />
           <span>Good to the bearer for verified views — payable from the funded pot.</span>
           <span>
             © {new Date().getFullYear()} Bounty Sounds ·{" "}
