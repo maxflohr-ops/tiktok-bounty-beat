@@ -54,7 +54,7 @@ export const payBridgeClaim = createServerFn({ method: "POST" })
 
     const paidCents =
       bounty.payout_type === "per_1k_views"
-        ? Math.floor(data.verified_views / 100000) * bounty.reward_cash_cents
+        ? Math.floor((data.verified_views * bounty.reward_cash_cents) / 100000)
         : bounty.reward_cash_cents;
     if (paidCents <= 0) throw new Error("Nothing to pay at that view count.");
 

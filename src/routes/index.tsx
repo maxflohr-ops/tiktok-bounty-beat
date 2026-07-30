@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listPublicBounties } from "@/lib/bounties.functions";
+import { formatPerViewRate } from "@/lib/rate";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
@@ -42,7 +43,7 @@ function money(cents: number, currency = "USD") {
 
 function rewardLabel(b: Bounty) {
   if (b.payout_type === "per_1k_views" && b.reward_cash_cents > 0)
-    return `${money(b.reward_cash_cents, b.currency)} / 100k views`;
+    return formatPerViewRate(b.reward_cash_cents, b.currency, true);
   if (b.reward_cash_cents > 0) return `${money(b.reward_cash_cents, b.currency)} / clip`;
   if (b.reward_points > 0) return `${b.reward_points} pts / clip`;
   return "reward on delivery";

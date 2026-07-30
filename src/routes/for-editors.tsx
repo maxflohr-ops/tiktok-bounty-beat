@@ -5,6 +5,7 @@ import { listPublicBounties } from "@/lib/bounties.functions";
 import { LandingLayout, LandingSection, FaqList } from "@/components/LandingLayout";
 import { InkSeal } from "@/components/ArtMarks";
 import { PARTNERS, partnerGoHref } from "@/lib/partners";
+import { formatPerViewRate } from "@/lib/rate";
 import { BsMono } from "@/components/bs";
 
 const CANONICAL = "https://bountysounds.com/for-editors";
@@ -65,7 +66,7 @@ function money(cents: number, currency = "USD") {
 
 function rate(b: Bounty) {
   if (b.payout_type === "per_1k_views" && b.reward_cash_cents > 0)
-    return `${money(b.reward_cash_cents, b.currency)} per 100k views`;
+    return formatPerViewRate(b.reward_cash_cents, b.currency, true);
   if (b.reward_cash_cents > 0) return `${money(b.reward_cash_cents, b.currency)} per approved clip`;
   if (b.reward_points > 0) return `${b.reward_points} pts per clip`;
   return "rate on the contract";
@@ -133,7 +134,7 @@ function ForEditors() {
 
       <LandingSection title="The deal">
         <ul className="list-disc space-y-2 pl-6">
-          <li>Rates are printed on the contract — most pay per 100k verified views</li>
+          <li>Rates are printed on the contract — paid per verified view, pro-rata</li>
           <li>First come, first served; early on a fresh sound wins</li>
           <li>Dispute flow if your view count doesn't match ours</li>
           <li>Payouts via PayPal or USDC — your pick</li>

@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
+import { formatPerViewRate } from "@/lib/rate";
 import { BsEmpty, BsLoading } from "@/components/bs";
 import { InkCardinal } from "@/components/ArtMarks";
 
@@ -358,7 +359,7 @@ function ContractCard({
 }) {
   const reward =
     b.payout_type === "per_1k_views"
-      ? `${money(b.reward_cash_cents, b.currency) ?? "—"} per 100,000 views`
+      ? formatPerViewRate(b.reward_cash_cents, b.currency)
       : b.reward_cash_cents > 0
         ? `${money(b.reward_cash_cents, b.currency)} per approved clip`
         : b.reward_points > 0
