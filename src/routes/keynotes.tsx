@@ -5,7 +5,7 @@ import { InkSeal } from "@/components/ArtMarks";
 
 const TITLE = "Keynote Clipping Campaigns · Bounty Sounds";
 const DESC =
-  "Turn a keynote into a thousand cuts. Fund a pot for your own footage, clippers compete to find the moments, and verified views pay out. Public board, checked deliveries.";
+  "Turn a keynote into a thousand cuts. Post a purse on your own footage, clippers compete to find the moments, and verified views pay out. Public board, checked deliveries.";
 
 export const Route = createFileRoute("/keynotes")({
   head: () => ({

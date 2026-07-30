@@ -147,7 +147,7 @@ function LandingPage() {
 
               {open.length === 0 ? (
                 <p className="py-6 text-center italic text-[var(--color-bs-ink-mute)]">
-                  No contracts posted right now. Check the Bounty Board.
+                  No bounties on the board right now.
                 </p>
               ) : (
                 <ul className="divide-y divide-[var(--color-bs-rule)]">
