@@ -110,6 +110,53 @@ export type Database = {
         }
         Relationships: []
       }
+      bounty_claims: {
+        Row: {
+          bounty_id: string
+          clip_url: string | null
+          copula_clip_id: string | null
+          copula_user_id: string | null
+          created_at: string
+          id: string
+          paid_cents: number
+          status: string
+          updated_at: string
+          verified_views: number
+        }
+        Insert: {
+          bounty_id: string
+          clip_url?: string | null
+          copula_clip_id?: string | null
+          copula_user_id?: string | null
+          created_at?: string
+          id?: string
+          paid_cents?: number
+          status?: string
+          updated_at?: string
+          verified_views?: number
+        }
+        Update: {
+          bounty_id?: string
+          clip_url?: string | null
+          copula_clip_id?: string | null
+          copula_user_id?: string | null
+          created_at?: string
+          id?: string
+          paid_cents?: number
+          status?: string
+          updated_at?: string
+          verified_views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bounty_claims_bounty_id_fkey"
+            columns: ["bounty_id"]
+            isOneToOne: false
+            referencedRelation: "bounties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bounty_payments: {
         Row: {
           amount_cents: number
@@ -308,7 +355,9 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          payout_preference: string | null
           points: number
+          signup_logged_at: string | null
           tiktok_handle: string | null
           updated_at: string
           wallet_address: string | null
@@ -318,7 +367,9 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          payout_preference?: string | null
           points?: number
+          signup_logged_at?: string | null
           tiktok_handle?: string | null
           updated_at?: string
           wallet_address?: string | null
@@ -328,7 +379,9 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          payout_preference?: string | null
           points?: number
+          signup_logged_at?: string | null
           tiktok_handle?: string | null
           updated_at?: string
           wallet_address?: string | null
@@ -343,12 +396,19 @@ export type Database = {
           created_at: string
           currency: string
           expires_at: string | null
+          featured_requested: boolean
+          featured_tier: string
+          hashtags: string | null
           id: string
           listed_at: string | null
+          listing_type: string
           notes: string | null
+          rules: string | null
           song_title: string
           spotify_url: string | null
           status: string
+          stream_at: string | null
+          stream_url: string | null
           stripe_checkout_session_id: string | null
           stripe_payment_intent_id: string | null
           tiktok_sound_url: string | null
@@ -362,12 +422,19 @@ export type Database = {
           created_at?: string
           currency?: string
           expires_at?: string | null
+          featured_requested?: boolean
+          featured_tier?: string
+          hashtags?: string | null
           id?: string
           listed_at?: string | null
+          listing_type?: string
           notes?: string | null
+          rules?: string | null
           song_title: string
           spotify_url?: string | null
           status?: string
+          stream_at?: string | null
+          stream_url?: string | null
           stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
           tiktok_sound_url?: string | null
@@ -381,12 +448,19 @@ export type Database = {
           created_at?: string
           currency?: string
           expires_at?: string | null
+          featured_requested?: boolean
+          featured_tier?: string
+          hashtags?: string | null
           id?: string
           listed_at?: string | null
+          listing_type?: string
           notes?: string | null
+          rules?: string | null
           song_title?: string
           spotify_url?: string | null
           status?: string
+          stream_at?: string | null
+          stream_url?: string | null
           stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
           tiktok_sound_url?: string | null
@@ -489,6 +563,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tax_profiles: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          country: string
+          created_at: string
+          id: string
+          legal_name: string
+          postal_code: string
+          region: string
+          tin: string
+          tin_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          country?: string
+          created_at?: string
+          id?: string
+          legal_name: string
+          postal_code: string
+          region: string
+          tin: string
+          tin_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          legal_name?: string
+          postal_code?: string
+          region?: string
+          tin?: string
+          tin_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tiktok_accounts: {
+        Row: {
+          created_at: string
+          handle: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          handle: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          handle?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
