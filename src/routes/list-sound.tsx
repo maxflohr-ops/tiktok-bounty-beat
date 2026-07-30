@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FooterNav } from "@/components/FooterNav";
 import { useSession } from "@/lib/session";
 import { createSoundListingCheckout, listMySoundListings } from "@/lib/sound-listings.functions";
 import { BsBadge, BsButton, BsCard, BsDisplay, BsEyebrow, BsMono } from "@/components/bs";
@@ -315,6 +316,13 @@ function ListSoundPage() {
           </div>
         )}
       </section>
+
+      <footer className="border-t border-[var(--color-bs-rule)]">
+        <div className="container-board flex flex-col items-center gap-3 py-10 text-center text-xs text-[var(--color-bs-ink-mute)]">
+          <FooterNav />
+          <span>© {new Date().getFullYear()} Bounty Sounds</span>
+        </div>
+      </footer>
     </div>
   );
 }
