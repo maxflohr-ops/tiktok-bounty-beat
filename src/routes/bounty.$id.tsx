@@ -254,7 +254,7 @@ function BountyDetail() {
                 <p className="mt-1 text-xs text-ink-soft">
                   {(bounty as any).funded_cash_cents > 0 ? (
                     <>
-                      Pot: <Money cents={(bounty as any).funded_cash_cents} currency={bounty.currency} />
+                      Purse: <Money cents={(bounty as any).funded_cash_cents} currency={bounty.currency} />
                       {(bounty as any).paid_out_cents > 0 ? (
                         <> · <Money cents={(bounty as any).paid_out_cents} currency={bounty.currency} /> paid out</>
                       ) : null}

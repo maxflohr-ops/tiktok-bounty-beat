@@ -509,7 +509,7 @@ function ContractCard({
         </div>
         {(b as any).funded_cash_cents > 0 ? (
           <span className="label-cap silver">
-            Pot: <Money cents={(b as any).funded_cash_cents} currency={b.currency} />
+            Purse: <Money cents={(b as any).funded_cash_cents} currency={b.currency} />
             {(b as any).paid_out_cents > 0 ? (
               <> · <Money cents={(b as any).paid_out_cents} currency={b.currency} /> paid out</>
             ) : null}
