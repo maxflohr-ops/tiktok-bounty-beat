@@ -140,7 +140,7 @@ function BountiesPanel() {
           reward_cash_cents: Number(editing.reward_cash_cents ?? 0),
           currency: editing.currency || "USD",
           payout_type: (editing.payout_type ?? "flat") as "flat" | "per_1k_views",
-          platform_target: (editing.platform_target ?? "tiktok") as "tiktok" | "reels" | "shorts",
+          platform_target: (editing.platform_target ?? "tiktok") as "tiktok" | "shorts",
           max_submissions: editing.max_submissions ?? null,
           deadline: editing.deadline || null,
           featured_until: (editing as any).featured_until || null,
@@ -227,7 +227,6 @@ function BountiesPanel() {
             <Field label="platform">
               <select value={editing.platform_target ?? "tiktok"} onChange={(e) => setEditing({ ...editing, platform_target: e.target.value as Bounty["platform_target"] })} className="dark-input">
                 <option value="tiktok">tiktok</option>
-                <option value="reels">reels</option>
                 <option value="shorts">shorts</option>
               </select>
             </Field>

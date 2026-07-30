@@ -165,7 +165,6 @@ const attributionInput = z.object({
   utm_content: z.string().max(200).optional(),
   gclid: z.string().max(200).optional(),
   ttclid: z.string().max(200).optional(),
-  fbclid: z.string().max(200).optional(),
   referrer: z.string().max(300).optional(),
   landing: z.string().max(200).optional(),
   captured_at: z.string().max(40).optional(),

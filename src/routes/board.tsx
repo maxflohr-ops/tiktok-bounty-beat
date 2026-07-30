@@ -77,7 +77,7 @@ function BoardPage() {
   const [taste, setTaste] = useState<TasteProfile | null>(null);
   useEffect(() => setTaste(loadTaste()), []);
 
-  const [platform, setPlatform] = useState<"all" | "tiktok" | "reels" | "shorts">("all");
+  const [platform, setPlatform] = useState<"all" | "tiktok" | "shorts">("all");
   const [payout, setPayout] = useState<"all" | "flat" | "per_1k_views">("all");
   const [status, setStatus] = useState<"open" | "all">("open");
 
@@ -164,7 +164,6 @@ function BoardPage() {
               options={[
                 { v: "all", l: "All" },
                 { v: "tiktok", l: "TikTok" },
-                { v: "reels", l: "Reels" },
                 { v: "shorts", l: "Shorts" },
               ]}
               value={platform}

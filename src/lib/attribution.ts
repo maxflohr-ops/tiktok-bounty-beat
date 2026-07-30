@@ -12,7 +12,6 @@ const PARAM_KEYS = [
   "utm_content",
   "gclid", // Google Ads
   "ttclid", // TikTok Ads
-  "fbclid", // Meta Ads
 ] as const;
 
 export type Attribution = Partial<Record<(typeof PARAM_KEYS)[number], string>> & {
