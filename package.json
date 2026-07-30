@@ -9,6 +9,8 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:smoke": "vitest run tests/board.smoke.test.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
