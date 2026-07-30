@@ -112,7 +112,7 @@ function LandingPage() {
                 </Link>
                 <Link
                   to="/list-sound"
-                  className="relative z-20 inline-flex items-center justify-center rounded-full bg-[#6f7f5c] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-[0_4px_0_rgba(111,127,92,0.4)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
+                  className="relative z-20 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-accent)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-[0_4px_0_rgba(111,127,92,0.4)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
                 >
                   List a sound
                 </Link>

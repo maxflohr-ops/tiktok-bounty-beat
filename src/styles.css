@@ -64,8 +64,8 @@
   --color-bs-ink-mute: #6b6b6b;
   --color-bs-rule: rgba(13, 13, 13, 0.15);
   --color-bs-rule-strong: rgba(13, 13, 13, 0.35);
-  --color-bs-accent: #e94f2e;
-  --color-bs-accent-soft: rgba(233, 79, 46, 0.25);
+  --color-bs-accent: #6f7f5c;
+  --color-bs-accent-soft: rgba(111, 127, 92, 0.25);
 }
 
 :root {
