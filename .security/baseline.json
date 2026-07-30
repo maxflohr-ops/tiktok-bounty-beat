@@ -1,0 +1,4 @@
+{
+  "$comment": "Accepted security findings. Entries here do not fail CI. Remove an entry once the underlying issue is fixed.",
+  "ignored": []
+}
