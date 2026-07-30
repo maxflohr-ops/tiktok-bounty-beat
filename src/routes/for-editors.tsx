@@ -15,16 +15,28 @@ const DESCRIPTION =
 
 const FAQ = [
   {
+    q: "How does payment work?",
+    a: "Every bounty posts its purse and rate before you start — most pay per verified view, some pay flat per approved clip. You claim a slot, post the clip from your own TikTok, and its views count for the bounty's counting window, usually 14 days from delivery. At the close, views are verified and the payout goes to your PayPal or a USDC wallet, your choice.",
+  },
+  {
+    q: "How much can I earn clipping?",
+    a: "It depends entirely on the rate and how many views your clips verify — the math is public on every bounty before you commit: rate times verified views, paid from the posted purse. We don't publish typical earnings because there's no such thing yet; the board shows every live rate.",
+  },
+  {
+    q: "Do I need experience to start?",
+    a: "No. If you can cut a vertical clip with subtitles in a phone or desktop editor, you can start today. Each bounty carries its own brief, and the clipper toolkit on every bounty links free tools for grabbing and cutting source footage.",
+  },
+  {
+    q: "How long until my first payout?",
+    a: "Your clip's views count for the bounty's counting window — usually 14 days from delivery. After the window closes, verification and payout usually complete within [TBD] days.",
+  },
+  {
     q: "What kind of work is this?",
     a: "TikTok edits built on a campaign's sound, stream, or keynote footage. If you already make edits for fun, this pays for them.",
   },
   {
     q: "Do I need followers?",
     a: "No. Small accounts with viral edits out-earn big accounts posting filler. Views are what pay.",
-  },
-  {
-    q: "How do I get paid?",
-    a: "PayPal, or USDC to a wallet on your profile. Every payout is reviewed against verified views, usually within days.",
   },
 ];
 
@@ -99,7 +111,7 @@ function ForEditors() {
     <LandingLayout
       eyebrow="for tiktok editors & UGC creators"
       h1="Get paid per view for the edits you already make"
-      intro="Claim a contract, post from your own TikTok, cash in on verified views. No pitching, no invite — the work is already on the board."
+      intro="Claim a contract, post from your own TikTok, cash in on verified views. Every bounty is visible to every editor, always. No paid tier, no gated board."
       primaryCta="claim a contract"
       primaryHref="/auth"
       primaryReturnTo="/board"

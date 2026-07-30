@@ -5,6 +5,7 @@ import { listPublicBounties } from "@/lib/bounties.functions";
 import { formatPerViewRate } from "@/lib/rate";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterNav } from "@/components/FooterNav";
+import { LedgerCard } from "@/components/LedgerCard";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
 import { GuillocheRosette, InkCardinal, InkDogwood, InkSeal, MicroRule } from "@/components/ArtMarks";
@@ -104,28 +105,20 @@ function LandingPage() {
               Sounds, streams, keynotes, podcasts. Post the clip — verified views pay out.
             </p>
 
+            <p className="mx-auto mt-3 max-w-md text-center text-sm text-[var(--color-bs-ink-mute)]">
+              The purse is posted before you cut. Verified views pay out.
+            </p>
+
             <div className="mt-8 flex justify-center">
-              <div className="flex items-center -space-x-3">
-                <Link
-                  to="/board"
-                  className="relative z-30 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-ink)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-bs-paper)] shadow-[0_4px_0_rgba(13,13,13,0.3)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
-                >
-                  Open Bounty Board
-                </Link>
-                <Link
-                  to="/list-sound"
-                  className="relative z-20 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-accent)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-[0_4px_0_rgba(111,127,92,0.4)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
-                >
-                  List a sound
-                </Link>
-                <Link
-                  to="/how-it-works"
-                  className="relative z-10 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-paper)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-bs-ink)] shadow-[0_4px_0_rgba(13,13,13,0.18)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
-                >
-                  How it works
-                </Link>
-              </div>
+              <Link
+                to="/board"
+                className="inline-flex items-center justify-center rounded-full bg-[var(--color-bs-ink)] px-7 py-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-bs-paper)] shadow-[0_4px_0_rgba(13,13,13,0.3)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5"
+              >
+                Open the board
+              </Link>
             </div>
+
+            <LedgerCard />
 
             <div className="bs-rule mt-10 pt-6">
               {presentedBy ? (
@@ -239,7 +232,7 @@ function LandingPage() {
         <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
           <InkSeal className="mb-1 w-24 opacity-70" />
           <FooterNav />
-          <span>Good to the bearer for verified views — payable from the funded pot.</span>
+          <span>Good to the bearer for verified views, payable from the posted purse.</span>
           <span>
             © {new Date().getFullYear()} Bounty Sounds ·{" "}
             <Link to="/admin" className="opacity-60 hover:opacity-100">admin desk</Link>

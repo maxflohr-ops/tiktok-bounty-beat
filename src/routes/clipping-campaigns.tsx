@@ -13,7 +13,7 @@ const FAQ = [
   },
   {
     q: "What does it cost?",
-    a: "$200 lists the campaign for 30 days. The per-view pot is funded separately at a rate you set.",
+    a: "$200 lists the campaign for 30 days. The per-view purse is posted separately at a rate you set.",
   },
   {
     q: "Does it have to be music?",

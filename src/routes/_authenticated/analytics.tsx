@@ -133,7 +133,7 @@ function AnalyticsPage() {
             {/* Money + reach */}
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Tile label="Paid out" value={money(t.paid_cents)} sub={`${money(t.awarded_cents - t.paid_cents)} approved, unpaid`} />
-              <Tile label="Funded pots" value={money(t.funded_cents)} sub={`${t.bounties} contracts total`} />
+              <Tile label="Posted purses" value={money(t.funded_cents)} sub={`${t.bounties} bounties total`} />
               <Tile label="Verified views" value={compact(t.views_verified)} sub={`${compact(t.views_reported)} self-reported`} />
               <Tile label="Listing revenue" value={money(t.listing_revenue_cents)} sub={`${t.listings} listings`} />
             </div>

@@ -77,6 +77,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+// ---- Tracking IDs -------------------------------------------------------
+// Drop the real IDs here (this file, these two consts) and both tags go
+// live sitewide. While either value still has its [brackets], that tag is
+// skipped entirely - nothing loads, nothing errors.
+const GTM_ID = "[GTM_ID]";
+const PIXEL_ID = "[PIXEL_ID]";
+const GTM_LIVE = !GTM_ID.startsWith("[");
+const PIXEL_LIVE = !PIXEL_ID.startsWith("[");
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -119,6 +128,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
     scripts: [
+      ...(GTM_LIVE
+        ? [{
+            children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`,
+          }]
+        : []),
+      ...(PIXEL_LIVE
+        ? [{
+            children: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${PIXEL_ID}');fbq('track','PageView');`,
+          }]
+        : []),
       {
         type: "application/ld+json",
         children: JSON.stringify({

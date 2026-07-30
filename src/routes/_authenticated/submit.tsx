@@ -152,7 +152,7 @@ function SubmitPage() {
           </div>
           <p className="mt-2 text-bone-soft">
             Paste your posted TikTok URL. It's matched to your open contract, the account
-            and sound are checked. Each clip's views count for the contract's counting window (usually 14 days from delivery), then pay out pro-rata from the pot.
+            and sound are checked. Each clip's views count for the contract's counting window (usually 14 days from delivery), then pay out pro-rata from the purse.
           </p>
           {me?.profile?.tiktok_handle ? (
             <p className="mt-2 text-sm text-bone-soft">

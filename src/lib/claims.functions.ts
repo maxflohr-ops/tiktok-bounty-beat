@@ -28,7 +28,7 @@ const payInput = z.object({
 });
 
 // Pays one approved claim: rate comes from the contract (cents per 100k
-// verified views), the pot must cover it, and copula gets notified after.
+// verified views), the purse must cover it, and copula gets notified after.
 export const payBridgeClaim = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => payInput.parse(d))
   .middleware([requireSupabaseAuth])
@@ -58,7 +58,7 @@ export const payBridgeClaim = createServerFn({ method: "POST" })
         : bounty.reward_cash_cents;
     if (paidCents <= 0) throw new Error("Nothing to pay at that view count.");
 
-    // The pot is shared with site-native submissions, so count both sides.
+    // The purse is shared with site-native submissions, so count both sides.
     const [{ data: claimRows }, { data: subRows }] = await Promise.all([
       supabaseAdmin.from("bounty_claims").select("paid_cents").eq("bounty_id", bounty.id).gt("paid_cents", 0),
       supabaseAdmin.from("submissions").select("paid_cash_cents").eq("bounty_id", bounty.id).gt("paid_cash_cents", 0),
@@ -67,7 +67,7 @@ export const payBridgeClaim = createServerFn({ method: "POST" })
       (claimRows ?? []).reduce((s, r) => s + r.paid_cents, 0) +
       (subRows ?? []).reduce((s, r) => s + (r.paid_cash_cents ?? 0), 0);
     if (alreadyPaid + paidCents > bounty.funded_cash_cents) {
-      throw new Error("Pot can't cover this payout. Top up the contract first.");
+      throw new Error("The purse can't cover this payout. Top it up first.");
     }
 
     // paying → paid, so a crash mid-flight is visible rather than silent.

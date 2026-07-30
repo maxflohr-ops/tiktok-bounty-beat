@@ -112,7 +112,7 @@ function BountyDetail() {
       setClips(1);
       refetchClaims(); refetchBounties();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not take the contract.");
+      toast.error(err instanceof Error ? err.message : "Could not seize this bounty.");
     } finally { setClaimBusy(false); }
   };
 
@@ -260,7 +260,7 @@ function BountyDetail() {
                       ) : null}
                     </>
                   ) : (
-                    "pot empty"
+                    "purse dry"
                   )}
                 </p>
               </div>
@@ -324,7 +324,7 @@ function BountyDetail() {
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Send it to your community</div>
               <p className="mt-1 text-xs text-ink-soft">
-                Running this campaign? Drop it in your Discord, subreddit, or group chat — every clipper it recruits works your pot.
+                Running this campaign? Drop it in your Discord, subreddit, or group chat — every clipper it recruits cuts for your purse.
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
@@ -364,7 +364,7 @@ function BountyDetail() {
             </div>
 
             <p className="script-note mt-8 text-center text-base text-ink-soft">
-              Good to the bearer for verified views — payable from the funded pot.
+              Good to the bearer for verified views, payable from the posted purse.
             </p>
 
             {/* Series + signature, set like the officer pair on a note */}
@@ -376,7 +376,7 @@ function BountyDetail() {
               </span>
               <span className="text-right">
                 <span className="script-note block text-xl leading-none text-ink">Bounty Sounds</span>
-                <span className="block text-[8px] italic text-ink-soft">Keeper of the Pot.</span>
+                <span className="block text-[8px] italic text-ink-soft">Keeper of the Purse.</span>
               </span>
             </div>
 
@@ -597,7 +597,7 @@ function BountyDetail() {
                     >
                       <span className="inline-flex items-center justify-center gap-2">
                         {claimBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                        {claimBusy ? "taking contract…" : clips === 1 ? "take the contract" : `take ${clips} clip slots`}
+                        {claimBusy ? "taking contract…" : clips === 1 ? "seize this bounty" : `take ${clips} clip slots`}
                       </span>
                     </button>
                     <p className="text-center text-xs text-bone-soft">

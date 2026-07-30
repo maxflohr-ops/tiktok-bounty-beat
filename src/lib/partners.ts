@@ -17,7 +17,7 @@ export const PARTNERS: Record<string, Partner> = {
     name: "Cobalt",
     blurb: "grab the source video or VOD",
     url: "https://cobalt.tools",
-    affiliateUrl: null, // donation-funded open source — no affiliate program
+    affiliateUrl: null, // donation-supported open source — no affiliate program
   },
   "opus-clip": {
     name: "Opus Clip",

@@ -38,7 +38,7 @@ function KeynotesPage() {
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-xl text-bone-soft">
           The best ninety seconds of your announcement shouldn't stay trapped in a
-          two-hour video. Fund a pot. Clippers find the moments. Verified views pay out.
+          two-hour video. Post a purse. Clippers find the moments. Verified views pay out.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Link to="/list-sound" search={{ type: "keynote" }} className="silver-btn px-7">
@@ -67,8 +67,8 @@ function KeynotesPage() {
           </p>
           <div className="mx-auto mt-12 grid max-w-3xl gap-px overflow-hidden rounded-2xl bg-[#333] sm:grid-cols-3">
             <div className="bg-[#111] p-8">
-              <p className="text-3xl font-semibold text-white">Fund</p>
-              <p className="mt-2 text-sm text-[#a1a1a6]">a pot on your own keynote footage.</p>
+              <p className="text-3xl font-semibold text-white">Post</p>
+              <p className="mt-2 text-sm text-[#a1a1a6]">a purse on your own keynote footage.</p>
             </div>
             <div className="bg-[#111] p-8">
               <p className="text-3xl font-semibold text-white">Brief</p>
@@ -112,7 +112,7 @@ function KeynotesPage() {
             <div className="mt-7 grid grid-cols-2 gap-y-6 text-left sm:grid-cols-4">
               <div>
                 <p className="text-2xl font-semibold tabular-nums">$5,000</p>
-                <p className="mt-0.5 text-xs text-bone-soft">funded pot</p>
+                <p className="mt-0.5 text-xs text-bone-soft">posted purse</p>
               </div>
               <div>
                 <p className="text-2xl font-semibold tabular-nums">$25</p>
@@ -133,7 +133,7 @@ function KeynotesPage() {
               <span className="text-xl font-semibold tabular-nums">$3,100</span>
             </div>
             <p className="mt-3 text-xs text-bone-soft">
-              Unspent pot returned. Every delivery checked against the clipper's own account;
+              Unspent purse returned. Every delivery checked against the clipper's own account;
               every payout approved against verified views.
             </p>
           </div>

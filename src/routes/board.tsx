@@ -14,7 +14,7 @@ import { GuillocheBand, InkCardinal } from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
-  "Every live clipping contract: the sound, the rate, the funded pot, and the deadline. Claim one, post your clip, get paid for verified views.";
+  "Every live bounty: the sound, the rate, the posted purse, and the deadline. Seize one, post your clip, get paid for verified views.";
 const HOME_URL = "https://bountysounds.com/board";
 
 export const Route = createFileRoute("/board")({
@@ -139,7 +139,7 @@ function BoardPage() {
               The Bounty Board
             </h1>
             <p className="mx-auto mt-2 max-w-xl text-bone-soft">
-              Rate, pot, and deadline — printed on every contract before you claim.
+              Rate, purse, and deadline — printed on every bounty before you seize it.
             </p>
             <p className="mt-3">
               <Link to="/how-it-works" className="terminal text-xs text-bone-soft underline hover:text-bone">
@@ -310,7 +310,7 @@ function BoardPage() {
           <div className="mt-12 text-center opacity-60">
             <InkCardinal className="mx-auto w-32" />
             <div className="inline-block border-t border-[var(--iron)] p-4">
-              <p className="label-cap text-bone-soft">Funded pots · verified views · real payouts</p>
+              <p className="label-cap text-bone-soft">Posted purses · verified views · real payouts</p>
             </div>
           </div>
         </div>
@@ -324,7 +324,7 @@ function BoardPage() {
             {" · "}
             <Link to="/admin" className="opacity-60 hover:text-bone hover:opacity-100">admin desk</Link>
           </span>
-          <span className="script-note text-sm">Every contract shows its pot, its rate, and its deadline before you claim it.</span>
+          <span className="script-note text-sm">Every bounty shows its purse, its rate, and its deadline before you seize it.</span>
           <span>© {new Date().getFullYear()} · Bounty Sounds</span>
         </div>
       </footer>
@@ -371,8 +371,8 @@ function EmptyBoard() {
         <p className="label-cap text-bone-soft">the Bounty Board</p>
         <h2 className="mt-2 font-display text-3xl text-bone">No live contracts yet.</h2>
         <p className="mx-auto mt-3 max-w-md text-bone-soft">
-          Creators are loading their first bounties — new contracts appear here the moment a
-          pot is funded. No invite needed.
+          Creators are loading their first bounties — new bounties appear here the moment a
+          purse is posted. No invite needed.
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link to="/how-it-works" className="bs-btn bs-btn-accent">how it works</Link>
@@ -387,7 +387,7 @@ function EmptyBoard() {
             title="Clip a Thursday Twitch stream"
             song="your favorite streamer"
             rate="$5 per 5,000 views"
-            pot="Pot: $500"
+            purse="Purse: $500"
             note="tiktok · counting window 14 days"
           />
         </li>
@@ -397,7 +397,7 @@ function EmptyBoard() {
             title="Hook challenge — new single"
             song="the next artist here"
             rate="$20 per approved clip"
-            pot="Pot: $400"
+            purse="Purse: $400"
             note="tiktok · up to 15 clip slots"
           />
         </li>
@@ -411,14 +411,14 @@ function GhostCard({
   title,
   song,
   rate,
-  pot,
+  purse,
   note,
 }: {
   no: number;
   title: string;
   song: string;
   rate: string;
-  pot: string;
+  purse: string;
   note: string;
 }) {
   return (
@@ -429,7 +429,7 @@ function GhostCard({
           <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
           <span className="terminal text-[9px] tracking-[0.15em] text-[var(--color-bs-accent)]">{serial(no)}</span>
         </div>
-        <span className="label-cap silver">{pot}</span>
+        <span className="label-cap silver">{purse}</span>
       </div>
       <h3 className="font-display text-2xl leading-tight text-ink">{title}</h3>
       <p className="mt-1 font-body italic text-ink-soft">for “{song}”</p>
@@ -515,7 +515,7 @@ function ContractCard({
             ) : null}
           </span>
         ) : (
-          <span className="text-xs italic text-ink-soft">pot empty</span>
+          <span className="text-xs italic text-ink-soft">purse dry</span>
         )}
       </div>
 
