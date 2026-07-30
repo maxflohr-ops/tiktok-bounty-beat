@@ -348,7 +348,8 @@ export const reviewSubmission = createServerFn({ method: "POST" })
         if (verified === null || verified === undefined) {
           throw new Error("Verify the view count (staff) before approving a per-view payout.");
         }
-        computedCash = Math.floor(verified / 100000) * bounty.reward_cash_cents;
+        // Proportional: rate is cents per 100k, paid pro-rata down to the view.
+        computedCash = Math.floor((verified * bounty.reward_cash_cents) / 100000);
       } else {
         computedCash = data.awarded_cash_cents || bounty.reward_cash_cents;
       }

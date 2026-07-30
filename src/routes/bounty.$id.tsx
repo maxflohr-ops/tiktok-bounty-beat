@@ -11,6 +11,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { PARTNERS, partnerGoHref } from "@/lib/partners";
 import { setReturnTo } from "@/lib/return-to";
 import { Money } from "@/components/Money";
+import { formatPerViewRate } from "@/lib/rate";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
 import { ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
@@ -139,7 +140,7 @@ function BountyDetail() {
 
   const reward =
     bounty.payout_type === "per_1k_views"
-      ? `${money(bounty.reward_cash_cents, bounty.currency) ?? "—"} per 100,000 views`
+      ? formatPerViewRate(bounty.reward_cash_cents, bounty.currency)
       : bounty.reward_cash_cents > 0
         ? `${money(bounty.reward_cash_cents, bounty.currency)} per approved clip`
         : `${bounty.reward_points} pts per approved clip`;
