@@ -81,12 +81,8 @@ function LandingPage() {
 
         <div className="container-board relative">
           <BsWell className="mx-auto max-w-4xl">
-            <div className="flex items-center justify-between">
-              <BsMono>Issue No. {pad(open.length + 42)}</BsMono>
-              <BsMono className="hidden sm:inline">— Bounty Board —</BsMono>
-              <BsMono>
-                {new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" })}
-              </BsMono>
+            <div className="text-center">
+              <BsMono>— Bounty Board —</BsMono>
             </div>
 
             <div className="relative mt-6 text-center">
