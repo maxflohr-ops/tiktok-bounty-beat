@@ -9,14 +9,38 @@ const BOUNTY_COLS =
 const PUBLIC_BOUNTY_COLS =
   "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor";
 
+// Columns present since the original schema — the fallback when the DB is
+// mid-deploy and hasn't run the newest column migrations yet.
+const PUBLIC_BOUNTY_COLS_BASE =
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at";
+const LATE_COLUMN_DEFAULTS = {
+  featured_until: null,
+  featured_plus: false,
+  hashtags: [] as string[],
+  rules: null,
+  counting_days: 14,
+  max_clips_per_editor: 15,
+};
+
 // Public: all bounties (any status) — the board never deletes, expired stays visible.
 export const listPublicBounties = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data: bounties, error } = await supabaseAdmin
+  let { data: bounties, error } = await supabaseAdmin
     .from("bounties")
     .select(PUBLIC_BOUNTY_COLS)
     .neq("status", "draft")
     .order("contract_no", { ascending: false });
+  if (error && /does not exist/i.test(error.message)) {
+    // Migrations lag the deploy: serve the board from the base columns
+    // rather than going dark.
+    const retry = await supabaseAdmin
+      .from("bounties")
+      .select(PUBLIC_BOUNTY_COLS_BASE)
+      .neq("status", "draft")
+      .order("contract_no", { ascending: false });
+    error = retry.error;
+    bounties = (retry.data?.map((b) => ({ ...LATE_COLUMN_DEFAULTS, ...b })) ?? null) as typeof bounties;
+  }
   if (error) throw new Error(error.message);
   const list = bounties ?? [];
   if (list.length === 0) return [];

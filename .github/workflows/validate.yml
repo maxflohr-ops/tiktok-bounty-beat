@@ -9,3 +9,4 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install "jsonschema[format-nongpl]"
       - run: python3 occ/tools/validate.py
+      - run: python3 occ/tools/schema_drift.py
