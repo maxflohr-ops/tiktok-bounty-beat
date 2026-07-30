@@ -200,12 +200,28 @@ function BoardPage() {
           {isLoading ? (
             <DelayedLoading />
           ) : filtered.length === 0 ? (
-            <BsEmpty
-              eyebrow="the Bounty Board"
-              title="No live contracts right now."
-              body={<>Check back soon, or fund the first pot yourself.</>}
-              action={<Link to="/list-sound" className="bs-btn bs-btn-accent">list your sound</Link>}
-            />
+            bounties.length > 0 ? (
+              <BsEmpty
+                eyebrow="the Bounty Board"
+                title="Nothing matches those filters."
+                body={<>There are contracts on the board — just none in this slice.</>}
+                action={
+                  <button
+                    type="button"
+                    className="bs-btn bs-btn-accent"
+                    onClick={() => {
+                      setPlatform("all");
+                      setPayout("all");
+                      setStatus("all");
+                    }}
+                  >
+                    show all contracts
+                  </button>
+                }
+              />
+            ) : (
+              <EmptyBoard />
+            )
           ) : (
             <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {filtered.map(({ b, score }) => {
@@ -312,6 +328,7 @@ function BoardPage() {
             <Link to="/clipping-campaigns" className="hover:text-bone">clipping campaigns</Link>
             <Link to="/tiktok-clipper" className="hover:text-bone">tiktok clippers</Link>
             <Link to="/list-sound" className="hover:text-bone">list a sound</Link>
+            <Link to="/admin" className="opacity-60 hover:text-bone hover:opacity-100">admin desk</Link>
           </nav>
           <span className="script-note text-sm">Every contract shows its pot, its rate, and its deadline before you claim it.</span>
           <span>© {new Date().getFullYear()} · Bounty Sounds</span>
@@ -348,6 +365,91 @@ function FilterGroup({
         ))}
       </div>
     </div>
+  );
+}
+
+// Clipper-first empty state: explain why the board is empty, teach the
+// structure with example cards — never ask a clipper to switch roles.
+function EmptyBoard() {
+  return (
+    <div>
+      <div className="text-center">
+        <p className="label-cap text-bone-soft">the Bounty Board</p>
+        <h2 className="mt-2 font-display text-3xl text-bone">No live contracts yet.</h2>
+        <p className="mx-auto mt-3 max-w-md text-bone-soft">
+          Creators are loading their first bounties — new contracts appear here the moment a
+          pot is funded. No invite needed.
+        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link to="/how-it-works" className="bs-btn bs-btn-accent">how it works</Link>
+          <Link to="/for-editors" className="bs-btn">how clippers earn</Link>
+        </div>
+      </div>
+      <p className="label-cap mt-12 mb-4 text-center text-bone-soft">What a contract looks like</p>
+      <ul className="mx-auto grid max-w-3xl grid-cols-1 gap-8 md:grid-cols-2">
+        <li>
+          <GhostCard
+            no={1}
+            title="Clip a Thursday Twitch stream"
+            song="your favorite streamer"
+            rate="$5 per 5,000 views"
+            pot="Pot: $500"
+            note="tiktok · counting window 14 days"
+          />
+        </li>
+        <li>
+          <GhostCard
+            no={2}
+            title="Hook challenge — new single"
+            song="the next artist here"
+            rate="$20 per approved clip"
+            pot="Pot: $400"
+            note="tiktok · up to 15 clip slots"
+          />
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+function GhostCard({
+  no,
+  title,
+  song,
+  rate,
+  pot,
+  note,
+}: {
+  no: number;
+  title: string;
+  song: string;
+  rate: string;
+  pot: string;
+  note: string;
+}) {
+  return (
+    <article aria-hidden className="contract relative select-none opacity-60 grayscale-[0.4]">
+      <span className="wax-seal">example</span>
+      <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
+          <span className="terminal text-[9px] tracking-[0.15em] text-[var(--color-bs-accent)]">{serial(no)}</span>
+        </div>
+        <span className="label-cap silver">{pot}</span>
+      </div>
+      <h3 className="font-display text-2xl leading-tight text-ink">{title}</h3>
+      <p className="mt-1 font-body italic text-ink-soft">for “{song}”</p>
+      <div className="mt-5 border-t border-[var(--paper-dark)] pt-3">
+        <div className="label-cap text-ink-soft">Reward</div>
+        <div className="mt-1 font-display text-lg text-ink">{rate}</div>
+        <div className="mt-1 text-xs text-ink-soft">{note}</div>
+      </div>
+      <div className="mt-4 text-center">
+        <span className="digital-badge">coming soon</span>
+      </div>
+      <span aria-hidden className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80">{serial(no)}</span>
+      <span aria-hidden className="terminal absolute bottom-2 right-3 text-[9px] text-ink-soft opacity-60">{pad(no)}</span>
+    </article>
   );
 }
 
