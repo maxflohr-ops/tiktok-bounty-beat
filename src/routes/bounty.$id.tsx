@@ -72,31 +72,42 @@ function BountyDetail() {
   });
 
   const bounty = bounties.find((b) => b.id === id);
-  const myClaim = myClaims.find((c) => c.bounty_id === id);
+  const myClaimsHere = myClaims.filter((c) => c.bounty_id === id);
+  const wallet = me?.profile?.wallet_address ?? null;
 
   const [handle, setHandle] = useState("");
   const [paypal, setPaypal] = useState("");
-  const [clipUrl, setClipUrl] = useState("");
+  const [clipUrls, setClipUrls] = useState<Record<string, string>>({});
+  const [replacing, setReplacing] = useState<Record<string, boolean>>({});
+  const [clips, setClips] = useState(1);
+  const [deliverBusyId, setDeliverBusyId] = useState<string | null>(null);
   const [claimBusy, setClaimBusy] = useState(false);
-  const [deliverBusy, setDeliverBusy] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ tiktok_handle?: string; paypal_email?: string }>({});
   const [touched, setTouched] = useState<{ tiktok_handle?: boolean; paypal_email?: boolean }>({});
   useEffect(() => {
     if (me?.profile?.tiktok_handle) setHandle(me.profile.tiktok_handle);
   }, [me?.profile?.tiktok_handle]);
+  useEffect(() => {
+    const first = myClaimsHere[0];
+    if (first?.tiktok_handle) setHandle((h) => h || first.tiktok_handle);
+    if (first?.paypal_email) setPaypal((pp) => pp || first.paypal_email!);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [myClaimsHere.length]);
 
   const take = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) { setReturnTo(`/bounty/${id}`); navigate({ to: "/auth" }); return; }
+    if (clips < 1) { toast.error("Pick at least one clip slot."); return; }
     const { validateClaimFields } = await import("@/lib/claim-validation");
-    const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal });
+    const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal, paypalOptional: Boolean(wallet) });
     setTouched({ tiktok_handle: true, paypal_email: true });
     if (!check.ok) { setFieldErrors(check.errors); return; }
     setFieldErrors({});
     setClaimBusy(true);
     try {
-      await claimFn({ data: { bounty_id: id, tiktok_handle: check.data.tiktok_handle, paypal_email: check.data.paypal_email } });
-      toast.success("Contract taken. Deliver proof before the deadline.");
+      await claimFn({ data: { bounty_id: id, tiktok_handle: check.data.tiktok_handle, paypal_email: check.data.paypal_email || undefined, clips } });
+      toast.success(clips === 1 ? "Slot claimed. Deliver proof before the deadline." : `${clips} slots claimed. Deliver each clip before the deadline.`);
+      setClips(1);
       refetchClaims(); refetchBounties();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not take the contract.");
@@ -110,20 +121,25 @@ function BountyDetail() {
   };
 
 
-  const deliver = async (e: React.FormEvent) => {
+  const deliver = async (e: React.FormEvent, submissionId: string) => {
     e.preventDefault();
-    if (!myClaim) return;
-    setDeliverBusy(true);
+    const url = clipUrls[submissionId] ?? "";
+    if (!url) return;
+    setDeliverBusyId(submissionId);
     try {
-      const r = await deliverFn({ data: { submission_id: myClaim.id, clip_url: clipUrl } });
-      toast.success(r.auto_check_passed
-        ? "Proof delivered. Auto-verified — awaiting review."
-        : "Proof delivered. Awaiting review.");
-      setClipUrl("");
+      const r = await deliverFn({ data: { submission_id: submissionId, clip_url: url } });
+      const ends = (r as { counting_ends_at?: string | null }).counting_ends_at;
+      toast.success(
+        `Proof delivered${r.auto_check_passed ? " — auto-verified" : ""}. ${
+          ends ? `Counting window open until ${new Date(ends).toLocaleDateString()}.` : "Awaiting review."
+        }`,
+      );
+      setClipUrls((m) => ({ ...m, [submissionId]: "" }));
+      setReplacing((m) => ({ ...m, [submissionId]: false }));
       refetchClaims();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Delivery refused.");
-    } finally { setDeliverBusy(false); }
+    } finally { setDeliverBusyId(null); }
   };
 
   if (!bounty) {
@@ -358,150 +374,207 @@ function BountyDetail() {
                   sign in
                 </Link>
               </>
-            ) : !myClaim ? (
-              <form onSubmit={take} noValidate className="mt-4 space-y-4">
-                <label className="block">
-                  <span className="label-cap text-bone-soft">your tiktok</span>
-                  <div
-                    className={`mt-2 flex items-center border px-3 py-2 ${
-                      touched.tiktok_handle && fieldErrors.tiktok_handle
-                        ? "border-red-500"
-                        : "border-[var(--border)]"
-                    }`}
-                  >
-                    <span className="text-bone-soft">@</span>
-                    <input
-                      required
-                      value={handle}
-                      onChange={(e) => {
-                        setHandle(e.target.value);
-                        if (touched.tiktok_handle) validateField("tiktok_handle", e.target.value);
-                      }}
-                      onBlur={(e) => {
-                        setTouched((t) => ({ ...t, tiktok_handle: true }));
-                        validateField("tiktok_handle", e.target.value);
-                      }}
-                      maxLength={60}
-                      aria-invalid={!!(touched.tiktok_handle && fieldErrors.tiktok_handle)}
-                      aria-describedby="tiktok-handle-error"
-                      className="w-full bg-transparent px-1 text-bone outline-none placeholder:italic placeholder:text-bone-soft/60"
-                      placeholder="yourname"
-                      disabled={claimBusy}
-                    />
-                  </div>
-                  {touched.tiktok_handle && fieldErrors.tiktok_handle && (
-                    <p id="tiktok-handle-error" role="alert" className="mt-1 text-xs text-red-400">
-                      {fieldErrors.tiktok_handle}
-                    </p>
-                  )}
-                </label>
-                <label className="block">
-                  <span className="label-cap text-bone-soft">your paypal</span>
-                  <input
-                    required
-                    type="email"
-                    value={paypal}
-                    onChange={(e) => {
-                      setPaypal(e.target.value);
-                      if (touched.paypal_email) validateField("paypal_email", e.target.value);
-                    }}
-                    onBlur={(e) => {
-                      setTouched((t) => ({ ...t, paypal_email: true }));
-                      validateField("paypal_email", e.target.value);
-                    }}
-                    maxLength={160}
-                    aria-invalid={!!(touched.paypal_email && fieldErrors.paypal_email)}
-                    aria-describedby="paypal-email-error"
-                    className={`dark-input mt-2 ${
-                      touched.paypal_email && fieldErrors.paypal_email ? "border-red-500" : ""
-                    }`}
-                    placeholder="you@paypal.com"
-                    disabled={claimBusy}
-                  />
-                  {touched.paypal_email && fieldErrors.paypal_email && (
-                    <p id="paypal-email-error" role="alert" className="mt-1 text-xs text-red-400">
-                      {fieldErrors.paypal_email}
-                    </p>
-                  )}
-                </label>
-                <button
-                  type="submit"
-                  disabled={claimBusy}
-                  aria-busy={claimBusy}
-                  className="silver-btn w-full disabled:opacity-60"
-                >
-                  <span className="inline-flex items-center justify-center gap-2">
-                    {claimBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                    {claimBusy ? "taking contract…" : "take the contract"}
-                  </span>
-                </button>
-                <p className="script-note text-center text-lg text-bone-soft">
-                  The Bounty Board keeps a record.
-                </p>
-                <p className="text-center">
-                  <Link to="/how-it-works" className="terminal text-[10px] text-bone-soft underline hover:text-bone">
-                    first contract? how it works
-                  </Link>
-                </p>
-              </form>
-
             ) : (
               <div className="mt-4 space-y-4">
-                <div className="border border-[var(--border)] p-3 text-sm">
-                  <div className="label-cap text-bone-soft">status</div>
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className="status-dot" />
-                    <span className="digital-badge">{prettyStatus(myClaim.status)}</span>
-                  </div>
-                  {myClaim.review_notes ? (
-                    <p className="mt-2 italic text-bone-soft">“{myClaim.review_notes}”</p>
-                  ) : null}
-                </div>
+                {myClaimsHere.length > 0 ? (
+                  <>
+                    <ul className="space-y-3">
+                      {myClaimsHere.map((c, idx) => (
+                        <li key={c.id} className="border border-[var(--border)] p-3 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="label-cap text-bone-soft">clip {idx + 1}</span>
+                            <span className="digital-badge">{prettyStatus(c.status)}</span>
+                          </div>
+                          {c.review_notes ? (
+                            <p className="mt-2 italic text-bone-soft">“{c.review_notes}”</p>
+                          ) : null}
+                          {c.counting_ends_at ? (
+                            <p className="mt-2 text-xs text-bone-soft">
+                              {new Date(c.counting_ends_at).getTime() > Date.now()
+                                ? `counting window closes ${new Date(c.counting_ends_at).toLocaleDateString()}`
+                                : `counting closed ${new Date(c.counting_ends_at).toLocaleDateString()} — payout at review`}
+                              {typeof c.view_count === "number" && c.view_count > 0 ? ` · ${c.view_count.toLocaleString()} views reported` : ""}
+                            </p>
+                          ) : null}
 
-                {(myClaim.status === "claimed" || myClaim.status === "rejected") ? (
-                  <form onSubmit={deliver} className="space-y-3">
+                          {c.status === "claimed" || c.status === "rejected" || replacing[c.id] ? (
+                            <form onSubmit={(e) => deliver(e, c.id)} className="mt-3 space-y-2">
+                              <input
+                                required
+                                type="url"
+                                value={clipUrls[c.id] ?? ""}
+                                onChange={(e) => setClipUrls((m) => ({ ...m, [c.id]: e.target.value }))}
+                                placeholder={
+                                  bounty.platform_target === "tiktok"
+                                    ? "https://www.tiktok.com/@you/video/…"
+                                    : "paste your posted clip's URL"
+                                }
+                                maxLength={500}
+                                className="dark-input"
+                                disabled={deliverBusyId === c.id}
+                              />
+                              <button
+                                type="submit"
+                                disabled={deliverBusyId === c.id}
+                                aria-busy={deliverBusyId === c.id}
+                                className="silver-btn w-full disabled:opacity-60"
+                              >
+                                <span className="inline-flex items-center justify-center gap-2">
+                                  {deliverBusyId === c.id ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                                  {deliverBusyId === c.id ? "delivering…" : replacing[c.id] ? "replace the link" : "deliver proof"}
+                                </span>
+                              </button>
+                            </form>
+                          ) : (["submitted", "pending", "in_review"] as string[]).includes(c.status as string) ? (
+                            <p className="mt-2 text-xs text-bone-soft">
+                              In review — payout follows the close of the counting window, usually within days.{" "}
+                              <button
+                                type="button"
+                                onClick={() => setReplacing((m) => ({ ...m, [c.id]: true }))}
+                                className="underline hover:text-bone"
+                              >
+                                wrong link? replace it
+                              </button>
+                            </p>
+                          ) : c.status === "approved" ? (
+                            <p className="mt-2 text-xs text-bone-soft">Approved. Payout on the way.</p>
+                          ) : c.status === "paid" ? (
+                            <p className="mt-2 text-xs text-silver-glow">Paid out. Nice work.</p>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {(() => {
+                      const maxClips = Math.min(15, (bounty as any).max_clips_per_editor ?? 15);
+                      const remaining = maxClips - myClaimsHere.length;
+                      if (remaining <= 0)
+                        return <p className="text-xs text-bone-soft">You hold the max of {maxClips} clips on this contract.</p>;
+                      return (
+                        <form onSubmit={take} className="flex items-center justify-between gap-3 border border-[var(--border)] p-3">
+                          <SlotStepper value={clips} setValue={setClips} max={remaining} />
+                          <button type="submit" disabled={claimBusy || clips < 1} className="silver-btn disabled:opacity-60">
+                            {claimBusy ? "claiming…" : `claim ${clips} more`}
+                          </button>
+                        </form>
+                      );
+                    })()}
+
+                    <p className="text-center">
+                      <Link to="/submit" className="terminal text-[10px] text-bone-soft underline hover:text-bone">
+                        report your view counts on the submit page →
+                      </Link>
+                    </p>
+                  </>
+                ) : (
+                  <form onSubmit={take} noValidate className="space-y-4">
                     <label className="block">
-                      <span className="label-cap text-bone-soft">clip url</span>
-                      <input
-                        required
-                        type="url"
-                        value={clipUrl}
-                        onChange={(e) => setClipUrl(e.target.value)}
-                        placeholder={
-                          bounty.platform_target === "tiktok"
-                            ? "https://www.tiktok.com/@you/video/…"
-                            : "paste your posted clip's URL"
-                        }
-                        maxLength={500}
-                        className="dark-input mt-2"
-                        disabled={deliverBusy}
-                      />
+                      <span className="label-cap text-bone-soft">your tiktok</span>
+                      <div
+                        className={`mt-2 flex items-center border px-3 py-2 ${
+                          touched.tiktok_handle && fieldErrors.tiktok_handle
+                            ? "border-red-500"
+                            : "border-[var(--border)]"
+                        }`}
+                      >
+                        <span className="text-bone-soft">@</span>
+                        <input
+                          required
+                          value={handle}
+                          onChange={(e) => {
+                            setHandle(e.target.value);
+                            if (touched.tiktok_handle) validateField("tiktok_handle", e.target.value);
+                          }}
+                          onBlur={(e) => {
+                            setTouched((t) => ({ ...t, tiktok_handle: true }));
+                            validateField("tiktok_handle", e.target.value);
+                          }}
+                          maxLength={60}
+                          aria-invalid={!!(touched.tiktok_handle && fieldErrors.tiktok_handle)}
+                          aria-describedby="tiktok-handle-error"
+                          className="w-full bg-transparent px-1 text-bone outline-none placeholder:italic placeholder:text-bone-soft/60"
+                          placeholder="yourname"
+                          disabled={claimBusy}
+                        />
+                      </div>
+                      {touched.tiktok_handle && fieldErrors.tiktok_handle && (
+                        <p id="tiktok-handle-error" role="alert" className="mt-1 text-xs text-red-400">
+                          {fieldErrors.tiktok_handle}
+                        </p>
+                      )}
                     </label>
+                    <label className="block">
+                      <span className="label-cap text-bone-soft">
+                        your paypal{wallet ? " (optional — wallet on file)" : ""}
+                      </span>
+                      <input
+                        required={!wallet}
+                        type="email"
+                        value={paypal}
+                        onChange={(e) => {
+                          setPaypal(e.target.value);
+                          if (touched.paypal_email && e.target.value) validateField("paypal_email", e.target.value);
+                        }}
+                        onBlur={(e) => {
+                          setTouched((t) => ({ ...t, paypal_email: true }));
+                          if (e.target.value || !wallet) validateField("paypal_email", e.target.value);
+                        }}
+                        maxLength={160}
+                        aria-invalid={!!(touched.paypal_email && fieldErrors.paypal_email)}
+                        aria-describedby="paypal-email-error"
+                        className={`dark-input mt-2 ${
+                          touched.paypal_email && fieldErrors.paypal_email ? "border-red-500" : ""
+                        }`}
+                        placeholder={wallet ? `leave blank to get paid at ${wallet.slice(0, 6)}…${wallet.slice(-4)}` : "you@paypal.com"}
+                        disabled={claimBusy}
+                      />
+                      {touched.paypal_email && fieldErrors.paypal_email && (
+                        <p id="paypal-email-error" role="alert" className="mt-1 text-xs text-red-400">
+                          {fieldErrors.paypal_email}
+                        </p>
+                      )}
+                      {!wallet ? (
+                        <p className="mt-1 text-xs text-bone-soft">
+                          No PayPal?{" "}
+                          <Link to="/dashboard" className="underline hover:text-bone">connect a USDC wallet</Link>{" "}
+                          and claim without one.
+                        </p>
+                      ) : null}
+                    </label>
+
+                    <div className="flex items-center justify-between border border-[var(--border)] p-3">
+                      <span className="label-cap text-bone-soft">clips</span>
+                      <SlotStepper
+                        value={clips}
+                        setValue={setClips}
+                        max={Math.min(15, (bounty as any).max_clips_per_editor ?? 15)}
+                      />
+                    </div>
+
                     <button
                       type="submit"
-                      disabled={deliverBusy}
-                      aria-busy={deliverBusy}
+                      disabled={claimBusy || clips < 1}
+                      aria-busy={claimBusy}
                       className="silver-btn w-full disabled:opacity-60"
                     >
                       <span className="inline-flex items-center justify-center gap-2">
-                        {deliverBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                        {deliverBusy ? "delivering…" : "deliver proof"}
+                        {claimBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                        {claimBusy ? "taking contract…" : clips === 1 ? "take the contract" : `take ${clips} clip slots`}
                       </span>
                     </button>
+                    <p className="text-center text-xs text-bone-soft">
+                      Each clip's views count for {(bounty as any).counting_days ?? 14} days after delivery, then pay out pro-rata.
+                    </p>
+                    <p className="script-note text-center text-lg text-bone-soft">
+                      The Bounty Board keeps a record.
+                    </p>
+                    <p className="text-center">
+                      <Link to="/how-it-works" className="terminal text-[10px] text-bone-soft underline hover:text-bone">
+                        first contract? how it works
+                      </Link>
+                    </p>
                   </form>
-                ) : (["submitted", "pending", "in_review"] as string[]).includes(myClaim.status as string) ? (
-                  <p className="text-bone-soft">
-                    Proof delivered. It's in review — payout follows approval.
-                  </p>
-                ) : myClaim.status === "approved" ? (
-                  <p className="text-bone-soft">
-                    Approved. Payout on the way.
-                  </p>
-                ) : myClaim.status === "paid" ? (
-                  <p className="text-silver-glow">
-                    Paid out. Nice work.
-                  </p>
-                ) : null}
+                )}
               </div>
             )}
           </aside>
@@ -522,4 +595,28 @@ function prettyStatus(s: string) {
     case "paid": return "paid out";
     default: return s;
   }
+}
+
+function SlotStepper({ value, setValue, max }: { value: number; setValue: (n: number) => void; max: number }) {
+  return (
+    <span className="inline-flex items-center gap-3">
+      <button
+        type="button"
+        aria-label="fewer clips"
+        onClick={() => setValue(Math.max(0, value - 1))}
+        className="ink-btn px-3 py-1"
+      >
+        −
+      </button>
+      <span className="w-6 text-center font-display text-lg text-bone tabular-nums">{value}</span>
+      <button
+        type="button"
+        aria-label="more clips"
+        onClick={() => setValue(Math.min(max, value + 1))}
+        className="ink-btn px-3 py-1"
+      >
+        +
+      </button>
+    </span>
+  );
 }

@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import { template as actionAlertTemplate } from './action-alert'
+import { template as editorStatusTemplate } from './editor-status'
 
 export interface TemplateEntry {
   component: ComponentType<any>
@@ -12,4 +13,5 @@ export interface TemplateEntry {
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'action-alert': actionAlertTemplate,
+  'editor-status': editorStatusTemplate,
 }

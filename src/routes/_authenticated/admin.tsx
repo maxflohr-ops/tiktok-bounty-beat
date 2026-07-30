@@ -142,6 +142,8 @@ function BountiesPanel() {
           payout_type: (editing.payout_type ?? "flat") as "flat" | "per_1k_views",
           platform_target: (editing.platform_target ?? "tiktok") as "tiktok" | "shorts",
           max_submissions: editing.max_submissions ?? null,
+          counting_days: Number((editing as any).counting_days ?? 14),
+          max_clips_per_editor: Number((editing as any).max_clips_per_editor ?? 15),
           deadline: editing.deadline || null,
           featured_until: (editing as any).featured_until || null,
           featured_plus: Boolean((editing as any).featured_plus),
@@ -251,6 +253,12 @@ function BountiesPanel() {
             </Field>
             <Field label="featured until ($1k/mo slot)">
               <input type="datetime-local" value={(editing as any).featured_until ? (editing as any).featured_until.slice(0, 16) : ""} onChange={(e) => setEditing({ ...editing, featured_until: e.target.value ? new Date(e.target.value).toISOString() : null } as any)} className="dark-input" />
+            </Field>
+            <Field label="counting window (days per clip)">
+              <input type="number" min={1} max={90} value={(editing as any).counting_days ?? 14} onChange={(e) => setEditing({ ...editing, counting_days: Number(e.target.value) } as any)} className="dark-input" />
+            </Field>
+            <Field label="max clips per editor">
+              <input type="number" min={1} max={50} value={(editing as any).max_clips_per_editor ?? 15} onChange={(e) => setEditing({ ...editing, max_clips_per_editor: Number(e.target.value) } as any)} className="dark-input" />
             </Field>
             <Field label="featured+ ($2.5k/mo · presented-by)">
               <label className="flex items-center gap-2 py-2 text-sm text-bone-soft">

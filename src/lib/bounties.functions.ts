@@ -4,10 +4,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until,featured_plus,hashtags,rules";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor";
 // Columns safe to expose publicly (excludes funded_cash_cents and any Stripe identifiers).
 const PUBLIC_BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor";
 
 // Public: all bounties (any status) — the board never deletes, expired stays visible.
 export const listPublicBounties = createServerFn({ method: "GET" }).handler(async () => {
@@ -58,6 +58,8 @@ const upsertBountyInput = z.object({
   payout_type: z.enum(["flat", "per_1k_views"]).default("flat"),
   platform_target: z.enum(["tiktok", "shorts"]).default("tiktok"),
   max_submissions: z.number().int().min(1).max(100000).nullable().optional(),
+  counting_days: z.number().int().min(1).max(90).default(14),
+  max_clips_per_editor: z.number().int().min(1).max(50).default(15),
   deadline: z.string().datetime().nullable().optional(),
   featured_until: z.string().datetime().nullable().optional(),
   featured_plus: z.boolean().default(false),
@@ -92,6 +94,8 @@ export const upsertBounty = createServerFn({ method: "POST" })
       payout_type: data.payout_type,
       platform_target: data.platform_target,
       max_submissions: data.max_submissions ?? null,
+      counting_days: data.counting_days,
+      max_clips_per_editor: data.max_clips_per_editor,
       deadline: data.deadline ?? null,
       featured_until: data.featured_until ?? null,
       featured_plus: data.featured_plus,

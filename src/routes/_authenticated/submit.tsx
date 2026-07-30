@@ -152,7 +152,7 @@ function SubmitPage() {
           </div>
           <p className="mt-2 text-bone-soft">
             Paste your posted TikTok URL. It's matched to your open contract, the account
-            and sound are checked, and approved views pay out from the pot.
+            and sound are checked. Each clip's views count for the contract's counting window (usually 14 days from delivery), then pay out pro-rata from the pot.
           </p>
           {me?.profile?.tiktok_handle ? (
             <p className="mt-2 text-sm text-bone-soft">
@@ -296,6 +296,13 @@ function SubmitPage() {
                           <div className="mt-1 flex flex-wrap items-center gap-2">
                             {b?.contract_no ? <span className="label-cap text-silver">No. {pad(b.contract_no)}</span> : null}
                             <span className="digital-badge-amber">{statusLabel(c.status)}</span>
+                            {c.counting_ends_at ? (
+                              <span className="label-cap text-bone-soft">
+                                {new Date(c.counting_ends_at).getTime() > Date.now()
+                                  ? `counting closes ${new Date(c.counting_ends_at).toLocaleDateString()}`
+                                  : "counting closed — payout at review"}
+                              </span>
+                            ) : null}
                           </div>
                         </div>
                         {c.tiktok_video_url ? (

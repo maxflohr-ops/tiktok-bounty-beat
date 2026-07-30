@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listMyClaims, updateViewCount } from "@/lib/submissions.functions";
-import { getMe, updateMyProfile, addTiktokAccount, removeTiktokAccount } from "@/lib/me.functions";
+import { getMe, updateMyProfile, addTiktokAccount, removeTiktokAccount, getTaxStatus, submitTaxInfo } from "@/lib/me.functions";
 import { getMyPayoutMethod, connectStripeAccount, refreshConnectStatus } from "@/lib/stripe.functions";
 import { fileDispute, listMyDisputes } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -237,7 +237,93 @@ function PaymentSetup() {
         </div>
       )}
       <CryptoPayout />
-      <p className="mt-3 text-xs text-bone-soft">PayPal support coming soon.</p>
+      <TaxCard />
+      <p className="mt-3 text-xs text-bone-soft">PayPal payouts run through the email on your claims.</p>
+    </div>
+  );
+}
+
+// US tax info (W-9). Required once lifetime payouts pass the threshold —
+// payouts past it are held until this is on file. The TIN is write-only:
+// the server never returns it to any client.
+function TaxCard() {
+  const statusFn = useServerFn(getTaxStatus);
+  const submitFn = useServerFn(submitTaxInfo);
+  const { data: tax, refetch } = useQuery({ queryKey: ["taxStatus"], queryFn: () => statusFn() });
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [f, setF] = useState({
+    legal_name: "", address_line1: "", address_line2: "", city: "", region: "", postal_code: "", country: "US", tin: "", tin_type: "ssn" as "ssn" | "ein",
+  });
+
+  if (!tax) return null;
+  const threshold = (tax.threshold_cents / 100).toFixed(0);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      await submitFn({ data: { ...f, address_line2: f.address_line2 || undefined } });
+      toast.success("Tax info received. Payouts are clear.");
+      setOpen(false);
+      setF((v) => ({ ...v, tin: "" }));
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save tax info.");
+    } finally { setBusy(false); }
+  };
+
+  return (
+    <div className="mt-4 border-t border-[var(--border)] pt-4">
+      <div className="flex items-center justify-between">
+        <div className="label-cap text-bone-soft">tax info</div>
+        <span className="digital-badge">
+          {tax.on_file ? "on file" : tax.required ? "required now" : `needed past $${threshold}`}
+        </span>
+      </div>
+      <p className="mt-2 text-xs text-bone-soft">
+        Lifetime payouts: <Money cents={tax.lifetime_cents} />. US law makes us collect a W-9 once
+        you pass ${threshold} — payouts past that hold until it's on file.
+        {tax.on_file ? ` Filed as ${tax.legal_name}.` : ""}
+      </p>
+      {!tax.on_file ? (
+        <button onClick={() => setOpen((o) => !o)} className="silver-btn mt-3">
+          {open ? "close" : "submit tax info"}
+        </button>
+      ) : null}
+      {open && !tax.on_file ? (
+        <form onSubmit={submit} className="mt-3 grid gap-2">
+          <input required placeholder="Legal name" value={f.legal_name} onChange={(e) => setF({ ...f, legal_name: e.target.value })} className="dark-input" maxLength={160} />
+          <input required placeholder="Street address" value={f.address_line1} onChange={(e) => setF({ ...f, address_line1: e.target.value })} className="dark-input" maxLength={200} />
+          <input placeholder="Apt / unit (optional)" value={f.address_line2} onChange={(e) => setF({ ...f, address_line2: e.target.value })} className="dark-input" maxLength={200} />
+          <div className="grid grid-cols-3 gap-2">
+            <input required placeholder="City" value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} className="dark-input" maxLength={100} />
+            <input required placeholder="State" value={f.region} onChange={(e) => setF({ ...f, region: e.target.value })} className="dark-input" maxLength={100} />
+            <input required placeholder="ZIP" value={f.postal_code} onChange={(e) => setF({ ...f, postal_code: e.target.value })} className="dark-input" maxLength={20} />
+          </div>
+          <div className="grid grid-cols-[1fr_auto] gap-2">
+            <input
+              required
+              placeholder="SSN or EIN — 9 digits, no dashes"
+              value={f.tin}
+              onChange={(e) => setF({ ...f, tin: e.target.value.replace(/\D/g, "").slice(0, 9) })}
+              className="dark-input"
+              inputMode="numeric"
+              autoComplete="off"
+            />
+            <select value={f.tin_type} onChange={(e) => setF({ ...f, tin_type: e.target.value as "ssn" | "ein" })} className="dark-input w-auto">
+              <option value="ssn">SSN</option>
+              <option value="ein">EIN</option>
+            </select>
+          </div>
+          <button type="submit" disabled={busy} className="silver-btn disabled:opacity-60">
+            {busy ? "saving…" : "save tax info"}
+          </button>
+          <p className="text-[10px] text-bone-soft">
+            Stored encrypted at rest, never shown again after saving, used only for tax reporting.
+          </p>
+        </form>
+      ) : null}
     </div>
   );
 }
