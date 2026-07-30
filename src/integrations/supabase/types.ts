@@ -18,19 +18,25 @@ export type Database = {
         Row: {
           artist_song: string | null
           contract_no: number
+          counting_days: number
           cover_url: string | null
           created_at: string
           created_by: string | null
           currency: string
           deadline: string | null
           description: string
+          featured_plus: boolean
+          featured_until: string | null
           funded_cash_cents: number
+          hashtags: string[]
           id: string
+          max_clips_per_editor: number
           max_submissions: number | null
           payout_type: Database["public"]["Enums"]["payout_type"]
           platform_target: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents: number
           reward_points: number
+          rules: string | null
           sound_name: string
           source_assets_url: string | null
           status: Database["public"]["Enums"]["bounty_status"]
@@ -43,19 +49,25 @@ export type Database = {
         Insert: {
           artist_song?: string | null
           contract_no?: number
+          counting_days?: number
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
           deadline?: string | null
           description: string
+          featured_plus?: boolean
+          featured_until?: string | null
           funded_cash_cents?: number
+          hashtags?: string[]
           id?: string
+          max_clips_per_editor?: number
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
           platform_target?: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents?: number
           reward_points?: number
+          rules?: string | null
           sound_name: string
           source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
@@ -68,19 +80,25 @@ export type Database = {
         Update: {
           artist_song?: string | null
           contract_no?: number
+          counting_days?: number
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
           deadline?: string | null
           description?: string
+          featured_plus?: boolean
+          featured_until?: string | null
           funded_cash_cents?: number
+          hashtags?: string[]
           id?: string
+          max_clips_per_editor?: number
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
           platform_target?: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents?: number
           reward_points?: number
+          rules?: string | null
           sound_name?: string
           source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
