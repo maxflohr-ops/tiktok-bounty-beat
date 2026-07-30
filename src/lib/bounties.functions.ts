@@ -43,19 +43,34 @@ const EBRIL_SEED = {
 };
 
 async function seedBoardIfEmpty(supabaseAdmin: any) {
+  // Emptiness = what the board shows: zero non-draft rows. A lone draft row
+  // must not block seeding.
   const { count, error } = await supabaseAdmin
     .from("bounties")
-    .select("id", { count: "exact", head: true });
-  if (error || (count ?? 0) > 0) return;
-  // WHERE NOT EXISTS semantics: the count==0 check plus a title guard keep
-  // concurrent callers from double-inserting.
+    .select("id", { count: "exact", head: true })
+    .neq("status", "draft");
+  if (error) {
+    console.error("seedBoardIfEmpty count failed:", error.message);
+    return;
+  }
+  if ((count ?? 0) > 0) return;
+  // The row may exist but be drafted — reactivate it (mirrors the seed
+  // migration's UPDATE) instead of inserting a duplicate.
   const { data: existing } = await supabaseAdmin
     .from("bounties")
-    .select("id")
+    .select("id,status")
     .eq("title", EBRIL_SEED.title)
     .maybeSingle();
-  if (existing) return;
-  await supabaseAdmin.from("bounties").insert(EBRIL_SEED);
+  if (existing) {
+    const { error: updateError } = await supabaseAdmin
+      .from("bounties")
+      .update({ status: "active" })
+      .eq("id", existing.id);
+    if (updateError) console.error("seedBoardIfEmpty reactivate failed:", updateError.message);
+    return;
+  }
+  const { error: insertError } = await supabaseAdmin.from("bounties").insert(EBRIL_SEED);
+  if (insertError) console.error("seedBoardIfEmpty insert failed:", insertError.message);
 }
 
 // Public: all bounties (any status) — the board never deletes, expired stays visible.
