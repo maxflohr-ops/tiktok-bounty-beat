@@ -83,8 +83,9 @@ function AuthPage() {
       <main className="container-board flex min-h-screen items-center justify-center py-10">
         <BsWell className="w-full max-w-md">
           <div className="text-center">
-            <Link to="/" className="inline-block font-[var(--font-display)] text-xl font-bold text-[var(--color-bs-ink)]">
-              Bounty<span className="text-[var(--color-bs-accent)]">Sounds</span>
+            <Link to="/" className="inline-flex items-center gap-2 text-xl font-semibold text-[var(--color-bs-ink)] [font-family:var(--font-brand)]">
+              <img src="/art/great-seal.png" alt="" aria-hidden className="h-7 w-7 object-contain" />
+              Bounty Sounds
             </Link>
             <BsEyebrow className="mt-4 block">
               {mode === "signin" ? "welcome back" : "create account"}
