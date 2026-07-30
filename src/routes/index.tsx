@@ -101,11 +101,11 @@ function LandingPage() {
               </BsDisplay>
             </div>
 
-            <p className="mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] md:text-lg">
+            <p className="mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] [font-family:var(--font-mono)] md:text-lg">
               Sounds, streams, keynotes, podcasts. Post the clip — verified views pay out.
             </p>
 
-            <p className="mx-auto mt-3 max-w-md text-center text-sm text-[var(--color-bs-ink-mute)]">
+            <p className="mx-auto mt-3 max-w-md text-center text-sm text-[var(--color-bs-ink-mute)] [font-family:var(--font-mono)]">
               The purse is posted before you cut. Verified views pay out.
             </p>
 
