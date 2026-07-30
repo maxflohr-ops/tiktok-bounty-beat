@@ -5,7 +5,7 @@ import { GuillocheBand, GuillocheRosette, InkDogwood, InkScrawl } from "@/compon
 
 const TITLE = "Payouts · Bounty Sounds";
 const DESC =
-  "Where the money comes from and how it reaches you: funded pots, per-100k-view rates, review, and payouts to PayPal or a USDC wallet.";
+  "Where the money comes from and how it reaches you: posted purses, per-view rates, review, and payouts to PayPal or a USDC wallet.";
 const URL = "https://bountysounds.com/payouts";
 
 export const Route = createFileRoute("/payouts")({

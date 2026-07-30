@@ -87,10 +87,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Bounty Sounds is a pay-per-view clipping board. Artists, streamers, speakers, and podcasters fund bounties; clippers post TikToks and get paid per verified view.",
+          "A public clipping bounty board for sounds, streams, and keynotes. Someone posts a purse, you post the clip, verified views pay out.",
       },
       { property: "og:site_name", content: "Bounty Sounds" },
       { property: "og:type", content: "website" },
+      {
+        property: "og:description",
+        content:
+          "A public clipping bounty board for sounds, streams, and keynotes. Someone posts a purse, you post the clip, verified views pay out.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "A public clipping bounty board for sounds, streams, and keynotes. Someone posts a purse, you post the clip, verified views pay out.",
+      },
       { property: "og:image", content: "https://bountysounds.com/og.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
