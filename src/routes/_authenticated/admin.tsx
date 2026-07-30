@@ -188,7 +188,7 @@ function BountiesPanel() {
                 <div className="label-cap silver">No. {pad(b.contract_no)}</div>
                 <div className="truncate text-bone">{b.title}</div>
                 <div className="text-xs text-bone-soft">
-                  {b.sound_name} · {b.status} · Pot: <Money cents={(b as any).funded_cash_cents ?? 0} currency={b.currency} />
+                  {b.sound_name} · {b.status} · Purse: <Money cents={(b as any).funded_cash_cents ?? 0} currency={b.currency} />
                 </div>
               </div>
               <div className="flex items-center gap-1">
