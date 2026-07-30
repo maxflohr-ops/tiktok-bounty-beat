@@ -477,6 +477,7 @@ export type Database = {
           awarded_points: number
           bounty_id: string
           claimed_at: string
+          counting_ends_at: string | null
           created_at: string
           editor_id: string
           id: string
@@ -505,6 +506,7 @@ export type Database = {
           awarded_points?: number
           bounty_id: string
           claimed_at?: string
+          counting_ends_at?: string | null
           created_at?: string
           editor_id: string
           id?: string
@@ -533,6 +535,7 @@ export type Database = {
           awarded_points?: number
           bounty_id?: string
           claimed_at?: string
+          counting_ends_at?: string | null
           created_at?: string
           editor_id?: string
           id?: string
