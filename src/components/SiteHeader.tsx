@@ -5,9 +5,10 @@ import { useServerFn } from "@tanstack/react-start";
 import { getMe } from "@/lib/me.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut } from "lucide-react";
-import { BsBadge, BsEyebrow, BsMono } from "@/components/bs";
 import { setReturnTo } from "@/lib/return-to";
 
+// The App Bar: calm serif frame around the hand-drawn interior.
+// Sage stays the only accent; the cardinal keeps its perch on the b.
 export function SiteHeader() {
   const { user, loading } = useSession();
   const meFn = useServerFn(getMe);
@@ -17,37 +18,47 @@ export function SiteHeader() {
     enabled: !!user,
   });
 
-  const navLink = "bs-mono px-3 py-2 uppercase tracking-[0.16em] text-[var(--color-bs-ink-mute)] hover:text-[var(--color-bs-ink)]";
-  const navActive = { className: "bs-mono px-3 py-2 uppercase tracking-[0.16em] text-[var(--color-bs-ink)]" };
+  const navLink =
+    "px-2.5 py-2 font-body text-sm font-medium text-[var(--color-bs-ink-mute)] transition hover:text-[var(--color-bs-ink)]";
+  const navActive = { className: "px-2.5 py-2 font-body text-sm font-medium text-[var(--color-bs-ink)]" };
+  const pill =
+    "rounded-full bg-[var(--color-bs-accent)] px-5 py-2.5 font-body text-[13.5px] font-semibold leading-none text-white transition hover:brightness-110";
+  const ghostPill =
+    "rounded-full border border-[var(--color-bs-rule)] px-4 py-2.5 font-body text-[13.5px] font-medium leading-none text-[var(--color-bs-ink)] transition hover:bg-black/5";
 
   return (
     <header className="relative z-30 border-b border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)]">
-      <div className="container-board flex flex-col items-center gap-2 py-5 md:flex-row md:justify-between md:py-6">
-        <Link to="/" className="flex flex-col items-center gap-1 md:items-start">
-          <span className="relative font-[var(--font-display)] text-2xl font-bold leading-none text-[var(--color-bs-ink)] md:text-3xl">
-            <img
-              src="/art/cardinal-perch.png"
-              alt=""
-              aria-hidden
-              draggable={false}
-              className="pointer-events-none absolute -top-[13px] left-0 w-7 select-none md:-top-4 md:w-8"
-            />
-            Bounty<span className="text-[var(--color-bs-accent)]">Sounds</span>
-          </span>
-          <BsEyebrow>clip sounds, streams, keynotes & pods · get paid per view</BsEyebrow>
+      <div className="container-board flex min-h-[64px] flex-col items-center gap-2 py-3 md:flex-row md:justify-between md:py-0">
+        <Link
+          to="/"
+          className="relative text-2xl font-semibold lowercase leading-none tracking-[-0.015em] text-[var(--color-bs-ink)] [font-family:var(--font-brand)]"
+        >
+          <img
+            src="/art/cardinal-perch.png"
+            alt=""
+            aria-hidden
+            draggable={false}
+            className="pointer-events-none absolute -top-[15px] left-0 w-7 select-none"
+          />
+          bounty sounds
         </Link>
-        <nav className="flex flex-wrap items-center justify-center gap-1">
-          <Link to="/board" className={navLink} activeProps={navActive}>board</Link>
+        <nav className="flex flex-wrap items-center justify-center gap-1 md:gap-3">
+          <Link to="/board" className={navLink} activeProps={navActive}>Board</Link>
+          <Link to="/payouts" className={navLink} activeProps={navActive}>Payouts</Link>
+          <Link to="/for-artists" className={navLink} activeProps={navActive}>For artists</Link>
+          <Link to="/for-editors" className={navLink} activeProps={navActive}>For clippers</Link>
           {loading ? null : user ? (
             <>
-              <Link to="/dashboard" className={navLink} activeProps={navActive}>dashboard</Link>
-              <Link to="/submit" className={navLink} activeProps={navActive}>submit clip</Link>
-              {typeof me?.profile?.points === "number" ? (
-                <BsBadge className="ml-1"><BsMono>{me.profile.points} pts</BsMono></BsBadge>
-              ) : null}
+              <Link to="/dashboard" className={`${ghostPill} ml-1`}>
+                Dashboard
+                {typeof me?.profile?.points === "number" ? (
+                  <span className="ml-2 text-[var(--color-bs-ink-mute)]">{me.profile.points} pts</span>
+                ) : null}
+              </Link>
+              <Link to="/submit" className={`${pill} ml-1`}>Submit clip</Link>
               <button
                 onClick={() => supabase.auth.signOut()}
-                className="ml-1 p-2 text-[var(--color-bs-ink-mute)] hover:text-[var(--color-bs-ink)]"
+                className="ml-1 p-2 text-[var(--color-bs-ink-mute)] transition hover:text-[var(--color-bs-ink)]"
                 aria-label="Sign out"
                 title="Sign out"
               >
@@ -57,10 +68,10 @@ export function SiteHeader() {
           ) : (
             <Link
               to="/auth"
-              className="bs-btn ml-2"
+              className={`${pill} ml-1`}
               onClick={() => setReturnTo(window.location.pathname + window.location.search)}
             >
-              sign in
+              Sign in
             </Link>
           )}
         </nav>

@@ -67,6 +67,8 @@
   --color-bs-rule-strong: rgba(13, 13, 13, 0.35);
   --color-bs-accent: #6f7f5c;
   --color-bs-accent-soft: rgba(111, 127, 92, 0.25);
+  /* Header wordmark: the calm serif frame around the hand-drawn interior. */
+  --font-brand: "Source Serif 4", Georgia, serif;
 }
 
 :root {
