@@ -56,6 +56,7 @@
   --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --font-script: "Caveat", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-terminal: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-poster: "Fredericka the Great", "Bricolage Grotesque", serif;
 
   --color-bs-paper: #f5f3ee;
   --color-bs-paper-soft: #faf9f5;
@@ -701,4 +702,23 @@
 ::view-transition-new(root) {
   animation-duration: 140ms;
   animation-timing-function: ease;
+}
+
+
+/* Wanted-poster handwriting, scoped to the paper surfaces only — contract
+   cards and the board masthead read hand-lettered, everything else keeps the
+   grotesque for legibility. */
+.contract h1,
+.contract h3 {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.contract .label-cap {
+  font-family: var(--font-marker);
+  letter-spacing: 0.08em;
+}
+.board-frame h1 {
+  font-family: var(--font-poster);
+  font-weight: 400;
 }
