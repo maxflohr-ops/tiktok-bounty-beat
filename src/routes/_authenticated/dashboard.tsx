@@ -237,8 +237,45 @@ function PaymentSetup() {
         </div>
       )}
       <CryptoPayout />
+      <PayoutPreference />
       <TaxCard />
       <p className="mt-3 text-xs text-bone-soft">PayPal payouts run through the email on your claims.</p>
+    </div>
+  );
+}
+
+// Which rail wins when both PayPal and a wallet are on file.
+function PayoutPreference() {
+  const meFn = useServerFn(getMe);
+  const saveFn = useServerFn(updateMyProfile);
+  const { data: me, refetch } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
+  const pref = (me?.profile as any)?.payout_preference ?? null;
+  const set = async (p: "paypal" | "usdc") => {
+    try {
+      await saveFn({ data: { payout_preference: p } as any });
+      toast.success(p === "usdc" ? "Payouts will prefer your USDC wallet." : "Payouts will prefer PayPal.");
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save preference.");
+    }
+  };
+  return (
+    <div className="mt-4 border-t border-[var(--border)] pt-4">
+      <div className="label-cap text-bone-soft">preferred payout rail</div>
+      <div className="mt-2 flex gap-2">
+        {(["paypal", "usdc"] as const).map((p) => (
+          <button
+            key={p}
+            type="button"
+            aria-pressed={pref === p}
+            onClick={() => set(p)}
+            className={pref === p ? "silver-btn" : "ink-btn"}
+          >
+            {p === "paypal" ? "PayPal" : "USDC wallet"}
+          </button>
+        ))}
+      </div>
+      <p className="mt-2 text-xs text-bone-soft">Used when both are on file. Unset = whatever's on the claim.</p>
     </div>
   );
 }

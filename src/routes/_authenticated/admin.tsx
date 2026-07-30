@@ -418,6 +418,13 @@ function ReviewCard({
         <div className="min-w-0 flex-1">
           <div className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</div>
           <div className="truncate text-bone">{s.bounty?.title}</div>
+          {(s as any).counting_ends_at && s.bounty?.payout_type === "per_1k_views" ? (
+            <div className="mt-0.5 text-xs text-bone-soft">
+              {new Date((s as any).counting_ends_at).getTime() > Date.now()
+                ? `counting window open — closes ${new Date((s as any).counting_ends_at).toLocaleDateString()} (verify views after)`
+                : `window closed ${new Date((s as any).counting_ends_at).toLocaleDateString()} — ready to verify + approve`}
+            </div>
+          ) : null}
           <div className="text-xs text-bone-soft">
             by {s.editor?.display_name || "editor"} · @{s.tiktok_handle}
           </div>

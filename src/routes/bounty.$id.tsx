@@ -388,12 +388,14 @@ function BountyDetail() {
                           {c.review_notes ? (
                             <p className="mt-2 italic text-bone-soft">“{c.review_notes}”</p>
                           ) : null}
-                          {c.counting_ends_at ? (
+                          {c.counting_ends_at && bounty.payout_type === "per_1k_views" ? (
                             <p className="mt-2 text-xs text-bone-soft">
                               {new Date(c.counting_ends_at).getTime() > Date.now()
                                 ? `counting window closes ${new Date(c.counting_ends_at).toLocaleDateString()}`
                                 : `counting closed ${new Date(c.counting_ends_at).toLocaleDateString()} — payout at review`}
-                              {typeof c.view_count === "number" && c.view_count > 0 ? ` · ${c.view_count.toLocaleString()} views reported` : ""}
+                              {typeof c.view_count === "number" && c.view_count > 0
+                                ? ` · ${c.view_count.toLocaleString()} views ≈ $${(Math.floor((c.view_count * bounty.reward_cash_cents) / 100000) / 100).toFixed(2)}`
+                                : ""}
                             </p>
                           ) : null}
 

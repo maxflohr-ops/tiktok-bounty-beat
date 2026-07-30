@@ -296,7 +296,7 @@ function SubmitPage() {
                           <div className="mt-1 flex flex-wrap items-center gap-2">
                             {b?.contract_no ? <span className="label-cap text-silver">No. {pad(b.contract_no)}</span> : null}
                             <span className="digital-badge-amber">{statusLabel(c.status)}</span>
-                            {c.counting_ends_at ? (
+                            {c.counting_ends_at && isPer1k ? (
                               <span className="label-cap text-bone-soft">
                                 {new Date(c.counting_ends_at).getTime() > Date.now()
                                   ? `counting closes ${new Date(c.counting_ends_at).toLocaleDateString()}`
@@ -365,6 +365,16 @@ function SubmitPage() {
                               maxLength={12}
                             />
                           </label>
+                          {(() => {
+                            const v = Number((viewsDraft[c.id] ?? "").replace(/\D/g, "")) || c.view_count || 0;
+                            const rate = b?.reward_cash_cents ?? 0;
+                            const est = Math.floor((v * rate) / 100000);
+                            return v > 0 && rate > 0 ? (
+                              <span className="pb-2 text-xs text-bone-soft">
+                                ≈ <span className="silver">${(est / 100).toFixed(2)}</span> at {v.toLocaleString()} views
+                              </span>
+                            ) : null;
+                          })()}
                           <button
                             type="button"
                             disabled={busyId === c.id}
