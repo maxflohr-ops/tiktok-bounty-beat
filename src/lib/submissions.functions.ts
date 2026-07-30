@@ -113,7 +113,7 @@ export const claimContract = createServerFn({ method: "POST" })
       editor_id: context.userId,
       tiktok_handle: data.tiktok_handle,
       paypal_email: data.paypal_email ?? null,
-      status: "claimed",
+      status: "claimed" as const,
       tiktok_video_url: null,
     }));
     const { error } = await context.supabase.from("submissions").insert(rows);
