@@ -106,19 +106,19 @@ function LandingPage() {
               <div className="flex items-center -space-x-3">
                 <Link
                   to="/board"
-                  className="relative z-30 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-ink)] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-bs-paper)] shadow-[0_6px_0_rgba(13,13,13,0.35)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
+                  className="relative z-30 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-ink)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-bs-paper)] shadow-[0_4px_0_rgba(13,13,13,0.3)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
                 >
                   Open Bounty Board
                 </Link>
                 <Link
                   to="/list-sound"
-                  className="relative z-20 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-accent)] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-[0_6px_0_rgba(233,79,46,0.45)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
+                  className="relative z-20 inline-flex items-center justify-center rounded-full bg-[#6f7f5c] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-[0_4px_0_rgba(111,127,92,0.4)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
                 >
                   List a sound
                 </Link>
                 <Link
                   to="/how-it-works"
-                  className="relative z-10 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-paper)] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-bs-ink)] shadow-[0_6px_0_rgba(13,13,13,0.2)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
+                  className="relative z-10 inline-flex items-center justify-center rounded-full bg-[var(--color-bs-paper)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--color-bs-ink)] shadow-[0_4px_0_rgba(13,13,13,0.18)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5 hover:z-40"
                 >
                   How it works
                 </Link>
