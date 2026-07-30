@@ -18,19 +18,25 @@ export type Database = {
         Row: {
           artist_song: string | null
           contract_no: number
+          counting_days: number
           cover_url: string | null
           created_at: string
           created_by: string | null
           currency: string
           deadline: string | null
           description: string
+          featured_plus: boolean
+          featured_until: string | null
           funded_cash_cents: number
+          hashtags: string[]
           id: string
+          max_clips_per_editor: number
           max_submissions: number | null
           payout_type: Database["public"]["Enums"]["payout_type"]
           platform_target: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents: number
           reward_points: number
+          rules: string | null
           sound_name: string
           source_assets_url: string | null
           status: Database["public"]["Enums"]["bounty_status"]
@@ -43,19 +49,25 @@ export type Database = {
         Insert: {
           artist_song?: string | null
           contract_no?: number
+          counting_days?: number
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
           deadline?: string | null
           description: string
+          featured_plus?: boolean
+          featured_until?: string | null
           funded_cash_cents?: number
+          hashtags?: string[]
           id?: string
+          max_clips_per_editor?: number
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
           platform_target?: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents?: number
           reward_points?: number
+          rules?: string | null
           sound_name: string
           source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
@@ -68,19 +80,25 @@ export type Database = {
         Update: {
           artist_song?: string | null
           contract_no?: number
+          counting_days?: number
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
           deadline?: string | null
           description?: string
+          featured_plus?: boolean
+          featured_until?: string | null
           funded_cash_cents?: number
+          hashtags?: string[]
           id?: string
+          max_clips_per_editor?: number
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
           platform_target?: Database["public"]["Enums"]["platform_target"]
           reward_cash_cents?: number
           reward_points?: number
+          rules?: string | null
           sound_name?: string
           source_assets_url?: string | null
           status?: Database["public"]["Enums"]["bounty_status"]
@@ -91,6 +109,53 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      bounty_claims: {
+        Row: {
+          bounty_id: string
+          clip_url: string | null
+          copula_clip_id: string | null
+          copula_user_id: string | null
+          created_at: string
+          id: string
+          paid_cents: number
+          status: string
+          updated_at: string
+          verified_views: number
+        }
+        Insert: {
+          bounty_id: string
+          clip_url?: string | null
+          copula_clip_id?: string | null
+          copula_user_id?: string | null
+          created_at?: string
+          id?: string
+          paid_cents?: number
+          status?: string
+          updated_at?: string
+          verified_views?: number
+        }
+        Update: {
+          bounty_id?: string
+          clip_url?: string | null
+          copula_clip_id?: string | null
+          copula_user_id?: string | null
+          created_at?: string
+          id?: string
+          paid_cents?: number
+          status?: string
+          updated_at?: string
+          verified_views?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bounty_claims_bounty_id_fkey"
+            columns: ["bounty_id"]
+            isOneToOne: false
+            referencedRelation: "bounties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bounty_payments: {
         Row: {
@@ -290,7 +355,9 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          payout_preference: string | null
           points: number
+          signup_logged_at: string | null
           tiktok_handle: string | null
           updated_at: string
           wallet_address: string | null
@@ -300,7 +367,9 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          payout_preference?: string | null
           points?: number
+          signup_logged_at?: string | null
           tiktok_handle?: string | null
           updated_at?: string
           wallet_address?: string | null
@@ -310,7 +379,9 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          payout_preference?: string | null
           points?: number
+          signup_logged_at?: string | null
           tiktok_handle?: string | null
           updated_at?: string
           wallet_address?: string | null
@@ -325,12 +396,19 @@ export type Database = {
           created_at: string
           currency: string
           expires_at: string | null
+          featured_requested: boolean
+          featured_tier: string
+          hashtags: string | null
           id: string
           listed_at: string | null
+          listing_type: string
           notes: string | null
+          rules: string | null
           song_title: string
           spotify_url: string | null
           status: string
+          stream_at: string | null
+          stream_url: string | null
           stripe_checkout_session_id: string | null
           stripe_payment_intent_id: string | null
           tiktok_sound_url: string | null
@@ -344,12 +422,19 @@ export type Database = {
           created_at?: string
           currency?: string
           expires_at?: string | null
+          featured_requested?: boolean
+          featured_tier?: string
+          hashtags?: string | null
           id?: string
           listed_at?: string | null
+          listing_type?: string
           notes?: string | null
+          rules?: string | null
           song_title: string
           spotify_url?: string | null
           status?: string
+          stream_at?: string | null
+          stream_url?: string | null
           stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
           tiktok_sound_url?: string | null
@@ -363,12 +448,19 @@ export type Database = {
           created_at?: string
           currency?: string
           expires_at?: string | null
+          featured_requested?: boolean
+          featured_tier?: string
+          hashtags?: string | null
           id?: string
           listed_at?: string | null
+          listing_type?: string
           notes?: string | null
+          rules?: string | null
           song_title?: string
           spotify_url?: string | null
           status?: string
+          stream_at?: string | null
+          stream_url?: string | null
           stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
           tiktok_sound_url?: string | null
@@ -385,6 +477,7 @@ export type Database = {
           awarded_points: number
           bounty_id: string
           claimed_at: string
+          counting_ends_at: string | null
           created_at: string
           editor_id: string
           id: string
@@ -413,6 +506,7 @@ export type Database = {
           awarded_points?: number
           bounty_id: string
           claimed_at?: string
+          counting_ends_at?: string | null
           created_at?: string
           editor_id: string
           id?: string
@@ -441,6 +535,7 @@ export type Database = {
           awarded_points?: number
           bounty_id?: string
           claimed_at?: string
+          counting_ends_at?: string | null
           created_at?: string
           editor_id?: string
           id?: string
@@ -471,6 +566,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tax_profiles: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          country: string
+          created_at: string
+          id: string
+          legal_name: string
+          postal_code: string
+          region: string
+          tin: string
+          tin_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          country?: string
+          created_at?: string
+          id?: string
+          legal_name: string
+          postal_code: string
+          region: string
+          tin: string
+          tin_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          legal_name?: string
+          postal_code?: string
+          region?: string
+          tin?: string
+          tin_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tiktok_accounts: {
+        Row: {
+          created_at: string
+          handle: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          handle: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          handle?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

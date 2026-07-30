@@ -86,7 +86,7 @@ export const payBridgeClaim = createServerFn({ method: "POST" })
 
     const { notifyCopulaPayout } = await import("@/lib/copula.server");
     const notified = await notifyCopulaPayout({
-      copulaClipId: claim.copula_clip_id,
+      copulaClipId: claim.copula_clip_id ?? "",
       verifiedViews: data.verified_views,
       paidCents,
       idempotencyKey: claim.id,
