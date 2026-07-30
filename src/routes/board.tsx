@@ -39,6 +39,10 @@ type Bounty = Awaited<ReturnType<typeof listPublicBounties>>[number];
 function pad(n: number) {
   return n.toString().padStart(3, "0");
 }
+// Serial in the style of a note: district letter + 8 digits, star suffix on featured runs.
+function serial(n: number, star = false) {
+  return `B ${n.toString().padStart(8, "0")}${star ? " ★" : ""}`;
+}
 function money(cents: number, currency = "USD") {
   if (!cents) return null;
   return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
@@ -403,7 +407,9 @@ function ContractCard({
       <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
-          <span className="terminal text-[10px] text-ink-soft">ID: #{pad(b.contract_no)}</span>
+          <span className="terminal text-[9px] tracking-[0.15em] text-[var(--color-bs-accent)]">
+            {serial(b.contract_no, featured)}
+          </span>
         </div>
         {(b as any).funded_cash_cents > 0 ? (
           <span className="label-cap silver">
@@ -445,8 +451,10 @@ function ContractCard({
         <span className={`${badgeClass} text-center`}>{bl.text}</span>
       </div>
 
-      {/* Corner numerals, like a bill's denomination */}
-      <span aria-hidden className="terminal absolute bottom-2 left-3 text-[9px] text-ink-soft opacity-60">{pad(b.contract_no)}</span>
+      {/* Serial lower-left in green (like a note's second serial), numeral lower-right */}
+      <span aria-hidden className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80">
+        {serial(b.contract_no, featured)}
+      </span>
       <span aria-hidden className="terminal absolute bottom-2 right-3 text-[9px] text-ink-soft opacity-60">{pad(b.contract_no)}</span>
     </article>
   );
