@@ -50,12 +50,12 @@
   --color-ring: var(--gold);
   --color-ring-offset-background: var(--wall);
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-marker: "Permanent Marker", "Space Grotesk", ui-sans-serif, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
-  --font-script: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-terminal: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-script: "Caveat", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-terminal: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --color-bs-paper: #f5f3ee;
   --color-bs-paper-soft: #faf9f5;
