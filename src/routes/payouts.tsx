@@ -39,7 +39,7 @@ function PayoutsPage() {
           the contract.
         </h1>
         <p className="mx-auto mt-5 max-w-md text-lg text-bone-soft">
-          Every pot is funded before you claim. Every rate is printed before you post.
+          Every purse is posted before you claim. Every rate is printed before you post.
         </p>
         <InkScrawl className="mx-auto mt-6 w-56 opacity-70" />
       </section>
@@ -48,9 +48,9 @@ function PayoutsPage() {
         <Reveal>
           <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-3">
             <div className="border border-[var(--color-bs-rule)] bg-white p-6">
-              <h2 className="font-display text-2xl text-bone">The pot</h2>
+              <h2 className="font-display text-2xl text-bone">The purse</h2>
               <p className="mt-2 text-sm leading-relaxed text-bone-soft">
-                Whoever posts the contract funds it up front. The pot — and everything already
+                Whoever posts the bounty puts the purse up first. The purse — and everything already
                 paid from it — is public on the card.
               </p>
             </div>

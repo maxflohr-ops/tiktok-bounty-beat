@@ -343,7 +343,7 @@ function TopUpControl({ bountyId }: { bountyId: string }) {
 
   return (
     <div className="flex items-center gap-2 border-t border-[var(--border)] pt-2">
-      <span className="label-cap text-bone-soft">top up pot ($)</span>
+      <span className="label-cap text-bone-soft">top up purse ($)</span>
       <input
         type="number"
         min={1}

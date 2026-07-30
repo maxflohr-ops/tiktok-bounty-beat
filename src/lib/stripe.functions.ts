@@ -101,7 +101,7 @@ export const refreshConnectStatus = createServerFn({ method: "POST" })
     return updated;
   });
 
-// Staff: create a Stripe Checkout session to top up a bounty's cash pot.
+// Staff: create a Stripe Checkout session to top up a bounty's purse.
 export const createBountyTopUp = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
@@ -233,7 +233,7 @@ export const requestPayout = createServerFn({ method: "POST" })
       throw new Error("Editor has not connected a Stripe payout account.");
 
     if ((bounty.funded_cash_cents ?? 0) < amountCents)
-      throw new Error("Insufficient funds in the bounty pot.");
+      throw new Error("The purse can't cover this payout. Top it up first.");
 
     const { data: existing } = await context.supabase
       .from("payout_approvals")
@@ -357,9 +357,9 @@ export const approveAndSendPayout = createServerFn({ method: "POST" })
     }
     if ((bounty.funded_cash_cents ?? 0) < amountCents) {
       await context.supabase.from("payout_approvals").update({
-        status: "failed", error: "Insufficient funds in bounty pot at approval time.",
+        status: "failed", error: "Purse could not cover the payout at approval time.",
       }).eq("id", approval.id);
-      throw new Error("Insufficient funds in the bounty pot.");
+      throw new Error("The purse can't cover this payout. Top it up first.");
     }
 
     const { data: pm } = await context.supabase

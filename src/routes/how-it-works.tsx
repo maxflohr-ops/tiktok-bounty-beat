@@ -62,7 +62,7 @@ const STEPS = [
   {
     n: "01",
     title: "Claim",
-    body: "Pick a contract. Rate, pot, and deadline are printed on it before you commit.",
+    body: "Pick a bounty. Rate, purse, and deadline are printed on it before you commit.",
   },
   {
     n: "02",
@@ -165,7 +165,7 @@ function HowItWorksPage() {
       <section className="container-board pb-20 text-center">
         <InkCardinal accent className="mx-auto mb-4 w-28" />
         <p className="text-bone-soft">
-          Funding a campaign instead of clipping one?
+          Posting a bounty instead of clipping one?
         </p>
         <nav className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
           <Link to="/for-artists" className="underline underline-offset-4 hover:text-bone">For artists</Link>

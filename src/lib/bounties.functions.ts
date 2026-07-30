@@ -119,6 +119,36 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
   }));
 });
 
+// Aggregates only — no per-bounty money figures leave the server. Feeds the
+// ledger card (behind FLAGS.ledger; the UI also zero-guards on open_count).
+export const boardLedger = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: open } = await supabaseAdmin
+    .from("bounties")
+    .select("id,funded_cash_cents,deadline")
+    .eq("status", "active");
+  const live = (open ?? []).filter(
+    (b) => !b.deadline || new Date(b.deadline).getTime() > Date.now(),
+  );
+  const purses = live.map((b) => b.funded_cash_cents ?? 0);
+  const { data: lastPaid } = await supabaseAdmin
+    .from("submissions")
+    .select("paid_cash_cents,created_at")
+    .eq("status", "paid")
+    .gt("paid_cash_cents", 0)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return {
+    open_count: live.length,
+    total_purse_cents: purses.reduce((a, b) => a + b, 0),
+    largest_purse_cents: purses.length ? Math.max(...purses) : 0,
+    last_capture: lastPaid
+      ? { amount_cents: lastPaid.paid_cash_cents ?? 0, at: lastPaid.created_at }
+      : null,
+  };
+});
+
 const upsertBountyInput = z.object({
   id: z.string().uuid().optional(),
   title: z.string().trim().min(2).max(120),

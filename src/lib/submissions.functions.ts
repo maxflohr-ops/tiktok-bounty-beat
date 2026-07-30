@@ -516,7 +516,7 @@ export const markPaid = createServerFn({ method: "POST" })
         status: "paid",
         paid_at: new Date().toISOString(),
         // Record the amount: leaderboards, per-campaign paid totals, tax
-        // lifetime sums, and pot-coverage checks all read paid_cash_cents.
+        // lifetime sums, and purse-coverage checks all read paid_cash_cents.
         ...(target && !target.paid_cash_cents && target.awarded_cash_cents
           ? { paid_cash_cents: target.awarded_cash_cents }
           : {}),

@@ -98,7 +98,7 @@ export function MicroRule({ className = "" }: MarkProps) {
   return (
     <div aria-hidden className={`microrule ${className}`}>
       {Array.from({ length: 14 })
-        .map(() => "bounty sounds · verified views · funded pots · good to the bearer")
+        .map(() => "bounty sounds · verified views · posted purses · good to the bearer")
         .join(" · ")}
     </div>
   );

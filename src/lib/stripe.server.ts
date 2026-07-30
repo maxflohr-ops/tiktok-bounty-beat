@@ -58,7 +58,7 @@ export async function createCheckoutSession(params: {
         price_data: {
           currency: params.currency.toLowerCase(),
           unit_amount: params.amountCents,
-          product_data: { name: "Bounty pot top-up" },
+          product_data: { name: "Bounty purse top-up" },
         },
         quantity: 1,
       },
