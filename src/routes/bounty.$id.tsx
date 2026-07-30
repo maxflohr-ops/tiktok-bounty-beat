@@ -41,6 +41,8 @@ export const Route = createFileRoute("/bounty/$id")({
 });
 
 function pad(n: number) { return n.toString().padStart(3, "0"); }
+// Serial in the style of a note: district letter + 8 digits, star suffix on featured runs.
+function serial(n: number, star = false) { return `B ${n.toString().padStart(8, "0")}${star ? " ★" : ""}`; }
 function money(cents: number, currency = "USD") {
   if (!cents) return null;
   return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
@@ -161,6 +163,12 @@ function BountyDetail() {
         ? `${money(bounty.reward_cash_cents, bounty.currency)} per approved clip`
         : `${bounty.reward_points} pts per approved clip`;
 
+  // Star note: featured contracts carry the ★ suffix, like a replacement bill's serial.
+  const isStarNote = Boolean(
+    (bounty as any).featured_plus ||
+      ((bounty as any).featured_until && new Date((bounty as any).featured_until) > new Date()),
+  );
+
   return (
     <div className="relative min-h-screen">
       <div className="scanlines fixed inset-0 z-50 opacity-40" />
@@ -183,9 +191,17 @@ function BountyDetail() {
 
             <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
-                <span className="label-cap text-ink-soft">No. {pad(bounty.contract_no)}</span>
+                <span className="flex items-center gap-2">
+                  <span aria-hidden className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-[var(--ink)] font-display text-[11px] leading-none text-ink opacity-70">B</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
+                </span>
+                <span className="terminal text-[10px] tracking-[0.15em] text-[var(--color-bs-accent)]">
+                  {serial(bounty.contract_no, isStarNote)}
+                </span>
               </div>
+              <p className="mt-1 text-[7px] font-bold uppercase leading-tight tracking-[0.14em] text-ink-soft">
+                This contract is good for all verified views, public and posted
+              </p>
             </div>
 
             <h1 className="font-display text-3xl leading-tight text-ink md:text-4xl">{bounty.title}</h1>
@@ -350,6 +366,26 @@ function BountyDetail() {
             <p className="script-note mt-8 text-center text-base text-ink-soft">
               Good to the bearer for verified views — payable from the funded pot.
             </p>
+
+            {/* Series + signature, set like the officer pair on a note */}
+            <div className="mt-4 flex items-end justify-between">
+              <span className="terminal text-[8px] uppercase tracking-[0.14em] text-ink-soft">
+                Series
+                <br />
+                2026
+              </span>
+              <span className="text-right">
+                <span className="script-note block text-xl leading-none text-ink">Bounty Sounds</span>
+                <span className="block text-[8px] italic text-ink-soft">Keeper of the Pot.</span>
+              </span>
+            </div>
+
+            <span aria-hidden className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80">
+              {serial(bounty.contract_no, isStarNote)}
+            </span>
+            <span aria-hidden className="terminal absolute bottom-2 right-3 text-[8px] text-ink-soft opacity-50">
+              FW B 26
+            </span>
           </article>
 
           <aside className="board-frame relative p-5 md:p-6">
