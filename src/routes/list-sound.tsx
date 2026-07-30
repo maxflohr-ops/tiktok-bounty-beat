@@ -30,7 +30,14 @@ export const Route = createFileRoute("/list-sound")({
     ],
     links: [{ rel: "canonical", href: LIST_URL }],
   }),
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (
+    s: Record<string, unknown>,
+  ): {
+    success?: boolean;
+    cancelled?: boolean;
+    id?: string;
+    type?: "stream" | "keynote" | "podcast";
+  } => ({
     success: s.success === "1" || s.success === 1 ? true : undefined,
     cancelled: s.cancelled === "1" || s.cancelled === 1 ? true : undefined,
     id: typeof s.id === "string" ? s.id : undefined,
