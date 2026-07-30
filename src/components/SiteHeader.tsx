@@ -38,9 +38,6 @@ export function SiteHeader() {
         </Link>
         <nav className="flex flex-wrap items-center justify-center gap-1">
           <Link to="/board" className={navLink} activeProps={navActive}>board</Link>
-          {me?.isStaff ? (
-            <Link to="/admin" className={navLink} activeProps={navActive}>admin</Link>
-          ) : null}
           {loading ? null : user ? (
             <>
               <Link to="/dashboard" className={navLink} activeProps={navActive}>dashboard</Link>

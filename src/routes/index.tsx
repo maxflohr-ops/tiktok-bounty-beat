@@ -236,7 +236,10 @@ function LandingPage() {
         <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
           <InkSeal className="mb-1 w-24 opacity-70" />
           <span>Good to the bearer for verified views — payable from the funded pot.</span>
-          <span>© {new Date().getFullYear()} Bounty Sounds</span>
+          <span>
+            © {new Date().getFullYear()} Bounty Sounds ·{" "}
+            <Link to="/admin" className="opacity-60 hover:opacity-100">admin desk</Link>
+          </span>
         </div>
       </footer>
     </div>
