@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
 import { formatPerViewRate } from "@/lib/rate";
 import { BsEmpty, BsLoading } from "@/components/bs";
-import { InkCardinal } from "@/components/ArtMarks";
+import { GuillocheBand, InkCardinal } from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
@@ -110,6 +110,7 @@ function BoardPage() {
 
       <section className="container-board relative z-10 py-6">
         <div className="board-frame relative p-6 md:p-12">
+          <GuillocheBand className="absolute inset-x-6 top-1 opacity-[0.08]" />
           {/* Corner brackets */}
           <div className="corner-bracket absolute top-3 left-3 border-t-2 border-l-2" />
           <div className="corner-bracket absolute top-3 right-3 border-t-2 border-r-2" />
@@ -443,6 +444,10 @@ function ContractCard({
         <span className={dotClass} />
         <span className={`${badgeClass} text-center`}>{bl.text}</span>
       </div>
+
+      {/* Corner numerals, like a bill's denomination */}
+      <span aria-hidden className="terminal absolute bottom-2 left-3 text-[9px] text-ink-soft opacity-60">{pad(b.contract_no)}</span>
+      <span aria-hidden className="terminal absolute bottom-2 right-3 text-[9px] text-ink-soft opacity-60">{pad(b.contract_no)}</span>
     </article>
   );
 }

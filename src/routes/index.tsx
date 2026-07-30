@@ -6,7 +6,7 @@ import { formatPerViewRate } from "@/lib/rate";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
-import { InkCardinal, InkDogwood, InkSeal } from "@/components/ArtMarks";
+import { GuillocheRosette, InkCardinal, InkDogwood, InkSeal, MicroRule } from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
@@ -79,6 +79,7 @@ function LandingPage() {
         <SprayMark className="absolute -top-6 -left-10 rotate-[-14deg] text-[var(--color-bs-accent)]/70" />
         <SprayMark className="absolute -bottom-8 -right-8 rotate-[12deg] text-[var(--color-bs-ink)]/40" />
         <InkDogwood className="absolute -bottom-12 -left-6 w-56 rotate-[-4deg] opacity-[0.09] md:w-72" />
+        <GuillocheRosette className="absolute -right-24 top-1/3 w-80 opacity-[0.05] md:w-[26rem]" />
 
         <div className="container-board relative">
           <BsWell className="mx-auto max-w-4xl">
@@ -231,9 +232,10 @@ function LandingPage() {
       </section>
 
       <footer className="border-t border-[var(--border)]">
+        <MicroRule className="mx-auto max-w-3xl pt-2 text-center" />
         <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
           <InkSeal className="mb-1 w-24 opacity-70" />
-          <span>Every contract shows its pot, rate, and deadline before you claim.</span>
+          <span>Good to the bearer for verified views — payable from the funded pot.</span>
           <span>© {new Date().getFullYear()} Bounty Sounds</span>
         </div>
       </footer>

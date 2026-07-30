@@ -348,7 +348,7 @@ function BountyDetail() {
             </div>
 
             <p className="script-note mt-8 text-center text-base text-ink-soft">
-              Verified listing · escrow-backed pot.
+              Good to the bearer for verified views — payable from the funded pot.
             </p>
           </article>
 

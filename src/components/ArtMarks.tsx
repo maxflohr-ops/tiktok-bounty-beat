@@ -66,3 +66,40 @@ export function InkScrawl({ className = "" }: MarkProps) {
     />
   );
 }
+
+export function GuillocheRosette({ className = "" }: MarkProps) {
+  return (
+    <img
+      src="/art/guilloche-rosette.svg"
+      alt=""
+      aria-hidden
+      loading="lazy"
+      draggable={false}
+      className={`pointer-events-none select-none ${className}`}
+    />
+  );
+}
+
+export function GuillocheBand({ className = "" }: MarkProps) {
+  return (
+    <img
+      src="/art/guilloche-band.svg"
+      alt=""
+      aria-hidden
+      loading="lazy"
+      draggable={false}
+      className={`pointer-events-none h-10 w-full object-cover select-none ${className}`}
+    />
+  );
+}
+
+// Microprint: reads as a rule until you lean in — like the security text on a bill.
+export function MicroRule({ className = "" }: MarkProps) {
+  return (
+    <div aria-hidden className={`microrule ${className}`}>
+      {Array.from({ length: 14 })
+        .map(() => "bounty sounds · verified views · funded pots · good to the bearer")
+        .join(" · ")}
+    </div>
+  );
+}

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/Reveal";
-import { InkCardinal, InkScrawl } from "@/components/ArtMarks";
+import { GuillocheRosette, InkCardinal, InkScrawl } from "@/components/ArtMarks";
 
 const TITLE = "How It Works · Bounty Sounds";
 const DESC =
@@ -85,7 +85,8 @@ function HowItWorksPage() {
     <div className="relative min-h-screen">
       <SiteHeader />
 
-      <section className="container-board pt-16 pb-14 text-center md:pt-24">
+      <section className="container-board relative overflow-hidden pt-16 pb-14 text-center md:pt-24">
+        <GuillocheRosette className="absolute -right-28 top-6 w-80 opacity-[0.05]" />
         <p className="label-cap">How it works</p>
         <h1 className="mx-auto mt-4 max-w-2xl text-4xl leading-[1.05] md:text-6xl">
           Four steps.
