@@ -11,7 +11,7 @@ const URL = "https://bountysounds.com/how-it-works";
 const FAQ = [
   {
     q: "Can I clip from more than one TikTok account?",
-    a: "Yes. Add every account you post from on your dashboard — an account earns trusted status once a clip gets approved.",
+    a: "Yes — and you can claim up to 15 clip slots on one contract. An account earns trusted status once a clip gets approved.",
   },
   {
     q: "What if TikTok remaps my audio?",
@@ -22,8 +22,8 @@ const FAQ = [
     a: "No. If your clip earns verified views, it earns the rate.",
   },
   {
-    q: "When does the money move?",
-    a: "After review — views verified, payout approved, sent to your PayPal or USDC wallet.",
+    q: "When are views counted?",
+    a: "Each clip gets a counting window — usually 14 days from delivery. At the close, views are verified and the payout goes out pro-rata to your PayPal or USDC wallet.",
   },
 ];
 
@@ -76,7 +76,7 @@ const STEPS = [
   {
     n: "04",
     title: "Get paid",
-    body: "Views verified, payout approved, money lands in your PayPal or USDC wallet.",
+    body: "Your clip's counting window closes, views are verified, and the payout lands pro-rata.",
   },
 ];
 

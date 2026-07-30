@@ -26,16 +26,24 @@ export const paypalEmailSchema = z
 export const claimContractSchema = z.object({
   bounty_id: z.string().uuid(),
   tiktok_handle: tiktokHandleSchema,
-  paypal_email: paypalEmailSchema,
+  // Optional: an editor with a connected wallet can claim without PayPal.
+  paypal_email: paypalEmailSchema.optional().or(z.literal("").transform(() => undefined)),
+  // Clip slots reserved on this contract (site max 15 for now).
+  clips: z.number().int().min(1).max(15).default(1),
 });
 
 export type ClaimContractInput = z.infer<typeof claimContractSchema>;
 
 export type ClaimFieldErrors = { tiktok_handle?: string; paypal_email?: string };
 
-export function validateClaimFields(input: { tiktok_handle: string; paypal_email: string }) {
+export function validateClaimFields(input: { tiktok_handle: string; paypal_email: string; paypalOptional?: boolean }) {
   const result = z
-    .object({ tiktok_handle: tiktokHandleSchema, paypal_email: paypalEmailSchema })
+    .object({
+      tiktok_handle: tiktokHandleSchema,
+      paypal_email: input.paypalOptional
+        ? paypalEmailSchema.optional().or(z.literal("").transform(() => undefined))
+        : paypalEmailSchema,
+    })
     .safeParse(input);
   if (result.success) return { ok: true as const, data: result.data, errors: {} as ClaimFieldErrors };
   const errors: ClaimFieldErrors = {};

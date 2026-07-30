@@ -62,8 +62,8 @@ function PayoutsPage() {
             <div className="border border-[var(--color-bs-rule)] bg-white p-6">
               <h2 className="font-display text-2xl text-bone">The payout</h2>
               <p className="mt-2 text-sm leading-relaxed text-bone-soft">
-                After your views are verified and approved, money goes to your PayPal or the
-                USDC wallet on your profile. Your pick.
+                Each clip's views count for a set window — usually 14 days. At the close
+                they're verified and paid pro-rata to your PayPal or USDC wallet.
               </p>
             </div>
           </div>

@@ -9,7 +9,7 @@ export const getMe = createServerFn({ method: "GET" })
     const [{ data: profile }, { data: roles }, { data: tiktokAccounts }] = await Promise.all([
       context.supabase
         .from("profiles")
-        .select("id,display_name,tiktok_handle,avatar_url,points,wallet_address,signup_logged_at")
+        .select("id,display_name,tiktok_handle,avatar_url,points,wallet_address,payout_preference,signup_logged_at")
         .eq("id", context.userId)
         .maybeSingle(),
       context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
@@ -70,6 +70,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
           .regex(/^(0x[0-9a-fA-F]{40})?$/, "Enter a valid EVM address (0x…).")
           .transform((v) => v || null)
           .optional(),
+        payout_preference: z.enum(["paypal", "usdc"]).nullable().optional(),
       })
       .parse(d),
   )
@@ -80,6 +81,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
         display_name: data.display_name,
         tiktok_handle: data.tiktok_handle,
         ...(data.wallet_address !== undefined ? { wallet_address: data.wallet_address } : {}),
+        ...(data.payout_preference !== undefined ? { payout_preference: data.payout_preference } : {}),
       })
       .eq("id", context.userId);
     if (error) throw new Error(error.message);
@@ -184,4 +186,58 @@ export const recordAttribution = createServerFn({ method: "POST" })
       details: data,
     });
     return { ok: true };
+  });
+
+
+// ---- Tax info (W-9 style), required past the lifetime payout threshold ----
+// All access via service role: the client can submit but never read a TIN back.
+
+const taxInput = z.object({
+  legal_name: z.string().trim().min(2).max(160),
+  address_line1: z.string().trim().min(2).max(200),
+  address_line2: z.string().trim().max(200).optional().or(z.literal("").transform(() => undefined)),
+  city: z.string().trim().min(1).max(100),
+  region: z.string().trim().min(1).max(100),
+  postal_code: z.string().trim().min(3).max(20),
+  country: z.string().trim().length(2).default("US"),
+  tin: z.string().trim().regex(/^\d{9}$/, "Enter 9 digits, no dashes (SSN or EIN)."),
+  tin_type: z.enum(["ssn", "ein"]).default("ssn"),
+});
+
+export const submitTaxInfo = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => taxInput.parse(d))
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("tax_profiles")
+      .upsert({ user_id: context.userId, ...data, address_line2: data.address_line2 ?? null }, { onConflict: "user_id" });
+    if (error) throw new Error(error.message);
+    notifyAsync({
+      event: "tax.submitted",
+      actor: context.userId,
+      reference: data.legal_name,
+      details: { tin_type: data.tin_type, country: data.country }, // never the TIN itself
+    });
+    return { ok: true };
+  });
+
+// Lifetime earnings + whether tax info is on file. TIN is never returned.
+export const getTaxStatus = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { TAX_THRESHOLD_CENTS } = await import("@/lib/submissions.functions");
+    const [{ data: paidRows }, { data: tax }] = await Promise.all([
+      supabaseAdmin.from("submissions").select("paid_cash_cents").eq("editor_id", context.userId).gt("paid_cash_cents", 0),
+      supabaseAdmin.from("tax_profiles").select("legal_name,updated_at").eq("user_id", context.userId).maybeSingle(),
+    ]);
+    const lifetime_cents = (paidRows ?? []).reduce((t, r) => t + (r.paid_cash_cents ?? 0), 0);
+    return {
+      lifetime_cents,
+      threshold_cents: TAX_THRESHOLD_CENTS,
+      required: lifetime_cents > TAX_THRESHOLD_CENTS,
+      on_file: Boolean(tax),
+      legal_name: tax?.legal_name ?? null,
+    };
   });
