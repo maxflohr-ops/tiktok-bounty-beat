@@ -512,7 +512,15 @@ export const markPaid = createServerFn({ method: "POST" })
 
     const { error } = await context.supabase
       .from("submissions")
-      .update({ status: "paid", paid_at: new Date().toISOString() })
+      .update({
+        status: "paid",
+        paid_at: new Date().toISOString(),
+        // Record the amount: leaderboards, per-campaign paid totals, tax
+        // lifetime sums, and pot-coverage checks all read paid_cash_cents.
+        ...(target && !target.paid_cash_cents && target.awarded_cash_cents
+          ? { paid_cash_cents: target.awarded_cash_cents }
+          : {}),
+      })
       .eq("id", data.id)
       .eq("status", "approved");
     if (error) throw new Error(error.message);
