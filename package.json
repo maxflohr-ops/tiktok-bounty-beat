@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:smoke": "vitest run tests/board.smoke.test.ts",
+    "security:scan": "node scripts/security-scan.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {
