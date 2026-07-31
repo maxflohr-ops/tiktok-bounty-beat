@@ -14,6 +14,8 @@ import { Money } from "@/components/Money";
 import { formatPerViewRate } from "@/lib/rate";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
+import { soundLinks } from "@/lib/sound-links";
+
 import { ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -278,20 +280,32 @@ function BountyDetail() {
                 ) : (
                   <p className="mt-1 font-body italic text-ink-soft">provided on take</p>
                 )}
-                {bounty.tiktok_sound_url ? (
-                  <div className="mt-1">
-                    <a
-                      href={bounty.tiktok_sound_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-body font-semibold text-ink underline"
-                    >
-                      post with this exact sound <ExternalLink className="h-3 w-3" />
-                    </a>
+                {soundLinks(bounty as any).length > 0 ? (
+                  <div className="mt-3">
+                    <div className="label-cap text-ink-soft">Sound links</div>
+                    <ul className="mt-1 space-y-1">
+                      {soundLinks(bounty as any).map((l) => (
+                        <li key={l.platform}>
+                          <a
+                            href={l.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 font-body text-ink underline"
+                          >
+                            {l.label} <ExternalLink className="h-3 w-3" />
+                          </a>
+                          {!l.exact ? <span className="ml-1 text-xs text-ink-soft">auto-matched</span> : null}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-1 text-xs text-ink-soft">
+                      Post with this exact sound on whichever platform you're cutting for.
+                    </p>
                   </div>
                 ) : null}
               </div>
             </div>
+
 
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Clipper toolkit</div>
