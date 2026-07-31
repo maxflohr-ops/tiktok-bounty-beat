@@ -103,7 +103,13 @@ function BountyDetail() {
     const { validateClaimFields } = await import("@/lib/claim-validation");
     const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal, paypalOptional: Boolean(wallet) });
     setTouched({ tiktok_handle: true, paypal_email: true });
-    if (!check.ok) { setFieldErrors(check.errors); return; }
+    if (!check.ok) {
+      setFieldErrors(check.errors);
+      // The claim-more form renders no handle/paypal fields, so inline
+      // errors have nowhere to show — say it out loud instead.
+      if (myClaimsHere.length > 0) toast.error(check.message ?? "Check your handle and payout details.");
+      return;
+    }
     setFieldErrors({});
     setClaimBusy(true);
     try {
@@ -131,10 +137,11 @@ function BountyDetail() {
     try {
       const r = await deliverFn({ data: { submission_id: submissionId, clip_url: url } });
       const ends = (r as { counting_ends_at?: string | null }).counting_ends_at;
+      const stats = (r as { stats?: { views: number; likes: number | null; comments: number | null } | null }).stats;
       toast.success(
-        `Proof delivered${r.auto_check_passed ? " — auto-verified" : ""}. ${
-          ends ? `Counting window open until ${new Date(ends).toLocaleDateString()}.` : "Awaiting review."
-        }`,
+        `Proof delivered${r.auto_check_passed ? " — auto-verified" : ""}.${
+          stats ? ` ${stats.views.toLocaleString()} views on the clock.` : ""
+        } ${ends ? `Counting window open until ${new Date(ends).toLocaleDateString()}.` : "Awaiting review."}`,
       );
       setClipUrls((m) => ({ ...m, [submissionId]: "" }));
       setReplacing((m) => ({ ...m, [submissionId]: false }));
@@ -489,12 +496,18 @@ function BountyDetail() {
                       if (remaining <= 0)
                         return <p className="text-xs text-bone-soft">You hold the max of {maxClips} clips on this contract.</p>;
                       return (
-                        <form onSubmit={take} className="flex items-center justify-between gap-3 border border-[var(--border)] p-3">
-                          <SlotStepper value={clips} setValue={setClips} max={remaining} />
-                          <button type="submit" disabled={claimBusy || clips < 1} className="silver-btn disabled:opacity-60">
-                            {claimBusy ? "claiming…" : `claim ${clips} more`}
-                          </button>
-                        </form>
+                        <div className="border border-[var(--border)] p-3">
+                          <form onSubmit={take} className="flex items-center justify-between gap-3">
+                            <SlotStepper value={clips} setValue={setClips} max={remaining} />
+                            <button type="submit" disabled={claimBusy || clips < 1} className="silver-btn disabled:opacity-60">
+                              {claimBusy ? "claiming…" : `claim ${clips} more`}
+                            </button>
+                          </form>
+                          <p className="mt-2 text-xs text-bone-soft">
+                            Claiming reserves clip slots ({remaining} of {maxClips} left for you) — post whenever
+                            you're ready and drop each link above before the deadline.
+                          </p>
+                        </div>
                       );
                     })()}
 
@@ -601,7 +614,9 @@ function BountyDetail() {
                       </span>
                     </button>
                     <p className="text-center text-xs text-bone-soft">
-                      Each clip's views count for {(bounty as any).counting_days ?? 14} days after delivery, then pay out pro-rata.
+                      Taking the contract just reserves your clip slots — post whenever you're ready, then
+                      deliver each link here before the deadline. Views count for {(bounty as any).counting_days ?? 14} days
+                      after delivery, then pay out pro-rata.
                     </p>
                     <p className="script-note text-center text-lg text-bone-soft">
                       The Bounty Board keeps a record.

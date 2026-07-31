@@ -164,7 +164,7 @@ export const deliverProof = createServerFn({ method: "POST" })
     const bounty = (sub as unknown as {
       bounties: { platform_target: string; tiktok_sound_url: string | null; sound_name: string; hashtags?: string[] | null; counting_days?: number | null };
     }).bounties;
-    const { parseMusicId, handleFromAuthorUrl, musicIdInHtml } = await import("@/lib/tiktok-verify");
+    const { parseMusicId, handleFromAuthorUrl, musicIdInHtml, statsFromHtml } = await import("@/lib/tiktok-verify");
 
     const isTikTok = bounty?.platform_target === "tiktok" && TIKTOK_URL.test(data.clip_url);
     const oembed = isTikTok ? await fetchOembed(data.clip_url) : null;
@@ -196,12 +196,17 @@ export const deliverProof = createServerFn({ method: "POST" })
       }
     }
 
-    // Sound: compare the contract's music ID against the video page's music data.
+    // Sound + stats both live in the video page HTML, so one fetch serves both:
+    // compare the contract's music ID, and lift the clip's live counts.
     const wantMusicId = isTikTok ? parseMusicId(bounty?.tiktok_sound_url) : null;
     let soundOk: boolean | null = null;
-    if (wantMusicId) {
+    let stats: import("@/lib/tiktok-verify").ClipStats | null = null;
+    if (isTikTok) {
       const html = await fetchVideoHtml(data.clip_url);
-      soundOk = html ? musicIdInHtml(html, wantMusicId) : null;
+      if (html) {
+        if (wantMusicId) soundOk = musicIdInHtml(html, wantMusicId);
+        stats = statsFromHtml(html);
+      }
     }
     // No hard block on sound: TikTok remaps audio often enough that a
     // mismatch is a review flag, not a rejection. The site hashtag or any
@@ -244,6 +249,14 @@ export const deliverProof = createServerFn({ method: "POST" })
         auto_check_notes: notes,
         status: "submitted",
         submitted_at: new Date().toISOString(),
+        ...(stats
+          ? {
+              view_count: stats.views,
+              like_count: stats.likes,
+              comment_count: stats.comments,
+              stats_refreshed_at: new Date().toISOString(),
+            }
+          : {}),
         // The counting window opens on first delivery and never resets —
         // replacing a wrong link keeps the original clock.
         ...((sub as { counting_ends_at?: string | null }).counting_ends_at
@@ -272,7 +285,40 @@ export const deliverProof = createServerFn({ method: "POST" })
       .select("counting_ends_at")
       .eq("id", data.submission_id)
       .single();
-    return { ok: true, auto_check_passed: passed, counting_ends_at: after?.counting_ends_at ?? null };
+    return { ok: true, auto_check_passed: passed, counting_ends_at: after?.counting_ends_at ?? null, stats };
+  });
+
+// AUTO-COUNT — re-pull live view/like/comment counts off the clip's public
+// page, on the editor's request, for instant feedback. view_count remains the
+// editor-facing figure; payouts still come from the staff-verified count.
+export const refreshClipStats = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ submission_id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { data: sub } = await context.supabase
+      .from("submissions")
+      .select("editor_id,tiktok_video_url")
+      .eq("id", data.submission_id)
+      .single();
+    if (!sub || sub.editor_id !== context.userId) throw new Error("Not your claim.");
+    if (!sub.tiktok_video_url) throw new Error("Deliver a clip link first.");
+    if (!TIKTOK_URL.test(sub.tiktok_video_url)) throw new Error("Auto-count only works for TikTok links.");
+    const html = await fetchVideoHtml(sub.tiktok_video_url);
+    const { statsFromHtml } = await import("@/lib/tiktok-verify");
+    const stats = html ? statsFromHtml(html) : null;
+    if (!stats)
+      throw new Error("TikTok didn't show the counts (clip private, removed, or blocked) — enter views manually for now.");
+    const { error } = await context.supabase
+      .from("submissions")
+      .update({
+        view_count: stats.views,
+        like_count: stats.likes,
+        comment_count: stats.comments,
+        stats_refreshed_at: new Date().toISOString(),
+      })
+      .eq("id", data.submission_id);
+    if (error) throw new Error(error.message);
+    return { ok: true, ...stats };
   });
 
 export const updateViewCount = createServerFn({ method: "POST" })
@@ -329,7 +375,7 @@ export const verifyViewCount = createServerFn({ method: "POST" })
   });
 
 const SUB_COLS =
-  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,paypal_email,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at,counting_ends_at";
+  "id,bounty_id,editor_id,tiktok_video_url,tiktok_handle,paypal_email,oembed_title,oembed_author,oembed_thumbnail,auto_check_passed,auto_check_notes,status,awarded_points,awarded_cash_cents,paid_cash_cents,stripe_transfer_id,view_count,like_count,comment_count,stats_refreshed_at,review_notes,claimed_at,submitted_at,reviewed_at,paid_at,created_at,counting_ends_at";
 
 export const listMyClaims = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])

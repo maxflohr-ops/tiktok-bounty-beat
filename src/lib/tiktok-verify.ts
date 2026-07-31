@@ -17,6 +17,29 @@ export function handleFromAuthorUrl(authorUrl: string | null | undefined): strin
   return m ? m[1].toLowerCase() : null;
 }
 
+// The video page embeds engagement counts as "stats" (numbers) or "statsV2"
+// (strings). Pick the block that carries playCount — authorStats and music
+// stats blocks don't have it — and read the counts out of it.
+export type ClipStats = {
+  views: number;
+  likes: number | null;
+  comments: number | null;
+  shares: number | null;
+};
+
+export function statsFromHtml(html: string): ClipStats | null {
+  const blocks = html.match(/"stats(?:V2)?"\s*:\s*\{[^{}]*"playCount"[^{}]*\}/g);
+  if (!blocks || blocks.length === 0) return null;
+  const block = blocks[0];
+  const num = (name: string): number | null => {
+    const m = block.match(new RegExp(`"${name}"\\s*:\\s*"?(\\d+)"?`));
+    return m ? Number(m[1]) : null;
+  };
+  const views = num("playCount");
+  if (views === null) return null;
+  return { views, likes: num("diggCount"), comments: num("commentCount"), shares: num("shareCount") };
+}
+
 // Video page HTML embeds the music JSON. Only claim a definite verdict when the
 // page clearly carries music data; otherwise return null (unverifiable).
 export function musicIdInHtml(html: string, musicId: string): boolean | null {
