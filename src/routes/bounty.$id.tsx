@@ -14,6 +14,8 @@ import { Money } from "@/components/Money";
 import { formatPerViewRate } from "@/lib/rate";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
+import { soundLinks } from "@/lib/sound-links";
+
 import { ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
