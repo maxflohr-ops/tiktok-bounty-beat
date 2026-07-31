@@ -14,6 +14,7 @@ import { Route as TasteRouteImport } from './routes/taste'
 import { Route as PayoutsRouteImport } from './routes/payouts'
 import { Route as ListSoundRouteImport } from './routes/list-sound'
 import { Route as KeynotesRouteImport } from './routes/keynotes'
+import { Route as JoinRouteImport } from './routes/join'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as ForEditorsRouteImport } from './routes/for-editors'
 import { Route as ForArtistsRouteImport } from './routes/for-artists'
@@ -55,6 +56,11 @@ const ListSoundRoute = ListSoundRouteImport.update({
 const KeynotesRoute = KeynotesRouteImport.update({
   id: '/keynotes',
   path: '/keynotes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/payouts': typeof PayoutsRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/payouts': typeof PayoutsRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/payouts': typeof PayoutsRoute
@@ -224,6 +233,7 @@ export interface FileRouteTypes {
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
+    | '/join'
     | '/keynotes'
     | '/list-sound'
     | '/payouts'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
+    | '/join'
     | '/keynotes'
     | '/list-sound'
     | '/payouts'
@@ -271,6 +282,7 @@ export interface FileRouteTypes {
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
+    | '/join'
     | '/keynotes'
     | '/list-sound'
     | '/payouts'
@@ -296,6 +308,7 @@ export interface RootRouteChildren {
   ForArtistsRoute: typeof ForArtistsRoute
   ForEditorsRoute: typeof ForEditorsRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  JoinRoute: typeof JoinRoute
   KeynotesRoute: typeof KeynotesRoute
   ListSoundRoute: typeof ListSoundRoute
   PayoutsRoute: typeof PayoutsRoute
@@ -343,6 +356,13 @@ declare module '@tanstack/react-router' {
       path: '/keynotes'
       fullPath: '/keynotes'
       preLoaderRoute: typeof KeynotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -493,6 +513,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForArtistsRoute: ForArtistsRoute,
   ForEditorsRoute: ForEditorsRoute,
   HowItWorksRoute: HowItWorksRoute,
+  JoinRoute: JoinRoute,
   KeynotesRoute: KeynotesRoute,
   ListSoundRoute: ListSoundRoute,
   PayoutsRoute: PayoutsRoute,
