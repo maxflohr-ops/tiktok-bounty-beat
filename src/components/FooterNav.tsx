@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 // header can stay three doors wide without stranding any page.
 const LINKS = [
   { to: "/board", label: "board" },
+  { to: "/join", label: "join as a clipper" },
   { to: "/how-it-works", label: "how it works" },
   { to: "/payouts", label: "payouts" },
   { to: "/for-artists", label: "for artists" },
