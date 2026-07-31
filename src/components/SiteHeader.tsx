@@ -89,6 +89,7 @@ export function SiteHeader() {
         {/* Middle: three doors (desktop only) */}
         <nav className="hidden items-center gap-3 justify-self-center md:flex">
           <Link to="/board" className={navLink} activeProps={navActive}>Board</Link>
+          <Link to="/join" className={navLink} activeProps={navActive}>Join</Link>
           <Link to="/how-it-works" className={navLink} activeProps={navActive}>How it works</Link>
           <Link to="/payouts" className={navLink} activeProps={navActive}>Payouts</Link>
           <HeaderLedger />
