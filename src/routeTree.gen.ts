@@ -25,6 +25,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BountyIdRouteImport } from './routes/bounty.$id'
 import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
+import { Route as AuthenticatedStartRouteImport } from './routes/_authenticated/start'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -112,6 +113,11 @@ const AuthenticatedSubmitRoute = AuthenticatedSubmitRouteImport.update({
   path: '/submit',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStartRoute = AuthenticatedStartRouteImport.update({
+  id: '/start',
+  path: '/start',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/start': typeof AuthenticatedStartRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/analytics'
     | '/dashboard'
+    | '/start'
     | '/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/analytics'
     | '/dashboard'
+    | '/start'
     | '/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
@@ -291,6 +302,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/analytics'
     | '/_authenticated/dashboard'
+    | '/_authenticated/start'
     | '/_authenticated/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
@@ -435,6 +447,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSubmitRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/start': {
+      id: '/_authenticated/start'
+      path: '/start'
+      fullPath: '/start'
+      preLoaderRoute: typeof AuthenticatedStartRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -491,6 +510,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedStartRoute: typeof AuthenticatedStartRoute
   AuthenticatedSubmitRoute: typeof AuthenticatedSubmitRoute
 }
 
@@ -498,6 +518,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedStartRoute: AuthenticatedStartRoute,
   AuthenticatedSubmitRoute: AuthenticatedSubmitRoute,
 }
 
@@ -528,13 +549,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
