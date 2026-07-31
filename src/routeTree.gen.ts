@@ -14,6 +14,7 @@ import { Route as TasteRouteImport } from './routes/taste'
 import { Route as PayoutsRouteImport } from './routes/payouts'
 import { Route as ListSoundRouteImport } from './routes/list-sound'
 import { Route as KeynotesRouteImport } from './routes/keynotes'
+import { Route as JoinRouteImport } from './routes/join'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as ForEditorsRouteImport } from './routes/for-editors'
 import { Route as ForArtistsRouteImport } from './routes/for-artists'
@@ -24,6 +25,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BountyIdRouteImport } from './routes/bounty.$id'
 import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
+import { Route as AuthenticatedStartRouteImport } from './routes/_authenticated/start'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -55,6 +57,11 @@ const ListSoundRoute = ListSoundRouteImport.update({
 const KeynotesRoute = KeynotesRouteImport.update({
   id: '/keynotes',
   path: '/keynotes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
@@ -106,6 +113,11 @@ const AuthenticatedSubmitRoute = AuthenticatedSubmitRouteImport.update({
   path: '/submit',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStartRoute = AuthenticatedStartRouteImport.update({
+  id: '/start',
+  path: '/start',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -151,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/payouts': typeof PayoutsRoute
@@ -159,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -174,6 +188,7 @@ export interface FileRoutesByTo {
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/payouts': typeof PayoutsRoute
@@ -182,6 +197,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -199,6 +215,7 @@ export interface FileRoutesById {
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRoute
   '/keynotes': typeof KeynotesRoute
   '/list-sound': typeof ListSoundRoute
   '/payouts': typeof PayoutsRoute
@@ -207,6 +224,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/start': typeof AuthenticatedStartRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -224,6 +242,7 @@ export interface FileRouteTypes {
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
+    | '/join'
     | '/keynotes'
     | '/list-sound'
     | '/payouts'
@@ -232,6 +251,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/analytics'
     | '/dashboard'
+    | '/start'
     | '/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
@@ -247,6 +267,7 @@ export interface FileRouteTypes {
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
+    | '/join'
     | '/keynotes'
     | '/list-sound'
     | '/payouts'
@@ -255,6 +276,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/analytics'
     | '/dashboard'
+    | '/start'
     | '/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
@@ -271,6 +293,7 @@ export interface FileRouteTypes {
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
+    | '/join'
     | '/keynotes'
     | '/list-sound'
     | '/payouts'
@@ -279,6 +302,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/analytics'
     | '/_authenticated/dashboard'
+    | '/_authenticated/start'
     | '/_authenticated/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
@@ -296,6 +320,7 @@ export interface RootRouteChildren {
   ForArtistsRoute: typeof ForArtistsRoute
   ForEditorsRoute: typeof ForEditorsRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  JoinRoute: typeof JoinRoute
   KeynotesRoute: typeof KeynotesRoute
   ListSoundRoute: typeof ListSoundRoute
   PayoutsRoute: typeof PayoutsRoute
@@ -343,6 +368,13 @@ declare module '@tanstack/react-router' {
       path: '/keynotes'
       fullPath: '/keynotes'
       preLoaderRoute: typeof KeynotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/how-it-works': {
@@ -415,6 +447,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSubmitRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/start': {
+      id: '/_authenticated/start'
+      path: '/start'
+      fullPath: '/start'
+      preLoaderRoute: typeof AuthenticatedStartRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -471,6 +510,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedStartRoute: typeof AuthenticatedStartRoute
   AuthenticatedSubmitRoute: typeof AuthenticatedSubmitRoute
 }
 
@@ -478,6 +518,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedStartRoute: AuthenticatedStartRoute,
   AuthenticatedSubmitRoute: AuthenticatedSubmitRoute,
 }
 
@@ -493,6 +534,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForArtistsRoute: ForArtistsRoute,
   ForEditorsRoute: ForEditorsRoute,
   HowItWorksRoute: HowItWorksRoute,
+  JoinRoute: JoinRoute,
   KeynotesRoute: KeynotesRoute,
   ListSoundRoute: ListSoundRoute,
   PayoutsRoute: PayoutsRoute,
