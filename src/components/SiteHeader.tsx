@@ -120,6 +120,7 @@ export function SiteHeader() {
         <nav className="border-t border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] pb-2 md:hidden" aria-label="Site menu">
           {[
             { to: "/board", label: "Board" },
+            { to: "/join", label: "Join" },
             { to: "/how-it-works", label: "How it works" },
             { to: "/payouts", label: "Payouts" },
             { to: "/for-editors", label: "For editors" },
