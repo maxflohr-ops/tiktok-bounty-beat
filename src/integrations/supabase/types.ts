@@ -477,10 +477,12 @@ export type Database = {
           awarded_points: number
           bounty_id: string
           claimed_at: string
+          comment_count: number | null
           counting_ends_at: string | null
           created_at: string
           editor_id: string
           id: string
+          like_count: number | null
           oembed_author: string | null
           oembed_thumbnail: string | null
           oembed_title: string | null
@@ -490,6 +492,7 @@ export type Database = {
           review_notes: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          stats_refreshed_at: string | null
           status: Database["public"]["Enums"]["submission_status"]
           stripe_transfer_id: string | null
           submitted_at: string | null
@@ -506,10 +509,12 @@ export type Database = {
           awarded_points?: number
           bounty_id: string
           claimed_at?: string
+          comment_count?: number | null
           counting_ends_at?: string | null
           created_at?: string
           editor_id: string
           id?: string
+          like_count?: number | null
           oembed_author?: string | null
           oembed_thumbnail?: string | null
           oembed_title?: string | null
@@ -519,6 +524,7 @@ export type Database = {
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          stats_refreshed_at?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
           stripe_transfer_id?: string | null
           submitted_at?: string | null
@@ -535,10 +541,12 @@ export type Database = {
           awarded_points?: number
           bounty_id?: string
           claimed_at?: string
+          comment_count?: number | null
           counting_ends_at?: string | null
           created_at?: string
           editor_id?: string
           id?: string
+          like_count?: number | null
           oembed_author?: string | null
           oembed_thumbnail?: string | null
           oembed_title?: string | null
@@ -548,6 +556,7 @@ export type Database = {
           review_notes?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          stats_refreshed_at?: string | null
           status?: Database["public"]["Enums"]["submission_status"]
           stripe_transfer_id?: string | null
           submitted_at?: string | null
