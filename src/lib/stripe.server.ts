@@ -89,6 +89,18 @@ export async function createTransfer(params: {
   return { transferId: transfer.id };
 }
 
+// Available balance on the PLATFORM account for one currency, in cents.
+// Purse money must be sitting here for transfers to editors to succeed — if
+// the Stripe payout schedule is automatic, it drains to the linked bank and
+// this comes back short.
+export async function getAvailableBalance(currency: string): Promise<number> {
+  const stripe = getStripe();
+  const balance = await stripe.balance.retrieve();
+  return (
+    balance.available.find((b) => b.currency === currency.toLowerCase())?.amount ?? 0
+  );
+}
+
 export async function retrieveAccount(accountId: string) {
   const stripe = getStripe();
   return stripe.accounts.retrieve(accountId);

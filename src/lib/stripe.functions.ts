@@ -375,7 +375,22 @@ export const approveAndSendPayout = createServerFn({ method: "POST" })
       throw new Error("Editor has not connected a Stripe payout account.");
     }
 
-    const { createTransfer } = await import("@/lib/stripe.server");
+    const { createTransfer, getAvailableBalance } = await import("@/lib/stripe.server");
+
+    // The purse ledger says the bounty can cover it — now confirm the money is
+    // actually still sitting in the Stripe balance. If the account's payout
+    // schedule is automatic, escrowed funds drain to the linked bank and the
+    // transfer would bounce with a cryptic insufficient-funds error.
+    const available = await getAvailableBalance(bounty.currency);
+    if (available < amountCents) {
+      const msg =
+        `Stripe balance ($${(available / 100).toFixed(2)}) can't cover this payout ($${(amountCents / 100).toFixed(2)}). ` +
+        `Purse money has likely been swept to the bank account — set the Stripe payout schedule to manual ` +
+        `(Dashboard → Settings → Bank accounts and scheduling) and add funds back to the balance first.`;
+      await context.supabase.from("payout_approvals").update({ status: "failed", error: msg }).eq("id", approval.id);
+      throw new Error(msg);
+    }
+
     let transferId: string;
     try {
       const r = await createTransfer({
