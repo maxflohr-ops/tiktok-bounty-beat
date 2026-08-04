@@ -85,8 +85,9 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
     .neq("status", "draft")
     .eq("visibility", "public")
     .order("contract_no", { ascending: false });
-  if (error && /does not exist/i.test(error.message)) {
-    // Migrations lag the deploy: serve the board from the base columns
+  if (error && (/does not exist/i.test(error.message) || (error as any).code === "42703")) {
+    // Migrations lag the deploy: serve the board from the base columns and
+    // drop the visibility filter entirely (everything is public pre-migration)
     // rather than going dark.
     const retry = await supabaseAdmin
       .from("bounties")
