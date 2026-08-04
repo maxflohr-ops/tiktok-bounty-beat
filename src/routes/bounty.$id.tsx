@@ -482,8 +482,6 @@ function BountyDetail() {
                 <Lock className="h-3 w-3" /> private campaign — you're in
               </div>
             ) : null}
-            <div className="hidden">
-            </div>
             {!user ? (
               <>
                 <p className="mt-3 text-bone-soft">
