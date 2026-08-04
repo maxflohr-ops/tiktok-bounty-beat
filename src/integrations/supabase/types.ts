@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       bounties: {
         Row: {
+          access_mode: string | null
           artist_song: string | null
           contract_no: number
           counting_days: number
@@ -45,8 +46,10 @@ export type Database = {
           title: string
           top_up_session_id: string | null
           updated_at: string
+          visibility: string
         }
         Insert: {
+          access_mode?: string | null
           artist_song?: string | null
           contract_no?: number
           counting_days?: number
@@ -76,8 +79,10 @@ export type Database = {
           title: string
           top_up_session_id?: string | null
           updated_at?: string
+          visibility?: string
         }
         Update: {
+          access_mode?: string | null
           artist_song?: string | null
           contract_no?: number
           counting_days?: number
@@ -107,8 +112,56 @@ export type Database = {
           title?: string
           top_up_session_id?: string | null
           updated_at?: string
+          visibility?: string
         }
         Relationships: []
+      }
+      bounty_access: {
+        Row: {
+          bounty_id: string
+          created_at: string
+          decided_at: string | null
+          id: string
+          invited_email: string | null
+          message: string | null
+          status: string
+          tiktok_handle: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          bounty_id: string
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          invited_email?: string | null
+          message?: string | null
+          status?: string
+          tiktok_handle?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          bounty_id?: string
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          invited_email?: string | null
+          message?: string | null
+          status?: string
+          tiktok_handle?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bounty_access_bounty_id_fkey"
+            columns: ["bounty_id"]
+            isOneToOne: false
+            referencedRelation: "bounties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       bounty_claims: {
         Row: {
@@ -392,6 +445,7 @@ export type Database = {
         Row: {
           amount_cents: number
           artist_name: string
+          campaign_access: string
           contact_email: string
           created_at: string
           currency: string
@@ -418,6 +472,7 @@ export type Database = {
         Insert: {
           amount_cents?: number
           artist_name: string
+          campaign_access?: string
           contact_email: string
           created_at?: string
           currency?: string
@@ -444,6 +499,7 @@ export type Database = {
         Update: {
           amount_cents?: number
           artist_name?: string
+          campaign_access?: string
           contact_email?: string
           created_at?: string
           currency?: string

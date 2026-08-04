@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { listMyPrivateBounties } from "@/lib/access.functions";
 import { listMyClaims, updateViewCount } from "@/lib/submissions.functions";
 import { getMe, updateMyProfile, addTiktokAccount, removeTiktokAccount, getTaxStatus, submitTaxInfo } from "@/lib/me.functions";
 import { getMyPayoutMethod, connectStripeAccount, refreshConnectStatus } from "@/lib/stripe.functions";
@@ -87,6 +88,8 @@ function Dashboard() {
           </div>
 
           <PaymentSetup />
+
+          <MyPrivateCampaigns />
 
           {claims.length === 0 ? (
             <div className="mt-10">
@@ -740,5 +743,34 @@ function TikTokAccounts() {
         <button className="silver-btn" disabled={busy || handle.trim().length < 2}>add</button>
       </form>
     </div>
+  );
+}
+
+function MyPrivateCampaigns() {
+  const listFn = useServerFn(listMyPrivateBounties);
+  const { data = [] } = useQuery({ queryKey: ["myPrivateBounties"], queryFn: () => listFn() });
+  if (data.length === 0) return null;
+  return (
+    <section className="board-frame mt-8 p-5">
+      <div className="label-cap silver">private campaigns</div>
+      <h2 className="font-display mt-1 text-2xl text-bone">Invitations &amp; applications</h2>
+      <ul className="mt-3 divide-y divide-[var(--border)]">
+        {data.map((b: any) => (
+          <li key={b.id} className="flex items-center justify-between gap-3 py-3">
+            <div className="min-w-0">
+              <div className="truncate text-bone">{b.title}</div>
+              <div className="text-xs text-bone-soft">
+                {b.sound_name} · {b.access_status === "applied"
+                  ? "application pending"
+                  : b.access_status === "rejected"
+                    ? "not selected"
+                    : "you're in"}
+              </div>
+            </div>
+            <Link to="/bounty/$id" params={{ id: b.id }} className="silver-btn px-3 py-1 text-xs">open</Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

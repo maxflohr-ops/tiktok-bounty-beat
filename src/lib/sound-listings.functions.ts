@@ -48,6 +48,7 @@ const listingInput = z.object({
   hashtags: z.string().trim().max(400).optional().or(z.literal("").transform(() => undefined)),
   rules: z.string().trim().max(2000).optional().or(z.literal("").transform(() => undefined)),
   featured_tier: z.enum(["none", "featured", "featured_plus"]).default("none"),
+  campaign_access: z.enum(["public", "private_invite", "private_apply"]).default("public"),
   attribution: z
     .object({
       utm_source: z.string().max(200).optional(),
@@ -99,6 +100,7 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
         rules: data.rules ?? null,
         featured_requested: data.featured_tier !== "none",
         featured_tier: data.featured_tier,
+        campaign_access: data.campaign_access,
         amount_cents: LISTING_FEE_CENTS + FEATURED_TIER_CENTS[data.featured_tier],
         currency: "USD",
         status: "pending_payment",
@@ -150,6 +152,7 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
         sound_listing_id: listing.id,
         kind: "sound_listing",
         featured: data.featured_tier,
+        campaign_access: data.campaign_access,
         utm_source: data.attribution?.utm_source ?? "",
         utm_campaign: data.attribution?.utm_campaign ?? "",
       },
@@ -174,6 +177,7 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
         listing_id: listing.id,
         listing_type: data.listing_type,
         featured: data.featured_tier,
+        campaign_access: data.campaign_access,
         amount_cents: LISTING_FEE_CENTS + FEATURED_TIER_CENTS[data.featured_tier],
         tiktok_sound_url: data.tiktok_sound_url ?? null,
         spotify_url: data.spotify_url ?? null,
