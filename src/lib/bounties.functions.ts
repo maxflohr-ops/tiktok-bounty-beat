@@ -83,6 +83,7 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
     .from("bounties")
     .select(PUBLIC_BOUNTY_COLS)
     .neq("status", "draft")
+    .eq("visibility", "public")
     .order("contract_no", { ascending: false });
   if (error && /does not exist/i.test(error.message)) {
     // Migrations lag the deploy: serve the board from the base columns
