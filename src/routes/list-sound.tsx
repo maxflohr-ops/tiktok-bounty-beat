@@ -243,6 +243,32 @@ function ListSoundPage() {
                 </div>
 
                 <fieldset className="mt-6 border border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] p-4">
+                  <legend className="px-1 font-[var(--font-display)] text-sm font-semibold text-[var(--color-bs-ink)]">Campaign access</legend>
+                  {([
+                    { v: "public", label: "Public", sub: "Any verified editor can claim it." },
+                    { v: "private_invite", label: "Private — invite only", sub: "Only creators you invite can submit clips." },
+                    { v: "private_apply", label: "Private — creators apply", sub: "Editors pitch first; you approve who gets in." },
+                  ] as const).map((o) => (
+                    <label key={o.v} className="flex cursor-pointer items-start gap-3 py-2">
+                      <input
+                        type="radio"
+                        name="campaign-access"
+                        checked={campaignAccess === o.v}
+                        onChange={() => setCampaignAccess(o.v)}
+                        className="mt-1 h-4 w-4 accent-[var(--color-bs-accent)]"
+                      />
+                      <span>
+                        <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">{o.label}</span>
+                        <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">{o.sub}</span>
+                      </span>
+                    </label>
+                  ))}
+                  <p className="mt-1 border-t border-[var(--color-bs-rule)] pt-2 text-xs text-[var(--color-bs-ink-mute)]">
+                    Pricing is the same either way.
+                  </p>
+                </fieldset>
+
+                <fieldset className="mt-6 border border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] p-4">
                   <legend className="px-1 font-[var(--font-display)] text-sm font-semibold text-[var(--color-bs-ink)]">Placement</legend>
                   {([
                     { v: "none", label: "Standard listing", sub: "On the board with everything else." },
