@@ -73,6 +73,7 @@ function ListSoundPage() {
   const [hashtags, setHashtags] = useState("");
   const [rules, setRules] = useState("");
   const [featuredTier, setFeaturedTier] = useState<"none" | "featured" | "featured_plus">("none");
+  const [campaignAccess, setCampaignAccess] = useState<"public" | "private_invite" | "private_apply">("public");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -97,6 +98,7 @@ function ListSoundPage() {
           hashtags: hashtags || undefined,
           rules: rules || undefined,
           featured_tier: featuredTier,
+          campaign_access: campaignAccess,
           attribution: getAttribution() ?? undefined,
         },
       });
