@@ -213,6 +213,9 @@ export const upsertBounty = createServerFn({ method: "POST" })
       hashtags: data.hashtags,
       rules: data.rules,
       status: data.status,
+      visibility: data.visibility,
+      access_mode:
+        data.visibility === "private" ? (data.access_mode ?? "invite") : null,
       created_by: context.userId,
     };
     if (data.id) {
