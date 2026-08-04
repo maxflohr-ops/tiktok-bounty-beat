@@ -20,6 +20,8 @@ const LATE_COLUMN_DEFAULTS = {
   rules: null,
   counting_days: 14,
   max_clips_per_editor: 15,
+  visibility: "public",
+  access_mode: null,
 };
 
 // The launch contract, mirrored from migration 20260730100000. Lovable's
