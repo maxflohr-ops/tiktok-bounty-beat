@@ -181,6 +181,8 @@ const upsertBountyInput = z.object({
     .transform((arr) => [...new Set(arr.map((t) => t.replace(/^#/, "").toLowerCase()))]),
   rules: z.string().trim().max(2000).nullable().optional().transform((v) => v || null),
   status: z.enum(["draft", "active", "claimed", "in_review", "fulfilled", "expired", "closed"]).default("active"),
+  visibility: z.enum(["public", "private"]).default("public"),
+  access_mode: z.enum(["invite", "apply"]).nullable().optional(),
 });
 
 export const upsertBounty = createServerFn({ method: "POST" })
