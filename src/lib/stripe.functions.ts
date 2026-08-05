@@ -44,7 +44,17 @@ export const connectStripeAccount = createServerFn({ method: "POST" })
         .eq("id", context.userId)
         .maybeSingle();
       const email = (context.claims as { email?: string } | undefined)?.email ?? null;
-      const { accountId: newAccountId } = await createConnectAccount(context.userId, email);
+      let newAccountId: string;
+      try {
+        ({ accountId: newAccountId } = await createConnectAccount(context.userId, email));
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "";
+        if (/signed up for Connect/i.test(msg))
+          throw new Error(
+            "Stripe payouts aren't switched on for the platform yet — the crew has been flagged. PayPal payouts still work in the meantime.",
+          );
+        throw err;
+      }
       accountId = newAccountId;
       void profile;
     }
