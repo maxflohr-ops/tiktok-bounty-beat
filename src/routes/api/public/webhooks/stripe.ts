@@ -61,19 +61,26 @@ export const Route = createFileRoute("/api/public/webhooks/stripe")({
           } else {
             const { data: payment } = await supabaseAdmin
               .from("bounty_payments")
-              .select("id,bounty_id,amount_cents")
+              .select("id,bounty_id,amount_cents,status")
               .eq("stripe_checkout_session_id", session.id)
               .maybeSingle();
 
-            if (payment) {
-              await supabaseAdmin
-                .from("bounty_payments")
-                .update({
-                  status: "succeeded",
-                  stripe_payment_intent_id: session.payment_intent ?? null,
-                })
-                .eq("id", payment.id);
+            // Atomically claim the pending payment row. Stripe retries webhooks
+            // on timeouts — without this guard a retry would credit the purse twice.
+            const { data: claimed } = payment
+              ? await supabaseAdmin
+                  .from("bounty_payments")
+                  .update({
+                    status: "succeeded",
+                    stripe_payment_intent_id: session.payment_intent ?? null,
+                  })
+                  .eq("id", payment.id)
+                  .neq("status", "succeeded")
+                  .select("id")
+                  .maybeSingle()
+              : { data: null };
 
+            if (payment && claimed) {
               const { data: bountyRaw } = await supabaseAdmin
                 .from("bounties")
                 .select("*")

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { getMe } from "@/lib/me.functions";
-import { listMyClaims, deliverProof, updateViewCount } from "@/lib/submissions.functions";
+import { listMyClaims, deliverProof, updateViewCount, refreshClipStats } from "@/lib/submissions.functions";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { ExternalLink, Link2 } from "lucide-react";
 import { BsEmpty } from "@/components/bs";
@@ -43,6 +43,7 @@ function SubmitPage() {
   const bountiesFn = useServerFn(listPublicBounties);
   const deliverFn = useServerFn(deliverProof);
   const viewsFn = useServerFn(updateViewCount);
+  const statsFn = useServerFn(refreshClipStats);
 
   const { data: me } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
   const { data: claims = [], refetch } = useQuery({
@@ -125,6 +126,23 @@ function SubmitPage() {
       refetch();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not update.");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const autoCount = async (subId: string) => {
+    setBusyId(subId);
+    try {
+      const r = await statsFn({ data: { submission_id: subId } });
+      toast.success(
+        `${r.views.toLocaleString()} views` +
+          (r.likes != null ? ` · ${r.likes.toLocaleString()} likes` : "") +
+          (r.comments != null ? ` · ${r.comments.toLocaleString()} comments` : ""),
+      );
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not reach TikTok.");
     } finally {
       setBusyId(null);
     }
@@ -383,8 +401,20 @@ function SubmitPage() {
                           >
                             update
                           </button>
+                          <button
+                            type="button"
+                            disabled={busyId === c.id}
+                            onClick={() => autoCount(c.id)}
+                            className="silver-btn"
+                            title="Pull live counts straight off the TikTok page"
+                          >
+                            {busyId === c.id ? "counting…" : "auto-count from TikTok"}
+                          </button>
                           <span className="text-xs text-bone-soft">
-                            logged: {(c.view_count ?? 0).toLocaleString()}
+                            logged: {(c.view_count ?? 0).toLocaleString()} views
+                            {c.like_count != null ? ` · ${Number(c.like_count).toLocaleString()} likes` : ""}
+                            {c.comment_count != null ? ` · ${Number(c.comment_count).toLocaleString()} comments` : ""}
+                            {c.stats_refreshed_at ? ` · counted ${new Date(c.stats_refreshed_at).toLocaleDateString()}` : ""}
                           </span>
                         </div>
                       ) : null}

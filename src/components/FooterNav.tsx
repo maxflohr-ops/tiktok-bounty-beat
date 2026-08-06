@@ -12,6 +12,7 @@ const LINKS = [
   { to: "/keynotes", label: "keynotes" },
   { to: "/clipping-campaigns", label: "clipping campaigns" },
   { to: "/tiktok-clipper", label: "tiktok clippers" },
+  { to: "/clipping-teams", label: "clipping teams" },
   { to: "/list-sound", label: "list a sound" },
 ] as const;
 

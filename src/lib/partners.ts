@@ -43,6 +43,20 @@ export const PARTNERS: Record<string, Partner> = {
     url: "https://riverside.fm",
     affiliateUrl: null, // affiliate program on their site — paste the tracking URL once approved
   },
+  clipping: {
+    name: "Clipping.net",
+    blurb: "more paid campaigns — join our clipping team",
+    url: "https://clipping.net/auth/login?ref=TGWX7EfXTb",
+    // The URL *is* the team/referral link — overrides on team earnings.
+    affiliateUrl: "https://clipping.net/auth/login?ref=TGWX7EfXTb",
+  },
+  discord: {
+    name: "Bounty Clips and Sounds",
+    blurb: "bounty pings, payout receipts, clipper chat",
+    url: "https://discord.gg/cZjkwrh7T5",
+    affiliateUrl: null,
+    kit: false, // linked from /clipping-teams and the community blocks, not the toolkit
+  },
   // Not a clipper tool: the quiet upstream funnel for campaigns bigger than a
   // board listing. Linked from the funder-facing pages only.
   florra: {

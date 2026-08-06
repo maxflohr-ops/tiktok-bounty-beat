@@ -14,9 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
-      VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+      # Fallbacks are the public client-side Supabase config (shipped in the
+      # site bundle) — repo secrets of the same name override them if set.
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://abvqcdiutahxfkruxidk.supabase.co' }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_WPo2DNkpff9D9K03tW5wxA_bdypdsWB' }}
+      VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID || 'abvqcdiutahxfkruxidk' }}
+      # Server-side vars: the URL is public; the service-role key is a real
+      # secret — the smoke test runs its data assertions only when it's set.
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://abvqcdiutahxfkruxidk.supabase.co' }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       SMOKE_BASE_URL: http://localhost:8080
     steps:
       - uses: actions/checkout@v4

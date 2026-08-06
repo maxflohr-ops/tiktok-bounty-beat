@@ -40,13 +40,25 @@ export function LandingLayout({
             {intro}
           </p>
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              to={primaryHref}
-              className="bs-btn"
-              onClick={primaryReturnTo ? () => setReturnTo(primaryReturnTo) : undefined}
-            >
-              {primaryCta}
-            </Link>
+            {/* /api/ and absolute URLs leave the SPA — the router Link can't take them. */}
+            {/^(https?:\/\/|\/api\/)/.test(primaryHref) ? (
+              <a
+                href={primaryHref}
+                target="_blank"
+                rel="sponsored noopener noreferrer"
+                className="bs-btn"
+              >
+                {primaryCta}
+              </a>
+            ) : (
+              <Link
+                to={primaryHref}
+                className="bs-btn"
+                onClick={primaryReturnTo ? () => setReturnTo(primaryReturnTo) : undefined}
+              >
+                {primaryCta}
+              </Link>
+            )}
             {secondaryCta && secondaryHref ? (
               <Link to={secondaryHref} className="bs-btn bs-btn-ghost">
                 {secondaryCta}
