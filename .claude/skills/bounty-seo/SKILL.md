@@ -53,6 +53,7 @@ plus a DataForSEO key; everything below works without them.
 | `/tiktok-clipper` | become a tiktok clipper, tiktok clipper jobs |
 | `/keynotes` | keynote clipping campaign, clip keynote speech |
 | `/list-sound` | promote my song on tiktok (transactional) |
+| `/clipping-teams` | join a clipping team, clipping discord |
 
 ## When live data is wanted
 

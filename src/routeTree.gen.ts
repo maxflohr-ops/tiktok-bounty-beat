@@ -17,6 +17,7 @@ import { Route as KeynotesRouteImport } from './routes/keynotes'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as ForEditorsRouteImport } from './routes/for-editors'
 import { Route as ForArtistsRouteImport } from './routes/for-artists'
+import { Route as ClippingTeamsRouteImport } from './routes/clipping-teams'
 import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -70,6 +71,11 @@ const ForEditorsRoute = ForEditorsRouteImport.update({
 const ForArtistsRoute = ForArtistsRouteImport.update({
   id: '/for-artists',
   path: '/for-artists',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClippingTeamsRoute = ClippingTeamsRouteImport.update({
+  id: '/clipping-teams',
+  path: '/clipping-teams',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClippingCampaignsRoute = ClippingCampaignsRouteImport.update({
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
+  '/clipping-teams': typeof ClippingTeamsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
+  '/clipping-teams': typeof ClippingTeamsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -196,6 +204,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
+  '/clipping-teams': typeof ClippingTeamsRoute
   '/for-artists': typeof ForArtistsRoute
   '/for-editors': typeof ForEditorsRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -221,6 +230,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/board'
     | '/clipping-campaigns'
+    | '/clipping-teams'
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
@@ -244,6 +254,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/board'
     | '/clipping-campaigns'
+    | '/clipping-teams'
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/board'
     | '/clipping-campaigns'
+    | '/clipping-teams'
     | '/for-artists'
     | '/for-editors'
     | '/how-it-works'
@@ -293,6 +305,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BoardRoute: typeof BoardRoute
   ClippingCampaignsRoute: typeof ClippingCampaignsRoute
+  ClippingTeamsRoute: typeof ClippingTeamsRoute
   ForArtistsRoute: typeof ForArtistsRoute
   ForEditorsRoute: typeof ForEditorsRoute
   HowItWorksRoute: typeof HowItWorksRoute
@@ -371,6 +384,13 @@ declare module '@tanstack/react-router' {
       path: '/clipping-campaigns'
       fullPath: '/clipping-campaigns'
       preLoaderRoute: typeof ClippingCampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clipping-teams': {
+      id: '/clipping-teams'
+      path: '/clipping-teams'
+      fullPath: '/clipping-teams'
+      preLoaderRoute: typeof ClippingTeamsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/board': {
@@ -490,6 +510,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BoardRoute: BoardRoute,
   ClippingCampaignsRoute: ClippingCampaignsRoute,
+  ClippingTeamsRoute: ClippingTeamsRoute,
   ForArtistsRoute: ForArtistsRoute,
   ForEditorsRoute: ForEditorsRoute,
   HowItWorksRoute: HowItWorksRoute,
