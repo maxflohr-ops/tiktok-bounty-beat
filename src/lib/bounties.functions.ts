@@ -24,65 +24,67 @@ const LATE_COLUMN_DEFAULTS = {
   access_mode: null,
 };
 
-// The launch contract, mirrored from migration 20260730100000. Lovable's
-// publish has skipped git-synced migration files before, so the server also
-// seeds it when the board is empty — same idempotence key (the title), base
-// columns only so it inserts on any schema vintage.
-const EBRIL_SEED = {
-  title: "Clip Ebril's Thursday Twitch stream",
-  description:
-    "Ebril goes live on Twitch every Thursday. Cut the stream's best moments into vertical clips and post them to TikTok — best reactions, best runs, best lines. $5 per 5,000 verified views. Keep Ebril's voice front and center. 9:16 only, subtitles encouraged. Clips from the live stream or its VOD both count.",
-  sound_name: "Ebril — live on Twitch (Thursdays)",
-  artist_song: "Ebril",
-  source_assets_url: "https://twitch.tv/ebbionline",
-  payout_type: "per_1k_views" as const,
-  platform_target: "tiktok" as const,
-  reward_cash_cents: 10000,
-  reward_points: 100,
-  max_submissions: 20,
-  deadline: "2026-08-13T23:59:00Z",
-  status: "active" as const,
-};
+// Launch contracts, mirrored from their seed migrations. Lovable's publish
+// has skipped git-synced migration files before, so the server also ensures
+// each one exists - same idempotence key (the title), base columns only so
+// the inserts work on any schema vintage. A seed whose posting window has
+// closed is skipped (an empty board after the deadline is the truth), and a
+// row that exists in ANY status is left alone - staff drafting sticks.
+const LAUNCH_SEEDS = [
+  {
+    title: "Clip Ebril's Thursday Twitch stream",
+    description:
+      "Ebril goes live on Twitch every Thursday. Cut the stream's best moments into vertical clips and post them to TikTok — best reactions, best runs, best lines. $5 per 5,000 verified views. Keep Ebril's voice front and center. 9:16 only, subtitles encouraged. Clips from the live stream or its VOD both count.",
+    sound_name: "Ebril — live on Twitch (Thursdays)",
+    artist_song: "Ebril",
+    source_assets_url: "https://twitch.tv/ebbionline",
+    payout_type: "per_1k_views" as const,
+    platform_target: "tiktok" as const,
+    reward_cash_cents: 10000,
+    reward_points: 100,
+    max_submissions: 20,
+    deadline: "2026-08-13T23:59:00Z",
+    status: "active" as const,
+  },
+  {
+    title: "Clip Ridgeclub — Biting Bullets",
+    description:
+      'Cut a TikTok on Ridgeclub\'s "Biting Bullets." $2 per 100,000 verified views — a 5M-view video captures the full $100 purse, and views stack across your clips, so two 2.5M clips cash the same. 9:16 only, subtitles encouraged, use the sound.',
+    sound_name: "Ridgeclub — Biting Bullets",
+    artist_song: "Ridgeclub",
+    payout_type: "per_1k_views" as const,
+    platform_target: "tiktok" as const,
+    reward_cash_cents: 200, // $2 per 100k ≡ $100 per 5M views
+    reward_points: 100,
+    max_submissions: 20,
+    deadline: "2026-09-08T23:59:00Z",
+    status: "active" as const,
+    funded_cash_cents: 10000, // the $100 purse
+  },
+];
 
-async function seedBoardIfEmpty(supabaseAdmin: any) {
-  // The seed's posting window is over: an empty board after the deadline is
-  // the truth, not a bug. Never insert or reactivate a bounty nobody can
-  // deliver to - and never fight staff drafting after the window.
-  if (new Date(EBRIL_SEED.deadline).getTime() < Date.now()) return;
-  // Emptiness = what the board shows: zero non-draft rows. A lone draft row
-  // must not block seeding.
-  const { count, error } = await supabaseAdmin
-    .from("bounties")
-    .select("id", { count: "exact", head: true })
-    .neq("status", "draft");
-  if (error) {
-    console.error("seedBoardIfEmpty count failed:", error.message);
-    return;
-  }
-  if ((count ?? 0) > 0) return;
-  // The row may exist but be drafted — reactivate it (mirrors the seed
-  // migration's UPDATE) instead of inserting a duplicate.
-  const { data: existing } = await supabaseAdmin
-    .from("bounties")
-    .select("id,status")
-    .eq("title", EBRIL_SEED.title)
-    .maybeSingle();
-  if (existing) {
-    const { error: updateError } = await supabaseAdmin
+async function ensureLaunchBounties(supabaseAdmin: any) {
+  for (const seed of LAUNCH_SEEDS) {
+    if (new Date(seed.deadline).getTime() < Date.now()) continue;
+    const { data: existing, error: lookupError } = await supabaseAdmin
       .from("bounties")
-      .update({ status: "active" })
-      .eq("id", existing.id);
-    if (updateError) console.error("seedBoardIfEmpty reactivate failed:", updateError.message);
-    return;
+      .select("id")
+      .eq("title", seed.title)
+      .maybeSingle();
+    if (lookupError) {
+      console.error("ensureLaunchBounties lookup failed:", lookupError.message);
+      continue;
+    }
+    if (existing) continue;
+    const { error: insertError } = await supabaseAdmin.from("bounties").insert(seed);
+    if (insertError) console.error("ensureLaunchBounties insert failed:", seed.title, insertError.message);
   }
-  const { error: insertError } = await supabaseAdmin.from("bounties").insert(EBRIL_SEED);
-  if (insertError) console.error("seedBoardIfEmpty insert failed:", insertError.message);
 }
 
 // Public: all bounties (any status) — the board never deletes, expired stays visible.
 export const listPublicBounties = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  await seedBoardIfEmpty(supabaseAdmin);
+  await ensureLaunchBounties(supabaseAdmin);
   let { data: bounties, error } = await supabaseAdmin
     .from("bounties")
     .select(PUBLIC_BOUNTY_COLS)
