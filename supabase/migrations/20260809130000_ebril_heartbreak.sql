@@ -2,14 +2,15 @@
 -- line as the stream bounty ($100 per 1M, one 2.5M video -> $250), $500
 -- purse, through year end. Sound URL attaches at release. Idempotent by title.
 INSERT INTO public.bounties
-  (title, description, sound_name, artist_song,
+  (title, description, sound_name, artist_song, tiktok_sound_url,
    payout_type, platform_target, reward_cash_cents, reward_points,
    max_submissions, deadline, status, funded_cash_cents)
 SELECT
   'Clip Ebril — Anticipate Heartbreak',
-  'Ebril''s next drop. Seize a slot now — the moment "Anticipate Heartbreak" lands on TikTok, cut your clip on it and deliver. Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound once it''s live (link lands on this contract at release).',
-  'Ebril — Anticipate Heartbreak (drops soon)',
+  'Cut a TikTok on Ebril''s "Anticipate Heartbreak." Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound.',
+  'Ebril — Anticipate Heartbreak',
   'Ebril',
+  'https://www.tiktok.com/music/original-sound-7597916391358024503',
   'per_1k_views',
   'tiktok',
   10000,
