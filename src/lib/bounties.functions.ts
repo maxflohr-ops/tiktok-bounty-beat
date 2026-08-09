@@ -48,6 +48,21 @@ const LAUNCH_SEEDS = [
     funded_cash_cents: 50000, // the $500 purse — covers the $250 single-video tier twice over
   },
   {
+    title: "Clip Ebril — Heartbreak",
+    description:
+      "Ebril's next drop. Seize a slot now — the moment \"Heartbreak\" lands on TikTok, cut your clip on it and deliver. Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound once it's live (link lands on this contract at release).",
+    sound_name: "Ebril — Heartbreak (drops soon)",
+    artist_song: "Ebril",
+    payout_type: "per_1k_views" as const,
+    platform_target: "tiktok" as const,
+    reward_cash_cents: 10000, // $100 per 1M, same tier line as the stream bounty
+    reward_points: 100,
+    max_submissions: 20,
+    deadline: "2026-12-31T23:59:00Z",
+    status: "active" as const,
+    funded_cash_cents: 50000, // the $500 purse
+  },
+  {
     title: "Clip Ridgeclub — Biting Bullets",
     description:
       'Cut a TikTok on Ridgeclub\'s "Biting Bullets." $2 per 100,000 verified views — a 5M-view video captures the full $100 purse, and views stack across your clips, so two 2.5M clips cash the same. 9:16 only, subtitles encouraged, use the sound.',
