@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { subscribeBoardAlerts } from "@/lib/alerts.functions";
 import { toast } from "sonner";
@@ -10,6 +10,10 @@ export function NotifyForm({ accountEmail }: { accountEmail: string | null }) {
   const [email, setEmail] = useState(accountEmail ?? "");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  // Session can resolve after mount - keep the one-click prefill honest.
+  useEffect(() => {
+    if (accountEmail) setEmail((e) => e || accountEmail);
+  }, [accountEmail]);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);

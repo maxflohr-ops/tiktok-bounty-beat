@@ -13,9 +13,9 @@ plus a DataForSEO key; everything below works without them.
 ## Content principles (from openseo-review-web-content, adopted wholesale)
 
 1. **Traceable truth.** Every claim on the site must be verifiable against the
-   product: "funded pots" must be labeled in the UI, "checked deliveries" must
+   product: "posted purses" must be labeled in the UI, "checked deliveries" must
    match the verification code in `src/lib/submissions.functions.ts`,
-   "PayPal, Stripe, or USDC" must match the actual payout paths. If you can't
+   "PayPal or USDC" must match the actual payout paths. If you can't
    point to where it's true, it doesn't ship.
 2. **Lead with the real answer.** FAQ answers open with the answer, including
    when it's "no" or "it costs $200."
