@@ -376,6 +376,24 @@ function BountyDetail() {
                     </p>
                   </div>
                 ) : null}
+                <div className="mt-3">
+                  <div className="label-cap text-ink-soft">Campaign logo</div>
+                  <p className="mt-1 text-xs text-ink-soft">
+                    Every delivered clip must carry the campaign logo overlay.
+                  </p>
+                  {(bounty as any).logo_pack_url ? (
+                    <a
+                      href={(bounty as any).logo_pack_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 inline-flex items-center gap-1 font-body text-ink underline"
+                    >
+                      download the logo pack <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : (
+                    <p className="mt-1 font-body text-xs italic text-ink-soft">logo pack link landing here shortly</p>
+                  )}
+                </div>
               </div>
             </div>
 
