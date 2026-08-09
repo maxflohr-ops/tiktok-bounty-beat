@@ -33,7 +33,7 @@ const LATE_COLUMN_DEFAULTS = {
 // row that exists in ANY status is left alone - staff drafting sticks.
 const LAUNCH_SEEDS = [
   {
-    title: "Clip Ebril's Thursday Twitch stream",
+    title: "Ebril's Thursday Twitch stream",
     description:
       "Ebril goes live on Twitch every Thursday. Cut the stream's best moments into vertical clips and post them to TikTok — best reactions, best runs, best lines. Tiered payout: 1M verified views on TikTok pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. Keep Ebril's voice front and center. 9:16 only, subtitles encouraged. Clips from the live stream or its VOD both count.",
     sound_name: "Ebril — live on Twitch (Thursdays)",
@@ -51,7 +51,7 @@ const LAUNCH_SEEDS = [
     logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
-    title: "Clip Ebril — Anticipate Heartbreak",
+    title: "Ebril — Anticipate Heartbreak",
     description:
       "Cut a TikTok on Ebril's \"Anticipate Heartbreak.\" Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound.",
     sound_name: "Ebril — Anticipate Heartbreak",
@@ -69,7 +69,7 @@ const LAUNCH_SEEDS = [
     logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
-    title: "Clip Sons of Legion — Any Song, Any Edit",
+    title: "Sons of Legion — Any Song, Any Edit",
     description:
       "Any Sons of Legion song, any style of edit — gameplay, lyrics, montage, whatever hits. #maddenlegion in the caption. $1 per 5,000 verified views, paid pro-rata, and views stack across your clips. 9:16 only.",
     sound_name: "Sons of Legion — any song, any edit",
@@ -87,7 +87,7 @@ const LAUNCH_SEEDS = [
     logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
-    title: "Clip Ridgeclub — Biting Bullets",
+    title: "Ridgeclub — Biting Bullets",
     description:
       'Cut a TikTok on Ridgeclub\'s "Biting Bullets." $2 per 100,000 verified views — a 5M-view video captures the full $100 purse, and views stack across your clips, so two 2.5M clips cash the same. 9:16 only, subtitles encouraged, use the sound.',
     sound_name: "Ridgeclub — Biting Bullets",
