@@ -52,6 +52,7 @@ const LAUNCH_SEEDS = [
       'Cut a TikTok on Ridgeclub\'s "Biting Bullets." $2 per 100,000 verified views — a 5M-view video captures the full $100 purse, and views stack across your clips, so two 2.5M clips cash the same. 9:16 only, subtitles encouraged, use the sound.',
     sound_name: "Ridgeclub — Biting Bullets",
     artist_song: "Ridgeclub",
+    tiktok_sound_url: "https://www.tiktok.com/music/original-sound-7653102138111052552",
     payout_type: "per_1k_views" as const,
     platform_target: "tiktok" as const,
     reward_cash_cents: 200, // $2 per 100k ≡ $100 per 5M views
