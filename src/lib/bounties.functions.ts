@@ -50,9 +50,10 @@ const LAUNCH_SEEDS = [
   {
     title: "Clip Ebril — Anticipate Heartbreak",
     description:
-      "Ebril's next drop. Seize a slot now — the moment \"Anticipate Heartbreak\" lands on TikTok, cut your clip on it and deliver. Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound once it's live (link lands on this contract at release).",
-    sound_name: "Ebril — Anticipate Heartbreak (drops soon)",
+      "Cut a TikTok on Ebril's \"Anticipate Heartbreak.\" Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound.",
+    sound_name: "Ebril — Anticipate Heartbreak",
     artist_song: "Ebril",
+    tiktok_sound_url: "https://www.tiktok.com/music/original-sound-7597916391358024503",
     payout_type: "per_1k_views" as const,
     platform_target: "tiktok" as const,
     reward_cash_cents: 10000, // $100 per 1M, same tier line as the stream bounty
