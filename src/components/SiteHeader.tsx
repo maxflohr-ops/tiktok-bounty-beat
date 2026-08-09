@@ -34,7 +34,7 @@ export function SiteHeader() {
     "px-2.5 py-2 font-body text-sm font-medium text-[var(--color-bs-ink-mute)] transition hover:text-[var(--color-bs-ink)]";
   const navActive = { className: "px-2.5 py-2 font-body text-sm font-medium text-[var(--color-bs-ink)]" };
   const crimsonPill =
-    "rounded-full bg-[var(--color-bs-crimson)] px-5 py-2.5 font-body text-[13.5px] font-semibold leading-none text-white transition hover:brightness-110";
+    "rounded-full bg-[var(--color-bs-crimson)] px-5 py-2.5 font-body text-[13.5px] font-semibold leading-none text-white transition hover:bg-[var(--color-bs-crimson-deep)]";
   const drawerLink =
     "block px-4 py-3 font-body text-base font-medium text-[var(--color-bs-ink)] hover:bg-black/5";
 
