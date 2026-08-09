@@ -64,11 +64,11 @@ const LAUNCH_SEEDS = [
     funded_cash_cents: 50000, // the $500 purse
   },
   {
-    title: "Clip Dog Legion — Lyric Edits (any song)",
+    title: "Clip Songs of Legion — Lyric Edits (any song)",
     description:
-      "Cut a lyric edit on any Dog Legion song — lyrics on screen, #maddenlegion in the caption. $1 per 5,000 verified views, paid pro-rata, and views stack across your clips. Any Dog Legion track counts; pick the line that hits. 9:16 only, subtitles/lyrics required.",
-    sound_name: "Dog Legion — any song (lyric edit)",
-    artist_song: "Dog Legion",
+      "Cut a lyric edit on any Songs of Legion song — lyrics on screen, #maddenlegion in the caption. $1 per 5,000 verified views, paid pro-rata, and views stack across your clips. Any Songs of Legion track counts; pick the line that hits. 9:16 only, subtitles/lyrics required.",
+    sound_name: "Songs of Legion — any song (lyric edit)",
+    artist_song: "Songs of Legion",
     payout_type: "per_1k_views" as const,
     platform_target: "tiktok" as const,
     reward_cash_cents: 2000, // $1 per 5k ≡ $20 per 100k views
