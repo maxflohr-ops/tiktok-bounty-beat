@@ -6,6 +6,7 @@ import { formatPerViewRate } from "@/lib/rate";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterNav } from "@/components/FooterNav";
 import { LedgerCard } from "@/components/LedgerCard";
+import { NotifyForm } from "@/components/NotifyForm";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
 import { GuillocheRosette, InkCardinal, InkDogwood, InkSeal, MicroRule } from "@/components/ArtMarks";
@@ -140,9 +141,12 @@ function LandingPage() {
               </div>
 
               {open.length === 0 ? (
-                <p className="py-6 text-center italic text-[var(--color-bs-ink-mute)]">
-                  No bounties on the board right now.
-                </p>
+                <div className="py-6 text-center">
+                  <p className="italic text-[var(--color-bs-ink-mute)]">
+                    No bounties on the board right now.
+                  </p>
+                  <NotifyForm accountEmail={null} />
+                </div>
               ) : (
                 <ul className="divide-y divide-[var(--color-bs-rule)]">
                   {open.map((b) => (
