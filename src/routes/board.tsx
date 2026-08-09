@@ -70,6 +70,21 @@ function bottomLine(b: Bounty) {
   if (b.claims_count > 0) return { text: `claimed ${b.claims_count}`, seal: false, variant: "amber" as const };
   return { text: "open", seal: false, variant: "cyan" as const };
 }
+// Explicit sort picks. "rate" keeps per-view rates ahead of flat rewards since
+// the two aren't the same unit; ties fall back to newest (contract_no desc).
+function compareBounties(sort: "rate" | "purse" | "ending", x: Bounty, y: Bounty): number {
+  if (sort === "rate") {
+    const xPerView = x.payout_type === "per_1k_views" ? 1 : 0;
+    const yPerView = y.payout_type === "per_1k_views" ? 1 : 0;
+    if (xPerView !== yPerView) return yPerView - xPerView;
+    return (y.reward_cash_cents ?? 0) - (x.reward_cash_cents ?? 0) || y.contract_no - x.contract_no;
+  }
+  if (sort === "purse")
+    return ((y as any).purse_cents ?? 0) - ((x as any).purse_cents ?? 0) || y.contract_no - x.contract_no;
+  const xDue = x.deadline ? new Date(x.deadline).getTime() : Infinity;
+  const yDue = y.deadline ? new Date(y.deadline).getTime() : Infinity;
+  return xDue - yDue || y.contract_no - x.contract_no;
+}
 
 function BoardPage() {
   const listFn = useServerFn(listPublicBounties);
@@ -90,6 +105,7 @@ function BoardPage() {
   const [platform, setPlatform] = useState<"all" | "tiktok" | "shorts">("all");
   const [payout, setPayout] = useState<"all" | "flat" | "per_1k_views">("all");
   const [status, setStatus] = useState<"open" | "all">("open");
+  const [sort, setSort] = useState<"board" | "rate" | "purse" | "ending">("board");
 
   const filtered = useMemo(() => {
     const base = bounties.filter((b) => {
@@ -106,9 +122,10 @@ function BoardPage() {
       : base
           .map((b) => ({ b, score: scoreBounty(taste, b) }))
           .sort((x, y) => y.score - x.score || y.b.contract_no - x.b.contract_no);
-    // Paid featured slots pin above everything, keeping taste order within each group.
-    return [...scored.filter(({ b }) => isFeatured(b)), ...scored.filter(({ b }) => !isFeatured(b))];
-  }, [bounties, platform, payout, status, taste]);
+    const ordered = sort === "board" ? scored : [...scored].sort((x, y) => compareBounties(sort, x.b, y.b));
+    // Paid featured slots pin above everything, keeping the chosen order within each group.
+    return [...ordered.filter(({ b }) => isFeatured(b)), ...ordered.filter(({ b }) => !isFeatured(b))];
+  }, [bounties, platform, payout, status, taste, sort]);
 
   return (
     <div className="relative min-h-screen">
@@ -199,6 +216,17 @@ function BoardPage() {
               value={status}
               onChange={(v) => setStatus(v as typeof status)}
             />
+            <FilterGroup
+              label="Sort"
+              options={[
+                { v: "board", l: "Board order" },
+                { v: "rate", l: "Highest rate" },
+                { v: "purse", l: "Biggest purse" },
+                { v: "ending", l: "Ending soon" },
+              ]}
+              value={sort}
+              onChange={(v) => setSort(v as typeof sort)}
+            />
           </div>
 
           {/* Board grid */}
@@ -218,6 +246,7 @@ function BoardPage() {
                       setPlatform("all");
                       setPayout("all");
                       setStatus("all");
+                      setSort("board");
                     }}
                   >
                     show all contracts
@@ -549,9 +578,9 @@ function ContractCard({
             {serial(b.contract_no, featured)}
           </span>
         </div>
-        {(b as any).funded_cash_cents > 0 ? (
+        {(b as any).purse_cents > 0 ? (
           <span className="label-cap silver">
-            Purse: <Money cents={(b as any).funded_cash_cents} currency={b.currency} />
+            Purse: <Money cents={(b as any).purse_cents} currency={b.currency} />
             {(b as any).paid_out_cents > 0 ? (
               <> · <Money cents={(b as any).paid_out_cents} currency={b.currency} /> paid out</>
             ) : null}

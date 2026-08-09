@@ -14,9 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
-      VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+      # The smoke suite runs against the in-repo Supabase mock so it is
+      # deterministic and needs no repository secrets.
+      VITE_SUPABASE_URL: http://127.0.0.1:54329
+      VITE_SUPABASE_PUBLISHABLE_KEY: mock
+      SUPABASE_URL: http://127.0.0.1:54329
+      SUPABASE_SERVICE_ROLE_KEY: mock
       SMOKE_BASE_URL: http://localhost:8080
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +30,11 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Start mock Supabase
+        run: |
+          node tests/mock-supabase.mjs > /tmp/mock-supabase.log 2>&1 &
+          echo $! > /tmp/mock-supabase.pid
 
       - name: Start dev server
         run: |
@@ -51,8 +59,12 @@ jobs:
 
       - name: Dev server logs on failure
         if: failure()
-        run: cat /tmp/dev-server.log || true
+        run: |
+          cat /tmp/dev-server.log || true
+          cat /tmp/mock-supabase.log || true
 
       - name: Stop dev server
         if: always()
-        run: kill "$(cat /tmp/dev-server.pid)" || true
+        run: |
+          kill "$(cat /tmp/dev-server.pid)" || true
+          kill "$(cat /tmp/mock-supabase.pid)" || true

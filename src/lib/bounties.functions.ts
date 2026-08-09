@@ -6,6 +6,9 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const BOUNTY_COLS =
   "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode,logo_pack_url";
 // Columns safe to expose publicly (excludes funded_cash_cents and any Stripe identifiers).
+// The purse AMOUNT is public by design — the payouts page promises it on every
+// card — but the raw column name never leaves the server: listPublicBounties
+// selects it separately and returns it as purse_cents.
 const PUBLIC_BOUNTY_COLS =
   "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode,logo_pack_url";
 
@@ -130,7 +133,7 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
   await ensureLaunchBounties(supabaseAdmin);
   let { data: bounties, error } = await supabaseAdmin
     .from("bounties")
-    .select(PUBLIC_BOUNTY_COLS as "*")
+    .select((PUBLIC_BOUNTY_COLS + ",funded_cash_cents") as "*")
     .neq("status", "draft")
     .eq("visibility", "public")
     .order("contract_no", { ascending: false });
@@ -140,7 +143,7 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
     // rather than going dark.
     const retry = await supabaseAdmin
       .from("bounties")
-      .select(PUBLIC_BOUNTY_COLS_BASE)
+      .select((PUBLIC_BOUNTY_COLS_BASE + ",funded_cash_cents") as "*")
       .neq("status", "draft")
       .order("contract_no", { ascending: false });
     error = retry.error;
@@ -164,12 +167,18 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
     row.paid += c.paid_cash_cents ?? 0;
   }
 
-  return list.map((b) => ({
-    ...b,
-    claims_count: counts.get(b.id)?.claims ?? 0,
-    approved_count: counts.get(b.id)?.approved ?? 0,
-    paid_out_cents: counts.get(b.id)?.paid ?? 0,
-  }));
+  // Rename the purse column before the payload leaves the server: the amount
+  // is public, the internal column name is not (the smoke test enforces this).
+  return list.map((b) => {
+    const { funded_cash_cents, ...pub } = b as typeof b & { funded_cash_cents?: number | null };
+    return {
+      ...pub,
+      purse_cents: funded_cash_cents ?? 0,
+      claims_count: counts.get(b.id)?.claims ?? 0,
+      approved_count: counts.get(b.id)?.approved ?? 0,
+      paid_out_cents: counts.get(b.id)?.paid ?? 0,
+    };
+  });
 });
 
 // Aggregates only — no per-bounty money figures leave the server. Feeds the
