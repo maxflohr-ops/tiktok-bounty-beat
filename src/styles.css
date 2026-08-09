@@ -69,6 +69,7 @@
   --color-bs-accent-soft: rgba(111, 127, 92, 0.25);
   /* Treasury crimson: the one filled button in the header. */
   --color-bs-crimson: #9e3b2f;
+  --color-bs-crimson-deep: #83291f;
   /* Header wordmark: the calm serif frame around the hand-drawn interior. */
   --font-brand: "Source Serif 4", Georgia, serif;
 }
@@ -739,4 +740,12 @@
   line-height: 1;
   opacity: 0.45;
   user-select: none;
+}
+
+/* Hallmark audit fixes - keyboard focus is visible everywhere, instantly.
+   Ring never animates; 2px accent at >=3:1 against paper and wall alike. */
+:focus-visible {
+  outline: 2px solid var(--color-bs-accent);
+  outline-offset: 2px;
+  transition: none;
 }

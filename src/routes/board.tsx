@@ -284,9 +284,9 @@ function BoardPage() {
           {top.length > 0 ? (
             <div className="mt-16">
               <div className="mx-auto max-w-md border border-[var(--iron)] bg-[var(--wall-2)]/50 p-6">
-                <div className="label-cap text-center text-silver">
+                <h3 className="text-center font-display text-xl text-bone">
                   {weekly.length > 0 ? "Paid this week" : "Top clippers"}
-                </div>
+                </h3>
                 <ol className="mt-4 divide-y divide-[var(--border)]">
                   {(weekly.length > 0 ? weekly : top).map((p: any, i: number) => (
                     <li key={i} className="flex items-center justify-between py-2 text-sm">
@@ -347,7 +347,7 @@ function BoardPage() {
           <div className="mt-12 text-center opacity-60">
             <InkCardinal className="mx-auto w-32" />
             <div className="inline-block border-t border-[var(--iron)] p-4">
-              <p className="label-cap text-bone-soft">Posted purses · verified views · real payouts</p>
+              <p className="text-xs tracking-wide text-bone-soft">Posted purses · verified views · real payouts</p>
             </div>
           </div>
         </div>
@@ -421,7 +421,7 @@ function EmptyBoard() {
           <Link to="/for-editors" className="bs-btn">how clippers earn</Link>
         </div>
       </div>
-      <p className="label-cap mt-12 mb-4 text-center text-bone-soft">What a contract looks like</p>
+      <p className="mt-12 mb-4 text-center font-body italic text-bone-soft">What a contract looks like</p>
       <ul className="mx-auto grid max-w-3xl grid-cols-1 gap-8 md:grid-cols-2">
         <li>
           <GhostCard

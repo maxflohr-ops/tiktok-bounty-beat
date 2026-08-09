@@ -99,7 +99,7 @@ function LandingPage() {
               />
               <BsDisplay as="h1" size="xl" className="relative">
                 Clip it.<br />
-                <span className="italic">Claim it.</span><br />
+                <span>Claim it.</span><br />
                 Cash it.
               </BsDisplay>
             </div>
