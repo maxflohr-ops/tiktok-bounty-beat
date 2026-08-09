@@ -64,6 +64,22 @@ const LAUNCH_SEEDS = [
     funded_cash_cents: 50000, // the $500 purse
   },
   {
+    title: "Clip Dog Legion — Lyric Edits (any song)",
+    description:
+      "Cut a lyric edit on any Dog Legion song — lyrics on screen, #maddenlegion in the caption. $1 per 5,000 verified views, paid pro-rata, and views stack across your clips. Any Dog Legion track counts; pick the line that hits. 9:16 only, subtitles/lyrics required.",
+    sound_name: "Dog Legion — any song (lyric edit)",
+    artist_song: "Dog Legion",
+    payout_type: "per_1k_views" as const,
+    platform_target: "tiktok" as const,
+    reward_cash_cents: 2000, // $1 per 5k ≡ $20 per 100k views
+    reward_points: 100,
+    max_submissions: 20,
+    deadline: "2026-09-08T23:59:00Z",
+    status: "active" as const,
+    funded_cash_cents: 10000, // the $100 purse
+    hashtags: ["maddenlegion"],
+  },
+  {
     title: "Clip Ridgeclub — Biting Bullets",
     description:
       'Cut a TikTok on Ridgeclub\'s "Biting Bullets." $2 per 100,000 verified views — a 5M-view video captures the full $100 purse, and views stack across your clips, so two 2.5M clips cash the same. 9:16 only, subtitles encouraged, use the sound.',
