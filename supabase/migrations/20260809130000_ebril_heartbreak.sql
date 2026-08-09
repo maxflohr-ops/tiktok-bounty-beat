@@ -6,9 +6,9 @@ INSERT INTO public.bounties
    payout_type, platform_target, reward_cash_cents, reward_points,
    max_submissions, deadline, status, funded_cash_cents)
 SELECT
-  'Clip Ebril — Heartbreak',
-  'Ebril''s next drop. Seize a slot now — the moment "Heartbreak" lands on TikTok, cut your clip on it and deliver. Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound once it''s live (link lands on this contract at release).',
-  'Ebril — Heartbreak (drops soon)',
+  'Clip Ebril — Anticipate Heartbreak',
+  'Ebril''s next drop. Seize a slot now — the moment "Anticipate Heartbreak" lands on TikTok, cut your clip on it and deliver. Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound once it''s live (link lands on this contract at release).',
+  'Ebril — Anticipate Heartbreak (drops soon)',
   'Ebril',
   'per_1k_views',
   'tiktok',
@@ -19,5 +19,5 @@ SELECT
   'active',
   50000
 WHERE NOT EXISTS (
-  SELECT 1 FROM public.bounties WHERE title = 'Clip Ebril — Heartbreak'
+  SELECT 1 FROM public.bounties WHERE title = 'Clip Ebril — Anticipate Heartbreak'
 );
