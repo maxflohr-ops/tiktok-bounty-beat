@@ -13,6 +13,7 @@ import {
   deliverProof,
   listMyClaims,
 } from "@/lib/submissions.functions";
+import { listBountyClips } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PARTNERS, partnerGoHref } from "@/lib/partners";
 import { setReturnTo } from "@/lib/return-to";
@@ -83,6 +84,12 @@ function BountyDetail() {
     queryKey: ["myClaims"],
     queryFn: () => myClaimsFn(),
     enabled: !!user,
+  });
+  const clipsFn = useServerFn(listBountyClips);
+  const { data: bountyClips = [] } = useQuery({
+    queryKey: ["bountyClips", id],
+    queryFn: () => clipsFn({ data: { bounty_id: id } }),
+    retry: false,
   });
 
   const { data: privateBounties = [] } = useQuery({
@@ -441,6 +448,45 @@ function BountyDetail() {
                   post to reddit
                 </a>
               </div>
+            </div>
+
+            {/* Every clip riding on this bounty - delivered, counting, captured */}
+            <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
+              <div className="label-cap text-ink-soft">Clips on this bounty · {bountyClips.length}</div>
+              {bountyClips.length === 0 ? (
+                <p className="mt-1 text-xs italic text-ink-soft">No clips delivered yet — the purse is untouched.</p>
+              ) : (
+                <ul className="mt-2 divide-y divide-[var(--paper-dark)]">
+                  {bountyClips.map((c) => (
+                    <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
+                      <a
+                        href={c.tiktok_video_url ?? "#"}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 font-body text-ink underline"
+                      >
+                        @{c.tiktok_handle} <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <span className="flex items-center gap-3 text-xs text-ink-soft">
+                        <span className="tabular-nums">
+                          {(c.verified_view_count ?? c.view_count ?? 0) > 0
+                            ? `${(c.verified_view_count ?? c.view_count ?? 0).toLocaleString()} views${c.verified_view_count != null ? " ✓" : ""}`
+                            : "views pending"}
+                        </span>
+                        <span className="digital-badge">
+                          {c.status === "paid"
+                            ? "captured"
+                            : c.status === "approved"
+                              ? "approved"
+                              : c.counting_ends_at && new Date(c.counting_ends_at).getTime() > Date.now()
+                                ? `counting until ${new Date(c.counting_ends_at).toLocaleDateString()}`
+                                : "in review"}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <p className="script-note mt-8 text-center text-base text-ink-soft">
