@@ -17,7 +17,7 @@ function appOrigin() {
     : "http://localhost:8080";
 }
 
-const listingInput = z.object({
+export const listingInput = z.object({
   listing_type: z.enum(["sound", "stream", "keynote", "podcast"]).default("sound"),
   artist_name: z.string().trim().min(1, "Name is required").max(120),
   song_title: z.string().trim().min(1, "Title is required").max(200),
@@ -76,11 +76,12 @@ const listingInput = z.object({
   }
 });
 
-// Create a Stripe Checkout session for a $200 / 30-day sound listing.
-export const createSoundListingCheckout = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => listingInput.parse(d))
-  .handler(async ({ data, context }) => {
+export type ListingInput = z.infer<typeof listingInput>;
+
+// Shared by the web flow and the public listings API: insert the listing,
+// open a Stripe Checkout session, return the payment URL.
+export async function createListingWithCheckout(data: ListingInput, userId: string) {
+    const context = { userId };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: listing, error: le } = await supabaseAdmin
@@ -191,7 +192,13 @@ export const createSoundListingCheckout = createServerFn({ method: "POST" })
     });
 
     return { url: session.url, sessionId: session.id, listingId: listing.id };
-  });
+}
+
+// Create a Stripe Checkout session for a $200 / 30-day sound listing.
+export const createSoundListingCheckout = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => listingInput.parse(d))
+  .handler(({ data, context }) => createListingWithCheckout(data, context.userId));
 
 // List the caller's sound listings.
 export const listMySoundListings = createServerFn({ method: "GET" })

@@ -11,6 +11,9 @@ import { loadTaste, scoreBounty, type TasteProfile } from "@/lib/taste";
 import { formatPerViewRate } from "@/lib/rate";
 import { BsEmpty, BsLoading } from "@/components/bs";
 import { GuillocheBand, InkCardinal } from "@/components/ArtMarks";
+import { useSession } from "@/lib/session";
+import { subscribeBoardAlerts } from "@/lib/alerts.functions";
+import { toast } from "sonner";
 
 const HOME_TITLE = "Bounty Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
@@ -367,6 +370,45 @@ function BoardPage() {
   );
 }
 
+// One field, one promise: an email when the next purse posts. Signed-in
+// editors subscribe with one click on their account email.
+function NotifyForm({ accountEmail }: { accountEmail: string | null }) {
+  const subscribeFn = useServerFn(subscribeBoardAlerts);
+  const [email, setEmail] = useState(accountEmail ?? "");
+  const [done, setDone] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const r = await subscribeFn({ data: { email, source: accountEmail ? "board-authed" : "board" } });
+      setDone(true);
+      toast.success(r.already ? "You're already on the list." : "On the list — you'll hear when a purse posts.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save that.");
+    } finally {
+      setBusy(false);
+    }
+  };
+  if (done) return <p className="mt-5 text-sm text-bone-soft">✓ You'll hear the moment a bounty posts.</p>;
+  return (
+    <form onSubmit={submit} className="mx-auto mt-5 flex max-w-sm items-center gap-2">
+      <input
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="you@email.com"
+        aria-label="Email for new-bounty alerts"
+        className="bone-input flex-1 text-sm"
+      />
+      <button type="submit" disabled={busy} className="silver-btn whitespace-nowrap text-sm disabled:opacity-60">
+        {busy ? "saving…" : "notify me"}
+      </button>
+    </form>
+  );
+}
+
 function FilterGroup({
   label,
   options,
@@ -399,16 +441,21 @@ function FilterGroup({
 
 // Clipper-first empty state: explain why the board is empty, teach the
 // structure with example cards — never ask a clipper to switch roles.
+// Copy is persona-aware: a signed-in editor gets "you're first in line",
+// an anonymous visitor gets the invitation; both get the alerts capture.
 function EmptyBoard() {
+  const { user } = useSession();
   return (
     <div>
       <div className="text-center">
         <p className="label-cap text-bone-soft">the Bounty Board</p>
         <h2 className="mt-2 font-display text-3xl text-bone">No live contracts yet.</h2>
         <p className="mx-auto mt-3 max-w-md text-bone-soft">
-          Creators are loading their first bounties — new bounties appear here the moment a
-          purse is posted. No invite needed.
+          {user
+            ? "Nothing to seize right now — new bounties appear here the moment a purse is posted, and you're already first in line."
+            : "Creators are loading their first bounties — new bounties appear here the moment a purse is posted. No invite needed."}
         </p>
+        <NotifyForm accountEmail={user?.email ?? null} />
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link to="/how-it-works" className="bs-btn bs-btn-accent">how it works</Link>
           <Link to="/for-editors" className="bs-btn">how clippers earn</Link>

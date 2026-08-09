@@ -89,7 +89,6 @@ export function SiteHeader() {
         {/* Middle: three doors (desktop only) */}
         <nav className="hidden items-center gap-3 justify-self-center md:flex">
           <Link to="/board" className={navLink} activeProps={navActive}>Board</Link>
-          <Link to="/join" className={navLink} activeProps={navActive}>Join</Link>
           <Link to="/how-it-works" className={navLink} activeProps={navActive}>How it works</Link>
           <Link to="/payouts" className={navLink} activeProps={navActive}>Payouts</Link>
           <HeaderLedger />
@@ -120,9 +119,9 @@ export function SiteHeader() {
         <nav className="border-t border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] pb-2 md:hidden" aria-label="Site menu">
           {[
             { to: "/board", label: "Board" },
-            { to: "/join", label: "Join" },
             { to: "/how-it-works", label: "How it works" },
             { to: "/payouts", label: "Payouts" },
+            { to: "/join", label: "Join as a clipper" },
             { to: "/for-editors", label: "For editors" },
           ].map((l) => (
             <Link key={l.to} to={l.to} className={drawerLink} onClick={() => setDrawerOpen(false)}>
