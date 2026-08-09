@@ -327,9 +327,9 @@ function BountyDetail() {
                 <div className="label-cap text-ink-soft">Reward</div>
                 <p className="mt-1 font-display text-lg text-ink">{reward}</p>
                 <p className="mt-1 text-xs text-ink-soft">
-                  {(bounty as any).funded_cash_cents > 0 ? (
+                  {(bounty as any).purse_cents > 0 ? (
                     <>
-                      Purse: <Money cents={(bounty as any).funded_cash_cents} currency={bounty.currency} />
+                      Purse: <Money cents={(bounty as any).purse_cents} currency={bounty.currency} />
                       {(bounty as any).paid_out_cents > 0 ? (
                         <> · <Money cents={(bounty as any).paid_out_cents} currency={bounty.currency} /> paid out</>
                       ) : null}
