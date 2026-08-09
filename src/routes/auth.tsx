@@ -54,8 +54,8 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success("Account created. You can start claiming contracts.");
-        navigate({ to: (consumeReturnTo() ?? "/dashboard") as never });
+        toast.success("Account created. Let's get you set up.");
+        navigate({ to: (consumeReturnTo() ?? "/start") as never });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong.");

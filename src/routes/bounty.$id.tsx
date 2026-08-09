@@ -3,6 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import {
+  getBountyTeaser,
+  getMyBountyAccess,
+  applyToBounty,
+  listMyPrivateBounties,
+} from "@/lib/access.functions";
+import {
   claimContract,
   deliverProof,
   listMyClaims,
@@ -14,7 +20,9 @@ import { Money } from "@/components/Money";
 import { formatPerViewRate } from "@/lib/rate";
 import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
-import { ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
+import { soundLinks } from "@/lib/sound-links";
+
+import { ArrowLeft, ExternalLink, Loader2, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -51,6 +59,10 @@ function money(cents: number, currency = "USD") {
 function BountyDetail() {
   const { id } = Route.useParams();
   const listFn = useServerFn(listPublicBounties);
+  const privateListFn = useServerFn(listMyPrivateBounties);
+  const teaserFn = useServerFn(getBountyTeaser);
+  const myAccessFn = useServerFn(getMyBountyAccess);
+  const applyFn = useServerFn(applyToBounty);
   const meFn = useServerFn(getMe);
   const myClaimsFn = useServerFn(listMyClaims);
   const claimFn = useServerFn(claimContract);
@@ -73,7 +85,30 @@ function BountyDetail() {
     enabled: !!user,
   });
 
-  const bounty = bounties.find((b) => b.id === id);
+  const { data: privateBounties = [] } = useQuery({
+    queryKey: ["bounties", "mine-private", user?.id],
+    queryFn: () => privateListFn(),
+    enabled: !!user,
+  });
+  const { data: teaser } = useQuery({
+    queryKey: ["bountyTeaser", id],
+    queryFn: () => teaserFn({ data: { bounty_id: id } }),
+  });
+  const { data: access, refetch: refetchAccess } = useQuery({
+    queryKey: ["bountyAccess", id, user?.id],
+    queryFn: () => myAccessFn({ data: { bounty_id: id } }),
+    enabled: !!user,
+  });
+
+  const [pitch, setPitch] = useState("");
+  const [applyHandle, setApplyHandle] = useState("");
+  const [applyBusy, setApplyBusy] = useState(false);
+
+  const bounty =
+    bounties.find((b) => b.id === id) ??
+    (privateBounties.find((b) => (b as { id: string }).id === id) as
+      | (typeof bounties)[number]
+      | undefined);
   const myClaimsHere = myClaims.filter((c) => c.bounty_id === id);
   const wallet = me?.profile?.wallet_address ?? null;
 
@@ -95,6 +130,19 @@ function BountyDetail() {
     if (first?.paypal_email) setPaypal((pp) => pp || first.paypal_email!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myClaimsHere.length]);
+
+  const submitApplication = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) { setReturnTo(`/bounty/${id}`); navigate({ to: "/auth" }); return; }
+    setApplyBusy(true);
+    try {
+      await applyFn({ data: { bounty_id: id, message: pitch, tiktok_handle: applyHandle } });
+      toast.success("Application sent. You'll hear back once it's reviewed.");
+      refetchAccess();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send your application.");
+    } finally { setApplyBusy(false); }
+  };
 
   const take = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,7 +192,27 @@ function BountyDetail() {
     } finally { setDeliverBusyId(null); }
   };
 
+  const accessStatus = access?.status ?? null;
+  const hasAccess = ["invited", "accepted", "approved"].includes(accessStatus ?? "");
+
   if (!bounty) {
+    // A private campaign the viewer can't (yet) enter — teaser + locked state.
+    if (teaser && (teaser as any).visibility === "private") {
+      return (
+        <LockedCampaign
+          teaser={teaser as any}
+          accessStatus={accessStatus}
+          signedIn={!!user}
+          pitch={pitch}
+          setPitch={setPitch}
+          handle={applyHandle}
+          setHandle={setApplyHandle}
+          busy={applyBusy}
+          onApply={submitApplication}
+          onSignIn={() => { setReturnTo(`/bounty/${id}`); navigate({ to: "/auth" }); }}
+        />
+      );
+    }
     return (
       <div className="min-h-screen">
         <SiteHeader />
@@ -278,20 +346,32 @@ function BountyDetail() {
                 ) : (
                   <p className="mt-1 font-body italic text-ink-soft">provided on take</p>
                 )}
-                {bounty.tiktok_sound_url ? (
-                  <div className="mt-1">
-                    <a
-                      href={bounty.tiktok_sound_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-body font-semibold text-ink underline"
-                    >
-                      post with this exact sound <ExternalLink className="h-3 w-3" />
-                    </a>
+                {soundLinks(bounty as any).length > 0 ? (
+                  <div className="mt-3">
+                    <div className="label-cap text-ink-soft">Sound links</div>
+                    <ul className="mt-1 space-y-1">
+                      {soundLinks(bounty as any).map((l) => (
+                        <li key={l.platform}>
+                          <a
+                            href={l.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 font-body text-ink underline"
+                          >
+                            {l.label} <ExternalLink className="h-3 w-3" />
+                          </a>
+                          {!l.exact ? <span className="ml-1 text-xs text-ink-soft">auto-matched</span> : null}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-1 text-xs text-ink-soft">
+                      Post with this exact sound on whichever platform you're cutting for.
+                    </p>
                   </div>
                 ) : null}
               </div>
             </div>
+
 
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Clipper toolkit</div>
@@ -397,6 +477,11 @@ function BountyDetail() {
               <h2 className="font-display text-2xl text-bone">The take</h2>
               <span className="terminal text-[10px] text-bone-soft">ID: #{pad(bounty.contract_no)}</span>
             </div>
+            {(bounty as any).visibility === "private" && hasAccess ? (
+              <div className="mb-3 inline-flex items-center gap-2 border border-[var(--color-bs-accent)] px-2 py-1 terminal text-[10px] uppercase tracking-[0.15em] text-[var(--color-bs-accent)]">
+                <Lock className="h-3 w-3" /> private campaign — you're in
+              </div>
+            ) : null}
             {!user ? (
               <>
                 <p className="mt-3 text-bone-soft">
@@ -665,5 +750,179 @@ function SlotStepper({ value, setValue, max }: { value: number; setValue: (n: nu
         +
       </button>
     </span>
+  );
+}
+
+type Teaser = {
+  id: string;
+  contract_no: number;
+  title: string;
+  sound_name: string;
+  artist_song: string | null;
+  reward_points: number;
+  reward_cash_cents: number;
+  currency: string;
+  payout_type: string;
+  platform_target: string;
+  deadline: string | null;
+  access_mode: "invite" | "apply" | null;
+  rules: string | null;
+};
+
+function LockedCampaign({
+  teaser, accessStatus, signedIn, pitch, setPitch, handle, setHandle, busy, onApply, onSignIn,
+}: {
+  teaser: Teaser;
+  accessStatus: string | null;
+  signedIn: boolean;
+  pitch: string;
+  setPitch: (v: string) => void;
+  handle: string;
+  setHandle: (v: string) => void;
+  busy: boolean;
+  onApply: (e: React.FormEvent) => void;
+  onSignIn: () => void;
+}) {
+  const reward =
+    teaser.payout_type === "per_1k_views"
+      ? formatPerViewRate(teaser.reward_cash_cents, teaser.currency)
+      : teaser.reward_cash_cents > 0
+        ? `${money(teaser.reward_cash_cents, teaser.currency)} per approved clip`
+        : `${teaser.reward_points} pts per approved clip`;
+
+  return (
+    <div className="relative min-h-screen">
+      <div className="scanlines fixed inset-0 z-50 opacity-40" />
+      <div className="vignette fixed inset-0 z-40" />
+      <SiteHeader />
+      <div className="container-board relative z-10 py-8">
+        <div className="flex items-center justify-between">
+          <Link to="/board" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
+            <ArrowLeft className="h-3.5 w-3.5" /> back to the Bounty Board
+          </Link>
+          <div className="system-bar">
+            <span className="status-dot" />
+            contract view · restricted
+          </div>
+        </div>
+
+        <div className="mx-auto mt-6 max-w-2xl">
+          <article className="contract contract-nail holo-glow relative">
+            <div className="mb-3 flex items-center justify-between border-b border-[var(--paper-dark)] pb-2">
+              <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">
+                <Lock className="h-3 w-3" /> Private contract
+              </span>
+              <span className="terminal text-[10px] tracking-[0.15em] text-[var(--color-bs-accent)]">
+                {serial(teaser.contract_no)}
+              </span>
+            </div>
+
+            <h1 className="font-display text-3xl leading-tight text-ink md:text-4xl">{teaser.title}</h1>
+            {teaser.artist_song ? <p className="mt-1 font-body italic text-ink-soft">for “{teaser.artist_song}”</p> : null}
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
+              <span>sound · {teaser.sound_name}</span>
+              <span>platform · {teaser.platform_target}</span>
+              {teaser.deadline ? <span>deadline · {new Date(teaser.deadline).toLocaleDateString()}</span> : null}
+            </div>
+
+            <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
+              <div className="label-cap text-ink-soft">Reward</div>
+              <p className="mt-1 font-display text-lg text-ink">{reward}</p>
+            </div>
+
+            {teaser.rules ? (
+              <div className="mt-4 border-t border-[var(--paper-dark)] pt-4">
+                <div className="label-cap text-ink-soft">Rules · preview</div>
+                <p className="mt-1 whitespace-pre-wrap font-body text-sm leading-relaxed text-ink-soft">{teaser.rules}</p>
+              </div>
+            ) : null}
+          </article>
+
+          <aside className="board-frame relative mt-6 p-5 md:p-6">
+            <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
+            <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
+            <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
+            <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
+
+            {accessStatus === "applied" ? (
+              <>
+                <h2 className="font-display text-2xl text-bone">Application pending review</h2>
+                <p className="mt-2 text-bone-soft">
+                  Your pitch is with the campaign owner. We'll email you the moment it's decided.
+                </p>
+              </>
+            ) : accessStatus === "rejected" ? (
+              <>
+                <h2 className="font-display text-2xl text-bone">Not accepted</h2>
+                <p className="mt-2 text-bone-soft">
+                  This campaign passed on your application. There's plenty else on the board.
+                </p>
+                <Link to="/board" className="silver-btn mt-5 w-full">browse open contracts</Link>
+              </>
+            ) : teaser.access_mode === "invite" ? (
+              <>
+                <h2 className="font-display text-2xl text-bone">Invite-only campaign</h2>
+                <p className="mt-2 text-bone-soft">
+                  This contract is locked to invited clippers. If you were promised a seat, sign in with the email you
+                  were invited on.
+                </p>
+                {!signedIn ? (
+                  <button type="button" onClick={onSignIn} className="silver-btn mt-5 w-full">sign in</button>
+                ) : null}
+                <Link to="/board" className="ink-btn mt-3 block w-full text-center">back to the public board</Link>
+              </>
+            ) : (
+              <>
+                <h2 className="font-display text-2xl text-bone">Apply to this campaign</h2>
+                <p className="mt-2 text-sm text-bone-soft">
+                  Private campaign — the owner reviews every clipper before slots open.
+                </p>
+                {!signedIn ? (
+                  <button type="button" onClick={onSignIn} className="silver-btn mt-5 w-full">sign in to apply</button>
+                ) : (
+                  <form onSubmit={onApply} className="mt-4 space-y-4">
+                    <label className="block">
+                      <span className="label-cap text-bone-soft">your tiktok</span>
+                      <div className="mt-2 flex items-center border border-[var(--border)] px-3 py-2">
+                        <span className="text-bone-soft">@</span>
+                        <input
+                          required
+                          value={handle}
+                          onChange={(e) => setHandle(e.target.value)}
+                          maxLength={60}
+                          disabled={busy}
+                          placeholder="yourname"
+                          className="w-full bg-transparent px-1 text-bone outline-none placeholder:italic placeholder:text-bone-soft/60"
+                        />
+                      </div>
+                    </label>
+                    <label className="block">
+                      <span className="label-cap text-bone-soft">your pitch</span>
+                      <textarea
+                        required
+                        rows={4}
+                        minLength={10}
+                        maxLength={1000}
+                        value={pitch}
+                        onChange={(e) => setPitch(e.target.value)}
+                        disabled={busy}
+                        placeholder="what you cut, your usual numbers, why this sound"
+                        className="dark-input mt-2 resize-y"
+                      />
+                    </label>
+                    <button type="submit" disabled={busy} aria-busy={busy} className="silver-btn w-full disabled:opacity-60">
+                      <span className="inline-flex items-center justify-center gap-2">
+                        {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                        {busy ? "sending…" : "apply to this campaign"}
+                      </span>
+                    </button>
+                  </form>
+                )}
+              </>
+            )}
+          </aside>
+        </div>
+      </div>
+    </div>
   );
 }

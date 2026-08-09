@@ -4,10 +4,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode";
 // Columns safe to expose publicly (excludes funded_cash_cents and any Stripe identifiers).
 const PUBLIC_BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode";
 
 // Columns present since the original schema — the fallback when the DB is
 // mid-deploy and hasn't run the newest column migrations yet.
@@ -20,6 +20,8 @@ const LATE_COLUMN_DEFAULTS = {
   rules: null,
   counting_days: 14,
   max_clips_per_editor: 15,
+  visibility: "public",
+  access_mode: null,
 };
 
 // The launch contract, mirrored from migration 20260730100000. Lovable's
@@ -81,9 +83,11 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
     .from("bounties")
     .select(PUBLIC_BOUNTY_COLS)
     .neq("status", "draft")
+    .eq("visibility", "public")
     .order("contract_no", { ascending: false });
-  if (error && /does not exist/i.test(error.message)) {
-    // Migrations lag the deploy: serve the board from the base columns
+  if (error && (/does not exist/i.test(error.message) || (error as any).code === "42703")) {
+    // Migrations lag the deploy: serve the board from the base columns and
+    // drop the visibility filter entirely (everything is public pre-migration)
     // rather than going dark.
     const retry = await supabaseAdmin
       .from("bounties")
@@ -205,6 +209,8 @@ const upsertBountyInput = z.object({
     .transform((arr) => [...new Set(arr.map((t) => t.replace(/^#/, "").toLowerCase()))]),
   rules: z.string().trim().max(2000).nullable().optional().transform((v) => v || null),
   status: z.enum(["draft", "active", "claimed", "in_review", "fulfilled", "expired", "closed"]).default("active"),
+  visibility: z.enum(["public", "private"]).default("public"),
+  access_mode: z.enum(["invite", "apply"]).nullable().optional(),
 });
 
 export const upsertBounty = createServerFn({ method: "POST" })
@@ -235,6 +241,9 @@ export const upsertBounty = createServerFn({ method: "POST" })
       hashtags: data.hashtags,
       rules: data.rules,
       status: data.status,
+      visibility: data.visibility,
+      access_mode:
+        data.visibility === "private" ? (data.access_mode ?? "invite") : null,
       created_by: context.userId,
     };
     if (data.id) {

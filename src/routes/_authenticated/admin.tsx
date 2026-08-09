@@ -2,6 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  listBountyAccessStaff,
+  decideBountyApplication,
+  inviteToBounty,
+} from "@/lib/access.functions";
+import {
   listAllBountiesStaff,
   upsertBounty,
   deleteBounty,
@@ -149,6 +154,10 @@ function BountiesPanel() {
           featured_plus: Boolean((editing as any).featured_plus),
           hashtags: (editing as any).hashtags ?? [],
           rules: (editing as any).rules || null,
+          visibility: ((editing as any).visibility ?? "public") as "public" | "private",
+          access_mode: (((editing as any).visibility ?? "public") === "private"
+            ? ((editing as any).access_mode ?? "invite")
+            : null) as "invite" | "apply" | null,
           status: (editing.status ?? "active") as "draft" | "active" | "claimed" | "in_review" | "fulfilled" | "expired" | "closed",
         },
       });
@@ -188,6 +197,9 @@ function BountiesPanel() {
                 <div className="label-cap silver">No. {pad(b.contract_no)}</div>
                 <div className="truncate text-bone">{b.title}</div>
                 <div className="text-xs text-bone-soft">
+                  {(b as any).visibility === "private"
+                    ? `private · ${(b as any).access_mode === "apply" ? "apply" : "invite only"} · `
+                    : ""}
                   {b.sound_name} · {b.status} · Purse: <Money cents={(b as any).funded_cash_cents ?? 0} currency={b.currency} />
                 </div>
               </div>
@@ -201,6 +213,9 @@ function BountiesPanel() {
               </div>
             </div>
             <TopUpControl bountyId={b.id} />
+            {(b as any).visibility === "private" ? (
+              <AccessPanel bountyId={b.id} mode={((b as any).access_mode ?? "invite") as "invite" | "apply"} />
+            ) : null}
           </li>
         ))}
         {data.length === 0 ? (
@@ -276,6 +291,30 @@ function BountiesPanel() {
                 <option value="closed">closed</option>
               </select>
             </Field>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="campaign access">
+              <select
+                value={(editing as any).visibility ?? "public"}
+                onChange={(e) => setEditing({ ...editing, visibility: e.target.value } as any)}
+                className="dark-input"
+              >
+                <option value="public">public — anyone can claim</option>
+                <option value="private">private — restricted</option>
+              </select>
+            </Field>
+            {((editing as any).visibility ?? "public") === "private" ? (
+              <Field label="access mode">
+                <select
+                  value={(editing as any).access_mode ?? "invite"}
+                  onChange={(e) => setEditing({ ...editing, access_mode: e.target.value } as any)}
+                  className="dark-input"
+                >
+                  <option value="invite">invite only</option>
+                  <option value="apply">creators apply</option>
+                </select>
+              </Field>
+            ) : null}
           </div>
           <Field label="campaign hashtags (space or comma separated)">
             <input
@@ -840,5 +879,97 @@ function DisputesPanel() {
         </details>
       ) : null}
     </section>
+  );
+}
+
+function AccessPanel({ bountyId, mode }: { bountyId: string; mode: "invite" | "apply" }) {
+  const listFn = useServerFn(listBountyAccessStaff);
+  const decideFn = useServerFn(decideBountyApplication);
+  const inviteFn = useServerFn(inviteToBounty);
+  const { data = [], refetch } = useQuery({ queryKey: ["bountyAccessStaff"], queryFn: () => listFn() });
+  const [email, setEmail] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const rows = (data as any[]).filter((r) => r.bounty_id === bountyId);
+  const applications = rows.filter((r) => r.status === "applied");
+  const decided = rows.filter((r) => r.status !== "applied");
+
+  const decide = async (id: string, decision: "approved" | "rejected") => {
+    try {
+      await decideFn({ data: { id, decision } });
+      toast.success(decision === "approved" ? "Approved — creator notified." : "Rejected — creator notified.");
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not record that decision.");
+    }
+  };
+
+  const invite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      await inviteFn({ data: { bounty_id: bountyId, email } });
+      toast.success("Invite sent.");
+      setEmail("");
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send that invite.");
+    } finally { setBusy(false); }
+  };
+
+  return (
+    <div className="border border-[var(--border)] p-3">
+      <div className="label-cap silver">private access</div>
+
+      {mode === "apply" ? (
+        <div className="mt-2">
+          <div className="text-xs text-bone-soft">
+            {applications.length === 0 ? "No applications waiting." : `${applications.length} awaiting review`}
+          </div>
+          <ul className="mt-2 space-y-2">
+            {applications.map((r) => (
+              <li key={r.id} className="border border-[var(--border)] p-2 text-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-bone">
+                    @{r.tiktok_handle ?? "—"}{r.display_name ? ` · ${r.display_name}` : ""}
+                  </span>
+                  <span className="terminal text-[10px] text-bone-soft">
+                    {new Date(r.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                {r.message ? <p className="mt-1 italic text-bone-soft">“{r.message}”</p> : null}
+                <div className="mt-2 flex gap-2">
+                  <button onClick={() => decide(r.id, "approved")} className="silver-btn px-3 py-1 text-xs">approve</button>
+                  <button onClick={() => decide(r.id, "rejected")} className="ink-btn px-3 py-1 text-xs">reject</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      <form onSubmit={invite} className="mt-3 flex gap-2">
+        <input
+          required
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="invite a creator by email"
+          className="dark-input flex-1"
+          disabled={busy}
+        />
+        <button className="silver-btn px-3 py-1 text-xs" disabled={busy}>{busy ? "sending…" : "invite"}</button>
+      </form>
+
+      {decided.length > 0 ? (
+        <ul className="mt-3 space-y-1 text-xs text-bone-soft">
+          {decided.map((r) => (
+            <li key={r.id}>
+              {r.invited_email ?? r.display_name ?? r.tiktok_handle ?? r.user_id} — {r.status}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   );
 }

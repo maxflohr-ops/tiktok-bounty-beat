@@ -70,7 +70,7 @@ export const claimContract = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: bounty, error: berr } = await context.supabase
       .from("bounties")
-      .select("id,status,max_submissions,max_clips_per_editor,deadline")
+      .select("id,status,max_submissions,max_clips_per_editor,deadline,visibility,access_mode")
       .eq("id", data.bounty_id)
       .single();
     if (berr || !bounty) throw new Error("Contract not found.");
@@ -79,6 +79,10 @@ export const claimContract = createServerFn({ method: "POST" })
     const deadline = (bounty as { deadline?: string | null }).deadline;
     if (deadline && new Date(deadline).getTime() < Date.now())
       throw new Error("The posting window for this bounty has closed.");
+
+    // Private campaigns: only invited/accepted/approved creators may claim.
+    const { assertBountyAccess } = await import("@/lib/access.server");
+    await assertBountyAccess(context.supabase, data.bounty_id, context.userId, bounty as never);
 
     // Payout rail required up front: PayPal on the claim, or a wallet on file.
     if (!data.paypal_email) {
@@ -159,6 +163,10 @@ export const deliverProof = createServerFn({ method: "POST" })
       .single();
     if (se || !sub) throw new Error("Claim not found.");
     if (sub.editor_id !== context.userId) throw new Error("Not your claim.");
+    {
+      const { assertBountyAccess } = await import("@/lib/access.server");
+      await assertBountyAccess(context.supabase, sub.bounty_id, context.userId);
+    }
     // claimed/rejected → first or re-delivery; submitted → the editor may
     // replace a wrong link while it's still in review.
     if (sub.status !== "claimed" && sub.status !== "rejected" && sub.status !== "submitted")
