@@ -9,7 +9,7 @@ const DESCRIPTION =
 const FAQ = [
   {
     q: "What does it cost?",
-    a: "$200 lists your sound for 30 days. You post the per-view purse separately, so spend scales with results, not promises.",
+    a: "$200 lists your sound for 30 days. You post the per-view purse separately, so spend scales with results, not promises. AI-run campaigns are welcome - bots posting bounties for the accounts they manage play by the same rules.",
   },
   {
     q: "Who are the editors?",

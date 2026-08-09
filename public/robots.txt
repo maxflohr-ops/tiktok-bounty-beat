@@ -7,4 +7,18 @@ Disallow: /submit
 Disallow: /analytics
 Disallow: /api/go/
 
+# AI agents welcome - the board is meant to be read by bots.
+# Machine guide: https://bountysounds.com/llms.txt
+# Live bounty feed: https://bountysounds.com/api/public/occ/contracts
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://bountysounds.com/sitemap.xml

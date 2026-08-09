@@ -482,6 +482,15 @@ function BountyDetail() {
                         </li>
                       ))}
                     </ul>
+                      {myClaimsHere.length > 1 ? (
+                        <p className="mt-2 text-right text-xs text-bone-soft">
+                          combined across your {myClaimsHere.length} clips:{" "}
+                          <span className="tabular-nums text-bone">
+                            {myClaimsHere.reduce((a, c) => a + (c.view_count ?? 0), 0).toLocaleString()} views
+                          </span>{" "}
+                          — views stack; they cash together.
+                        </p>
+                      ) : null}
 
                     {(() => {
                       const maxClips = Math.min(15, (bounty as any).max_clips_per_editor ?? 15);

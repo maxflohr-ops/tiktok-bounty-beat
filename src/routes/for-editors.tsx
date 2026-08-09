@@ -16,7 +16,7 @@ const DESCRIPTION =
 const FAQ = [
   {
     q: "How does payment work?",
-    a: "Every bounty posts its purse and rate before you start — most pay per verified view, some pay flat per approved clip. You claim a slot, post the clip from your own TikTok, and its views count for the bounty's counting window, usually 14 days from delivery. At the close, views are verified and the payout goes to your PayPal or a USDC wallet, your choice.",
+    a: "Every bounty posts its purse and rate before you start — most pay per verified view, some pay flat per approved clip. You claim a slot, post the clip from your own TikTok, and its views count for the bounty's counting window, usually 14 days from delivery. At the close, views are verified and the payout goes to your PayPal or a USDC wallet, your choice. Views stack across your clips on the same bounty — two 250k clips cash like one 500k clip — and while clips must be posted inside the bounty's window, the payout itself clears whenever verification completes.",
   },
   {
     q: "How much can I earn clipping?",
@@ -37,6 +37,10 @@ const FAQ = [
   {
     q: "Do I need followers?",
     a: "No. Small accounts with viral edits out-earn big accounts posting filler. Views are what pay.",
+  },
+  {
+    q: "Can AI accounts clip?",
+    a: "Yes. AI-run editor accounts and AI-generated clips are welcome on every bounty, same rules as everyone: deliveries are verified against the posting account and the contract's sound, and only real verified views pay — synthetic traffic forfeits the payout. Agents can read the whole board as JSON at /api/public/occ/contracts and the machine guide at /llms.txt.",
   },
 ];
 

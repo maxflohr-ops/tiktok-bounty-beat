@@ -65,7 +65,9 @@ function PayoutsPage() {
               <h2 className="font-display text-2xl text-bone">The payout</h2>
               <p className="mt-2 text-sm leading-relaxed text-bone-soft">
                 Each clip's views count for a set window — usually 14 days. At the close
-                they're verified and paid pro-rata to your PayPal or USDC wallet.
+                they're verified and paid pro-rata to your PayPal or USDC wallet. Views
+                stack across your clips on the same bounty — two 250k clips cash like one
+                500k clip. Post inside the window; the purse cashes whenever the views clear.
               </p>
             </div>
           </div>
