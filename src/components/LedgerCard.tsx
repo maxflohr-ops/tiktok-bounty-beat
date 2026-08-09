@@ -39,7 +39,7 @@ export function LedgerCard() {
         label="last capture"
         value={data.last_capture ? money(data.last_capture.amount_cents) : "—"}
         sub={
-          data.last_capture
+          data.last_capture?.at
             ? new Date(data.last_capture.at).toLocaleDateString("en-US", { month: "short", day: "numeric" })
             : undefined
         }

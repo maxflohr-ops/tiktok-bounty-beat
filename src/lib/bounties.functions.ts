@@ -45,6 +45,10 @@ const EBRIL_SEED = {
 };
 
 async function seedBoardIfEmpty(supabaseAdmin: any) {
+  // The seed's posting window is over: an empty board after the deadline is
+  // the truth, not a bug. Never insert or reactivate a bounty nobody can
+  // deliver to - and never fight staff drafting after the window.
+  if (new Date(EBRIL_SEED.deadline).getTime() < Date.now()) return;
   // Emptiness = what the board shows: zero non-draft rows. A lone draft row
   // must not block seeding.
   const { count, error } = await supabaseAdmin
@@ -137,10 +141,10 @@ export const boardLedger = createServerFn({ method: "GET" }).handler(async () =>
   const purses = live.map((b) => b.funded_cash_cents ?? 0);
   const { data: lastPaid } = await supabaseAdmin
     .from("submissions")
-    .select("paid_cash_cents,created_at")
+    .select("paid_cash_cents,paid_at")
     .eq("status", "paid")
     .gt("paid_cash_cents", 0)
-    .order("created_at", { ascending: false })
+    .order("paid_at", { ascending: false, nullsFirst: false })
     .limit(1)
     .maybeSingle();
   return {
@@ -148,7 +152,7 @@ export const boardLedger = createServerFn({ method: "GET" }).handler(async () =>
     total_purse_cents: purses.reduce((a, b) => a + b, 0),
     largest_purse_cents: purses.length ? Math.max(...purses) : 0,
     last_capture: lastPaid
-      ? { amount_cents: lastPaid.paid_cash_cents ?? 0, at: lastPaid.created_at }
+      ? { amount_cents: lastPaid.paid_cash_cents ?? 0, at: lastPaid.paid_at }
       : null,
   };
 });
@@ -161,12 +165,12 @@ export const pastCaptures = createServerFn({ method: "GET" }).handler(async () =
   const { data, error } = await supabaseAdmin
     .from("submissions")
     .select(
-      "id,tiktok_handle,tiktok_video_url,verified_view_count,paid_cash_cents,created_at,bounties:bounty_id(title,contract_no)",
+      "id,tiktok_handle,tiktok_video_url,verified_view_count,paid_cash_cents,paid_at,bounties:bounty_id(title,contract_no)",
     )
     .eq("status", "paid")
     .gt("paid_cash_cents", 0)
     .not("tiktok_video_url", "is", null)
-    .order("created_at", { ascending: false })
+    .order("paid_at", { ascending: false, nullsFirst: false })
     .limit(12);
   if (error) return [];
   return (data ?? []).map((s) => ({

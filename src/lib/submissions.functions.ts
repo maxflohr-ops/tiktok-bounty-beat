@@ -157,7 +157,7 @@ export const deliverProof = createServerFn({ method: "POST" })
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
       .select(
-        "id,editor_id,status,tiktok_handle,bounty_id,counting_ends_at,bounties:bounty_id(platform_target,tiktok_sound_url,sound_name,hashtags,counting_days)",
+        "id,editor_id,status,tiktok_handle,bounty_id,counting_ends_at,bounties:bounty_id(platform_target,tiktok_sound_url,sound_name,hashtags,counting_days,deadline)",
       )
       .eq("id", data.submission_id)
       .single();
@@ -175,14 +175,8 @@ export const deliverProof = createServerFn({ method: "POST" })
     // Post within the window, cash whenever: a FIRST delivery must land
     // before the bounty deadline. A claim already delivered in-window keeps
     // its clock and may replace the link; payouts settle any time after.
-    const bountyDeadline = await (async () => {
-      const { data: b } = await context.supabase
-        .from("bounties")
-        .select("deadline")
-        .eq("id", sub.bounty_id)
-        .single();
-      return b?.deadline ?? null;
-    })();
+    const bountyDeadline =
+      (sub as unknown as { bounties: { deadline?: string | null } | null }).bounties?.deadline ?? null;
     const firstDelivery = !(sub as { counting_ends_at?: string | null }).counting_ends_at;
     if (firstDelivery && bountyDeadline && new Date(bountyDeadline).getTime() < Date.now())
       throw new Error("The posting window for this bounty closed before this clip was delivered. Approved clips still cash out - only new deliveries are closed.");
@@ -196,9 +190,13 @@ export const deliverProof = createServerFn({ method: "POST" })
     const oembed = isTikTok ? await fetchOembed(data.clip_url) : null;
 
     // Author: the unique handle lives in author_url; author_name is a display nickname.
+    const rawAuthorName = (oembed?.author_name || "").replace(/^@/, "").toLowerCase();
+    // author_name is a free-form display nickname - only trust it as a handle
+    // when it actually looks like one, or it corrupts tiktok_handle and
+    // tiktok_accounts with strings like "john smith \u{1F525}".
     const author =
       handleFromAuthorUrl(oembed?.author_url) ??
-      (oembed?.author_name || "").replace(/^@/, "").toLowerCase();
+      (/^[a-z0-9_.]{2,24}$/.test(rawAuthorName) ? rawAuthorName : "");
 
     // Clippers run multiple accounts. Never block on the posting account:
     // linked accounts auto-verify; a new account is auto-linked as
@@ -536,7 +534,7 @@ export const markPaid = createServerFn({ method: "POST" })
       }
     }
 
-    const { error } = await context.supabase
+    const { data: updated, error } = await context.supabase
       .from("submissions")
       .update({
         status: "paid",
@@ -548,8 +546,13 @@ export const markPaid = createServerFn({ method: "POST" })
           : {}),
       })
       .eq("id", data.id)
-      .eq("status", "approved");
+      .eq("status", "approved")
+      .select("id");
     if (error) throw new Error(error.message);
+    // The status filter means a non-approved submission matches nothing —
+    // fail loudly instead of telling the editor money moved when it didn't.
+    if (!updated || updated.length === 0)
+      throw new Error("Only approved submissions can be marked paid — this one wasn't in 'approved'.");
     // Tell the editor their money moved (best-effort).
     if (target) notifyEditorAsync(target.editor_id, "Payout sent", "Your bounty payout was sent to your payout method on file.");
     notifyAsync({

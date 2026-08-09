@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { FooterNav } from "@/components/FooterNav";
 import { LedgerCard } from "@/components/LedgerCard";
 import { NotifyForm } from "@/components/NotifyForm";
+import { useSession } from "@/lib/session";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
 import { GuillocheRosette, InkCardinal, InkDogwood, InkSeal, MicroRule } from "@/components/ArtMarks";
@@ -57,6 +58,7 @@ function pad(n: number) {
 }
 
 function LandingPage() {
+  const { user } = useSession();
   const listFn = useServerFn(listPublicBounties);
   const { data: bounties = [] } = useQuery({
     queryKey: ["bounties", "public"],
@@ -145,7 +147,7 @@ function LandingPage() {
                   <p className="italic text-[var(--color-bs-ink-mute)]">
                     No bounties on the board right now.
                   </p>
-                  <NotifyForm accountEmail={null} />
+                  <NotifyForm accountEmail={user?.email ?? null} />
                 </div>
               ) : (
                 <ul className="divide-y divide-[var(--color-bs-rule)]">

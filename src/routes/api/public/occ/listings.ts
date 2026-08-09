@@ -101,7 +101,9 @@ export const Route = createFileRoute("/api/public/occ/listings")({
             201,
           );
         } catch (err) {
-          return json({ error: err instanceof Error ? err.message : "listing failed" }, 500);
+          // Internals (Supabase/Stripe messages) stay in the server log.
+          console.error("listings API create failed:", err instanceof Error ? err.message : err);
+          return json({ error: "listing could not be created - try again or use /list-sound" }, 500);
         }
       },
     },
