@@ -204,6 +204,25 @@ export const pastCaptures = createServerFn({ method: "GET" }).handler(async () =
   }));
 });
 
+// Public: every delivered clip on a bounty - in review, counting, approved,
+// or captured. Anyone clicking into a bounty sees what's already riding on
+// it. Public TikTok handle + video link only; no payout PII.
+export const listBountyClips = createServerFn({ method: "GET" })
+  .inputValidator((d: unknown) => z.object({ bounty_id: z.string().uuid() }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("submissions")
+      .select("id,tiktok_handle,tiktok_video_url,view_count,verified_view_count,status,counting_ends_at,submitted_at,paid_cash_cents")
+      .eq("bounty_id", data.bounty_id)
+      .in("status", ["submitted", "pending", "approved", "paid"])
+      .not("tiktok_video_url", "is", null)
+      .order("submitted_at", { ascending: false })
+      .limit(50);
+    if (error) return [];
+    return rows ?? [];
+  });
+
 const upsertBountyInput = z.object({
   id: z.string().uuid().optional(),
   title: z.string().trim().min(2).max(120),
