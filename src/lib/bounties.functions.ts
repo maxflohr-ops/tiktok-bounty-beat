@@ -4,10 +4,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,funded_cash_cents,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode,logo_pack_url";
 // Columns safe to expose publicly (excludes funded_cash_cents and any Stripe identifiers).
 const PUBLIC_BOUNTY_COLS =
-  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode";
+  "id,contract_no,title,description,sound_name,tiktok_sound_url,cover_url,artist_song,source_assets_url,reward_points,reward_cash_cents,currency,payout_type,platform_target,max_submissions,deadline,status,created_at,featured_until,featured_plus,hashtags,rules,counting_days,max_clips_per_editor,visibility,access_mode,logo_pack_url";
 
 // Columns present since the original schema — the fallback when the DB is
 // mid-deploy and hasn't run the newest column migrations yet.
@@ -22,6 +22,7 @@ const LATE_COLUMN_DEFAULTS = {
   max_clips_per_editor: 15,
   visibility: "public",
   access_mode: null,
+  logo_pack_url: null,
 };
 
 // Launch contracts, mirrored from their seed migrations. Lovable's publish
@@ -46,6 +47,8 @@ const LAUNCH_SEEDS = [
     deadline: "2026-12-31T23:59:00Z",
     status: "active" as const,
     funded_cash_cents: 50000, // the $500 purse — covers the $250 single-video tier twice over
+    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
+    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
     title: "Clip Ebril — Anticipate Heartbreak",
@@ -62,13 +65,15 @@ const LAUNCH_SEEDS = [
     deadline: "2026-12-31T23:59:00Z",
     status: "active" as const,
     funded_cash_cents: 50000, // the $500 purse
+    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
+    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
-    title: "Clip Songs of Legion — Lyric Edits (any song)",
+    title: "Clip Sons of Legion — Any Song, Any Edit",
     description:
-      "Cut a lyric edit on any Songs of Legion song — lyrics on screen, #maddenlegion in the caption. $1 per 5,000 verified views, paid pro-rata, and views stack across your clips. Any Songs of Legion track counts; pick the line that hits. 9:16 only, subtitles/lyrics required.",
-    sound_name: "Songs of Legion — any song (lyric edit)",
-    artist_song: "Songs of Legion",
+      "Any Sons of Legion song, any style of edit — gameplay, lyrics, montage, whatever hits. #maddenlegion in the caption. $1 per 5,000 verified views, paid pro-rata, and views stack across your clips. 9:16 only.",
+    sound_name: "Sons of Legion — any song, any edit",
+    artist_song: "Sons of Legion",
     payout_type: "per_1k_views" as const,
     platform_target: "tiktok" as const,
     reward_cash_cents: 2000, // $1 per 5k ≡ $20 per 100k views
@@ -78,6 +83,8 @@ const LAUNCH_SEEDS = [
     status: "active" as const,
     funded_cash_cents: 10000, // the $100 purse
     hashtags: ["maddenlegion"],
+    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
+    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
     title: "Clip Ridgeclub — Biting Bullets",
@@ -94,6 +101,8 @@ const LAUNCH_SEEDS = [
     deadline: "2026-09-08T23:59:00Z",
     status: "active" as const,
     funded_cash_cents: 10000, // the $100 purse
+    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
+    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
 ];
 
@@ -121,7 +130,7 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
   await ensureLaunchBounties(supabaseAdmin);
   let { data: bounties, error } = await supabaseAdmin
     .from("bounties")
-    .select(PUBLIC_BOUNTY_COLS)
+    .select(PUBLIC_BOUNTY_COLS as "*")
     .neq("status", "draft")
     .eq("visibility", "public")
     .order("contract_no", { ascending: false });
@@ -340,7 +349,7 @@ export const listAllBountiesStaff = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("bounties")
-      .select(BOUNTY_COLS)
+      .select(BOUNTY_COLS as "*")
       .order("contract_no", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
