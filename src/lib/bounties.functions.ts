@@ -34,7 +34,7 @@ const LAUNCH_SEEDS = [
   {
     title: "Clip Ebril's Thursday Twitch stream",
     description:
-      "Ebril goes live on Twitch every Thursday. Cut the stream's best moments into vertical clips and post them to TikTok — best reactions, best runs, best lines. $5 per 5,000 verified views. Keep Ebril's voice front and center. 9:16 only, subtitles encouraged. Clips from the live stream or its VOD both count.",
+      "Ebril goes live on Twitch every Thursday. Cut the stream's best moments into vertical clips and post them to TikTok — best reactions, best runs, best lines. Tiered payout: 1M verified views on TikTok pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. Keep Ebril's voice front and center. 9:16 only, subtitles encouraged. Clips from the live stream or its VOD both count.",
     sound_name: "Ebril — live on Twitch (Thursdays)",
     artist_song: "Ebril",
     source_assets_url: "https://twitch.tv/ebbionline",
@@ -43,8 +43,9 @@ const LAUNCH_SEEDS = [
     reward_cash_cents: 10000,
     reward_points: 100,
     max_submissions: 20,
-    deadline: "2026-08-13T23:59:00Z",
+    deadline: "2026-12-31T23:59:00Z",
     status: "active" as const,
+    funded_cash_cents: 50000, // the $500 purse — covers the $250 single-video tier twice over
   },
   {
     title: "Clip Ridgeclub — Biting Bullets",
