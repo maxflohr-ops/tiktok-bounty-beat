@@ -70,12 +70,15 @@ export const claimContract = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: bounty, error: berr } = await context.supabase
       .from("bounties")
-      .select("id,status,max_submissions,max_clips_per_editor,visibility,access_mode")
+      .select("id,status,max_submissions,max_clips_per_editor,deadline,visibility,access_mode")
       .eq("id", data.bounty_id)
       .single();
     if (berr || !bounty) throw new Error("Contract not found.");
     if (bounty.status === "expired" || bounty.status === "fulfilled" || bounty.status === "closed")
       throw new Error("This contract is no longer taking claims.");
+    const deadline = (bounty as { deadline?: string | null }).deadline;
+    if (deadline && new Date(deadline).getTime() < Date.now())
+      throw new Error("The posting window for this bounty has closed.");
 
     // Private campaigns: only invited/accepted/approved creators may claim.
     const { assertBountyAccess } = await import("@/lib/access.server");
@@ -168,6 +171,21 @@ export const deliverProof = createServerFn({ method: "POST" })
     // replace a wrong link while it's still in review.
     if (sub.status !== "claimed" && sub.status !== "rejected" && sub.status !== "submitted")
       throw new Error("This claim has been reviewed — the clip can no longer be changed.");
+
+    // Post within the window, cash whenever: a FIRST delivery must land
+    // before the bounty deadline. A claim already delivered in-window keeps
+    // its clock and may replace the link; payouts settle any time after.
+    const bountyDeadline = await (async () => {
+      const { data: b } = await context.supabase
+        .from("bounties")
+        .select("deadline")
+        .eq("id", sub.bounty_id)
+        .single();
+      return b?.deadline ?? null;
+    })();
+    const firstDelivery = !(sub as { counting_ends_at?: string | null }).counting_ends_at;
+    if (firstDelivery && bountyDeadline && new Date(bountyDeadline).getTime() < Date.now())
+      throw new Error("The posting window for this bounty closed before this clip was delivered. Approved clips still cash out - only new deliveries are closed.");
 
     const bounty = (sub as unknown as {
       bounties: { platform_target: string; tiktok_sound_url: string | null; sound_name: string; hashtags?: string[] | null; counting_days?: number | null };

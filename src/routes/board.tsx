@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { listPublicBounties } from "@/lib/bounties.functions";
+import { listPublicBounties, pastCaptures } from "@/lib/bounties.functions";
 import { leaderboard, weeklyPayouts } from "@/lib/me.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FooterNav } from "@/components/FooterNav";
@@ -79,6 +79,8 @@ function BoardPage() {
   const { data: top = [] } = useQuery({ queryKey: ["leaderboard"], queryFn: () => boardFn() });
   const weeklyFn = useServerFn(weeklyPayouts);
   const { data: weekly = [] } = useQuery({ queryKey: ["weeklyPayouts"], queryFn: () => weeklyFn() });
+  const capturesFn = useServerFn(pastCaptures);
+  const { data: captures = [] } = useQuery({ queryKey: ["pastCaptures"], queryFn: () => capturesFn(), retry: false });
 
   const [taste, setTaste] = useState<TasteProfile | null>(null);
   useEffect(() => setTaste(loadTaste()), []);
@@ -242,6 +244,39 @@ function BoardPage() {
               })}
             </ul>
           )}
+
+          {/* Captured: clips that cashed their purse. Hidden until real payouts exist. */}
+          {captures.length > 0 ? (
+            <div className="mt-16">
+              <div className="label-cap text-center text-silver">Captured</div>
+              <p className="mx-auto mt-1 max-w-md text-center text-sm text-bone-soft">
+                Posted in the window, verified, paid. The purse cashes whenever the views clear.
+              </p>
+              <ul className="mx-auto mt-5 grid max-w-3xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {captures.map((c) => (
+                  <li key={c.id} className="border border-[var(--iron)] bg-[var(--wall-2)]/50 p-4">
+                    <a
+                      href={c.tiktok_video_url ?? "#"}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-display text-base text-bone hover:text-silver-glow"
+                    >
+                      @{c.tiktok_handle} ↗
+                    </a>
+                    <p className="mt-1 truncate text-xs text-bone-soft">{c.bounty_title}</p>
+                    <p className="mt-2 flex items-baseline justify-between text-sm">
+                      <span className="tabular-nums text-bone">
+                        {c.verified_view_count ? `${(c.verified_view_count / 1000).toFixed(0)}k views` : "verified"}
+                      </span>
+                      <span className="tabular-nums font-semibold text-gold">
+                        <Money cents={c.paid_cash_cents} currency="USD" />
+                      </span>
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           {/* Roster */}
           {top.length > 0 ? (

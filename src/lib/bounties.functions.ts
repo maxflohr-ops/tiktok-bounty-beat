@@ -153,6 +153,33 @@ export const boardLedger = createServerFn({ method: "GET" }).handler(async () =>
   };
 });
 
+// Public: clips that captured their purse — posted in the window, verified,
+// paid. No PII beyond the public TikTok handle. Powers the board's
+// "Captured" wall; renders nothing until real payouts exist.
+export const pastCaptures = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("submissions")
+    .select(
+      "id,tiktok_handle,tiktok_video_url,verified_view_count,paid_cash_cents,created_at,bounties:bounty_id(title,contract_no)",
+    )
+    .eq("status", "paid")
+    .gt("paid_cash_cents", 0)
+    .not("tiktok_video_url", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(12);
+  if (error) return [];
+  return (data ?? []).map((s) => ({
+    id: s.id,
+    tiktok_handle: s.tiktok_handle,
+    tiktok_video_url: s.tiktok_video_url,
+    verified_view_count: s.verified_view_count,
+    paid_cash_cents: s.paid_cash_cents,
+    bounty_title: (s as unknown as { bounties: { title: string } | null }).bounties?.title ?? null,
+    contract_no: (s as unknown as { bounties: { contract_no: number } | null }).bounties?.contract_no ?? null,
+  }));
+});
+
 const upsertBountyInput = z.object({
   id: z.string().uuid().optional(),
   title: z.string().trim().min(2).max(120),
