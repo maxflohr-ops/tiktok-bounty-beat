@@ -126,6 +126,49 @@ const LAUNCH_SEEDS = [
   },
 ];
 
+// Names we never worked with — any row carrying one is scrubbed outright from
+// every surface it could reach (board, bounty pages and their metadata, the
+// OCC feed, clips walls). Mirrors 20260811010000_purge_zeds_dead.sql for
+// publishes that skip git-synced migrations. Dependents cascade with the row.
+const BANNED_LISTING_PATTERN = /zed'?s\s*dead|zedsdead/i;
+const BANNED_OR_FILTER = [
+  "title",
+  "artist_song",
+  "sound_name",
+  "description",
+]
+  .flatMap((col) => [`${col}.ilike.*zeds dead*`, `${col}.ilike.*zed's dead*`, `${col}.ilike.*zedsdead*`])
+  .join(",");
+
+export async function purgeBannedListings(supabaseAdmin: any) {
+  const { data: bountyRows } = await supabaseAdmin
+    .from("bounties")
+    .select("id,title,artist_song,sound_name,description")
+    .or(BANNED_OR_FILTER);
+  // Re-check in JS: the CI mock ignores `or`, and a backend quirk must never
+  // widen a delete beyond rows that actually carry the name.
+  for (const b of (bountyRows ?? []) as Record<string, string | null>[]) {
+    const hay = `${b.title ?? ""} ${b.artist_song ?? ""} ${b.sound_name ?? ""} ${b.description ?? ""}`;
+    if (!BANNED_LISTING_PATTERN.test(hay)) continue;
+    const { error } = await supabaseAdmin.from("bounties").delete().eq("id", b.id);
+    if (error) console.error("purgeBannedListings bounty delete failed:", b.title, error.message);
+  }
+
+  const listingFilter = ["artist_name", "song_title", "notes"]
+    .flatMap((col) => [`${col}.ilike.*zeds dead*`, `${col}.ilike.*zed's dead*`, `${col}.ilike.*zedsdead*`])
+    .join(",");
+  const { data: listingRows } = await supabaseAdmin
+    .from("sound_listings")
+    .select("id,artist_name,song_title,notes")
+    .or(listingFilter);
+  for (const l of (listingRows ?? []) as Record<string, string | null>[]) {
+    const hay = `${l.artist_name ?? ""} ${l.song_title ?? ""} ${l.notes ?? ""}`;
+    if (!BANNED_LISTING_PATTERN.test(hay)) continue;
+    const { error } = await supabaseAdmin.from("sound_listings").delete().eq("id", l.id);
+    if (error) console.error("purgeBannedListings listing delete failed:", l.artist_name, error.message);
+  }
+}
+
 // Titles the launch campaigns outgrew (earlier generations of renamed seeds).
 // Rows carrying them are deleted when nothing was ever submitted against them.
 const STALE_TITLES = [
@@ -195,6 +238,7 @@ async function healBountyTitles(supabaseAdmin: any) {
 }
 
 async function ensureLaunchBounties(supabaseAdmin: any) {
+  await purgeBannedListings(supabaseAdmin);
   await healBountyTitles(supabaseAdmin);
   for (const seed of LAUNCH_SEEDS) {
     if (new Date(seed.deadline).getTime() < Date.now()) continue;
