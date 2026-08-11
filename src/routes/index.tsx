@@ -159,7 +159,7 @@ function LandingPage() {
                         className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 py-3 transition hover:bg-[var(--color-bs-ink)]/[0.04]"
                       >
                         <BsMono className="text-[var(--color-bs-ink-mute)]">#{pad(b.contract_no)}</BsMono>
-                        <span className="min-w-0 truncate font-[var(--font-display)] text-base font-medium text-[var(--color-bs-ink)] md:text-lg">
+                        <span className="min-w-0 truncate [font-family:var(--font-brand)] text-base font-semibold text-[var(--color-bs-ink)] md:text-lg">
                           {b.title}
                         </span>
                         <BsMono className="font-semibold text-[var(--color-bs-accent)]">
