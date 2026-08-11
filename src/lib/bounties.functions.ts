@@ -108,6 +108,23 @@ const LAUNCH_SEEDS = [
     logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
+    title: "Ridgeclub — Do I Clench My Fist? (Mac Miller edits)",
+    description:
+      'Cut Mac Miller edits — archival footage, interviews, live moments — set to Ridgeclub\'s "Do I Clench My Fist?". $3 per 100,000 verified views from a $100 posted purse, paid pro-rata, and views stack across your clips. 9:16 only, use the sound.',
+    sound_name: "Ridgeclub — Do I Clench My Fist?",
+    artist_song: "Ridgeclub",
+    payout_type: "per_1k_views" as const,
+    platform_target: "tiktok" as const,
+    reward_cash_cents: 300, // $3 per 100k verified views
+    reward_points: 100,
+    max_submissions: 20,
+    deadline: "2026-09-08T23:59:00Z",
+    status: "active" as const,
+    funded_cash_cents: 10000, // the $100 purse
+    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
+    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
+  },
+  {
     title: "Ridgeclub — Fan Page",
     description:
       "Build a whole Ridgeclub fan page on TikTok: a dedicated account carrying the Ridgeclub name and look, at least five posted clips using Ridgeclub sounds, and a bio that points back to the artist. Deliver the account URL as your submission. $50 flat per approved fan page from a $100 posted purse — the first two approved pages capture it.",
