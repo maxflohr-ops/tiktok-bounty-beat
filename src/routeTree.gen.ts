@@ -20,6 +20,7 @@ import { Route as ForEditorsRouteImport } from './routes/for-editors'
 import { Route as ForArtistsRouteImport } from './routes/for-artists'
 import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
 import { Route as BoardRouteImport } from './routes/board'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -88,6 +89,11 @@ const ClippingCampaignsRoute = ClippingCampaignsRouteImport.update({
 const BoardRoute = BoardRouteImport.update({
   id: '/board',
   path: '/board',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -164,6 +170,7 @@ const ApiPublicOccContractsRoute = ApiPublicOccContractsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/app': typeof AppRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/app': typeof AppRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/app': typeof AppRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
   '/for-artists': typeof ForArtistsRoute
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/app'
     | '/board'
     | '/clipping-campaigns'
     | '/for-artists'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/app'
     | '/board'
     | '/clipping-campaigns'
     | '/for-artists'
@@ -299,6 +310,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/app'
     | '/board'
     | '/clipping-campaigns'
     | '/for-artists'
@@ -327,6 +339,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  AppRoute: typeof AppRoute
   BoardRoute: typeof BoardRoute
   ClippingCampaignsRoute: typeof ClippingCampaignsRoute
   ForArtistsRoute: typeof ForArtistsRoute
@@ -416,6 +429,13 @@ declare module '@tanstack/react-router' {
       path: '/clipping-campaigns'
       fullPath: '/clipping-campaigns'
       preLoaderRoute: typeof ClippingCampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/board': {
@@ -549,6 +569,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  AppRoute: AppRoute,
   BoardRoute: BoardRoute,
   ClippingCampaignsRoute: ClippingCampaignsRoute,
   ForArtistsRoute: ForArtistsRoute,
