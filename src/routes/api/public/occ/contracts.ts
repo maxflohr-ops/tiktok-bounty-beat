@@ -16,6 +16,10 @@ export const Route = createFileRoute("/api/public/occ/contracts")({
         const counts = new Map<string, { claims: number; approved: number }>();
         try {
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          // Scrub banned names before serving — the feed must never carry a
+          // listing the board would refuse to show.
+          const { purgeBannedListings } = await import("@/lib/bounties.functions");
+          await purgeBannedListings(supabaseAdmin);
           const { data: bounties, error } = await supabaseAdmin
             .from("bounties")
             .select(
