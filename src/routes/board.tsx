@@ -506,7 +506,7 @@ function GhostCard({
       <p className="mt-1 font-body italic text-ink-soft">for “{song}”</p>
       <div className="mt-5 border-t border-[var(--paper-dark)] pt-3">
         <div className="label-cap text-ink-soft">Reward</div>
-        <div className="mt-1 font-display text-lg text-ink">{rate}</div>
+        <div className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{rate}</div>
         <div className="mt-1 text-xs text-ink-soft">{note}</div>
       </div>
       <div className="mt-4 text-center">
@@ -533,7 +533,7 @@ function ContractCard({
     b.payout_type === "per_1k_views"
       ? formatPerViewRate(b.reward_cash_cents, b.currency)
       : b.reward_cash_cents > 0
-        ? `${money(b.reward_cash_cents, b.currency)} per approved clip`
+        ? `${money(b.reward_cash_cents, b.currency)} per approved delivery`
         : b.reward_points > 0
           ? `${b.reward_points} pts per clip`
           : "Reward set on delivery";
@@ -601,7 +601,7 @@ function ContractCard({
 
       <div className="mt-5 border-t border-[var(--paper-dark)] pt-3">
         <div className="label-cap text-ink-soft">Reward</div>
-        <div className="mt-1 font-display text-lg text-ink">{reward}</div>
+        <div className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</div>
         <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-ink-soft">
           <span>{b.platform_target}</span>
           {b.deadline ? (
