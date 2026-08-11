@@ -590,7 +590,7 @@ function ContractCard({
         )}
       </div>
 
-      <h3 className="font-display text-2xl leading-tight text-ink">{b.title}</h3>
+      <h3 className="[font-family:var(--font-brand)] text-2xl font-semibold leading-snug text-ink">{b.title}</h3>
       {b.artist_song ? (
         <p className="mt-1 font-body italic text-ink-soft">for “{b.artist_song}”</p>
       ) : (

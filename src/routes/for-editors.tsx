@@ -131,7 +131,7 @@ function ForEditors() {
               <li key={b.id} className="border border-[var(--color-bs-rule)] bg-white p-5">
                 <Link to="/bounty/$id" params={{ id: b.id }} className="group block">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="font-[var(--font-display)] text-lg font-semibold text-[var(--color-bs-ink)] group-hover:underline">
+                    <span className="[font-family:var(--font-brand)] text-lg font-semibold text-[var(--color-bs-ink)] group-hover:underline">
                       {b.title}
                     </span>
                     <BsMono className="text-[var(--color-bs-accent)]">{rate(b)}</BsMono>

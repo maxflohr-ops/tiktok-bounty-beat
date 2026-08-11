@@ -109,7 +109,76 @@ const LAUNCH_SEEDS = [
   },
 ];
 
+// Titles the launch campaigns outgrew (earlier generations of renamed seeds).
+// Rows carrying them are deleted when nothing was ever submitted against them.
+const STALE_TITLES = [
+  "Dog Legion — Lyric Edits (any song)",
+  "Songs of Legion — Lyric Edits (any song)",
+];
+
+// Publishes have skipped git-synced migrations before, so the server heals
+// titles itself, mirroring 20260809190000_strip_clip_prefix_dedupe.sql:
+// stale renamed-campaign rows go (submission-guarded), then "Clip " prefixes
+// come off (collision-guarded). Idempotent — a healthy board is two cheap
+// empty selects.
+async function healBountyTitles(supabaseAdmin: any) {
+  const hasSubmissions = async (bountyId: string) => {
+    const { count } = await supabaseAdmin
+      .from("submissions")
+      .select("id", { count: "exact", head: true })
+      .eq("bounty_id", bountyId);
+    return (count ?? 0) > 0;
+  };
+
+  const { data: clipRaw } = await supabaseAdmin
+    .from("bounties")
+    .select("id,title")
+    .like("title", "Clip %");
+  // Re-filter in JS: the CI mock ignores `like`, and a backend quirk here must
+  // never let slice(5) chew a title that doesn't carry the prefix.
+  const clipRows = ((clipRaw ?? []) as { id: string; title: string }[]).filter((r) =>
+    r.title?.startsWith("Clip "),
+  );
+  const { data: staleRaw } = await supabaseAdmin
+    .from("bounties")
+    .select("id,title")
+    .in("title", STALE_TITLES);
+
+  const doomed = [
+    ...(((staleRaw ?? []) as { id: string; title: string }[])),
+    ...clipRows.filter((r) => STALE_TITLES.includes(r.title.slice(5))),
+  ];
+  const doomedIds = new Set<string>();
+  for (const row of doomed) {
+    if (await hasSubmissions(row.id)) continue;
+    const { error } = await supabaseAdmin.from("bounties").delete().eq("id", row.id);
+    if (error) console.error("healBountyTitles delete failed:", row.title, error.message);
+    else doomedIds.add(row.id);
+  }
+
+  for (const row of clipRows) {
+    if (doomedIds.has(row.id)) continue;
+    const target = row.title.slice(5);
+    const { data: clash } = await supabaseAdmin
+      .from("bounties")
+      .select("id")
+      .eq("title", target)
+      .maybeSingle();
+    if (clash) {
+      // Duplicate generation of the same campaign: drop the prefixed copy
+      // unless clips already ride on it.
+      if (await hasSubmissions(row.id)) continue;
+      const { error } = await supabaseAdmin.from("bounties").delete().eq("id", row.id);
+      if (error) console.error("healBountyTitles dedupe failed:", row.title, error.message);
+    } else {
+      const { error } = await supabaseAdmin.from("bounties").update({ title: target }).eq("id", row.id);
+      if (error) console.error("healBountyTitles rename failed:", row.title, error.message);
+    }
+  }
+}
+
 async function ensureLaunchBounties(supabaseAdmin: any) {
+  await healBountyTitles(supabaseAdmin);
   for (const seed of LAUNCH_SEEDS) {
     if (new Date(seed.deadline).getTime() < Date.now()) continue;
     const { data: existing, error: lookupError } = await supabaseAdmin

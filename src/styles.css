@@ -710,14 +710,16 @@
 }
 
 
-/* Wanted-poster handwriting, scoped to the paper surfaces only — contract
-   cards and the board masthead read hand-lettered, everything else keeps the
-   grotesque for legibility. */
+/* Bounty titles read in the brand serif — the hand-lettered poster face was
+   illegible at title size on phones. The masthead below keeps the poster
+   look; titles carry the name, so they carry the legible face. */
 .contract h1,
 .contract h3 {
-  font-family: var(--font-poster);
-  font-weight: 400;
-  letter-spacing: 0.01em;
+  font-family: var(--font-brand);
+  font-weight: 600;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 .contract .label-cap {
   font-family: var(--font-marker);

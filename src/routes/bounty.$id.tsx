@@ -279,7 +279,7 @@ function BountyDetail() {
               </p>
             </div>
 
-            <h1 className="font-display text-3xl leading-tight text-ink md:text-4xl">{bounty.title}</h1>
+            <h1 className="[font-family:var(--font-brand)] text-3xl font-semibold leading-tight text-ink md:text-4xl">{bounty.title}</h1>
             {bounty.artist_song ? (
               <p className="mt-1 font-body italic text-ink-soft">for “{bounty.artist_song}”</p>
             ) : null}
