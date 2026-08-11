@@ -235,8 +235,8 @@ function BountyDetail() {
     bounty.payout_type === "per_1k_views"
       ? formatPerViewRate(bounty.reward_cash_cents, bounty.currency)
       : bounty.reward_cash_cents > 0
-        ? `${money(bounty.reward_cash_cents, bounty.currency)} per approved clip`
-        : `${bounty.reward_points} pts per approved clip`;
+        ? `${money(bounty.reward_cash_cents, bounty.currency)} per approved delivery`
+        : `${bounty.reward_points} pts per approved delivery`;
 
   // Star note: featured contracts carry the ★ suffix, like a replacement bill's serial.
   const isStarNote = Boolean(
@@ -325,7 +325,7 @@ function BountyDetail() {
             <div className="mt-6 grid gap-4 border-t border-[var(--paper-dark)] pt-4 sm:grid-cols-2">
               <div>
                 <div className="label-cap text-ink-soft">Reward</div>
-                <p className="mt-1 font-display text-lg text-ink">{reward}</p>
+                <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</p>
                 <p className="mt-1 text-xs text-ink-soft">
                   {(bounty as any).purse_cents > 0 ? (
                     <>
@@ -851,8 +851,8 @@ function LockedCampaign({
     teaser.payout_type === "per_1k_views"
       ? formatPerViewRate(teaser.reward_cash_cents, teaser.currency)
       : teaser.reward_cash_cents > 0
-        ? `${money(teaser.reward_cash_cents, teaser.currency)} per approved clip`
-        : `${teaser.reward_points} pts per approved clip`;
+        ? `${money(teaser.reward_cash_cents, teaser.currency)} per approved delivery`
+        : `${teaser.reward_points} pts per approved delivery`;
 
   return (
     <div className="relative min-h-screen">
@@ -891,7 +891,7 @@ function LockedCampaign({
 
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Reward</div>
-              <p className="mt-1 font-display text-lg text-ink">{reward}</p>
+              <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</p>
             </div>
 
             {teaser.rules ? (

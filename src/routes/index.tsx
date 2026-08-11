@@ -48,7 +48,7 @@ function money(cents: number, currency = "USD") {
 function rewardLabel(b: Bounty) {
   if (b.payout_type === "per_1k_views" && b.reward_cash_cents > 0)
     return formatPerViewRate(b.reward_cash_cents, b.currency, true);
-  if (b.reward_cash_cents > 0) return `${money(b.reward_cash_cents, b.currency)} / clip`;
+  if (b.reward_cash_cents > 0) return `${money(b.reward_cash_cents, b.currency)} / delivery`;
   if (b.reward_points > 0) return `${b.reward_points} pts / clip`;
   return "reward on delivery";
 }
