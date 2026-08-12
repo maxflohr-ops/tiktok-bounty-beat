@@ -82,7 +82,7 @@ const LAUNCH_SEEDS = [
     reward_cash_cents: 2000, // $1 per 5k ≡ $20 per 100k views
     reward_points: 100,
     max_submissions: 20,
-    deadline: "2026-09-08T23:59:00Z",
+    deadline: "2026-10-31T23:59:00Z", // open through Halloween
     status: "active" as const,
     funded_cash_cents: 10000, // the $100 purse
     hashtags: ["maddenlegion"],
@@ -101,7 +101,7 @@ const LAUNCH_SEEDS = [
     reward_cash_cents: 200, // $2 per 100k ≡ $100 per 5M views
     reward_points: 100,
     max_submissions: 20,
-    deadline: "2026-09-08T23:59:00Z",
+    deadline: "2026-10-31T23:59:00Z", // open through Halloween
     status: "active" as const,
     funded_cash_cents: 10000, // the $100 purse
     rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
@@ -113,12 +113,13 @@ const LAUNCH_SEEDS = [
       'Cut Mac Miller edits — archival footage, interviews, live moments — set to Ridgeclub\'s "Do I Clench My Fist?". $3 per 100,000 verified views from a $100 posted purse, paid pro-rata, and views stack across your clips. 9:16 only, use the sound.',
     sound_name: "Ridgeclub — Do I Clench My Fist?",
     artist_song: "Ridgeclub",
+    tiktok_sound_url: "https://www.tiktok.com/t/ZT9kLRCQ8e1vj-jLsqm/",
     payout_type: "per_1k_views" as const,
     platform_target: "tiktok" as const,
     reward_cash_cents: 300, // $3 per 100k verified views
     reward_points: 100,
     max_submissions: 20,
-    deadline: "2026-09-08T23:59:00Z",
+    deadline: "2026-10-31T23:59:00Z", // open through Halloween
     status: "active" as const,
     funded_cash_cents: 10000, // the $100 purse
     rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
@@ -261,14 +262,36 @@ async function ensureLaunchBounties(supabaseAdmin: any) {
     if (new Date(seed.deadline).getTime() < Date.now()) continue;
     const { data: existing, error: lookupError } = await supabaseAdmin
       .from("bounties")
-      .select("id")
+      .select("id,deadline,tiktok_sound_url")
       .eq("title", seed.title)
       .maybeSingle();
     if (lookupError) {
       console.error("ensureLaunchBounties lookup failed:", lookupError.message);
       continue;
     }
-    if (existing) continue;
+    if (existing) {
+      // Existing rows stay untouched except for two field syncs that mirror
+      // their migrations (publishes have skipped migration files before):
+      // deadlines only ever extend (never shorten, and a null deadline —
+      // open-ended — stays null), and a missing sound link is backfilled.
+      const patch: Record<string, unknown> = {};
+      if (
+        seed.deadline &&
+        existing.deadline &&
+        new Date(existing.deadline).getTime() < new Date(seed.deadline).getTime()
+      )
+        patch.deadline = seed.deadline;
+      const seedSound = (seed as { tiktok_sound_url?: string }).tiktok_sound_url;
+      if (seedSound && !existing.tiktok_sound_url) patch.tiktok_sound_url = seedSound;
+      if (Object.keys(patch).length > 0) {
+        const { error: syncError } = await supabaseAdmin
+          .from("bounties")
+          .update(patch)
+          .eq("id", existing.id);
+        if (syncError) console.error("ensureLaunchBounties sync failed:", seed.title, syncError.message);
+      }
+      continue;
+    }
     const { error: insertError } = await supabaseAdmin.from("bounties").insert(seed);
     if (insertError) console.error("ensureLaunchBounties insert failed:", seed.title, insertError.message);
   }
