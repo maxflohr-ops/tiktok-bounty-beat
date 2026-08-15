@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 // The operating entity behind Bounty Sounds. Named in both legal documents;
 // reviewers (TikTok, payment partners) check that a real operator is
 // identified rather than an anonymous site.
-export const OPERATOR = "All My Life Productions";
+export const OPERATOR = "Florra LLC";
 export const PRIVACY_EMAIL = "privacy@bountysounds.com";
 export const LEGAL_EMAIL = "legal@bountysounds.com";
 export const EFFECTIVE_DATE = "August 15, 2026";
