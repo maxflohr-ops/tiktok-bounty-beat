@@ -13,6 +13,8 @@ const LINKS = [
   { to: "/clipping-campaigns", label: "clipping campaigns" },
   { to: "/tiktok-clipper", label: "tiktok clippers" },
   { to: "/list-sound", label: "list a sound" },
+  { to: "/privacy", label: "privacy" },
+  { to: "/terms", label: "terms" },
 ] as const;
 
 export function FooterNav({ className = "" }: { className?: string }) {
