@@ -126,6 +126,32 @@ const LAUNCH_SEEDS = [
     logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
   {
+    // Legion Franchise Bounty. Flat ladder, not per-view: $25 a clip is the
+    // rung the board pays automatically. The series upgrade ($50) and the
+    // judged purse ($150/$100/$50) are awarded by staff at review using the
+    // awarded_cash_cents override, so they are described here rather than
+    // encoded in reward_cash_cents. Deadline is fixed at Sept 13 because the
+    // creator outreach emails commit to that date.
+    title: "Sons of Legion — Out The Cage (Madden 27)",
+    description:
+      "Sons of Legion's \"Out The Cage\" is on the Madden NFL 27 soundtrack. Cut Madden content over it — franchise storylines, rebuild arcs, ratings reactions, MUT pulls, tier lists with a spicy bottom slot. $25 per approved clip, or $50 if you run a 3+ episode series with the track as the intro theme. On top of that sits a $300 judged purse: $150 for the best series, $100 runner-up, $50 for the best single clip — judged on creativity, not follower count, so a mid-size account can take it off someone twice their size.",
+    sound_name: "Sons of Legion — Out The Cage",
+    artist_song: "Sons of Legion",
+    tiktok_sound_url: "https://www.tiktok.com/music/Out-The-Cage-7665103983788705793",
+    payout_type: "flat" as const,
+    platform_target: "tiktok" as const,
+    reward_cash_cents: 2500, // $25 flat per approved clip; series/purse awarded at review
+    reward_points: 100,
+    max_submissions: 20,
+    deadline: "2026-09-13T23:59:00Z",
+    status: "active" as const,
+    funded_cash_cents: 110000, // $800 posting line + the $300 judged purse
+    hashtags: ["maddenlegion"],
+    rules:
+      "Official sound only — the canonical Out The Cage page, not a re-upload or remix. #maddenlegion in the caption. Paid-partnership toggle ON (FTC — protects you and the band). Your own capture, no re-uploaded broadcast footage. Series entries need 3+ episodes using the track as the intro theme. No slurs or hate, no piling on individual players, and never claim EA or the NFL endorses this campaign.",
+    logo_pack_url: null,
+  },
+  {
     title: "Ridgeclub — Fan Page",
     description:
       "Build a whole Ridgeclub fan page on TikTok: a dedicated account carrying the Ridgeclub name and look, at least five posted clips using Ridgeclub sounds, and a bio that points back to the artist. Deliver the account URL as your submission. $50 flat per approved fan page from a $100 posted purse — the first two approved pages capture it.",
