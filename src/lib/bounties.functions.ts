@@ -315,7 +315,7 @@ async function ensureLaunchBounties(supabaseAdmin: any) {
     if (new Date(seed.deadline).getTime() < Date.now()) continue;
     const { data: existing, error: lookupError } = await supabaseAdmin
       .from("bounties")
-      .select("id,deadline,tiktok_sound_url")
+      .select("id,deadline,tiktok_sound_url,cover_url")
       .eq("title", seed.title)
       .maybeSingle();
     if (lookupError) {
