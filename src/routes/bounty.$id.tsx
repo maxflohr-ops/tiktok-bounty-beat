@@ -279,18 +279,27 @@ function BountyDetail() {
               </p>
             </div>
 
+            {flagship ? (
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <LiveNowBadge />
+                <PlatformIcons />
+              </div>
+            ) : null}
             <h1 className="[font-family:var(--font-brand)] text-3xl font-semibold leading-tight text-ink md:text-4xl">{bounty.title}</h1>
             {bounty.artist_song ? (
               <p className="mt-1 font-body italic text-ink-soft">for “{bounty.artist_song}”</p>
             ) : null}
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
               <span>sound · {bounty.sound_name}</span>
-              <span>platform · {bounty.platform_target}</span>
+              <span>platform · {flagship ? "tiktok + instagram reels" : bounty.platform_target}</span>
+              {flagship ? <span>funder · {FLAGSHIP.funder}</span> : null}
+              {flagship ? <span>views verify over 72 hours</span> : null}
               {bounty.deadline ? (
                 <span>deadline · {new Date(bounty.deadline).toLocaleString()}</span>
               ) : null}
               {bounty.max_submissions ? <span>cap · {bounty.max_submissions} clips</span> : null}
             </div>
+
 
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Brief</div>
