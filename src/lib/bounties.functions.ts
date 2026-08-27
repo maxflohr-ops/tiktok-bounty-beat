@@ -336,6 +336,8 @@ async function ensureLaunchBounties(supabaseAdmin: any) {
         patch.deadline = seed.deadline;
       const seedSound = (seed as { tiktok_sound_url?: string }).tiktok_sound_url;
       if (seedSound && !existing.tiktok_sound_url) patch.tiktok_sound_url = seedSound;
+      const seedCover = (seed as { cover_url?: string }).cover_url;
+      if (seedCover && !existing.cover_url) patch.cover_url = seedCover;
       if (Object.keys(patch).length > 0) {
         const { error: syncError } = await supabaseAdmin
           .from("bounties")
