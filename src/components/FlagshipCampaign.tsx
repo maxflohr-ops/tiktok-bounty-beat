@@ -66,83 +66,98 @@ export function PurseBar({
   );
 }
 
-/** Source material, official sounds, verbatim rules and the hook bank. */
-export function FlagshipPanels() {
+/** The two things that matter: what to clip, and what sound to use. */
+export function FlagshipTopMedia() {
   const f = FLAGSHIP;
+  const tiktokSound = f.sounds.find((s) => s.required) ?? f.sounds[0];
   return (
-    <>
-      <section className="mt-6 border-t border-[var(--paper-dark)] pt-4">
-        <div className="label-cap text-ink-soft">Source material</div>
-        <a
-          href={f.source.youtube}
-          target="_blank"
-          rel="noreferrer"
-          className="group mt-2 block border border-[var(--paper-dark)]"
-        >
-          <span className="relative block">
-            <img
-              src={f.hero.image}
-              alt={f.hero.alt}
-              loading="lazy"
-              className="block w-full object-cover"
-            />
-            <span className="absolute inset-0 flex items-center justify-center">
-              <span className="inline-flex items-center gap-2 bg-black/70 px-3 py-1.5 text-xs uppercase tracking-widest text-white">
-                <Play aria-hidden className="h-3.5 w-3.5" /> watch on YouTube
-              </span>
+    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <a
+        href={f.source.youtube}
+        target="_blank"
+        rel="noreferrer"
+        className="group block border border-[var(--paper-dark)] bg-black/5 transition hover:bg-black/10"
+      >
+        <span className="relative block">
+          <img src={f.hero.image} alt={f.hero.alt} loading="lazy" className="block aspect-video w-full object-cover" />
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className="inline-flex items-center gap-2 bg-black/70 px-3 py-1.5 text-xs uppercase tracking-widest text-white">
+              <Play aria-hidden className="h-3.5 w-3.5" /> watch on YouTube
             </span>
           </span>
-          <span className="block px-3 py-2 font-body text-sm text-ink">{f.source.youtubeTitle}</span>
-        </a>
-        <ul className="mt-2 space-y-1 text-sm">
-          <li>
-            <a href={f.source.youtube} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-body text-ink underline">
-              Rockstar Games official announcement <ExternalLink className="h-3 w-3" />
-            </a>
-          </li>
-          <li>
-            <a href={f.source.netflix} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-body text-ink underline">
-              Netflix info page <ExternalLink className="h-3 w-3" />
-            </a>
-          </li>
-        </ul>
-        <p className="mt-2 text-xs text-ink-soft">{f.source.note}</p>
+        </span>
+        <span className="block px-3 py-2">
+          <span className="label-cap block text-[var(--wax-red)]">Clip this</span>
+          <span className="mt-0.5 block font-body text-sm text-ink">{f.source.youtubeTitle}</span>
+        </span>
+      </a>
+
+      <a
+        href={tiktokSound.url}
+        target="_blank"
+        rel="noreferrer"
+        className="flex flex-col justify-center border border-[var(--paper-dark)] bg-black/5 px-4 py-5 transition hover:bg-black/10"
+      >
+        <span className="label-cap block text-[var(--wax-red)]">Use this sound</span>
+        <span className="mt-1 flex items-center gap-2 [font-family:var(--font-brand)] text-xl font-semibold text-ink">
+          <Music2 aria-hidden className="h-5 w-5" /> “biting bullets” — official TikTok sound
+        </span>
+        <span className="mt-2 inline-flex items-center gap-1 font-body text-sm text-ink underline">
+          open the sound page <ExternalLink className="h-3 w-3" />
+        </span>
+        <span className="mt-2 block text-xs text-ink-soft">
+          Pick it from TikTok's sound picker (or Reels audio) — the attribution is what gets you paid.
+        </span>
+      </a>
+    </div>
+  );
+}
+
+/** Rules, rights note, remaining links and the hook bank. */
+export function FlagshipPanels() {
+  const f = FLAGSHIP;
+  const extras = f.sounds.filter((s) => !s.required);
+  return (
+    <>
+      <section className="mt-5 border-t border-[var(--paper-dark)] pt-4">
+        <div className="label-cap text-ink-soft">Rules — violations marked “seized”</div>
+        <ol className="mt-2 list-decimal space-y-1.5 pl-5 font-body text-sm leading-relaxed text-ink-soft">
+          {f.rules.map((r) => (
+            <li key={r}>{r}</li>
+          ))}
+        </ol>
+        <p className="mt-2 text-[11px] leading-relaxed text-ink-soft">{f.rightsNote}</p>
       </section>
 
-      <section className="mt-6 border-t border-[var(--paper-dark)] pt-4">
-        <div className="label-cap text-ink-soft">Use this sound</div>
+      <section className="mt-5 border-t border-[var(--paper-dark)] pt-4">
+        <div className="label-cap text-ink-soft">More links</div>
         <div className="mt-2 flex flex-wrap gap-2">
-          {f.sounds.map((s) => (
+          {extras.map((s) => (
             <a
               key={s.url}
               href={s.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 border border-[var(--paper-dark)] px-3 py-1.5 font-body text-sm text-ink hover:bg-black/5"
+              className="inline-flex items-center gap-1.5 border border-[var(--paper-dark)] px-3 py-1 font-body text-sm text-ink hover:bg-black/5"
             >
               <Music2 aria-hidden className="h-3.5 w-3.5" />
               {s.label}
-              {s.required ? <span className="text-[10px] uppercase tracking-widest text-[var(--wax-red)]">required</span> : null}
               <ExternalLink className="h-3 w-3" />
             </a>
           ))}
+          <a
+            href={f.source.netflix}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 border border-[var(--paper-dark)] px-3 py-1 font-body text-sm text-ink hover:bg-black/5"
+          >
+            Netflix info page <ExternalLink className="h-3 w-3" />
+          </a>
         </div>
-        <p className="mt-2 text-xs text-ink-soft">
-          Pick the sound from TikTok's sound picker (or Reels audio) — attribution is what gets you paid.
-        </p>
+        <p className="mt-2 text-xs text-ink-soft">{f.source.note}</p>
       </section>
 
-      <section className="mt-6 border-t border-[var(--paper-dark)] pt-4">
-        <div className="label-cap text-ink-soft">Rules — violations marked “seized”</div>
-        <ol className="mt-2 list-decimal space-y-2 pl-5 font-body text-sm leading-relaxed text-ink-soft">
-          {f.rules.map((r) => (
-            <li key={r}>{r}</li>
-          ))}
-        </ol>
-        <p className="mt-3 text-[11px] leading-relaxed text-ink-soft">{f.rightsNote}</p>
-      </section>
-
-      <section className="mt-6 border-t border-[var(--paper-dark)] pt-4">
+      <section className="mt-5 border-t border-[var(--paper-dark)] pt-4">
         <div className="label-cap text-ink-soft">Steal these hooks</div>
         <ul className="mt-2 space-y-1 font-body text-sm text-ink-soft">
           {f.hooks.map((h) => (
@@ -153,3 +168,4 @@ export function FlagshipPanels() {
     </>
   );
 }
+
