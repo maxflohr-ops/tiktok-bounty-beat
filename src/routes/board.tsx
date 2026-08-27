@@ -123,8 +123,13 @@ function BoardPage() {
           .map((b) => ({ b, score: scoreBounty(taste, b) }))
           .sort((x, y) => y.score - x.score || y.b.contract_no - x.b.contract_no);
     const ordered = sort === "board" ? scored : [...scored].sort((x, y) => compareBounties(sort, x.b, y.b));
-    // Paid featured slots pin above everything, keeping the chosen order within each group.
-    return [...ordered.filter(({ b }) => isFeatured(b)), ...ordered.filter(({ b }) => !isFeatured(b))];
+    // The flagship LIVE campaign pins first, then paid featured slots, keeping
+    // the chosen order within each group.
+    return [
+      ...ordered.filter(({ b }) => isFlagship(b)),
+      ...ordered.filter(({ b }) => !isFlagship(b) && isFeatured(b)),
+      ...ordered.filter(({ b }) => !isFlagship(b) && !isFeatured(b)),
+    ];
   }, [bounties, platform, payout, status, taste, sort]);
 
   return (
