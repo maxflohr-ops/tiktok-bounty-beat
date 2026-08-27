@@ -31,6 +31,7 @@ export type Database = {
           funded_cash_cents: number
           hashtags: string[]
           id: string
+          logo_pack_url: string | null
           max_clips_per_editor: number
           max_submissions: number | null
           payout_type: Database["public"]["Enums"]["payout_type"]
@@ -64,6 +65,7 @@ export type Database = {
           funded_cash_cents?: number
           hashtags?: string[]
           id?: string
+          logo_pack_url?: string | null
           max_clips_per_editor?: number
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
@@ -97,6 +99,7 @@ export type Database = {
           funded_cash_cents?: number
           hashtags?: string[]
           id?: string
+          logo_pack_url?: string | null
           max_clips_per_editor?: number
           max_submissions?: number | null
           payout_type?: Database["public"]["Enums"]["payout_type"]
