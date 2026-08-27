@@ -23,7 +23,7 @@ import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
 import { soundLinks } from "@/lib/sound-links";
 import { FLAGSHIP, isFlagship } from "@/lib/flagship";
-import { FlagshipPanels, LiveNowBadge, PlatformIcons, PurseBar } from "@/components/FlagshipCampaign";
+import { FlagshipPanels, FlagshipTopMedia, LiveNowBadge, PlatformIcons, PurseBar } from "@/components/FlagshipCampaign";
 
 import { ArrowLeft, ExternalLink, Loader2, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -293,6 +293,7 @@ function BountyDetail() {
             {bounty.artist_song ? (
               <p className="mt-1 font-body italic text-ink-soft">for “{bounty.artist_song}”</p>
             ) : null}
+            {flagship ? <FlagshipTopMedia /> : null}
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
               <span>sound · {bounty.sound_name}</span>
               <span>platform · {flagship ? "tiktok + instagram reels" : bounty.platform_target}</span>
@@ -305,7 +306,15 @@ function BountyDetail() {
             </div>
 
 
-            <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
+            {flagship ? (
+              <PurseBar
+                purseCents={(bounty as any).purse_cents ?? 0}
+                paidCents={(bounty as any).paid_out_cents ?? 0}
+                currency={bounty.currency}
+              />
+            ) : null}
+
+            <div className="mt-5 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Brief</div>
               <p className="mt-2 whitespace-pre-wrap font-body leading-relaxed text-ink-soft">{bounty.description}</p>
             </div>
@@ -325,14 +334,7 @@ function BountyDetail() {
             ) : null}
 
             {flagship ? (
-              <>
-                <PurseBar
-                  purseCents={(bounty as any).purse_cents ?? 0}
-                  paidCents={(bounty as any).paid_out_cents ?? 0}
-                  currency={bounty.currency}
-                />
-                <FlagshipPanels />
-              </>
+              <FlagshipPanels />
             ) : (bounty as any).rules ? (
               <details className="mt-4 border border-[var(--paper-dark)]">
                 <summary className="cursor-pointer select-none px-3 py-2 font-display text-ink hover:bg-black/5">
@@ -345,7 +347,7 @@ function BountyDetail() {
             ) : null}
 
 
-            <div className="mt-6 grid gap-4 border-t border-[var(--paper-dark)] pt-4 sm:grid-cols-2">
+            <div className={`mt-5 grid gap-4 border-t border-[var(--paper-dark)] pt-4 ${flagship ? "" : "sm:grid-cols-2"}`}>
               <div>
                 <div className="label-cap text-ink-soft">Reward</div>
                 <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</p>
@@ -362,7 +364,7 @@ function BountyDetail() {
                   )}
                 </p>
               </div>
-              <div>
+              <div className={flagship ? "hidden" : undefined}>
                 <div className="label-cap text-ink-soft">Assets</div>
                 {bounty.source_assets_url ? (
                   <a

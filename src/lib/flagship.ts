@@ -4,7 +4,9 @@
 // verbatim rule list and the hook bank — are campaign copy, so they live here
 // and are matched onto the row by title.
 
-export const FLAGSHIP_TITLE = '"biting bullets" × GTA VI';
+export const FLAGSHIP_TITLE =
+  "biting bullets by ridgeclub / Grand Theft Auto — Clipping Campaign";
+
 
 export type FlagshipCopy = {
   rateLabel: string;
