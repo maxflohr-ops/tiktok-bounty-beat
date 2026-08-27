@@ -536,8 +536,10 @@ function ContractCard({
   match?: boolean;
   featured?: boolean;
 }) {
-  const reward =
-    b.payout_type === "per_1k_views"
+  const live = isFlagship(b);
+  const reward = live
+    ? FLAGSHIP.rateLabelCompact
+    : b.payout_type === "per_1k_views"
       ? formatPerViewRate(b.reward_cash_cents, b.currency)
       : b.reward_cash_cents > 0
         ? `${money(b.reward_cash_cents, b.currency)} per approved delivery`
