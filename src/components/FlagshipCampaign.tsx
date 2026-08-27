@@ -125,8 +125,8 @@ export function FlagshipPanels() {
           {f.rules.map((r) => (
             <li key={r}>{r}</li>
           ))}
+          <li className="text-[13px]">{f.rightsNote}</li>
         </ol>
-        <p className="mt-2 text-[11px] leading-relaxed text-ink-soft">{f.rightsNote}</p>
       </section>
 
       <section className="mt-5 border-t border-[var(--paper-dark)] pt-4">
