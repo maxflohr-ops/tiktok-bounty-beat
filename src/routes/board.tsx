@@ -13,6 +13,8 @@ import { BsEmpty, BsLoading } from "@/components/bs";
 import { GuillocheBand, InkCardinal } from "@/components/ArtMarks";
 import { useSession } from "@/lib/session";
 import { NotifyForm } from "@/components/NotifyForm";
+import { FLAGSHIP, isFlagship } from "@/lib/flagship";
+import { LiveNowBadge, PlatformIcons } from "@/components/FlagshipCampaign";
 
 const HOME_TITLE = "Bounty Board — Live TikTok Clipping Contracts · Bounty Sounds";
 const HOME_DESC =
