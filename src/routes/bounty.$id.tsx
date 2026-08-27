@@ -311,7 +311,16 @@ function BountyDetail() {
               </div>
             ) : null}
 
-            {(bounty as any).rules ? (
+            {flagship ? (
+              <>
+                <PurseBar
+                  purseCents={(bounty as any).purse_cents ?? 0}
+                  paidCents={(bounty as any).paid_out_cents ?? 0}
+                  currency={bounty.currency}
+                />
+                <FlagshipPanels />
+              </>
+            ) : (bounty as any).rules ? (
               <details className="mt-4 border border-[var(--paper-dark)]">
                 <summary className="cursor-pointer select-none px-3 py-2 font-display text-ink hover:bg-black/5">
                   Campaign rules ▾
@@ -321,6 +330,7 @@ function BountyDetail() {
                 </p>
               </details>
             ) : null}
+
 
             <div className="mt-6 grid gap-4 border-t border-[var(--paper-dark)] pt-4 sm:grid-cols-2">
               <div>
