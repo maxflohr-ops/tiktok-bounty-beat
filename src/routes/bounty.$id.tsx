@@ -615,10 +615,13 @@ function BountyDetail() {
                                 value={clipUrls[c.id] ?? ""}
                                 onChange={(e) => setClipUrls((m) => ({ ...m, [c.id]: e.target.value }))}
                                 placeholder={
-                                  bounty.platform_target === "tiktok"
-                                    ? "https://www.tiktok.com/@you/video/…"
-                                    : "paste your posted clip's URL"
+                                  flagship
+                                    ? "TikTok or Instagram Reels URL"
+                                    : bounty.platform_target === "tiktok"
+                                      ? "https://www.tiktok.com/@you/video/…"
+                                      : "paste your posted clip's URL"
                                 }
+
                                 maxLength={500}
                                 className="dark-input"
                                 disabled={deliverBusyId === c.id}
