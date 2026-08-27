@@ -36,6 +36,33 @@ const LATE_COLUMN_DEFAULTS = {
 // row that exists in ANY status is left alone - staff drafting sticks.
 const LAUNCH_SEEDS = [
   {
+    // FLAGSHIP — live, public, open to all creators. Display copy (source
+    // footage, sound buttons, verbatim rules, hooks) lives in src/lib/flagship.ts.
+    title: '"biting bullets" × GTA VI',
+    description:
+      "GTA VI: An Extended Look just dropped (Netflix Aug 27, Rockstar's YouTube tonight 9pm ET). Clip the announcement / trailer footage — Vice City night shots, chases, neon, character reveals — and put the official 'biting bullets' sound under it. Reaction clips to the announcement count too. Make Vice City look like it was scored by a saxophone.",
+    sound_name: "ridgeclub — biting bullets",
+    artist_song: "ridgeclub — biting bullets",
+    tiktok_sound_url: "https://www.tiktok.com/music/biting-bullets-7657072140283643921",
+    source_assets_url: "https://www.youtube.com/watch?v=qq76pQsI1iw",
+    cover_url: "https://img.youtube.com/vi/qq76pQsI1iw/maxresdefault.jpg",
+    payout_type: "per_1k_views" as const,
+    platform_target: "tiktok" as const, // TikTok + Instagram Reels both accepted (see rules)
+    reward_cash_cents: 10000, // $100 per 100k verified views ≡ $1.00 per 1,000
+    reward_points: 100,
+    max_submissions: null,
+    deadline: "2026-12-31T23:59:00Z",
+    status: "active" as const,
+    visibility: "public",
+    funded_cash_cents: 250000, // $2,500 purse — caps at 2,500,000 verified views
+    counting_days: 3, // views verify over 72 hours
+    hashtags: ["bitingbullets"],
+    rules:
+      "1. Clip must use the OFFICIAL \"biting bullets\" sound via the platform's sound picker (TikTok sound / Reels audio). Baked-in or re-uploaded audio doesn't count — the sound attribution IS the campaign.\n2. Caption must include @ridgeclub + #bitingbullets.\n3. Minimum clip length: 7 seconds.\n4. Link your account here BEFORE posting. Unlinked accounts produce unpayable views — no retroactive fix.\n5. Submit your live URL within 60 minutes of posting.\n6. One payout per unique edit — duplicates of another creator's edit are seized; first submission wins.\n7. Bot or purchased views: seized + banned from all future bounties.\n8. Rights note: trailer footage belongs to Rockstar/Netflix. Transformative edits (cropped, captioned, sped, reaction-framed) survive; straight re-uploads get taken down, and takedown risk is on the creator.\n\nPayout order: first verified, first paid, until the purse is dry. Funded by All My Life Productions.",
+    logo_pack_url: null,
+  },
+  {
+
     title: "Ebril's Thursday Twitch stream",
     description:
       "Ebril goes live on Twitch every Thursday. Cut the stream's best moments into vertical clips and post them to TikTok — best reactions, best runs, best lines. Tiered payout: 1M verified views on TikTok pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. Keep Ebril's voice front and center. 9:16 only, subtitles encouraged. Clips from the live stream or its VOD both count.",
@@ -288,7 +315,7 @@ async function ensureLaunchBounties(supabaseAdmin: any) {
     if (new Date(seed.deadline).getTime() < Date.now()) continue;
     const { data: existing, error: lookupError } = await supabaseAdmin
       .from("bounties")
-      .select("id,deadline,tiktok_sound_url")
+      .select("id,deadline,tiktok_sound_url,cover_url")
       .eq("title", seed.title)
       .maybeSingle();
     if (lookupError) {
@@ -309,6 +336,8 @@ async function ensureLaunchBounties(supabaseAdmin: any) {
         patch.deadline = seed.deadline;
       const seedSound = (seed as { tiktok_sound_url?: string }).tiktok_sound_url;
       if (seedSound && !existing.tiktok_sound_url) patch.tiktok_sound_url = seedSound;
+      const seedCover = (seed as { cover_url?: string }).cover_url;
+      if (seedCover && !existing.cover_url) patch.cover_url = seedCover;
       if (Object.keys(patch).length > 0) {
         const { error: syncError } = await supabaseAdmin
           .from("bounties")
