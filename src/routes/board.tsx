@@ -599,6 +599,21 @@ function ContractCard({
         )}
       </div>
 
+      {live ? (
+        <div className="mb-3">
+          <img
+            src={(b as any).cover_url || FLAGSHIP.hero.image}
+            alt={FLAGSHIP.hero.alt}
+            loading="lazy"
+            className="block w-full border border-[var(--paper-dark)] object-cover"
+          />
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <LiveNowBadge />
+            <PlatformIcons />
+          </div>
+        </div>
+      ) : null}
+
       <h3 className="[font-family:var(--font-brand)] text-2xl font-semibold leading-snug text-ink">{b.title}</h3>
       {b.artist_song ? (
         <p className="mt-1 font-body italic text-ink-soft">for “{b.artist_song}”</p>
@@ -612,7 +627,8 @@ function ContractCard({
         <div className="label-cap text-ink-soft">Reward</div>
         <div className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</div>
         <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-ink-soft">
-          <span>{b.platform_target}</span>
+          <span>{live ? "tiktok + reels" : b.platform_target}</span>
+
           {b.deadline ? (
             <span>by {new Date(b.deadline).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
           ) : (
