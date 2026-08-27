@@ -38,7 +38,7 @@ const LAUNCH_SEEDS = [
   {
     // FLAGSHIP — live, public, open to all creators. Display copy (source
     // footage, sound buttons, verbatim rules, hooks) lives in src/lib/flagship.ts.
-    title: '"biting bullets" × GTA VI',
+    title: "biting bullets by ridgeclub / Grand Theft Auto — Clipping Campaign",
     description:
       "GTA VI: An Extended Look just dropped (Netflix Aug 27, Rockstar's YouTube tonight 9pm ET). Clip the announcement / trailer footage — Vice City night shots, chases, neon, character reveals — and put the official 'biting bullets' sound under it. Reaction clips to the announcement count too. Make Vice City look like it was scored by a saxophone.",
     sound_name: "ridgeclub — biting bullets",
@@ -59,123 +59,6 @@ const LAUNCH_SEEDS = [
     hashtags: ["bitingbullets"],
     rules:
       "1. Clip must use the OFFICIAL \"biting bullets\" sound via the platform's sound picker (TikTok sound / Reels audio). Baked-in or re-uploaded audio doesn't count — the sound attribution IS the campaign.\n2. Caption must include @ridgeclub + #bitingbullets.\n3. Minimum clip length: 7 seconds.\n4. Link your account here BEFORE posting. Unlinked accounts produce unpayable views — no retroactive fix.\n5. Submit your live URL within 60 minutes of posting.\n6. One payout per unique edit — duplicates of another creator's edit are seized; first submission wins.\n7. Bot or purchased views: seized + banned from all future bounties.\n8. Rights note: trailer footage belongs to Rockstar/Netflix. Transformative edits (cropped, captioned, sped, reaction-framed) survive; straight re-uploads get taken down, and takedown risk is on the creator.\n\nPayout order: first verified, first paid, until the purse is dry. Funded by All My Life Productions.",
-    logo_pack_url: null,
-  },
-  {
-
-    title: "Ebril's Thursday Twitch stream",
-    description:
-      "Ebril goes live on Twitch every Thursday. Cut the stream's best moments into vertical clips and post them to TikTok — best reactions, best runs, best lines. Tiered payout: 1M verified views on TikTok pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. Keep Ebril's voice front and center. 9:16 only, subtitles encouraged. Clips from the live stream or its VOD both count.",
-    sound_name: "Ebril — live on Twitch (Thursdays)",
-    artist_song: "Ebril",
-    source_assets_url: "https://twitch.tv/ebbionline",
-    payout_type: "per_1k_views" as const,
-    platform_target: "tiktok" as const,
-    reward_cash_cents: 10000,
-    reward_points: 100,
-    max_submissions: 20,
-    deadline: "2026-12-31T23:59:00Z",
-    status: "active" as const,
-    funded_cash_cents: 50000, // the $500 purse — covers the $250 single-video tier twice over
-    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
-    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
-  },
-  {
-    title: "Ebril — Anticipate Heartbreak",
-    description:
-      "Cut a TikTok on Ebril's \"Anticipate Heartbreak.\" Tiered payout: 1M verified views pays $100, and a single video that hits 2.5M views captures $250. Views stack across your clips at the same rate. 9:16 only, subtitles encouraged, use the official sound.",
-    sound_name: "Ebril — Anticipate Heartbreak",
-    artist_song: "Ebril",
-    tiktok_sound_url: "https://www.tiktok.com/music/original-sound-7597916391358024503",
-    payout_type: "per_1k_views" as const,
-    platform_target: "tiktok" as const,
-    reward_cash_cents: 10000, // $100 per 1M, same tier line as the stream bounty
-    reward_points: 100,
-    max_submissions: 20,
-    deadline: "2026-12-31T23:59:00Z",
-    status: "active" as const,
-    funded_cash_cents: 50000, // the $500 purse
-    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
-    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
-  },
-  {
-    title: "Sons of Legion — Any Song, Any Edit",
-    description:
-      "Any Sons of Legion song, any style of edit — gameplay, lyrics, montage, whatever hits. #maddenlegion in the caption. $1 per 5,000 verified views, paid pro-rata, and views stack across your clips. 9:16 only.",
-    sound_name: "Sons of Legion — any song, any edit",
-    artist_song: "Sons of Legion",
-    payout_type: "per_1k_views" as const,
-    platform_target: "tiktok" as const,
-    reward_cash_cents: 2000, // $1 per 5k ≡ $20 per 100k views
-    reward_points: 100,
-    max_submissions: 20,
-    deadline: "2026-10-31T23:59:00Z", // open through Halloween
-    status: "active" as const,
-    funded_cash_cents: 10000, // the $100 purse
-    hashtags: ["maddenlegion"],
-    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
-    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
-  },
-  {
-    title: "Ridgeclub — Biting Bullets",
-    description:
-      'Cut a TikTok on Ridgeclub\'s "Biting Bullets." $2 per 100,000 verified views — a 5M-view video captures the full $100 purse, and views stack across your clips, so two 2.5M clips cash the same. 9:16 only, subtitles encouraged, use the sound.',
-    sound_name: "Ridgeclub — Biting Bullets",
-    artist_song: "Ridgeclub",
-    tiktok_sound_url: "https://www.tiktok.com/music/original-sound-7653102138111052552",
-    payout_type: "per_1k_views" as const,
-    platform_target: "tiktok" as const,
-    reward_cash_cents: 200, // $2 per 100k ≡ $100 per 5M views
-    reward_points: 100,
-    max_submissions: 20,
-    deadline: "2026-10-31T23:59:00Z", // open through Halloween
-    status: "active" as const,
-    funded_cash_cents: 10000, // the $100 purse
-    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
-    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
-  },
-  {
-    title: "Ridgeclub — Do I Clench My Fist? (Mac Miller edits)",
-    description:
-      'Cut Mac Miller edits — archival footage, interviews, live moments — set to Ridgeclub\'s "Do I Clench My Fist?". $3 per 100,000 verified views from a $100 posted purse, paid pro-rata, and views stack across your clips. 9:16 only, use the sound.',
-    sound_name: "Ridgeclub — Do I Clench My Fist?",
-    artist_song: "Ridgeclub",
-    tiktok_sound_url: "https://www.tiktok.com/t/ZT9kLRCQ8e1vj-jLsqm/",
-    payout_type: "per_1k_views" as const,
-    platform_target: "tiktok" as const,
-    reward_cash_cents: 300, // $3 per 100k verified views
-    reward_points: 100,
-    max_submissions: 20,
-    deadline: "2026-10-31T23:59:00Z", // open through Halloween
-    status: "active" as const,
-    funded_cash_cents: 10000, // the $100 purse
-    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
-    logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
-  },
-  {
-    // Legion Franchise Bounty. Flat ladder, not per-view: $25 a clip is the
-    // rung the board pays automatically. The series upgrade ($50) and the
-    // judged purse ($150/$100/$50) are awarded by staff at review using the
-    // awarded_cash_cents override, so they are described here rather than
-    // encoded in reward_cash_cents. Deadline is fixed at Sept 13 because the
-    // creator outreach emails commit to that date.
-    title: "Sons of Legion — Out The Cage (Madden 27)",
-    description:
-      "Sons of Legion's \"Out The Cage\" is on the Madden NFL 27 soundtrack. Cut Madden content over it — franchise storylines, rebuild arcs, ratings reactions, MUT pulls, tier lists with a spicy bottom slot. $25 per approved clip, or $50 if you run a 3+ episode series with the track as the intro theme. On top of that sits a $300 judged purse: $150 for the best series, $100 runner-up, $50 for the best single clip — judged on creativity, not follower count, so a mid-size account can take it off someone twice their size.",
-    sound_name: "Sons of Legion — Out The Cage",
-    artist_song: "Sons of Legion",
-    tiktok_sound_url: "https://www.tiktok.com/music/Out-The-Cage-7665103983788705793",
-    payout_type: "flat" as const,
-    platform_target: "tiktok" as const,
-    reward_cash_cents: 2500, // $25 flat per approved clip; series/purse awarded at review
-    reward_points: 100,
-    max_submissions: 20,
-    deadline: "2026-09-13T23:59:00Z",
-    status: "active" as const,
-    funded_cash_cents: 110000, // $800 posting line + the $300 judged purse
-    hashtags: ["maddenlegion"],
-    rules:
-      "Official sound only — the canonical Out The Cage page, not a re-upload or remix. #maddenlegion in the caption. Paid-partnership toggle ON (FTC — protects you and the band). Your own capture, no re-uploaded broadcast footage. Series entries need 3+ episodes using the track as the intro theme. No slurs or hate, no piling on individual players, and never claim EA or the NFL endorses this campaign.",
     logo_pack_url: null,
   },
   {
