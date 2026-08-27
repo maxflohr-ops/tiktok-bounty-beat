@@ -231,8 +231,10 @@ function BountyDetail() {
     );
   }
 
-  const reward =
-    bounty.payout_type === "per_1k_views"
+  const flagship = isFlagship(bounty);
+  const reward = flagship
+    ? FLAGSHIP.rateLabel
+    : bounty.payout_type === "per_1k_views"
       ? formatPerViewRate(bounty.reward_cash_cents, bounty.currency)
       : bounty.reward_cash_cents > 0
         ? `${money(bounty.reward_cash_cents, bounty.currency)} per approved delivery`
