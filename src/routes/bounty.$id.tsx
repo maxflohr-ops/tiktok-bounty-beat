@@ -23,7 +23,7 @@ import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
 import { soundLinks } from "@/lib/sound-links";
 import { FLAGSHIP, isFlagship } from "@/lib/flagship";
-import { FlagshipPanels, LiveNowBadge, PlatformIcons, PurseBar } from "@/components/FlagshipCampaign";
+import { FlagshipPanels, FlagshipTopMedia, LiveNowBadge, PlatformIcons, PurseBar } from "@/components/FlagshipCampaign";
 
 import { ArrowLeft, ExternalLink, Loader2, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
