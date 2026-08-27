@@ -347,7 +347,7 @@ function BountyDetail() {
             ) : null}
 
 
-            <div className="mt-6 grid gap-4 border-t border-[var(--paper-dark)] pt-4 sm:grid-cols-2">
+            <div className={`mt-5 grid gap-4 border-t border-[var(--paper-dark)] pt-4 ${flagship ? "" : "sm:grid-cols-2"}`}>
               <div>
                 <div className="label-cap text-ink-soft">Reward</div>
                 <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</p>
@@ -364,7 +364,7 @@ function BountyDetail() {
                   )}
                 </p>
               </div>
-              <div>
+              <div className={flagship ? "hidden" : undefined}>
                 <div className="label-cap text-ink-soft">Assets</div>
                 {bounty.source_assets_url ? (
                   <a
