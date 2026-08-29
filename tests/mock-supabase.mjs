@@ -5,7 +5,7 @@
 import http from "node:http";
 import crypto from "node:crypto";
 
-const tables = { bounties: [], submissions: [], profiles: [], user_roles: [], tiktok_accounts: [], events: [], sound_listings: [] };
+const tables = { bounties: [], submissions: [], profiles: [], user_roles: [], tiktok_accounts: [], events: [], sound_listings: [], payout_approvals: [], disputes: [], tax_profiles: [] };
 let contractNo = 0;
 const users = new Map(); // email -> {id, email, password}
 const toB64u = (o) => Buffer.from(JSON.stringify(o)).toString("base64url");
@@ -55,19 +55,28 @@ function applyFilters(rows, filters) {
   }));
 }
 
-// Embed support for the two shapes the app uses: bounties:bounty_id(cols)
+// Embed support. PostgREST embeds are written either as alias:fk_column(cols)
+// or alias:table(cols); the admin desk uses both, plus one nested level
+// (payout_approvals -> submission -> bounty).
+function embedBounty(row) {
+  return row?.bounty_id ? (tables.bounties.find((b) => b.id === row.bounty_id) ?? null) : null;
+}
+
 function withEmbeds(row, select, table) {
   if (!select) return row;
   const out = { ...row };
-  const embedRe = /([a-z_]+):([a-z_]+)\(([^)]*)\)/g;
+  const embedRe = /([a-z_]+):([a-z_]+)\(/g;
   let m;
   while ((m = embedRe.exec(select))) {
-    const [, alias, fkCol] = m;
-    if (table === "submissions" && alias === "bounties") {
-      out.bounties = tables.bounties.find((b) => b.id === row[fkCol]) ?? null;
+    const alias = m[1];
+    if (table === "submissions") {
+      if (alias === "bounty" || alias === "bounties") out[alias] = embedBounty(row);
+      if (alias === "profiles" || alias === "editor")
+        out[alias] = tables.profiles.find((p) => p.id === row.editor_id) ?? null;
     }
-    if (table === "submissions" && alias === "profiles") {
-      out.profiles = tables.profiles.find((p) => p.id === row[fkCol]) ?? null;
+    if ((table === "payout_approvals" || table === "disputes") && alias === "submission") {
+      const sub = tables.submissions.find((x) => x.id === row.submission_id) ?? null;
+      out.submission = sub ? { ...sub, bounty: embedBounty(sub) } : null;
     }
   }
   return out;
