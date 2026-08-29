@@ -330,11 +330,16 @@ export const updateViewCount = createServerFn({ method: "POST" })
       .eq("id", data.submission_id)
       .single();
     if (!sub || sub.editor_id !== context.userId) throw new Error("Not your claim.");
-    const { error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: updatedRows, error } = await supabaseAdmin
       .from("submissions")
       .update({ view_count: data.view_count })
-      .eq("id", data.submission_id);
+      .eq("id", data.submission_id)
+      .eq("editor_id", context.userId)
+      .select("id");
     if (error) throw new Error(error.message);
+    if (!updatedRows || updatedRows.length === 0)
+      throw new Error("View count did not save — please try again.");
     notifyAsync({
       event: "views.updated",
       actor: (context.claims as { email?: string })?.email ?? context.userId,
