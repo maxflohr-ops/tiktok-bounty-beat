@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -15,6 +15,7 @@ import {
   listAllSubmissionsStaff,
   reviewSubmission,
   markPaid,
+  verifyViewCount,
 } from "@/lib/submissions.functions";
 import { getMe } from "@/lib/me.functions";
 import { createBountyTopUp, requestPayout, listPayoutApprovals, approveAndSendPayout, rejectPayout } from "@/lib/stripe.functions";
@@ -23,13 +24,21 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag } from "lucide-react";
+import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag, Eye, AlertTriangle, RefreshCw } from "lucide-react";
 import { BsEmpty, BsLoading } from "@/components/bs";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  validateSearch: (search: Record<string, unknown>): { focus?: string; tab?: string } => ({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { focus?: string; tab?: DeskTab; topup_success?: boolean; topup_cancelled?: boolean } => ({
     focus: typeof search.focus === "string" ? search.focus : undefined,
-    tab: typeof search.tab === "string" ? search.tab : undefined,
+    tab: TABS.some((t) => t.key === search.tab) ? (search.tab as DeskTab) : undefined,
+    // Stripe Checkout returns here after a purse top-up; without these the
+    // router drops the params and the round trip ends with no confirmation.
+    // The router parses `?topup_success=1` into the NUMBER 1, so accept every
+    // truthy spelling rather than just the string.
+    topup_success: isTruthyParam(search.topup_success),
+    topup_cancelled: isTruthyParam(search.topup_cancelled),
   }),
   head: () => ({
     meta: [
@@ -40,10 +49,23 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: Admin,
 });
 
+function isTruthyParam(v: unknown) {
+  return v === 1 || v === "1" || v === true || v === "true";
+}
 function pad(n: number) { return n.toString().padStart(3, "0"); }
 function money(cents: number, currency = "USD") {
   return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(cents / 100);
 }
+
+// The desk is one job at a time: triage deliveries, then move money. Tabs keep
+// each queue whole instead of stacking five panels down one scroll.
+const TABS = [
+  { key: "deliveries", label: "Deliveries" },
+  { key: "payouts", label: "Payouts" },
+  { key: "contracts", label: "Contracts" },
+  { key: "disputes", label: "Disputes" },
+] as const;
+type DeskTab = (typeof TABS)[number]["key"];
 
 // Deep link from the "approval needed" email: ?focus=<id>&tab=deliveries|payouts
 function useFocusRow() {
@@ -94,32 +116,189 @@ function Admin() {
       </Frame>
     );
 
+  return <AdminDesk />;
+}
+
+function AdminDesk() {
+  const { tab } = Route.useSearch();
+  const navigate = useNavigate();
+  // Deliveries is the default queue; the approval email deep-links carry
+  // ?tab= so the focused row is already on screen when useFocusRow runs.
+  const active: DeskTab = tab ?? "deliveries";
+  const setTab = (next: DeskTab) =>
+    navigate({ to: "/admin", search: (prev) => ({ ...prev, tab: next }), replace: true });
+
+  const counts = useDeskCounts();
+
   return (
     <div className="relative min-h-screen">
       <div className="scanlines fixed inset-0 z-50 opacity-40" />
       <div className="vignette fixed inset-0 z-40" />
       <SiteHeader />
       <div className="container-board relative z-10 py-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="font-display text-4xl text-bone">Admin desk</h1>
-            <p className="script-note text-xl text-bone-soft">Post contracts. Review deliveries. Approve payouts.</p>
+            <p className="script-note text-xl text-bone-soft">Verify the views. Honor the clip. Send the money.</p>
             <Link to="/analytics" className="mt-2 inline-block text-sm underline underline-offset-4">
-              Analytics →
+              Analytics &rarr;
             </Link>
           </div>
           <div className="system-bar">
             <span className="status-dot" />
-            admin console · authorized
+            admin console &middot; authorized
           </div>
         </div>
-        <div className="mt-8 grid gap-8 lg:grid-cols-2">
-          <BountiesPanel />
-          <SubmissionsPanel />
+
+        <TopUpReturnNotice />
+        <DeskSummary counts={counts} />
+
+        <nav aria-label="Desk sections" className="mt-6 flex flex-wrap gap-2 border-b border-[var(--border)] pb-3">
+          {TABS.map((t) => {
+            const n = counts[t.key];
+            const on = active === t.key;
+            return (
+              <button
+                key={t.key}
+                type="button"
+                aria-current={on ? "page" : undefined}
+                onClick={() => setTab(t.key)}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
+                  on
+                    ? "border-[var(--ink)] bg-[var(--ink)] text-white"
+                    : "border-[var(--border)] text-bone-soft hover:border-[var(--ink)] hover:text-bone"
+                }`}
+              >
+                {t.label}
+                {n > 0 ? (
+                  <span
+                    className={`inline-flex min-w-[1.4rem] justify-center rounded-full px-1.5 py-0.5 text-[11px] font-semibold ${
+                      on ? "bg-white/20 text-white" : "bg-[var(--paper-shade)] text-ink"
+                    }`}
+                  >
+                    {n}
+                  </span>
+                ) : null}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="mt-6">
+          {active === "deliveries" ? <SubmissionsPanel /> : null}
+          {active === "payouts" ? (
+            <div className="space-y-8">
+              <PayoutApprovalsPanel />
+              <Ledger />
+            </div>
+          ) : null}
+          {active === "contracts" ? <BountiesPanel /> : null}
+          {active === "disputes" ? <DisputesPanel /> : null}
         </div>
-        <PayoutApprovalsPanel />
-        <DisputesPanel />
-        <Ledger />
+      </div>
+    </div>
+  );
+}
+
+// One place that knows what is waiting, so the tabs and the summary agree.
+// Same query keys as the panels, so React Query serves both from one fetch.
+function useDeskCounts() {
+  const subsFn = useServerFn(listAllSubmissionsStaff);
+  const approvalsFn = useServerFn(listPayoutApprovals);
+  const disputesFn = useServerFn(listAllDisputesStaff);
+  const { data: subs = [] } = useQuery({ queryKey: ["allSubs"], queryFn: () => subsFn() });
+  const { data: approvals = [] } = useQuery({
+    queryKey: ["payoutApprovals"],
+    queryFn: () => approvalsFn(),
+    // Money waiting on a second pair of eyes should surface without a reload.
+    refetchInterval: 60_000,
+  });
+  const { data: disputes = [] } = useQuery({ queryKey: ["disputesStaff"], queryFn: () => disputesFn() });
+
+  const deliveries = subs.filter((x) => {
+    const st = x.status as string;
+    return st === "submitted" || st === "pending" || st === "in_review";
+  }).length;
+  const payouts = (approvals as any[]).filter((a) => a.status === "pending").length;
+  const openDisputes = (disputes as any[]).filter((d) => d.status === "open" || d.status === "under_review").length;
+  const owed = subs
+    .filter((x) => x.status === "approved")
+    .reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
+  const paid = subs
+    .filter((x) => x.status === "paid")
+    .reduce((a, r) => a + ((r as any).paid_cash_cents ?? r.awarded_cash_cents ?? 0), 0);
+
+  return { deliveries, payouts, contracts: 0, disputes: openDisputes, owed, paid };
+}
+
+function DeskSummary({ counts }: { counts: ReturnType<typeof useDeskCounts> }) {
+  const items = [
+    { label: "awaiting review", value: String(counts.deliveries), tone: counts.deliveries > 0 },
+    { label: "payouts to approve", value: String(counts.payouts), tone: counts.payouts > 0 },
+    { label: "owed to clippers", value: money(counts.owed), tone: false },
+    { label: "paid out", value: money(counts.paid), tone: false },
+  ];
+  return (
+    <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+      {items.map((i) => (
+        <div key={i.label} className="border border-[var(--border)] bg-[var(--paper)] p-4">
+          <dt className="label-cap text-bone-soft">{i.label}</dt>
+          <dd className={`mt-1 font-display text-2xl ${i.tone ? "text-[var(--color-bs-crimson)]" : "text-ink"}`}>
+            {i.value}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+// Stripe Checkout sends the admin back here after a purse top-up. Previously
+// the params were dropped on the floor: no confirmation, and the purse figures
+// on screen stayed stale until a manual reload.
+function TopUpReturnNotice() {
+  const { topup_success, topup_cancelled } = Route.useSearch();
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+
+  useEffect(() => {
+    if (!topup_success && !topup_cancelled) return;
+    if (topup_success) {
+      qc.invalidateQueries({ queryKey: ["bountiesStaff"] });
+      toast.success("Purse topped up. The new balance is on the contract.");
+    }
+    // Clear the params so a refresh does not replay the banner.
+    const t = setTimeout(
+      () =>
+        navigate({
+          to: "/admin",
+          search: (prev) => ({ ...prev, topup_success: undefined, topup_cancelled: undefined }),
+          replace: true,
+        }),
+      6000,
+    );
+    return () => clearTimeout(t);
+  }, [topup_success, topup_cancelled, qc, navigate]);
+
+  if (!topup_success && !topup_cancelled) return null;
+  return (
+    <div
+      role="status"
+      className={`mt-6 flex items-start gap-3 border p-4 ${
+        topup_success
+          ? "border-[var(--color-bs-accent)] bg-[var(--color-bs-accent-soft)]"
+          : "border-[var(--border)] bg-[var(--paper-shade)]"
+      }`}
+    >
+      {topup_success ? <Check className="mt-0.5 h-5 w-5 shrink-0" /> : <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />}
+      <div>
+        <p className="font-display text-lg text-ink">
+          {topup_success ? "Top-up received." : "Top-up cancelled."}
+        </p>
+        <p className="text-sm text-ink-soft">
+          {topup_success
+            ? "Stripe confirmed the payment and the purse now carries it. Open Contracts to see the new balance."
+            : "Nothing was charged. The purse is unchanged."}
+        </p>
       </div>
     </div>
   );
@@ -460,7 +639,7 @@ function SubmissionsPanel() {
       <p className="script-note text-lg text-bone-soft">Latest first. Auto-check ✓ = URL and handle agree.</p>
       <ul className="mt-4 space-y-4">
         {pending.map((s) => (
-          <ReviewCard key={s.id} s={s} onDecide={decide} />
+          <ReviewCard key={s.id} s={s} onDecide={decide} onVerified={refetch} />
         ))}
         {pending.length === 0 ? (
           <li className="script-note py-6 text-center text-xl text-bone-soft">The desk is clear.</li>
@@ -470,16 +649,64 @@ function SubmissionsPanel() {
   );
 }
 
+// Per-view payouts are computed from the STAFF-verified view count, never the
+// editor's self-reported number — reviewSubmission refuses to approve one
+// until that figure exists. The desk therefore has to capture it here, or the
+// whole per-view side of the board is un-payable.
+function payoutForViews(views: number, ratePer100k: number) {
+  return Math.floor((views * ratePer100k) / 100000);
+}
+
 function ReviewCard({
   s,
   onDecide,
+  onVerified,
 }: {
   s: Sub;
   onDecide: (id: string, decision: "approved" | "rejected", points: number, cash: number, notes: string) => void;
+  onVerified: () => void;
 }) {
+  const verifyFn = useServerFn(verifyViewCount);
+  const perView = s.bounty?.payout_type === "per_1k_views";
+  const rate = s.bounty?.reward_cash_cents ?? 0;
+  const currency = s.bounty?.currency || "USD";
+  const verified = (s as any).verified_view_count as number | null | undefined;
+  const selfReported = (s as any).view_count as number | null | undefined;
+
   const [points, setPoints] = useState(s.bounty?.reward_points ?? 0);
-  const [cash, setCash] = useState(s.bounty?.reward_cash_cents ?? 0);
+  // Money is entered in dollars. The old cents-only field made a $187.50
+  // payout read as 18750, one slip away from a 100x overpayment.
+  const [dollars, setDollars] = useState<string>(() => {
+    if (perView) return verified != null ? (payoutForViews(verified, rate) / 100).toFixed(2) : "";
+    return ((s.bounty?.reward_cash_cents ?? 0) / 100).toFixed(2);
+  });
+  const [views, setViews] = useState<string>(verified != null ? String(verified) : selfReported != null ? String(selfReported) : "");
   const [notes, setNotes] = useState("");
+  const [verifying, setVerifying] = useState(false);
+
+  const cash = Math.round((Number(dollars) || 0) * 100);
+  const pendingViews = Number(views) || 0;
+  const previewCents = perView ? payoutForViews(pendingViews, rate) : cash;
+  const needsVerification = perView && verified == null;
+
+  const verify = async () => {
+    if (!Number.isFinite(pendingViews) || pendingViews < 0) {
+      toast.error("Enter the verified view count first.");
+      return;
+    }
+    setVerifying(true);
+    try {
+      await verifyFn({ data: { submission_id: s.id, verified_view_count: Math.round(pendingViews) } });
+      setDollars((payoutForViews(Math.round(pendingViews), rate) / 100).toFixed(2));
+      toast.success(`Verified ${Math.round(pendingViews).toLocaleString()} views.`);
+      onVerified();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not record that view count.");
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   return (
     <li id={`sub-${s.id}`} className="border border-[var(--border)] p-4">
       <div className="flex gap-4">
@@ -491,7 +718,7 @@ function ReviewCard({
         <div className="min-w-0 flex-1">
           <div className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</div>
           <div className="truncate text-bone">{s.bounty?.title}</div>
-          {(s as any).counting_ends_at && s.bounty?.payout_type === "per_1k_views" ? (
+          {(s as any).counting_ends_at && perView ? (
             <div className="mt-0.5 text-xs text-bone-soft">
               {new Date((s as any).counting_ends_at).getTime() > Date.now()
                 ? `counting window open — closes ${new Date((s as any).counting_ends_at).toLocaleDateString()} (verify views after)`
@@ -514,22 +741,76 @@ function ReviewCard({
           </div>
         </div>
       </div>
+
+      {perView ? (
+        <div className="mt-4 border-t border-[var(--border)] pt-4">
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="block">
+              <span className="label-cap text-bone-soft">verified views</span>
+              <input
+                type="number"
+                min={0}
+                value={views}
+                onChange={(e) => setViews(e.target.value)}
+                className="dark-input mt-1 max-w-[160px]"
+                placeholder="e.g. 250000"
+              />
+            </label>
+            <button type="button" onClick={verify} disabled={verifying} className="silver-btn">
+              <Eye className="h-3.5 w-3.5" /> {verifying ? "recording…" : verified != null ? "re-verify" : "verify views"}
+            </button>
+            <div className="text-sm text-bone-soft">
+              <div>
+                rate {money(rate, currency)} per 100k →{" "}
+                <span className="font-display text-ink">{money(previewCents, currency)}</span>
+              </div>
+              <div className="text-xs">
+                {verified != null
+                  ? `verified ${verified.toLocaleString()}`
+                  : selfReported != null
+                    ? `editor reported ${selfReported.toLocaleString()} — not yet verified`
+                    : "no view count on file yet"}
+              </div>
+            </div>
+          </div>
+          {needsVerification ? (
+            <p className="mt-2 inline-flex items-center gap-2 text-xs text-[var(--color-bs-crimson)]">
+              <AlertTriangle className="h-3.5 w-3.5" />
+              Verify the view count before honoring — a per-view payout cannot be approved without it.
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
       <div className="mt-4 grid gap-2 border-t border-[var(--border)] pt-4 md:grid-cols-[1fr_1fr_2fr_auto]">
         <label className="block">
           <span className="label-cap text-bone-soft">points</span>
           <input type="number" min={0} value={points} onChange={(e) => setPoints(Number(e.target.value))} className="dark-input mt-1" />
         </label>
         <label className="block">
-          <span className="label-cap text-bone-soft">cash (cents)</span>
-          <input type="number" min={0} value={cash} onChange={(e) => setCash(Number(e.target.value))} className="dark-input mt-1" />
+          <span className="label-cap text-bone-soft">payout ({currency})</span>
+          <input
+            type="number"
+            min={0}
+            step="0.01"
+            value={dollars}
+            onChange={(e) => setDollars(e.target.value)}
+            className="dark-input mt-1"
+            placeholder="0.00"
+          />
         </label>
         <label className="block">
           <span className="label-cap text-bone-soft">note</span>
           <input value={notes} maxLength={1000} onChange={(e) => setNotes(e.target.value)} className="dark-input mt-1" placeholder="well cut / re-cut with a wider crop / …" />
         </label>
         <div className="flex items-end gap-2">
-          <button onClick={() => onDecide(s.id, "approved", points, cash, notes)} className="silver-btn">
-            <Check className="h-4 w-4" /> honor
+          <button
+            onClick={() => onDecide(s.id, "approved", points, cash, notes)}
+            disabled={needsVerification}
+            title={needsVerification ? "Verify the view count first" : undefined}
+            className="silver-btn disabled:opacity-40"
+          >
+            <Check className="h-4 w-4" /> honor {cash > 0 ? money(cash, currency) : ""}
           </button>
           <button onClick={() => onDecide(s.id, "rejected", 0, 0, notes)} className="ink-btn">
             <X className="h-4 w-4" /> dispute
@@ -637,12 +918,13 @@ function PayoutApprovalsPanel() {
   const pending = data.filter((a: any) => a.status === "pending");
   const recent = data.filter((a: any) => a.status !== "pending").slice(0, 10);
 
-  const decide = async (id: string, kind: "approve" | "reject") => {
-    const note = kind === "reject"
-      ? (prompt("Reason for rejecting this payout?") ?? "")
-      : (prompt("Optional note for approval (leave blank to approve):") ?? "");
+  // Sending a Stripe transfer is irreversible, so it gets a real confirmation
+  // step showing exactly who and how much - not a browser prompt().
+  const [ask, setAsk] = useState<{ id: string; kind: "approve" | "reject"; row: any } | null>(null);
+
+  const decide = async (id: string, kind: "approve" | "reject", note: string) => {
     if (kind === "reject" && !note.trim()) { toast.error("Rejections need a reason."); return; }
-    if (kind === "approve" && !confirm("Approve and send this payout via Stripe? This moves real money.")) return;
+    setAsk(null);
     setBusyId(id);
     try {
       if (kind === "approve") {
@@ -693,10 +975,10 @@ function PayoutApprovalsPanel() {
             </div>
             <div className="flex items-center gap-3">
               <span className="font-display silver">{money(a.amount_cents, a.currency)}</span>
-              <button onClick={() => decide(a.id, "approve")} disabled={busyId === a.id} className="silver-btn">
+              <button onClick={() => setAsk({ id: a.id, kind: "approve", row: a })} disabled={busyId === a.id} className="silver-btn">
                 <Check className="h-3.5 w-3.5" /> {busyId === a.id ? "working…" : "approve & send"}
               </button>
-              <button onClick={() => decide(a.id, "reject")} disabled={busyId === a.id} className="ink-btn">
+              <button onClick={() => setAsk({ id: a.id, kind: "reject", row: a })} disabled={busyId === a.id} className="ink-btn">
                 <X className="h-3.5 w-3.5" /> reject
               </button>
             </div>
@@ -730,7 +1012,105 @@ function PayoutApprovalsPanel() {
           </ul>
         </div>
       ) : null}
+
+      {ask ? (
+        <PayoutDecisionDialog
+          kind={ask.kind}
+          row={ask.row}
+          busy={busyId === ask.id}
+          onCancel={() => setAsk(null)}
+          onConfirm={(note) => decide(ask.id, ask.kind, note)}
+        />
+      ) : null}
     </section>
+  );
+}
+
+// Explicit confirmation for money leaving the account: names the clipper, the
+// contract, and the exact amount, and makes a rejection state its reason.
+function PayoutDecisionDialog({
+  kind,
+  row,
+  busy,
+  onCancel,
+  onConfirm,
+}: {
+  kind: "approve" | "reject";
+  row: any;
+  busy: boolean;
+  onCancel: () => void;
+  onConfirm: (note: string) => void;
+}) {
+  const [note, setNote] = useState("");
+  const approving = kind === "approve";
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={approving ? "Approve and send payout" : "Reject payout"}
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4"
+      onClick={onCancel}
+    >
+      <div
+        className="w-full max-w-md border border-[var(--border)] bg-[var(--paper)] p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="font-display text-2xl text-ink">
+          {approving ? "Send this payout?" : "Reject this payout?"}
+        </h3>
+        <dl className="mt-4 space-y-1 text-sm text-ink-soft">
+          <div className="flex justify-between gap-4">
+            <dt>Amount</dt>
+            <dd className="font-display text-lg text-ink">{money(row.amount_cents, row.currency)}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt>Clipper</dt>
+            <dd>@{row.submission?.tiktok_handle ?? "—"}</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt>Contract</dt>
+            <dd className="truncate text-right">{row.submission?.bounty?.title ?? "—"}</dd>
+          </div>
+        </dl>
+        {approving ? (
+          <p className="mt-4 inline-flex items-start gap-2 text-xs text-[var(--color-bs-crimson)]">
+            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+            This sends a real Stripe transfer. It cannot be undone from the desk.
+          </p>
+        ) : null}
+        <label className="mt-4 block">
+          <span className="label-cap text-bone-soft">
+            {approving ? "note (optional)" : "reason (required)"}
+          </span>
+          <textarea
+            autoFocus
+            value={note}
+            maxLength={500}
+            rows={3}
+            onChange={(e) => setNote(e.target.value)}
+            className="dark-input mt-1 w-full"
+            placeholder={approving ? "verified against the live clip" : "why this payout is not going out"}
+          />
+        </label>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onCancel} className="ink-btn">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => onConfirm(note)}
+            disabled={busy || (!approving && !note.trim())}
+            className="silver-btn disabled:opacity-40"
+          >
+            {busy
+              ? "working…"
+              : approving
+                ? `Send ${money(row.amount_cents, row.currency)}`
+                : "Reject payout"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
