@@ -310,7 +310,7 @@ export const deliverProof = createServerFn({ method: "POST" })
         adminUrl: `${base}/admin?focus=${data.submission_id}&tab=deliveries`,
       });
     }
-    const { data: after } = await context.supabase
+    const { data: after } = await supabaseAdmin
       .from("submissions")
       .select("counting_ends_at")
       .eq("id", data.submission_id)
