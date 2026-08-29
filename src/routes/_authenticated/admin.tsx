@@ -612,12 +612,65 @@ function TopUpControl({ bountyId }: { bountyId: string }) {
 
 type Sub = Awaited<ReturnType<typeof listAllSubmissionsStaff>>[number];
 
+// Every delivered clip an admin might need to open, whatever became of it.
+// Rejected work used to vanish from the desk the moment it was disputed,
+// which is precisely when a clipper appeals and someone has to look again.
+const DELIVERY_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "queue", label: "Awaiting review" },
+  { key: "failed", label: "Failed auto-check" },
+  { key: "rejected", label: "Rejected" },
+  { key: "approved", label: "Approved" },
+  { key: "paid", label: "Paid" },
+] as const;
+type DeliveryFilter = (typeof DELIVERY_FILTERS)[number]["key"];
+
+const AWAITING = new Set(["submitted", "pending", "in_review"]);
+
+function statusTone(status: string) {
+  if (status === "paid" || status === "approved") return "border-[var(--gold)]/40 silver";
+  if (status === "rejected") return "border-[var(--color-bs-crimson)] text-[var(--color-bs-crimson)]";
+  return "border-[var(--border)] text-bone-soft";
+}
+
 function SubmissionsPanel() {
   const listFn = useServerFn(listAllSubmissionsStaff);
   const reviewFn = useServerFn(reviewSubmission);
   const { data = [], refetch } = useQuery({ queryKey: ["allSubs"], queryFn: () => listFn() });
+  const [filter, setFilter] = useState<DeliveryFilter>("queue");
 
-  const pending = data.filter((s) => { const st = s.status as string; return st === "submitted" || st === "pending" || st === "in_review"; });
+  const pending = data.filter((s) => AWAITING.has(s.status as string));
+  // A delivery is anything the editor actually posted a link for. Claims with
+  // no URL yet are not clips and would only pad the list.
+  const delivered = data.filter((s) => Boolean(s.tiktok_video_url));
+
+  const shown = (() => {
+    switch (filter) {
+      case "queue":
+        return pending;
+      case "failed":
+        return delivered.filter((s) => !s.auto_check_passed);
+      case "rejected":
+        return delivered.filter((s) => s.status === "rejected");
+      case "approved":
+        return delivered.filter((s) => s.status === "approved");
+      case "paid":
+        return delivered.filter((s) => s.status === "paid");
+      default:
+        return delivered;
+    }
+  })();
+
+  const countFor = (k: DeliveryFilter) => {
+    switch (k) {
+      case "queue": return pending.length;
+      case "failed": return delivered.filter((s) => !s.auto_check_passed).length;
+      case "rejected": return delivered.filter((s) => s.status === "rejected").length;
+      case "approved": return delivered.filter((s) => s.status === "approved").length;
+      case "paid": return delivered.filter((s) => s.status === "paid").length;
+      default: return delivered.length;
+    }
+  };
 
   const decide = async (id: string, decision: "approved" | "rejected", points: number, cash: number, notes: string) => {
     try {
@@ -635,17 +688,109 @@ function SubmissionsPanel() {
       <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
       <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
-      <h2 className="font-display text-2xl text-bone">Awaiting review</h2>
-      <p className="script-note text-lg text-bone-soft">Latest first. Auto-check ✓ = URL and handle agree.</p>
+      <h2 className="font-display text-2xl text-bone">Deliveries</h2>
+      <p className="script-note text-lg text-bone-soft">
+        Every clip stays openable — including the ones that failed the check or were turned down.
+      </p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {DELIVERY_FILTERS.map((f) => {
+          const n = countFor(f.key);
+          const on = filter === f.key;
+          return (
+            <button
+              key={f.key}
+              type="button"
+              aria-pressed={on}
+              onClick={() => setFilter(f.key)}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition ${
+                on
+                  ? "border-[var(--ink)] bg-[var(--ink)] text-white"
+                  : "border-[var(--border)] text-bone-soft hover:border-[var(--ink)] hover:text-bone"
+              }`}
+            >
+              {f.label}
+              <span className={on ? "text-white/70" : "text-bone-soft"}>{n}</span>
+            </button>
+          );
+        })}
+      </div>
+
       <ul className="mt-4 space-y-4">
-        {pending.map((s) => (
-          <ReviewCard key={s.id} s={s} onDecide={decide} onVerified={refetch} />
-        ))}
-        {pending.length === 0 ? (
-          <li className="script-note py-6 text-center text-xl text-bone-soft">The desk is clear.</li>
+        {shown.map((s) =>
+          AWAITING.has(s.status as string) ? (
+            <ReviewCard key={s.id} s={s} onDecide={decide} onVerified={refetch} />
+          ) : (
+            <DeliveryRow key={s.id} s={s} />
+          ),
+        )}
+        {shown.length === 0 ? (
+          <li className="script-note py-6 text-center text-xl text-bone-soft">
+            {filter === "queue" ? "The desk is clear." : "Nothing here."}
+          </li>
         ) : null}
       </ul>
     </section>
+  );
+}
+
+// Read-only record of a clip that has already been decided. The point is that
+// the video is still one click away, with the reason it went the way it did.
+function DeliveryRow({ s }: { s: Sub }) {
+  const status = s.status as string;
+  const verified = (s as any).verified_view_count as number | null | undefined;
+  const reported = (s as any).view_count as number | null | undefined;
+  const currency = s.bounty?.currency || "USD";
+  return (
+    <li id={`sub-${s.id}`} className="border border-[var(--border)] p-4">
+      <div className="flex gap-4">
+        {s.oembed_thumbnail ? (
+          <img src={s.oembed_thumbnail} alt="" className="h-24 w-20 object-cover" />
+        ) : (
+          <div className="flex h-24 w-20 items-center justify-center border border-[var(--border)] text-center text-xs text-bone-soft">
+            no thumb
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</span>
+            <span className={`label-cap border px-2 py-0.5 ${statusTone(status)}`}>{status}</span>
+            <span className={`label-cap ${s.auto_check_passed ? "text-bone-soft" : "text-[var(--color-bs-crimson)]"}`}>
+              {s.auto_check_passed ? "auto-check ✓" : "auto-check ✗"}
+            </span>
+          </div>
+          <div className="mt-1 truncate text-bone">{s.bounty?.title}</div>
+          <div className="text-xs text-bone-soft">
+            by {s.editor?.display_name || "editor"} · @{s.tiktok_handle}
+          </div>
+          <div className="mt-1 text-xs text-bone-soft">
+            {verified != null
+              ? `${verified.toLocaleString()} verified views`
+              : reported != null
+                ? `${reported.toLocaleString()} reported, unverified`
+                : "no view count"}
+            {s.awarded_cash_cents ? ` · awarded ${money(s.awarded_cash_cents, currency)}` : ""}
+            {(s as any).paid_cash_cents ? ` · paid ${money((s as any).paid_cash_cents, currency)}` : ""}
+          </div>
+          {s.auto_check_notes ? (
+            <p className="mt-1 text-xs text-bone-soft">check: {s.auto_check_notes}</p>
+          ) : null}
+          {s.review_notes ? (
+            <p className="mt-1 text-xs text-bone-soft">ruling: {s.review_notes}</p>
+          ) : null}
+          {s.tiktok_video_url ? (
+            <a
+              href={s.tiktok_video_url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 inline-flex items-center gap-1 text-xs italic underline text-bone-soft hover:text-bone"
+            >
+              open clip <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </li>
   );
 }
 
