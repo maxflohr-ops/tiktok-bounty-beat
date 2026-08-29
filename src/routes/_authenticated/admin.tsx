@@ -27,7 +27,7 @@ import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag } fro
 import { BsEmpty, BsLoading } from "@/components/bs";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { focus?: string; tab?: string } => ({
     focus: typeof search.focus === "string" ? search.focus : undefined,
     tab: typeof search.tab === "string" ? search.tab : undefined,
   }),
