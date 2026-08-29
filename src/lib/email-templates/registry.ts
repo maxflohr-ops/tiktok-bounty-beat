@@ -15,5 +15,7 @@ export interface TemplateEntry {
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'action-alert': actionAlertTemplate,
+  'approval-needed': approvalNeededTemplate,
   'editor-status': editorStatusTemplate,
 }
+
