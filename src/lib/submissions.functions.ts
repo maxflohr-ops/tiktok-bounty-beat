@@ -255,7 +255,7 @@ export const deliverProof = createServerFn({ method: "POST" })
           ? `Posted from linked account @${author}, ${soundNote}.`
           : `First delivery from @${author} — account auto-linked, verify it's theirs. Also: ${soundNote}.`;
 
-    const { error } = await context.supabase
+    const { data: updatedRows, error } = await supabaseAdmin
       .from("submissions")
       .update({
         tiktok_video_url: data.clip_url,
@@ -278,8 +278,13 @@ export const deliverProof = createServerFn({ method: "POST" })
               ).toISOString(),
             }),
       })
-      .eq("id", data.submission_id);
+      .eq("id", data.submission_id)
+      .eq("editor_id", context.userId)
+      .select("id");
     if (error) throw new Error(error.message);
+    if (!updatedRows || updatedRows.length === 0)
+      throw new Error("Delivery did not save — please try again.");
+
     notifyAsync({
       event: "proof.delivered",
       actor: (context.claims as { email?: string })?.email ?? context.userId,
