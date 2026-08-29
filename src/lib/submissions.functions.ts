@@ -255,7 +255,7 @@ export const deliverProof = createServerFn({ method: "POST" })
           ? `Posted from linked account @${author}, ${soundNote}.`
           : `First delivery from @${author} — account auto-linked, verify it's theirs. Also: ${soundNote}.`;
 
-    const { error } = await context.supabase
+    const { data: updatedRows, error } = await supabaseAdmin
       .from("submissions")
       .update({
         tiktok_video_url: data.clip_url,
@@ -278,8 +278,13 @@ export const deliverProof = createServerFn({ method: "POST" })
               ).toISOString(),
             }),
       })
-      .eq("id", data.submission_id);
+      .eq("id", data.submission_id)
+      .eq("editor_id", context.userId)
+      .select("id");
     if (error) throw new Error(error.message);
+    if (!updatedRows || updatedRows.length === 0)
+      throw new Error("Delivery did not save — please try again.");
+
     notifyAsync({
       event: "proof.delivered",
       actor: (context.claims as { email?: string })?.email ?? context.userId,
@@ -305,7 +310,7 @@ export const deliverProof = createServerFn({ method: "POST" })
         adminUrl: `${base}/admin?focus=${data.submission_id}&tab=deliveries`,
       });
     }
-    const { data: after } = await context.supabase
+    const { data: after } = await supabaseAdmin
       .from("submissions")
       .select("counting_ends_at")
       .eq("id", data.submission_id)
@@ -325,11 +330,16 @@ export const updateViewCount = createServerFn({ method: "POST" })
       .eq("id", data.submission_id)
       .single();
     if (!sub || sub.editor_id !== context.userId) throw new Error("Not your claim.");
-    const { error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: updatedRows, error } = await supabaseAdmin
       .from("submissions")
       .update({ view_count: data.view_count })
-      .eq("id", data.submission_id);
+      .eq("id", data.submission_id)
+      .eq("editor_id", context.userId)
+      .select("id");
     if (error) throw new Error(error.message);
+    if (!updatedRows || updatedRows.length === 0)
+      throw new Error("View count did not save — please try again.");
     notifyAsync({
       event: "views.updated",
       actor: (context.claims as { email?: string })?.email ?? context.userId,
