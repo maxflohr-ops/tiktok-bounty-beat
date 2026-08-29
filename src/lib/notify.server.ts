@@ -82,6 +82,53 @@ async function sendEmailAlert(p: EventPayload, ts: string) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Separate, additional email: an instant "approval needed" ping for the admin.
+// Fire-and-forget — never throws, never blocks the delivery/payout path.
+
+export const APPROVAL_EMAIL = "max@florra.net";
+
+export function approvalBaseUrl() {
+  return process.env.NODE_ENV === "production"
+    ? "https://www.bountysounds.com"
+    : "http://localhost:8080";
+}
+
+export type ApprovalEmailOptions = {
+  kind: "delivery" | "payout";
+  id: string;
+  bountyTitle?: string | null;
+  contractNo?: string | number | null;
+  handle?: string | null;
+  clipUrl?: string | null;
+  amountLabel?: string | null;
+  autoCheckNotes?: string | null;
+  adminUrl: string;
+};
+
+export function sendApprovalEmailAsync(opts: ApprovalEmailOptions): void {
+  void (async () => {
+    try {
+      const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
+      await sendTemplateEmail("approval-needed", APPROVAL_EMAIL, {
+        templateData: {
+          kind: opts.kind,
+          bountyTitle: opts.bountyTitle ?? "",
+          contractNo: opts.contractNo ?? null,
+          handle: opts.handle ?? "editor",
+          clipUrl: opts.clipUrl ?? null,
+          amountLabel: opts.amountLabel ?? null,
+          autoCheckNotes: opts.autoCheckNotes ?? null,
+          adminUrl: opts.adminUrl,
+        },
+        idempotencyKey: `approval-${opts.kind}-${opts.id}-${Date.now()}`,
+      });
+    } catch (err) {
+      // Domain may still be verifying (EmailAPIError code=domain_not_verified).
+      console.warn(`[notify.approval] skipped: ${(err as Error)?.message ?? err}`);
+    }
+  })();
+}
 
 
 export async function notify(p: EventPayload): Promise<void> {

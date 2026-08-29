@@ -2,7 +2,7 @@ import { isStaff, hasRole } from "@/lib/authz.server";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { notifyAsync } from "@/lib/notify.server";
+import { notifyAsync, sendApprovalEmailAsync, approvalBaseUrl } from "@/lib/notify.server";
 
 function appOrigin() {
   return process.env.NODE_ENV === "production"
@@ -188,7 +188,7 @@ async function computePayoutAmount(_supabase: unknown, submissionId: string) {
   const { data: sub, error } = await supabaseAdmin
     .from("submissions")
     .select(
-      "id,editor_id,status,awarded_cash_cents,view_count,verified_view_count,paid_cash_cents,stripe_transfer_id,bounty_id,bounties:bounty_id(id,currency,payout_type,reward_cash_cents,funded_cash_cents)",
+      "id,editor_id,status,tiktok_handle,awarded_cash_cents,view_count,verified_view_count,paid_cash_cents,stripe_transfer_id,bounty_id,bounties:bounty_id(id,title,contract_no,currency,payout_type,reward_cash_cents,funded_cash_cents)",
     )
     .eq("id", submissionId)
     .single();
@@ -196,7 +196,7 @@ async function computePayoutAmount(_supabase: unknown, submissionId: string) {
   if (sub.status !== "approved") throw new Error("Claim must be honored before requesting payout.");
   const paidAlready = (sub as { paid_cash_cents: number | null }).paid_cash_cents ?? 0;
   if (paidAlready > 0 || sub.stripe_transfer_id) throw new Error("Already paid.");
-  const bounty = (sub as { bounties: { id: string; currency: string; payout_type: string; reward_cash_cents: number; funded_cash_cents: number | null } }).bounties;
+  const bounty = (sub as { bounties: { id: string; title?: string | null; contract_no?: number | null; currency: string; payout_type: string; reward_cash_cents: number; funded_cash_cents: number | null } }).bounties;
   if (!bounty) throw new Error("Bounty not found.");
 
   let amountCents = 0;
@@ -260,6 +260,22 @@ export const requestPayout = createServerFn({ method: "POST" })
       reference: data.submissionId,
       details: { approval_id: row.id, amount_cents: amountCents, currency: bounty.currency },
     });
+    {
+      const amountLabel = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: bounty.currency || "USD",
+      }).format(amountCents / 100);
+      const base = approvalBaseUrl();
+      sendApprovalEmailAsync({
+        kind: "payout",
+        id: row.id,
+        bountyTitle: bounty.title ?? null,
+        contractNo: bounty.contract_no ?? null,
+        handle: (sub as { tiktok_handle?: string | null }).tiktok_handle ?? null,
+        amountLabel,
+        adminUrl: `${base}/admin?focus=${row.id}&tab=payouts`,
+      });
+    }
     return { approvalId: row.id, amountCents };
   });
 

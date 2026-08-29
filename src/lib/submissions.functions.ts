@@ -2,7 +2,7 @@ import { isStaff } from "@/lib/authz.server";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { notifyAsync } from "@/lib/notify.server";
+import { notifyAsync, sendApprovalEmailAsync, approvalBaseUrl } from "@/lib/notify.server";
 import { claimContractSchema } from "@/lib/claim-validation";
 
 const TIKTOK_URL = /^https?:\/\/((www|vm|vt|m)\.)?tiktok\.com\/.+/i;
@@ -157,7 +157,7 @@ export const deliverProof = createServerFn({ method: "POST" })
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
       .select(
-        "id,editor_id,status,tiktok_handle,bounty_id,counting_ends_at,bounties:bounty_id(platform_target,tiktok_sound_url,sound_name,hashtags,counting_days,deadline)",
+        "id,editor_id,status,tiktok_handle,bounty_id,counting_ends_at,bounties:bounty_id(title,contract_no,platform_target,tiktok_sound_url,sound_name,hashtags,counting_days,deadline)",
       )
       .eq("id", data.submission_id)
       .single();
@@ -291,6 +291,20 @@ export const deliverProof = createServerFn({ method: "POST" })
         oembed_author: oembed?.author_name ?? null,
       },
     });
+    {
+      const meta = (sub as unknown as { bounties: { title?: string | null; contract_no?: number | null } | null }).bounties;
+      const base = approvalBaseUrl();
+      sendApprovalEmailAsync({
+        kind: "delivery",
+        id: data.submission_id,
+        bountyTitle: meta?.title ?? null,
+        contractNo: meta?.contract_no ?? null,
+        handle: author || sub.tiktok_handle,
+        clipUrl: data.clip_url,
+        autoCheckNotes: notes,
+        adminUrl: `${base}/admin?focus=${data.submission_id}&tab=deliveries`,
+      });
+    }
     const { data: after } = await context.supabase
       .from("submissions")
       .select("counting_ends_at")
