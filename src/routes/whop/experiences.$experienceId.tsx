@@ -13,6 +13,7 @@ import { Money } from "@/components/Money";
 import { BsEmpty, BsLoading } from "@/components/bs";
 import { formatPerViewRate } from "@/lib/rate";
 import { WhopExternalLink } from "@/components/whop/WhopExternalLink";
+import { WhopIdentityCard } from "@/components/whop/WhopIdentityCard";
 
 export const Route = createFileRoute("/whop/experiences/$experienceId")({
   component: WhopExperiencePage,
@@ -62,6 +63,8 @@ function WhopExperiencePage() {
         </p>
       </header>
 
+      <WhopIdentityCard />
+
       {isLoading ? (
         <BsLoading label="Fetching live contracts…" />
       ) : open.length === 0 ? (
@@ -95,7 +98,8 @@ function WhopExperiencePage() {
       )}
 
       <p className="mt-6 text-center text-xs text-bone-soft">
-        Seize &amp; submit from inside Whop lands with identity crossover (next work order).
+        Link your account above, then seize &amp; submit from inside Whop lands with the payout
+        onboarding work order.
       </p>
     </div>
   );

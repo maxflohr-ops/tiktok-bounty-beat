@@ -114,16 +114,32 @@ async function moveMoney(outbox: OutboxStore, args: MoveMoneyArgs): Promise<Mone
   }
 
   const dry = isDryRun();
-  await outbox.insert({
-    kind: args.kind,
-    refTable: args.refTable,
-    refId: args.refId,
-    idempotencyKey: args.idempotencyKey,
-    request: args.request,
-    status: dry ? "dry" : "sent",
-    createdAt: new Date().toISOString(),
-    ...(dry ? {} : { sentAt: new Date().toISOString() }),
-  });
+  try {
+    await outbox.insert({
+      kind: args.kind,
+      refTable: args.refTable,
+      refId: args.refId,
+      idempotencyKey: args.idempotencyKey,
+      request: args.request,
+      status: dry ? "dry" : "sent",
+      createdAt: new Date().toISOString(),
+      ...(dry ? {} : { sentAt: new Date().toISOString() }),
+    });
+  } catch {
+    // A concurrent caller won the unique-key race; treat this call as a retry
+    // of theirs. Ambiguity ('sent') still refuses per the rules above.
+    const winner = await outbox.find(args.idempotencyKey);
+    if (winner?.status === "ok" && winner.response) {
+      const res = winner.response as { id: string; status?: string };
+      return { id: res.id, status: res.status, dry: false, replayed: true };
+    }
+    if (winner?.status === "dry") {
+      return { id: `dry_${args.kind}_${args.refId}`, dry: true, replayed: true };
+    }
+    throw new Error(
+      `outbox row ${args.idempotencyKey} is '${winner?.status ?? "unknown"}' — reconcile before retrying`,
+    );
+  }
 
   if (dry) {
     return { id: `dry_${args.kind}_${args.refId}`, dry: true, replayed: false };
