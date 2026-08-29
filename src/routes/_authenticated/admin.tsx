@@ -21,12 +21,16 @@ import { createBountyTopUp, requestPayout, listPayoutApprovals, approveAndSendPa
 import { listAllDisputesStaff, resolveDispute } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag } from "lucide-react";
 import { BsEmpty, BsLoading } from "@/components/bs";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    focus: typeof search.focus === "string" ? search.focus : undefined,
+    tab: typeof search.tab === "string" ? search.tab : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Admin · Bounty Sounds" },
@@ -41,7 +45,37 @@ function money(cents: number, currency = "USD") {
   return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(cents / 100);
 }
 
+// Deep link from the "approval needed" email: ?focus=<id>&tab=deliveries|payouts
+function useFocusRow() {
+  const { focus, tab } = Route.useSearch();
+  useEffect(() => {
+    if (!focus) return;
+    const prefix = tab === "payouts" ? "pa-" : tab === "deliveries" ? "sub-" : "";
+    const ids = prefix ? [`${prefix}${focus}`] : [`sub-${focus}`, `pa-${focus}`];
+    let tries = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+    const tryFocus = () => {
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.classList.add("ring-2", "ring-amber-400", "transition-shadow");
+          setTimeout(() => el.classList.remove("ring-2", "ring-amber-400", "transition-shadow"), 4000);
+          if (timer) clearInterval(timer);
+          return true;
+        }
+      }
+      // The row may not exist yet while the lists are still loading.
+      if (++tries > 40 && timer) clearInterval(timer);
+      return false;
+    };
+    if (!tryFocus()) timer = setInterval(tryFocus, 250);
+    return () => { if (timer) clearInterval(timer); };
+  }, [focus, tab]);
+}
+
 function Admin() {
+  useFocusRow();
   const meFn = useServerFn(getMe);
   const { data: me, isLoading } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
 
@@ -447,7 +481,7 @@ function ReviewCard({
   const [cash, setCash] = useState(s.bounty?.reward_cash_cents ?? 0);
   const [notes, setNotes] = useState("");
   return (
-    <li className="border border-[var(--border)] p-4">
+    <li id={`sub-${s.id}`} className="border border-[var(--border)] p-4">
       <div className="flex gap-4">
         {s.oembed_thumbnail ? (
           <img src={s.oembed_thumbnail} alt="" className="h-24 w-20 object-cover" />
@@ -648,7 +682,7 @@ function PayoutApprovalsPanel() {
 
       <ul className="mt-4 divide-y divide-[var(--border)]">
         {pending.map((a: any) => (
-          <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+          <li key={a.id} id={`pa-${a.id}`} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
             <div className="min-w-0">
               <span className="label-cap silver mr-2">No. {a.submission?.bounty?.contract_no != null ? pad(a.submission.bounty.contract_no) : "—"}</span>
               <span className="text-bone">{a.submission?.bounty?.title}</span>
