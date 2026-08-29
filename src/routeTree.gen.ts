@@ -23,6 +23,7 @@ import { Route as ForArtistsRouteImport } from './routes/for-artists'
 import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as WhopRouteRouteImport } from './routes/whop/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BountyIdRouteImport } from './routes/bounty.$id'
@@ -31,6 +32,8 @@ import { Route as AuthenticatedStartRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as WhopExperiencesExperienceIdRouteImport } from './routes/whop/experiences.$experienceId'
+import { Route as WhopDashboardCompanyIdRouteImport } from './routes/whop/dashboard.$companyId'
 import { Route as ApiGoToolRouteImport } from './routes/api/go.$tool'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public/webhooks/stripe'
@@ -107,6 +110,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WhopRouteRoute = WhopRouteRouteImport.update({
+  id: '/whop',
+  path: '/whop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -146,6 +154,17 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const WhopExperiencesExperienceIdRoute =
+  WhopExperiencesExperienceIdRouteImport.update({
+    id: '/experiences/$experienceId',
+    path: '/experiences/$experienceId',
+    getParentRoute: () => WhopRouteRoute,
+  } as any)
+const WhopDashboardCompanyIdRoute = WhopDashboardCompanyIdRouteImport.update({
+  id: '/dashboard/$companyId',
+  path: '/dashboard/$companyId',
+  getParentRoute: () => WhopRouteRoute,
+} as any)
 const ApiGoToolRoute = ApiGoToolRouteImport.update({
   id: '/api/go/$tool',
   path: '/api/go/$tool',
@@ -175,6 +194,7 @@ const ApiPublicOccContractsRoute = ApiPublicOccContractsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/whop': typeof WhopRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
@@ -196,6 +216,8 @@ export interface FileRoutesByFullPath {
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/whop/dashboard/$companyId': typeof WhopDashboardCompanyIdRoute
+  '/whop/experiences/$experienceId': typeof WhopExperiencesExperienceIdRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -203,6 +225,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/whop': typeof WhopRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
@@ -224,6 +247,8 @@ export interface FileRoutesByTo {
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/whop/dashboard/$companyId': typeof WhopDashboardCompanyIdRoute
+  '/whop/experiences/$experienceId': typeof WhopExperiencesExperienceIdRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -233,6 +258,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/whop': typeof WhopRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/board': typeof BoardRoute
   '/clipping-campaigns': typeof ClippingCampaignsRoute
@@ -254,6 +280,8 @@ export interface FileRoutesById {
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/whop/dashboard/$companyId': typeof WhopDashboardCompanyIdRoute
+  '/whop/experiences/$experienceId': typeof WhopExperiencesExperienceIdRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -263,6 +291,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/whop'
     | '/auth'
     | '/board'
     | '/clipping-campaigns'
@@ -284,6 +313,8 @@ export interface FileRouteTypes {
     | '/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
+    | '/whop/dashboard/$companyId'
+    | '/whop/experiences/$experienceId'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -291,6 +322,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/whop'
     | '/auth'
     | '/board'
     | '/clipping-campaigns'
@@ -312,6 +344,8 @@ export interface FileRouteTypes {
     | '/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
+    | '/whop/dashboard/$companyId'
+    | '/whop/experiences/$experienceId'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -320,6 +354,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/whop'
     | '/auth'
     | '/board'
     | '/clipping-campaigns'
@@ -341,6 +376,8 @@ export interface FileRouteTypes {
     | '/_authenticated/submit'
     | '/bounty/$id'
     | '/api/go/$tool'
+    | '/whop/dashboard/$companyId'
+    | '/whop/experiences/$experienceId'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -350,6 +387,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  WhopRouteRoute: typeof WhopRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   BoardRoute: typeof BoardRoute
   ClippingCampaignsRoute: typeof ClippingCampaignsRoute
@@ -472,6 +510,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/whop': {
+      id: '/whop'
+      path: '/whop'
+      fullPath: '/whop'
+      preLoaderRoute: typeof WhopRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -527,6 +572,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/whop/experiences/$experienceId': {
+      id: '/whop/experiences/$experienceId'
+      path: '/experiences/$experienceId'
+      fullPath: '/whop/experiences/$experienceId'
+      preLoaderRoute: typeof WhopExperiencesExperienceIdRouteImport
+      parentRoute: typeof WhopRouteRoute
+    }
+    '/whop/dashboard/$companyId': {
+      id: '/whop/dashboard/$companyId'
+      path: '/dashboard/$companyId'
+      fullPath: '/whop/dashboard/$companyId'
+      preLoaderRoute: typeof WhopDashboardCompanyIdRouteImport
+      parentRoute: typeof WhopRouteRoute
     }
     '/api/go/$tool': {
       id: '/api/go/$tool'
@@ -585,9 +644,24 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface WhopRouteRouteChildren {
+  WhopDashboardCompanyIdRoute: typeof WhopDashboardCompanyIdRoute
+  WhopExperiencesExperienceIdRoute: typeof WhopExperiencesExperienceIdRoute
+}
+
+const WhopRouteRouteChildren: WhopRouteRouteChildren = {
+  WhopDashboardCompanyIdRoute: WhopDashboardCompanyIdRoute,
+  WhopExperiencesExperienceIdRoute: WhopExperiencesExperienceIdRoute,
+}
+
+const WhopRouteRouteWithChildren = WhopRouteRoute._addFileChildren(
+  WhopRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  WhopRouteRoute: WhopRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BoardRoute: BoardRoute,
   ClippingCampaignsRoute: ClippingCampaignsRoute,
