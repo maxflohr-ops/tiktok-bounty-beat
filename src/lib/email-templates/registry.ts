@@ -1,6 +1,8 @@
 import type { ComponentType } from 'react'
 import { template as actionAlertTemplate } from './action-alert'
+import { template as approvalNeededTemplate } from './approval-needed'
 import { template as editorStatusTemplate } from './editor-status'
+
 
 export interface TemplateEntry {
   component: ComponentType<any>
