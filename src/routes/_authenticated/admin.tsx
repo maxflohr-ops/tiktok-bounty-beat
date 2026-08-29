@@ -138,13 +138,18 @@ function AdminDesk() {
       <div className="container-board relative z-10 py-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="font-display text-4xl text-bone">Admin desk</h1>
-            <p className="script-note text-xl text-bone-soft">Verify the views. Honor the clip. Send the money.</p>
-            <Link to="/analytics" className="mt-2 inline-block text-sm underline underline-offset-4">
+            <h1 className="font-display text-2xl text-bone md:text-4xl">Admin desk</h1>
+            <p className="script-note hidden text-xl text-bone-soft md:block">
+              Verify the views. Honor the clip. Send the money.
+            </p>
+            <Link
+              to="/analytics"
+              className="mt-1 inline-flex min-h-[44px] items-center text-sm underline underline-offset-4 md:mt-2 md:min-h-0"
+            >
               Analytics &rarr;
             </Link>
           </div>
-          <div className="system-bar">
+          <div className="system-bar hidden md:flex">
             <span className="status-dot" />
             admin console &middot; authorized
           </div>
@@ -153,7 +158,10 @@ function AdminDesk() {
         <TopUpReturnNotice />
         <DeskSummary counts={counts} />
 
-        <nav aria-label="Desk sections" className="mt-6 flex flex-wrap gap-2 border-b border-[var(--border)] pb-3">
+        <nav
+          aria-label="Desk sections"
+          className="mt-4 flex gap-2 overflow-x-auto border-b border-[var(--border)] pb-3 [-ms-overflow-style:none] [scrollbar-width:none] md:mt-6 md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden"
+        >
           {TABS.map((t) => {
             const n = counts[t.key];
             const on = active === t.key;
@@ -163,7 +171,7 @@ function AdminDesk() {
                 type="button"
                 aria-current={on ? "page" : undefined}
                 onClick={() => setTab(t.key)}
-                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
+                className={`inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
                   on
                     ? "border-[var(--ink)] bg-[var(--ink)] text-white"
                     : "border-[var(--border)] text-bone-soft hover:border-[var(--ink)] hover:text-bone"
@@ -232,18 +240,31 @@ function useDeskCounts() {
 }
 
 function DeskSummary({ counts }: { counts: ReturnType<typeof useDeskCounts> }) {
+  // Short labels so nothing wraps to a second line in a narrow column.
   const items = [
-    { label: "awaiting review", value: String(counts.deliveries), tone: counts.deliveries > 0 },
-    { label: "payouts to approve", value: String(counts.payouts), tone: counts.payouts > 0 },
-    { label: "owed to clippers", value: money(counts.owed), tone: false },
-    { label: "paid out", value: money(counts.paid), tone: false },
+    { short: "review", label: "awaiting review", value: String(counts.deliveries), tone: counts.deliveries > 0 },
+    { short: "approve", label: "payouts to approve", value: String(counts.payouts), tone: counts.payouts > 0 },
+    { short: "owed", label: "owed to clippers", value: money(counts.owed), tone: false },
+    { short: "paid", label: "paid out", value: money(counts.paid), tone: false },
   ];
   return (
-    <dl className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-      {items.map((i) => (
-        <div key={i.label} className="border border-[var(--border)] bg-[var(--paper)] p-4">
-          <dt className="label-cap text-bone-soft">{i.label}</dt>
-          <dd className={`mt-1 font-display text-2xl ${i.tone ? "text-[var(--color-bs-crimson)]" : "text-ink"}`}>
+    <dl className="mt-4 grid grid-cols-4 border border-[var(--border)] bg-[var(--paper)] md:mt-6 md:gap-3 md:border-0 md:bg-transparent">
+      {items.map((i, idx) => (
+        <div
+          key={i.label}
+          className={`px-2 py-2.5 text-center md:border md:border-[var(--border)] md:bg-[var(--paper)] md:p-4 md:text-left ${
+            idx > 0 ? "border-l border-[var(--border)] md:border-l" : ""
+          }`}
+        >
+          <dt className="label-cap text-[10px] leading-tight text-bone-soft md:text-xs">
+            <span className="md:hidden">{i.short}</span>
+            <span className="hidden md:inline">{i.label}</span>
+          </dt>
+          <dd
+            className={`mt-0.5 font-display text-base leading-tight md:mt-1 md:text-2xl ${
+              i.tone ? "text-[var(--color-bs-crimson)]" : "text-ink"
+            }`}
+          >
             {i.value}
           </dd>
         </div>
@@ -391,7 +412,7 @@ function BountiesPanel() {
   };
 
   return (
-    <section className="board-frame relative p-5">
+    <section className="board-frame relative p-3 md:p-5">
       <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
       <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
       <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
@@ -683,17 +704,17 @@ function SubmissionsPanel() {
   };
 
   return (
-    <section className="board-frame relative p-5">
+    <section className="board-frame relative p-3 md:p-5">
       <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
       <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
       <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
-      <h2 className="font-display text-2xl text-bone">Deliveries</h2>
-      <p className="script-note text-lg text-bone-soft">
+      <h2 className="font-display text-xl text-bone md:text-2xl">Deliveries</h2>
+      <p className="script-note hidden text-lg text-bone-soft md:block">
         Every clip stays openable — including the ones that failed the check or were turned down.
       </p>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="-mx-1 mt-4 flex gap-2 overflow-x-auto px-1 [-ms-overflow-style:none] [scrollbar-width:none] md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden">
         {DELIVERY_FILTERS.map((f) => {
           const n = countFor(f.key);
           const on = filter === f.key;
@@ -703,7 +724,7 @@ function SubmissionsPanel() {
               type="button"
               aria-pressed={on}
               onClick={() => setFilter(f.key)}
-              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition ${
+              className={`inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition ${
                 on
                   ? "border-[var(--ink)] bg-[var(--ink)] text-white"
                   : "border-[var(--border)] text-bone-soft hover:border-[var(--ink)] hover:text-bone"
@@ -759,7 +780,7 @@ function DeliveryRow({ s }: { s: Sub }) {
               {s.auto_check_passed ? "auto-check ✓" : "auto-check ✗"}
             </span>
           </div>
-          <div className="mt-1 truncate text-bone">{s.bounty?.title}</div>
+          <div className="mt-1 line-clamp-2 text-bone md:truncate">{s.bounty?.title}</div>
           <div className="text-xs text-bone-soft">
             by {s.editor?.display_name || "editor"} · @{s.tiktok_handle}
           </div>
@@ -862,7 +883,7 @@ function ReviewCard({
         )}
         <div className="min-w-0 flex-1">
           <div className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</div>
-          <div className="truncate text-bone">{s.bounty?.title}</div>
+          <div className="line-clamp-2 text-bone md:truncate">{s.bounty?.title}</div>
           {(s as any).counting_ends_at && perView ? (
             <div className="mt-0.5 text-xs text-bone-soft">
               {new Date((s as any).counting_ends_at).getTime() > Date.now()
