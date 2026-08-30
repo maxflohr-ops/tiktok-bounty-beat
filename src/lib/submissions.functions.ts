@@ -518,6 +518,60 @@ export const reviewSubmission = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// Staff: put a rejected delivery back in the review queue. reviewSubmission
+// only rules on submitted/in_review/pending, so without this a rejection is
+// permanent - and a clipper who was turned down in error, then won their
+// dispute, still had no route to payment. Deliberately a separate, audited
+// action rather than loosening the review gate, so a re-ruling is always an
+// explicit decision someone is named on.
+export const reopenSubmission = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({
+      id: z.string().uuid(),
+      reason: z.string().trim().min(3).max(1000),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const staff = await isStaff(context.supabase, context.userId);
+    if (!staff) throw new Error("Forbidden");
+
+    const { data: sub, error: se } = await context.supabase
+      .from("submissions")
+      .select("id,status,paid_cash_cents,stripe_transfer_id,review_notes")
+      .eq("id", data.id)
+      .single();
+    if (se || !sub) throw new Error("Not found.");
+    if ((sub.status as string) !== "rejected")
+      throw new Error("Only a rejected delivery can be reopened.");
+    // Paid work is settled; reopening it would invite a double payout.
+    if (((sub as { paid_cash_cents: number | null }).paid_cash_cents ?? 0) > 0 || sub.stripe_transfer_id)
+      throw new Error("This delivery has already been paid.");
+
+    const trail = `${sub.review_notes ? sub.review_notes + " | " : ""}reopened: ${data.reason}`;
+    const { error } = await context.supabase
+      .from("submissions")
+      .update({
+        status: "submitted",
+        // The rejection zeroed these; clear them so the new ruling starts clean.
+        awarded_cash_cents: 0,
+        awarded_points: 0,
+        review_notes: trail,
+        reviewed_at: null,
+        reviewed_by: null,
+      })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+
+    notifyAsync({
+      event: "submission.reopened",
+      actor: (context.claims as { email?: string })?.email ?? context.userId,
+      reference: data.id,
+      details: { reason: data.reason },
+    });
+    return { ok: true };
+  });
+
 // Lifetime payout total (cents) above which US tax info (W-9) is required
 // before any further payout can be marked. Adjustable here.
 export const TAX_THRESHOLD_CENTS = 15000; // $150
