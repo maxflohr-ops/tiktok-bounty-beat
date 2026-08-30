@@ -45,7 +45,7 @@ function PayoutsPage() {
       </section>
 
       <section className="container-board pb-16">
-        <Reveal>
+        <Reveal from="left">
           <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-3">
             <div className="border border-[var(--color-bs-rule)] bg-white p-6">
               <h2 className="font-display text-2xl text-bone">The purse</h2>
@@ -81,7 +81,7 @@ function PayoutsPage() {
       <section className="bg-[var(--wall-2)] py-16">
         <div className="container-board text-center">
           <GuillocheBand className="mx-auto mb-8 max-w-2xl opacity-[0.12]" />
-          <Reveal>
+          <Reveal from="right">
             <p className="label-cap">Out in the open</p>
             <h2 className="mx-auto mt-3 max-w-xl text-3xl md:text-4xl">
               Paid clippers make the leaderboard.

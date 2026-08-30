@@ -3,7 +3,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { FooterNav } from "@/components/FooterNav";
 import { BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
 import { setReturnTo } from "@/lib/return-to";
-import type { ReactNode } from "react";
+import { Children, isValidElement, type ReactNode } from "react";
+import { Reveal } from "@/components/Reveal";
 
 export function LandingLayout({
   eyebrow,
@@ -54,7 +55,20 @@ export function LandingLayout({
             ) : null}
           </div>
         </section>
-        <div className="mx-auto mt-12 max-w-4xl space-y-10">{children}</div>
+        <div className="mx-auto mt-12 max-w-4xl space-y-10">
+          {/* Sections arrive alternately from the left and the right as they
+              scroll into view. Strict alternation by position, so the page
+              reads as one deliberate rhythm. */}
+          {Children.toArray(children).map((child, i) =>
+            isValidElement(child) ? (
+              <Reveal key={i} from={i % 2 === 0 ? "left" : "right"}>
+                {child}
+              </Reveal>
+            ) : (
+              child
+            ),
+          )}
+        </div>
         <footer className="mx-auto mt-16 max-w-4xl border-t border-[var(--color-bs-rule)] pt-6 text-center text-sm text-[var(--color-bs-ink-mute)]">
           <FooterNav />
         </footer>
