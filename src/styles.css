@@ -859,3 +859,35 @@
   .bs-backdrop { animation: bs-backdrop-in var(--dur-long) var(--ease-out); }
   .bs-dialog { animation: bs-dialog-in var(--dur-long) var(--ease-out); }
 }
+
+/* Hero sequence. The three imperatives land in the cadence you'd say them —
+   clip, claim, cash — and the accent bar then strikes across behind them,
+   left to right, the way a stamp lands on paper. One sequence, settled
+   inside 700ms, transform and opacity only. */
+@keyframes bs-hero-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes bs-hero-mark {
+  from { transform: rotate(-1deg) scaleX(0); }
+  to { transform: rotate(-1deg) scaleX(1); }
+}
+
+/* The mark keeps its tilt with no script and under reduced motion; only the
+   sweep is conditional. */
+.bs-hero-mark {
+  transform: rotate(-1deg);
+  transform-origin: left center;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .bs-hero-in {
+    opacity: 0;
+    animation: bs-hero-rise var(--dur-long) var(--ease-out) forwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+  .bs-hero-mark {
+    transform: rotate(-1deg) scaleX(0);
+    animation: bs-hero-mark var(--dur-long) var(--ease-out) 280ms forwards;
+  }
+}
