@@ -129,7 +129,7 @@ function ListSoundPage() {
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
             Thirty days on the Bounty Board. Editors take contracts and deliver TikToks cut from
             your footage — upcoming or already out.{" "}
-            <a href="/for-artists" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+            <a href="/for-artists" className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
               the full breakdown →
             </a>
           </p>
@@ -291,7 +291,7 @@ function ListSoundPage() {
                   ))}
                   <p className="mt-1 border-t border-[var(--color-bs-rule)] pt-2 text-xs text-[var(--color-bs-ink-mute)]">
                     bigger than featured?{" "}
-                    <a href="/api/go/florra" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+                    <a href="/api/go/florra" target="_blank" rel="noreferrer" className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
                       florra.club
                     </a>
                   </p>

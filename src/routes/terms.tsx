@@ -23,7 +23,7 @@ export const Route = createFileRoute("/terms")({
 });
 
 const MAIL = (address: string) => (
-  <a href={`mailto:${address}`} className="underline underline-offset-2 hover:text-bone">
+  <a href={`mailto:${address}`} className="tap-inline underline underline-offset-2 hover:text-bone">
     {address}
   </a>
 );

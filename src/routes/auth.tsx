@@ -83,7 +83,7 @@ function AuthPage() {
       <main className="container-board flex min-h-screen items-center justify-center py-10">
         <BsWell className="w-full max-w-md">
           <div className="text-center">
-            <Link to="/" className="inline-flex items-center gap-2 text-xl font-semibold text-[var(--color-bs-ink)] [font-family:var(--font-brand)]">
+            <Link to="/" className="inline-flex min-h-[44px] items-center gap-2 text-xl font-semibold text-[var(--color-bs-ink)] [font-family:var(--font-brand)]">
               <img src="/art/great-seal.png" alt="" aria-hidden className="h-7 w-7 object-contain" />
               Bounty Sounds
             </Link>
@@ -147,7 +147,7 @@ function AuthPage() {
             {mode === "signin" ? "New here?" : "Already have an account?"}{" "}
             <button
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="font-medium text-[var(--color-bs-ink)] underline underline-offset-2"
+              className="inline-flex min-h-[44px] items-center font-medium text-[var(--color-bs-ink)] underline underline-offset-2 md:min-h-0"
             >
               {mode === "signin" ? "Create an account" : "Sign in"}
             </button>

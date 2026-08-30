@@ -73,7 +73,7 @@ export function SiteHeader() {
     >
       <div className="container-board flex min-h-[64px] items-center justify-between gap-3 md:grid md:grid-cols-[1fr_auto_1fr]">
         {/* Left: the seal, then the name */}
-        <Link to="/" className="flex items-center gap-2.5 justify-self-start" onClick={() => setDrawerOpen(false)}>
+        <Link to="/" className="flex min-h-[44px] items-center gap-2.5 justify-self-start" onClick={() => setDrawerOpen(false)}>
           <img
             src="/art/great-seal.png"
             alt=""
@@ -105,7 +105,7 @@ export function SiteHeader() {
           </Link>
           <button
             onClick={() => setDrawerOpen((o) => !o)}
-            className="p-2 text-[var(--color-bs-ink)] md:hidden"
+            className="-mr-2 inline-flex min-h-[44px] min-w-[44px] items-center justify-center p-2 text-[var(--color-bs-ink)] md:hidden"
             aria-label={drawerOpen ? "Close menu" : "Open menu"}
             aria-expanded={drawerOpen}
           >

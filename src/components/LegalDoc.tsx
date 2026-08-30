@@ -56,7 +56,7 @@ export function LegalDoc({
                 <li key={s.id} className="text-sm">
                   <a
                     href={`#${s.id}`}
-                    className="text-bone-soft underline underline-offset-2 hover:text-bone"
+                    className="inline-flex min-h-[44px] items-center text-bone-soft underline underline-offset-2 hover:text-bone md:min-h-0"
                   >
                     {i + 1}. {s.heading}
                   </a>
@@ -81,11 +81,11 @@ export function LegalDoc({
           <div className="mt-14 border-t border-[var(--color-bs-rule)] pt-6 text-sm text-bone-soft">
             <p>
               Read alongside our{" "}
-              <Link to="/privacy" className="underline underline-offset-2 hover:text-bone">
+              <Link to="/privacy" className="tap-inline underline underline-offset-2 hover:text-bone">
                 Privacy Policy
               </Link>{" "}
               and{" "}
-              <Link to="/terms" className="underline underline-offset-2 hover:text-bone">
+              <Link to="/terms" className="tap-inline underline underline-offset-2 hover:text-bone">
                 Terms of Service
               </Link>
               .

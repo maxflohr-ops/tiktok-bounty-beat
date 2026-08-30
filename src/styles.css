@@ -410,6 +410,10 @@
 }
 
 @utility filter-chip {
+  /* 44px minimum touch height - the chips sat at 39px on a phone. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 0.45rem 1.05rem;
   border: 1px solid transparent;
   border-radius: 999px;
@@ -768,4 +772,13 @@
 .legal-prose p,
 .legal-prose li {
   overflow-wrap: anywhere;
+}
+
+/* Touch target helper for links that sit inside running text. Grows the hit
+   box vertically to the 44px guidance without changing where the line sits,
+   so prose keeps its rhythm while a thumb still lands. */
+@utility tap-inline {
+  display: inline-block;
+  padding-block: 0.85rem;
+  margin-block: -0.85rem;
 }
