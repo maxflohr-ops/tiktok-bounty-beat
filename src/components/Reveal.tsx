@@ -8,10 +8,14 @@ export function Reveal({
   children,
   className = "",
   delay = 0,
+  from = "up",
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
+  /** Which edge the content travels in from. Alternated by the caller so a
+   *  page reads as one system rather than a scatter of directions. */
+  from?: "up" | "left" | "right";
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -38,7 +42,12 @@ export function Reveal({
   }, []);
 
   return (
-    <div ref={ref} className={`reveal ${className}`} style={delay ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties) : undefined}>
+    <div
+      ref={ref}
+      data-from={from}
+      className={`reveal ${className}`}
+      style={delay ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties) : undefined}
+    >
       {children}
     </div>
   );

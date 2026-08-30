@@ -210,7 +210,7 @@ function LandingPage() {
       </section>
 
       <section className="container-board py-14">
-        <Reveal>
+        <Reveal from="left">
         <nav aria-label="Explore Bounty Sounds" className="mx-auto max-w-3xl">
           <BsEyebrow className="block text-center">Explore</BsEyebrow>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">

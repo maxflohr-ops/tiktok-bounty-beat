@@ -101,7 +101,7 @@ function HowItWorksPage() {
       </section>
 
       <section className="container-board pb-16">
-        <Reveal>
+        <Reveal from="left">
           <ol className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
             {STEPS.map((s) => (
               <li key={s.n} className="border border-[var(--color-bs-rule)] bg-white p-6">
@@ -121,7 +121,7 @@ function HowItWorksPage() {
       {/* The checks — short and honest */}
       <section className="bg-[var(--wall-2)] py-16">
         <div className="container-board text-center">
-          <Reveal>
+          <Reveal from="right">
             <p className="label-cap">What we check</p>
             <h2 className="mx-auto mt-3 max-w-xl text-3xl md:text-4xl">Three things. No tricks.</h2>
             <div className="mx-auto mt-8 grid max-w-3xl gap-4 text-left sm:grid-cols-3">

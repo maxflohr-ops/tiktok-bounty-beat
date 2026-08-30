@@ -83,6 +83,8 @@
   --dur-micro: 120ms;
   --dur-short: 220ms;
   --dur-long: 420ms;
+  /* Overshoots ~4% then settles. Used only where something lands. */
+  --ease-settle: cubic-bezier(0.34, 1.35, 0.64, 1);
 }
 
 :root {
@@ -135,6 +137,9 @@
   }
   html,
   body {
+    /* Sideways reveals must never turn into a horizontal scrollbar. `clip`
+       rather than `hidden`, which would break position: sticky. */
+    overflow-x: clip;
     background: var(--wall);
     color: var(--bone);
     font-family: var(--font-body);
@@ -723,6 +728,14 @@
     transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
     transition-delay: var(--reveal-delay, 0ms);
   }
+  /* Sideways arrivals alternate down a page; the distance is the same on
+     both sides so the rhythm stays even rather than looking hand-placed. */
+  .reveal[data-from="left"] {
+    transform: translate3d(-36px, 0, 0);
+  }
+  .reveal[data-from="right"] {
+    transform: translate3d(36px, 0, 0);
+  }
   .reveal[data-revealed] {
     opacity: 1;
     transform: none;
@@ -864,8 +877,8 @@
    clip, claim, cash — and the accent bar then strikes across behind them,
    left to right, the way a stamp lands on paper. One sequence, settled
    inside 700ms, transform and opacity only. */
-@keyframes bs-hero-rise {
-  from { opacity: 0; transform: translateY(14px); }
+@keyframes bs-hero-drop {
+  from { opacity: 0; transform: translateY(-22px); }
   to { opacity: 1; transform: none; }
 }
 @keyframes bs-hero-mark {
@@ -883,7 +896,7 @@
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .bs-hero-in {
     opacity: 0;
-    animation: bs-hero-rise var(--dur-long) var(--ease-out) forwards;
+    animation: bs-hero-drop var(--dur-long) var(--ease-settle) forwards;
     animation-delay: calc(var(--i, 0) * 60ms);
   }
   .bs-hero-mark {
