@@ -88,31 +88,37 @@ function LandingPage() {
 
         <div className="container-board relative">
           <BsWell className="mx-auto max-w-4xl">
-            <div className="text-center">
+            <div className="bs-hero-in text-center" style={{ "--i": 0 } as React.CSSProperties}>
               <BsMono>— Bounty Board —</BsMono>
             </div>
 
             <div className="relative mt-6 text-center">
               <span
                 aria-hidden
-                className="pointer-events-none absolute inset-x-6 bottom-2 h-4 -rotate-1 bg-[var(--color-bs-accent-soft)] md:bottom-4 md:h-6"
+                className="bs-hero-mark pointer-events-none absolute inset-x-6 bottom-2 h-4 bg-[var(--color-bs-accent-soft)] md:bottom-4 md:h-6"
               />
               <BsDisplay as="h1" size="xl" className="relative">
-                Clip it.<br />
-                <span>Claim it.</span><br />
-                Cash it.
+                <span className="bs-hero-in block" style={{ "--i": 1 } as React.CSSProperties}>Clip it.</span>
+                <span className="bs-hero-in block" style={{ "--i": 2 } as React.CSSProperties}>Claim it.</span>
+                <span className="bs-hero-in block" style={{ "--i": 3 } as React.CSSProperties}>Cash it.</span>
               </BsDisplay>
             </div>
 
-            <p className="mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] md:text-lg">
+            <p
+              className="bs-hero-in mx-auto mt-6 max-w-md text-center text-base text-[var(--color-bs-ink-soft)] md:text-lg"
+              style={{ "--i": 5 } as React.CSSProperties}
+            >
               Sounds, streams, keynotes, podcasts. Post the clip — verified views pay out.
             </p>
 
-            <p className="mx-auto mt-3 max-w-md text-center text-sm text-[var(--color-bs-ink-mute)]">
+            <p
+              className="bs-hero-in mx-auto mt-3 max-w-md text-center text-sm text-[var(--color-bs-ink-mute)]"
+              style={{ "--i": 6 } as React.CSSProperties}
+            >
               The purse is posted before you cut. Verified views pay out.
             </p>
 
-            <div className="mt-8 flex justify-center">
+            <div className="bs-hero-in mt-8 flex justify-center" style={{ "--i": 7 } as React.CSSProperties}>
               <Link
                 to="/board"
                 className="inline-flex items-center justify-center rounded-full bg-[var(--color-bs-ink)] px-7 py-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-bs-paper)] shadow-[0_4px_0_rgba(13,13,13,0.3)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5"
