@@ -608,7 +608,7 @@ function ContractCard({
             src={(b as any).cover_url || FLAGSHIP.hero.image}
             alt={FLAGSHIP.hero.alt}
             loading="lazy"
-            className="block w-full border border-[var(--paper-dark)] object-cover"
+            className="block aspect-video w-full border border-[var(--paper-dark)] object-cover"
           />
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <LiveNowBadge />
