@@ -1214,11 +1214,11 @@ function PayoutDecisionDialog({
       role="dialog"
       aria-modal="true"
       aria-label={approving ? "Approve and send payout" : "Reject payout"}
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4"
+      className="bs-backdrop fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4"
       onClick={onCancel}
     >
       <div
-        className="w-full max-w-md border border-[var(--border)] bg-[var(--paper)] p-6 shadow-xl"
+        className="bs-dialog w-full max-w-md border border-[var(--border)] bg-[var(--paper)] p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="font-display text-2xl text-ink">

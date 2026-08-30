@@ -268,11 +268,15 @@ function BoardPage() {
             )
           ) : (
             <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map(({ b, score }) => {
+              {filtered.map(({ b, score }, i) => {
                 const bl = bottomLine(b);
                 const dim = isExpired(b) === "expired";
                 return (
-                  <li key={b.id} className={dim ? "opacity-60 transition" : "transition"}>
+                  <li
+                    key={b.id}
+                    style={{ "--i": i, "--settle-to": dim ? 0.6 : 1 } as React.CSSProperties}
+                    className={`bs-settle ${dim ? "opacity-60" : ""}`}
+                  >
                     <Link
                       to="/bounty/$id"
                       params={{ id: b.id }}
