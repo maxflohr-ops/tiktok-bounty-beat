@@ -163,7 +163,7 @@ function KeynotesPage() {
         </div>
         <p className="mt-8 text-center text-xs text-bone-soft">
           bigger than a board listing?{" "}
-          <a href="/api/go/florra" target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-bone">
+          <a href="/api/go/florra" target="_blank" rel="noreferrer" className="tap-inline underline underline-offset-2 hover:text-bone">
             florra.club
           </a>
         </p>

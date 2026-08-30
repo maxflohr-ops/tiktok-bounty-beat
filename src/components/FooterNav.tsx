@@ -21,10 +21,14 @@ export function FooterNav({ className = "" }: { className?: string }) {
   return (
     <nav
       aria-label="Footer"
-      className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-2 ${className}`}
+      className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-0 md:gap-y-2 ${className}`}
     >
       {LINKS.map((l) => (
-        <Link key={l.to} to={l.to} className="hover:text-bone">
+        <Link
+          key={l.to}
+          to={l.to}
+          className="inline-flex min-h-[44px] items-center hover:text-bone md:min-h-0"
+        >
           {l.label}
         </Link>
       ))}

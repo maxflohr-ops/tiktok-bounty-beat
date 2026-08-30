@@ -168,9 +168,9 @@ function HowItWorksPage() {
           Posting a bounty instead of clipping one?
         </p>
         <nav className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
-          <Link to="/for-artists" className="underline underline-offset-4 hover:text-bone">For artists</Link>
-          <Link to="/keynotes" className="underline underline-offset-4 hover:text-bone">Keynote campaigns</Link>
-          <Link to="/clipping-campaigns" className="underline underline-offset-4 hover:text-bone">Campaigns end to end</Link>
+          <Link to="/for-artists" className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0">For artists</Link>
+          <Link to="/keynotes" className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0">Keynote campaigns</Link>
+          <Link to="/clipping-campaigns" className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0">Campaigns end to end</Link>
         </nav>
       </section>
 

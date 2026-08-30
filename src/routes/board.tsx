@@ -142,7 +142,7 @@ function BoardPage() {
       <SiteHeader />
 
       <section className="container-board relative z-10 py-6">
-        <div className="board-frame relative p-6 md:p-12">
+        <div className="board-frame relative p-3 md:p-12">
           <GuillocheBand className="absolute inset-x-6 top-1 opacity-[0.08]" />
           {/* Corner brackets */}
           <div className="corner-bracket absolute top-3 left-3 border-t-2 border-l-2" />
@@ -151,8 +151,8 @@ function BoardPage() {
           <div className="corner-bracket absolute bottom-3 right-3 border-b-2 border-r-2" />
 
           {/* Header */}
-          <div className="mb-8 text-center md:mb-12">
-            <div className="relative mb-4 flex flex-col items-center">
+          <div className="mb-5 text-center md:mb-12">
+            <div className="relative mb-4 hidden flex-col items-center md:flex">
               <div className="system-bar">
                 <span className="status-dot" />
                 system status · connected
@@ -170,7 +170,10 @@ function BoardPage() {
               Rate, purse, and deadline — printed on every bounty before you seize it.
             </p>
             <p className="mt-3">
-              <Link to="/how-it-works" className="terminal text-xs text-bone-soft underline hover:text-bone">
+              <Link
+                to="/how-it-works"
+                className="terminal inline-flex min-h-[44px] items-center text-xs text-bone-soft underline hover:text-bone md:min-h-0"
+              >
                 new here? how it works
               </Link>
             </p>
@@ -193,7 +196,7 @@ function BoardPage() {
           </div>
 
           {/* Filters */}
-          <div className="mb-8 flex flex-wrap items-center justify-center gap-4 md:mb-10">
+          <div className="-mx-3 mb-5 flex items-center gap-4 overflow-x-auto px-3 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:mx-0 md:mb-10 md:flex-wrap md:justify-center md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
             <FilterGroup
               label="Platform"
               options={[
@@ -353,25 +356,25 @@ function BoardPage() {
             <h2 className="text-center font-display text-2xl text-bone">Explore Bounty Sounds</h2>
             <ul className="mx-auto mt-6 grid max-w-4xl gap-4 sm:grid-cols-2">
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/for-artists" className="font-display text-lg text-bone hover:text-silver-glow">
+                <Link to="/for-artists" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
                   TikTok music promotion for artists →
                 </Link>
                 <p className="mt-1 text-sm text-bone-soft">List your song, set a per-view rate, only pay for verified views.</p>
               </li>
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/for-editors" className="font-display text-lg text-bone hover:text-silver-glow">
+                <Link to="/for-editors" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
                   UGC creator jobs for editors →
                 </Link>
                 <p className="mt-1 text-sm text-bone-soft">Claim contracts, post TikToks, cash in via PayPal, Stripe, or USDC.</p>
               </li>
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/clipping-campaigns" className="font-display text-lg text-bone hover:text-silver-glow">
+                <Link to="/clipping-campaigns" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
                   Clipping campaigns →
                 </Link>
                 <p className="mt-1 text-sm text-bone-soft">How pay-per-view clipping campaigns work end to end.</p>
               </li>
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/tiktok-clipper" className="font-display text-lg text-bone hover:text-silver-glow">
+                <Link to="/tiktok-clipper" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
                   Become a TikTok clipper →
                 </Link>
                 <p className="mt-1 text-sm text-bone-soft">Turn your edits into per-view income. No follower minimum.</p>
@@ -393,9 +396,9 @@ function BoardPage() {
         <div className="container-board flex flex-col items-center gap-3 py-8 text-center text-xs text-bone-soft">
           <FooterNav />
           <span>
-            <Link to="/" className="hover:text-bone">home</Link>
+            <Link to="/" className="tap-inline hover:text-bone">home</Link>
             {" · "}
-            <Link to="/admin" className="opacity-60 hover:text-bone hover:opacity-100">admin desk</Link>
+            <Link to="/admin" className="tap-inline opacity-60 hover:text-bone hover:opacity-100">admin desk</Link>
           </span>
           <span className="script-note text-sm">Every bounty shows its purse, its rate, and its deadline before you seize it.</span>
           <span>© {new Date().getFullYear()} · Bounty Sounds</span>
@@ -417,9 +420,9 @@ function FilterGroup({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="terminal text-bone-soft">{label}</span>
-      <div className="flex flex-wrap gap-2">
+    <div className="flex shrink-0 items-center gap-2">
+      <span className="terminal shrink-0 text-bone-soft">{label}</span>
+      <div className="flex shrink-0 gap-2 md:flex-wrap">
         {options.map((o) => (
           <button
             key={o.v}

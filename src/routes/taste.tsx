@@ -123,11 +123,11 @@ function TastePage() {
 
         <div className="mt-10 flex items-center gap-6">
           {step > 0 ? (
-            <button onClick={() => setStep(step - 1)} className="terminal text-xs text-bone-soft underline hover:text-bone">
+            <button onClick={() => setStep(step - 1)} className="terminal inline-flex min-h-[44px] items-center text-xs text-bone-soft underline hover:text-bone md:min-h-0">
               back
             </button>
           ) : null}
-          <Link to="/board" className="terminal text-xs text-bone-soft underline hover:text-bone">
+          <Link to="/board" className="terminal inline-flex min-h-[44px] items-center text-xs text-bone-soft underline hover:text-bone md:min-h-0">
             skip — show me everything
           </Link>
         </div>

@@ -137,7 +137,7 @@ function LandingPage() {
               ) : null}
               <div className="mb-3 flex items-center justify-between">
                 <BsBadge variant="live">Live · {open.length} open</BsBadge>
-                <Link to="/board" className="bs-mono underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+                <Link to="/board" className="bs-mono inline-flex min-h-[44px] items-center underline underline-offset-2 hover:text-[var(--color-bs-ink)] md:min-h-0">
                   see all →
                 </Link>
               </div>
@@ -195,7 +195,7 @@ function LandingPage() {
           <p className="mt-4 text-center">
             <Link
               to="/how-it-works"
-              className="bs-mono underline underline-offset-2 text-[var(--color-bs-ink-mute)] hover:text-[var(--color-bs-ink)]"
+              className="bs-mono inline-flex min-h-[44px] items-center underline underline-offset-2 text-[var(--color-bs-ink-mute)] hover:text-[var(--color-bs-ink)] md:min-h-0"
             >
               the full flow →
             </Link>
@@ -221,7 +221,7 @@ function LandingPage() {
               <li key={l.to}>
                 <Link
                   to={l.to}
-                  className="flex items-center justify-between border-b border-[var(--iron)] py-2 text-bone hover:text-bone-soft"
+                  className="flex min-h-[44px] items-center justify-between border-b border-[var(--iron)] py-2 text-bone hover:text-bone-soft"
                 >
                   <span className="font-display text-base">{l.label}</span>
                   <span className="font-mono text-xs text-bone-soft">→</span>
@@ -241,7 +241,7 @@ function LandingPage() {
           <span>Good to the bearer for verified views, payable from the posted purse.</span>
           <span>
             © {new Date().getFullYear()} Bounty Sounds ·{" "}
-            <Link to="/admin" className="opacity-60 hover:opacity-100">admin desk</Link>
+            <Link to="/admin" className="tap-inline opacity-60 hover:opacity-100">admin desk</Link>
           </span>
         </div>
       </footer>

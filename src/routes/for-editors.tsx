@@ -165,7 +165,7 @@ function ForEditors() {
                 href={partnerGoHref(id)}
                 target="_blank"
                 rel="sponsored noopener noreferrer"
-                className="underline hover:text-bone"
+                className="tap-inline underline hover:text-bone"
               >
                 {p.name}
               </a>{" "}
