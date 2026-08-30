@@ -72,6 +72,17 @@
   --color-bs-crimson-deep: #83291f;
   /* Header wordmark: the calm serif frame around the hand-drawn interior. */
   --font-brand: "Source Serif 4", Georgia, serif;
+
+  /* Motion. Three easings, three durations - everything on the site speaks
+     these. Exponential ease-out for things arriving, ease-in for things
+     leaving, so nothing floats to a stop. No spring, no bounce: this is a
+     banknote, it should move like paper and press, not like jelly. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
 }
 
 :root {
@@ -219,10 +230,18 @@
   border: 1px solid var(--paper-dark);
   border-radius: var(--radius-lg);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: transform 180ms ease, box-shadow 180ms ease;
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
+  transition: transform var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
+    }
+  }
+  /* Touch has no hover, so the press itself has to answer. */
+  &:active {
+    transform: translateY(0) scale(0.995);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition-duration: var(--dur-micro);
   }
 }
 
@@ -261,11 +280,14 @@
   font-weight: 500;
   min-height: 44px;
   cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
-  &:hover:not(:disabled) {
-    background: var(--ink);
-    color: #ffffff;
+  transition: background var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background: var(--ink);
+      color: #ffffff;
+    }
   }
+  &:active:not(:disabled) { transform: translateY(1px); }
   &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
@@ -286,11 +308,14 @@
   font-weight: 500;
   min-height: 44px;
   cursor: pointer;
-  transition: opacity 120ms ease, transform 120ms ease;
-  &:hover:not(:disabled) {
-    opacity: 0.85;
-    transform: translateY(-1px);
+  transition: opacity var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
   }
+  &:active:not(:disabled) { transform: translateY(1px); opacity: 1; }
   &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
@@ -352,7 +377,7 @@
   font-family: var(--font-body);
   font-size: 1rem;
   outline: none;
-  transition: border-color 120ms ease, background 120ms ease;
+  transition: border-color var(--dur-micro) var(--ease-out), background var(--dur-micro) var(--ease-out);
   &:focus { border-color: var(--ink); background: #ffffff; }
   &::placeholder { color: rgba(110, 110, 115, 0.7); }
 }
@@ -368,7 +393,7 @@
   /* 16px minimum: below this iOS Safari zooms the page on focus. */
   font-size: 1rem;
   outline: none;
-  transition: border-color 120ms ease, background 120ms ease;
+  transition: border-color var(--dur-micro) var(--ease-out), background var(--dur-micro) var(--ease-out);
   &:focus { border-color: var(--ink); background: #ffffff; }
   &::placeholder { color: rgba(110, 110, 115, 0.7); }
 }
@@ -426,7 +451,7 @@
   letter-spacing: 0;
   text-transform: none;
   cursor: pointer;
-  transition: all 120ms ease;
+  transition: background var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
   &:hover {
     background: #e8e8ed;
   }
@@ -434,6 +459,7 @@
     background: var(--ink);
     color: #ffffff;
   }
+  &:active { transform: translateY(1px); }
 }
 
 @utility system-bar {
@@ -466,7 +492,22 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  /* Spatial motion collapses; opacity stays as the only cue, and durations
+     go near-zero rather than to none so transitionend still fires. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal,
+  .contract,
+  .ink-btn,
+  .silver-btn {
+    transform: none !important;
+  }
 }
 
 /* ============================================================
@@ -534,7 +575,7 @@
   background: var(--color-bs-ink);
   color: var(--color-bs-paper);
   cursor: pointer;
-  transition: background 140ms ease, color 140ms ease, border-color 140ms ease, transform 140ms ease;
+  transition: background var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
   &:hover:not(:disabled) { background: var(--color-bs-accent); border-color: var(--color-bs-accent); }
   &:active:not(:disabled) { transform: translateY(1px); }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -599,7 +640,7 @@
   color: var(--color-bs-ink);
   border: 1px solid var(--color-bs-rule);
   padding: 1.25rem 1.5rem;
-  transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  transition: border-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
   &:hover {
     border-color: var(--color-bs-rule-strong);
     box-shadow: 4px 4px 0 var(--color-bs-ink);
@@ -646,7 +687,7 @@
   font-family: var(--font-body);
   font-size: 1rem;
   outline: none;
-  transition: border-color 140ms ease, box-shadow 140ms ease;
+  transition: border-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
   &:focus { border-color: var(--color-bs-ink); box-shadow: 3px 3px 0 var(--color-bs-ink); }
   &::placeholder { color: color-mix(in oklab, var(--color-bs-ink) 40%, transparent); }
 }
@@ -679,7 +720,7 @@
   .reveal {
     opacity: 0;
     transform: translateY(14px);
-    transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
     transition-delay: var(--reveal-delay, 0ms);
   }
   .reveal[data-revealed] {
@@ -782,4 +823,39 @@
   display: inline-block;
   padding-block: 0.85rem;
   margin-block: -0.85rem;
+}
+
+/* ── Motion vocabulary ────────────────────────────────────────────────
+   Two orchestrated moments, not ten scattered ones: the board settling on
+   arrival, and the confirmation that moves real money. */
+
+/* Board settle: cards arrive in DOM order, staggered by index. Capped at
+   eight steps so a long board never feels slow to finish. */
+@keyframes bs-settle {
+  from { opacity: 0; transform: translateY(10px); }
+  /* Settles to its resting opacity, not flat 1 - expired cards stay dimmed
+     rather than being brightened by animation-fill-mode. */
+  to { opacity: var(--settle-to, 1); transform: none; }
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .bs-settle {
+    opacity: 0;
+    animation: bs-settle var(--dur-long) var(--ease-out) forwards;
+    animation-delay: calc(min(var(--i, 0), 8) * 55ms);
+  }
+}
+
+/* Money confirmation. The backdrop fades, the sheet scales up from 0.96 -
+   enough to read as arriving deliberately, not enough to feel springy. */
+@keyframes bs-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes bs-dialog-in {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bs-backdrop { animation: bs-backdrop-in var(--dur-long) var(--ease-out); }
+  .bs-dialog { animation: bs-dialog-in var(--dur-long) var(--ease-out); }
 }
