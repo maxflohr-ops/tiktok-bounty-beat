@@ -138,9 +138,15 @@ export const resolveDispute = createServerFn({ method: "POST" })
     }
     if (data.decision === "resolved" && data.corrected_view_count != null) {
       patch.resolved_view_count = data.corrected_view_count;
+      // Ruling for the clipper has to move the figure a payout is computed
+      // from. Writing view_count alone left the correction cosmetic: payouts
+      // read verified_view_count, so the dispute changed nothing material.
       const { error: ue } = await context.supabase
         .from("submissions")
-        .update({ view_count: data.corrected_view_count })
+        .update({
+          view_count: data.corrected_view_count,
+          verified_view_count: data.corrected_view_count,
+        })
         .eq("id", disp.submission_id);
       if (ue) throw new Error(ue.message);
     }

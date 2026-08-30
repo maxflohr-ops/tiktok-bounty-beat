@@ -16,6 +16,7 @@ import {
   reviewSubmission,
   markPaid,
   verifyViewCount,
+  reopenSubmission,
 } from "@/lib/submissions.functions";
 import { getMe } from "@/lib/me.functions";
 import { createBountyTopUp, requestPayout, listPayoutApprovals, approveAndSendPayout, rejectPayout } from "@/lib/stripe.functions";
@@ -742,7 +743,7 @@ function SubmissionsPanel() {
           AWAITING.has(s.status as string) ? (
             <ReviewCard key={s.id} s={s} onDecide={decide} onVerified={refetch} />
           ) : (
-            <DeliveryRow key={s.id} s={s} />
+            <DeliveryRow key={s.id} s={s} onReopened={refetch} />
           ),
         )}
         {shown.length === 0 ? (
@@ -757,8 +758,26 @@ function SubmissionsPanel() {
 
 // Read-only record of a clip that has already been decided. The point is that
 // the video is still one click away, with the reason it went the way it did.
-function DeliveryRow({ s }: { s: Sub }) {
+function DeliveryRow({ s, onReopened }: { s: Sub; onReopened: () => void }) {
+  const reopenFn = useServerFn(reopenSubmission);
+  const [reopening, setReopening] = useState(false);
   const status = s.status as string;
+  const paid = ((s as any).paid_cash_cents ?? 0) > 0 || Boolean((s as any).stripe_transfer_id);
+
+  const reopen = async () => {
+    const reason = prompt("Why is this going back to review?");
+    if (!reason?.trim()) return;
+    setReopening(true);
+    try {
+      await reopenFn({ data: { id: s.id, reason: reason.trim() } });
+      toast.success("Back in the review queue.");
+      onReopened();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not reopen this delivery.");
+    } finally {
+      setReopening(false);
+    }
+  };
   const verified = (s as any).verified_view_count as number | null | undefined;
   const reported = (s as any).view_count as number | null | undefined;
   const currency = s.bounty?.currency || "USD";
@@ -808,6 +827,16 @@ function DeliveryRow({ s }: { s: Sub }) {
             >
               open clip <ExternalLink className="h-3 w-3" />
             </a>
+          ) : null}
+          {status === "rejected" && !paid ? (
+            <div className="mt-3">
+              <button type="button" onClick={reopen} disabled={reopening} className="ink-btn">
+                <RefreshCw className="h-3.5 w-3.5" /> {reopening ? "reopening…" : "reopen for review"}
+              </button>
+              <p className="mt-1 text-xs text-bone-soft">
+                Puts it back in the queue so it can be ruled on again — for an appeal you agree with.
+              </p>
+            </div>
           ) : null}
         </div>
       </div>
