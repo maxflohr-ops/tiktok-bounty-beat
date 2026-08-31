@@ -31,6 +31,8 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedStartRouteImport } from './routes/_authenticated/start'
 import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
 import { Route as BountyIdRouteImport } from './routes/bounty.$id'
+import { Route as DigitalMarketingIndexRouteImport } from './routes/digital-marketing/index'
+import { Route as DigitalMarketingSlugRouteImport } from './routes/digital-marketing/$slug'
 import { Route as ManagersIndexRouteImport } from './routes/managers/index'
 import { Route as ManagersSlugRouteImport } from './routes/managers/$slug'
 import { Route as MusicManagementIndexRouteImport } from './routes/music-management/index'
@@ -151,6 +153,16 @@ const BountyIdRoute = BountyIdRouteImport.update({
   path: '/bounty/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DigitalMarketingIndexRoute = DigitalMarketingIndexRouteImport.update({
+  id: '/digital-marketing/',
+  path: '/digital-marketing/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigitalMarketingSlugRoute = DigitalMarketingSlugRouteImport.update({
+  id: '/digital-marketing/$slug',
+  path: '/digital-marketing/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ManagersIndexRoute = ManagersIndexRouteImport.update({
   id: '/managers/',
   path: '/managers/',
@@ -225,8 +237,10 @@ export interface FileRoutesByFullPath {
   '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/digital-marketing/$slug': typeof DigitalMarketingSlugRoute
   '/managers/$slug': typeof ManagersSlugRoute
   '/music-management/$slug': typeof MusicManagementSlugRoute
+  '/digital-marketing/': typeof DigitalMarketingIndexRoute
   '/managers/': typeof ManagersIndexRoute
   '/music-management/': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -258,8 +272,10 @@ export interface FileRoutesByTo {
   '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/digital-marketing/$slug': typeof DigitalMarketingSlugRoute
   '/managers/$slug': typeof ManagersSlugRoute
   '/music-management/$slug': typeof MusicManagementSlugRoute
+  '/digital-marketing': typeof DigitalMarketingIndexRoute
   '/managers': typeof ManagersIndexRoute
   '/music-management': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -293,8 +309,10 @@ export interface FileRoutesById {
   '/_authenticated/start': typeof AuthenticatedStartRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/digital-marketing/$slug': typeof DigitalMarketingSlugRoute
   '/managers/$slug': typeof ManagersSlugRoute
   '/music-management/$slug': typeof MusicManagementSlugRoute
+  '/digital-marketing/': typeof DigitalMarketingIndexRoute
   '/managers/': typeof ManagersIndexRoute
   '/music-management/': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
@@ -328,8 +346,10 @@ export interface FileRouteTypes {
     | '/start'
     | '/submit'
     | '/bounty/$id'
+    | '/digital-marketing/$slug'
     | '/managers/$slug'
     | '/music-management/$slug'
+    | '/digital-marketing/'
     | '/managers/'
     | '/music-management/'
     | '/api/go/$tool'
@@ -361,8 +381,10 @@ export interface FileRouteTypes {
     | '/start'
     | '/submit'
     | '/bounty/$id'
+    | '/digital-marketing/$slug'
     | '/managers/$slug'
     | '/music-management/$slug'
+    | '/digital-marketing'
     | '/managers'
     | '/music-management'
     | '/api/go/$tool'
@@ -395,8 +417,10 @@ export interface FileRouteTypes {
     | '/_authenticated/start'
     | '/_authenticated/submit'
     | '/bounty/$id'
+    | '/digital-marketing/$slug'
     | '/managers/$slug'
     | '/music-management/$slug'
+    | '/digital-marketing/'
     | '/managers/'
     | '/music-management/'
     | '/api/go/$tool'
@@ -425,8 +449,10 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   TiktokClipperRoute: typeof TiktokClipperRoute
   BountyIdRoute: typeof BountyIdRoute
+  DigitalMarketingSlugRoute: typeof DigitalMarketingSlugRoute
   ManagersSlugRoute: typeof ManagersSlugRoute
   MusicManagementSlugRoute: typeof MusicManagementSlugRoute
+  DigitalMarketingIndexRoute: typeof DigitalMarketingIndexRoute
   ManagersIndexRoute: typeof ManagersIndexRoute
   MusicManagementIndexRoute: typeof MusicManagementIndexRoute
   ApiGoToolRoute: typeof ApiGoToolRoute
@@ -593,6 +619,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BountyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/digital-marketing/': {
+      id: '/digital-marketing/'
+      path: '/digital-marketing'
+      fullPath: '/digital-marketing/'
+      preLoaderRoute: typeof DigitalMarketingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digital-marketing/$slug': {
+      id: '/digital-marketing/$slug'
+      path: '/digital-marketing/$slug'
+      fullPath: '/digital-marketing/$slug'
+      preLoaderRoute: typeof DigitalMarketingSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/managers/': {
       id: '/managers/'
       path: '/managers'
@@ -703,8 +743,10 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   TiktokClipperRoute: TiktokClipperRoute,
   BountyIdRoute: BountyIdRoute,
+  DigitalMarketingSlugRoute: DigitalMarketingSlugRoute,
   ManagersSlugRoute: ManagersSlugRoute,
   MusicManagementSlugRoute: MusicManagementSlugRoute,
+  DigitalMarketingIndexRoute: DigitalMarketingIndexRoute,
   ManagersIndexRoute: ManagersIndexRoute,
   MusicManagementIndexRoute: MusicManagementIndexRoute,
   ApiGoToolRoute: ApiGoToolRoute,

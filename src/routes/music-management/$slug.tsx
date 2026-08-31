@@ -11,7 +11,7 @@ import {
   Paragraphs,
   SourceList,
 } from "@/components/managers/Prose";
-import { articleJsonLd, breadcrumbs, faqJsonLd, headFor } from "@/lib/managers/seo";
+import { articleJsonLd, breadcrumbs, faqJsonLd, headFor } from "@/lib/editorial-seo";
 
 export const Route = createFileRoute("/music-management/$slug")({
   loader: ({ params }) => {

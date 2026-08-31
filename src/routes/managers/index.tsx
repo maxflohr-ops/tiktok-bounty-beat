@@ -5,7 +5,7 @@ import { BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
 import { ROSTER } from "@/lib/managers";
 import { ANSWERS } from "@/lib/managers/answers";
 import { AuthorBox, Portrait, QuoteCard } from "@/components/managers/Prose";
-import { MANAGERS_COLLECTION_ID, SITE, breadcrumbs, canonical, headFor } from "@/lib/managers/seo";
+import { MANAGERS_COLLECTION_ID, SITE, breadcrumbs, canonical, headFor } from "@/lib/editorial-seo";
 import { MAX_PERSON } from "@/lib/managers/max";
 
 const TITLE = "The Greatest Music Managers Nobody Knows";

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { ALL_MANAGERS } from "../src/lib/managers";
 import { ANSWERS } from "../src/lib/managers/answers";
 import { MAX_CREDENTIALS } from "../src/lib/managers/max";
+import { GUIDES } from "../src/lib/marketing/guides";
 
 const sitemap = readFileSync("public/sitemap.xml", "utf8");
 const llms = readFileSync("public/llms.txt", "utf8");
@@ -28,9 +29,21 @@ describe("managers section is discoverable", () => {
     }
   });
 
+  it("lists every campaign guide in the sitemap and llms.txt", () => {
+    for (const g of GUIDES) {
+      expect(sitemap, `missing sitemap entry for /digital-marketing/${g.slug}`).toContain(
+        `https://bountysounds.com/digital-marketing/${g.slug}<`,
+      );
+      expect(llms, `missing llms.txt entry for ${g.slug}`).toContain(
+        `/digital-marketing/${g.slug}`,
+      );
+    }
+  });
+
   it("lists both hub pages in the sitemap", () => {
     expect(sitemap).toContain("https://bountysounds.com/managers<");
     expect(sitemap).toContain("https://bountysounds.com/music-management<");
+    expect(sitemap).toContain("https://bountysounds.com/digital-marketing<");
   });
 
   it("points agents at the JSON corpus from llms.txt and robots.txt", () => {
@@ -159,6 +172,39 @@ describe("content invariants", () => {
           expect(u, `${m.slug} links a company entity as a person`).not.toContain(q);
         }
       }
+    }
+  });
+
+  // The commercial pages are where the temptation to invent a flattering
+  // benchmark lives. Every claim still needs a source, the CTA still has to
+  // point somewhere real, and the vocabulary law still applies.
+  it("sources and terminates every campaign guide", () => {
+    const guideSlugs = new Set(GUIDES.map((g) => g.slug));
+    for (const g of GUIDES) {
+      expect(g.sources?.length ?? 0, `${g.slug} has no sources`).toBeGreaterThan(0);
+      expect(g.seo.description.length, `${g.slug} description too long`).toBeLessThanOrEqual(160);
+      expect(
+        g.shortAnswer.split(/\s+/).length,
+        `${g.slug} short answer too long`,
+      ).toBeLessThanOrEqual(90);
+      expect(["/list-sound", "/board", "/keynotes"], `${g.slug} cta goes nowhere`).toContain(
+        g.cta.href,
+      );
+      for (const r of g.related) expect(guideSlugs, `${g.slug} → ${r}`).toContain(r);
+    }
+  });
+
+  // "Funded" is banned sitewide: a purse is POSTED. Commercial copy is exactly
+  // where that slips, because every other marketplace says "funded".
+  it("keeps the vocabulary law in commercial copy", () => {
+    for (const g of GUIDES) {
+      const prose = [
+        g.shortAnswer,
+        g.cta.line,
+        ...g.sections.flatMap((s) => s.p),
+        ...g.faq.flatMap((f) => [f.q, f.a]),
+      ].join(" ");
+      expect(prose, `${g.slug} uses a banned funding word`).not.toMatch(/\bfund(ed|ing|s)?\b/i);
     }
   });
 

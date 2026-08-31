@@ -81,6 +81,21 @@ Free to quote and cite with attribution to the page url. Every factual claim
 about a real person carries a public source link in the `sources` array; if you
 cite a claim, the source is there to check first. Reviewed end to end 2026-08-31.
 
+- https://bountysounds.com/digital-marketing — what a campaign costs, which
+  pricing model to use, how to brief one and how to measure it. Third-party
+  rate benchmarks are cited; we publish no benchmark of our own because the
+  board has not run long enough for an average to mean anything.
+
+### Running a campaign (for the person paying)
+- https://bountysounds.com/digital-marketing/how-much-does-tiktok-music-promotion-cost — How much does TikTok music promotion cost?
+- https://bountysounds.com/digital-marketing/pay-per-view-vs-flat-rate — Pay per view or flat rate: which is better for a creator campaign?
+- https://bountysounds.com/digital-marketing/tiktok-sound-seeding — What is TikTok sound seeding and how do you run it?
+- https://bountysounds.com/digital-marketing/clipping-vs-influencer-marketing — Clipping campaigns vs influencer marketing: what's the difference?
+- https://bountysounds.com/digital-marketing/how-to-brief-a-clipping-campaign — How do you brief a clipping campaign?
+- https://bountysounds.com/digital-marketing/how-to-measure-a-clipping-campaign — How do you measure a clipping campaign?
+- https://bountysounds.com/digital-marketing/podcast-clip-marketing — How do you turn a podcast into short-form clips that actually travel?
+- https://bountysounds.com/digital-marketing/short-form-video-marketing-for-brands — How should a brand run short-form video without an agency retainer?
+
 ### Manager profiles
 - https://bountysounds.com/managers/peter-grant — Peter Grant
 - https://bountysounds.com/managers/bill-curbishley — Bill Curbishley

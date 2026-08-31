@@ -20,7 +20,7 @@ import {
   breadcrumbs,
   canonical,
   headFor,
-} from "@/lib/managers/seo";
+} from "@/lib/editorial-seo";
 
 export const Route = createFileRoute("/managers/$slug")({
   loader: ({ params }) => {

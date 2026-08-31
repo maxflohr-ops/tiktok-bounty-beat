@@ -18,7 +18,8 @@ export const Route = createFileRoute("/api/public/managers")({
       GET: async () => {
         const { ALL_MANAGERS } = await import("@/lib/managers");
         const { ANSWERS } = await import("@/lib/managers/answers");
-        const { REVIEWED, SITE, canonical } = await import("@/lib/managers/seo");
+        const { GUIDES } = await import("@/lib/marketing/guides");
+        const { REVIEWED, SITE, canonical } = await import("@/lib/editorial-seo");
         const { MAX_BYLINE } = await import("@/lib/managers/max");
 
         const body = {
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/api/public/managers")({
           hubs: {
             managers: canonical("/managers"),
             answers: canonical("/music-management"),
+            campaigns: canonical("/digital-marketing"),
             humanReadable: SITE,
           },
           managers: ALL_MANAGERS.map((m) => ({
@@ -55,6 +57,16 @@ export const Route = createFileRoute("/api/public/managers")({
               : null,
             same_as: m.sameAs ?? [],
             sources: m.sources.map((s) => ({ label: s.label, url: s.url })),
+          })),
+          // Commercial guides: same shape, aimed at whoever is paying for reach.
+          campaign_guides: GUIDES.map((g) => ({
+            slug: g.slug,
+            url: canonical(`/digital-marketing/${g.slug}`),
+            question: g.question,
+            short_answer: g.shortAnswer,
+            sections: g.sections.map((s) => ({ heading: s.h, paragraphs: s.p })),
+            faq: g.faq.map((f) => ({ question: f.q, answer: f.a })),
+            sources: (g.sources ?? []).map((s) => ({ label: s.label, url: s.url })),
           })),
           answers: ANSWERS.map((a) => ({
             slug: a.slug,

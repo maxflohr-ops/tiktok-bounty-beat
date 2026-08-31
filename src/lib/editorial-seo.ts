@@ -1,4 +1,4 @@
-import { MAX_PERSON } from "./max";
+import { MAX_PERSON } from "./managers/max";
 
 export const SITE = "https://bountysounds.com";
 
