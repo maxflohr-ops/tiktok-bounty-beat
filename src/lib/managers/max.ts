@@ -36,18 +36,19 @@ export const MAX_CREDENTIALS: {
 
 /**
  * Max's line for the quote wall on /managers, sitting alongside Grant,
- * Curbishley, Dickins and the rest.
+ * Curbishley, Dickins and the rest. Unlike the others this one isn't lifted
+ * from an interview — it's an original statement made here, which is why its
+ * source points at the board rather than at a publication.
  *
- * ⚠️ Deliberately empty. Everyone else on that wall is quoted from a public
- * source, so this one has to be Max's actual words rather than something
- * written for him. Drop the sentence in and the card appears on the wall and
- * on his profile automatically; leave it empty and both simply omit it.
+ * Set to null to drop the card from both the wall and his profile.
  */
 type MaxQuote = { text: string; context?: string };
 // Asserted rather than annotated: a `const` annotated `X | null` and assigned
-// null gets narrowed to `never` in the truthy branch below, so the assertion
-// is what keeps this a real switch rather than dead code.
-export const MAX_QUOTE = null as MaxQuote | null;
+// a literal gets narrowed in the branch below, so the assertion is what keeps
+// this a real switch rather than dead code.
+export const MAX_QUOTE = {
+  text: "Clipping is the only market where you're expected to do the work first and find out what it paid afterwards.",
+} as MaxQuote | null;
 
 const BODY_CORE = [
   "Max Flohr managed and A&R'd The Hellp, the Los Angeles duo of Noah Dillon and Chandler Ransom Lucy, whose second album LL came out on Atlantic Records in 2024. Two people with no musical background who started a band out of a fear of dying without ever having been in a cool one is not a project that survives being handed to the conventional machine, and it is a useful thing to have managed before arguing about how attention actually moves.",

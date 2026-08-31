@@ -88,10 +88,10 @@ describe("content invariants", () => {
     }
   });
 
-  it("quotes every historical manager on the roster", () => {
-    const missing = ALL_MANAGERS.filter((m) => !m.quote && m.slug !== "max-flohr").map(
-      (m) => m.slug,
-    );
+  // Every profile carries a line, Max's included — his card is not a special
+  // case on the wall.
+  it("quotes every manager on the roster", () => {
+    const missing = ALL_MANAGERS.filter((m) => !m.quote).map((m) => m.slug);
     expect(missing, "these profiles have no quote").toEqual([]);
   });
 
