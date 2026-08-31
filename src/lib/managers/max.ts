@@ -56,7 +56,8 @@ export const MAX_CREDENTIALS: {
     {
       name: "Ebril",
       status: "current",
-      note: "On the Florra roster.",
+      note: 'Huda Al-Hamami — Iraqi-Canadian, based in Hamilton, Ontario, the name said "ehh-breel". Her debut album In Copula runs folk, ambient and shoegaze through field recordings taken outside her bedroom window in Hamilton and on the streets of Amman, where she grew up. Its opening track "Stranger in You" passed a billion views on TikTok in July 2025.',
+      url: "https://ebril.net",
     },
     {
       name: "McKayla Maroney",
@@ -101,7 +102,8 @@ export const MAX_QUOTE = {
 const BODY_CORE = [
   "Max Flohr runs Florra, where he manages Ridgeclub, Ebril and McKayla Maroney. Florra's own description of the problem is the tightest statement of what modern management is for: songs break on the internet, budgets live in the industry, and somebody has to be the bridge. Almost every manager profiled on this site was standing on one of those two banks. The job now is standing on both.",
   "He has the résumé for the industry side. He was head of A&R at The System Records and general manager at Terrible Records — the label Chris Taylor of Grizzly Bear founded, whose catalogue runs through Solange, Blood Orange, Twin Shadow, Empress Of and Moses Sumney — where the roster in his time included The Hellp, Mila DeGray and Sir Chloe. He also ran makeoutmusic, an underground show series that booked Remi Wolf, Tommy Richman and Gigi Perez before any of them were the names they are now. Booking three artists early is luck once and a method three times.",
-  "Ridgeclub is the clearest proof case: a Toronto project running a saxophone through effects, taken from a bedroom to seven figures of monthly listeners and a label deal. Nothing about that artist is a radio proposition, which is the point — the route was built rather than bought.",
+  "Ridgeclub is the clearest proof case for building a route rather than buying one: a Toronto project running a saxophone through effects, taken from a bedroom to seven figures of monthly listeners and a label deal. Nothing about that artist is a radio proposition, which is exactly the point.",
+  'Ebril is the clearest proof case for the other half. Huda Al-Hamami makes folk, ambient and shoegaze built on field recordings from her window in Hamilton and the streets of Amman — about as far from a designed TikTok product as music gets — and "Stranger in You", the opening track of her debut album, passed a billion views on the platform in July 2025. That is what the short-form argument on this site is actually about. The reach was not a substitute for the record; it was a distribution problem solved on behalf of one.',
   "The other half is infrastructure. He runs Bounty Sounds, a public clipping bounty board where an artist posts a purse against a sound, editors claim a slot and post from their own accounts, and payouts run on verified views. Every term is visible before anyone commits: the purse, the per-view rate, the counting window, the verification rule. That is an unusual position in a market whose normal arrangement is a private Discord, an unstated budget and a payout explained after the fact.",
   "He also wrote the Open Clipping Contract — a vendor-neutral JSON specification for describing paid clipping work, published under an open licence and deliberately not tied to his own platform, so an editor can compare two offers from two boards without decoding two layouts. Florra OS extends the same idea past clipping: an agent-run back office that bounty funders, podcasts, brands and studios can build on rather than rebuild.",
   "Running the marketplace and giving away the standard it runs on is the same bet Peter Grant made about the gate and Coran Capshaw made about the mailing list. The money is not in owning the format. It is in being the place the work actually happens.",
