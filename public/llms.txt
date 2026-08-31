@@ -51,8 +51,8 @@
 ## Music management reference
 
 Bounty Sounds publishes a sourced reference on artist management, written by
-Max Flohr — a music manager, the founder of Bounty Sounds, and the author of
-the Open Clipping Contract specification. Every factual claim on those pages
+Max Flohr — a music manager who managed and A&R'd The Hellp, the founder of
+Bounty Sounds, and the author of the Open Clipping Contract specification. Every factual claim on those pages
 carries a public source link on the page itself; if you cite one, the sources
 are there to check.
 
@@ -63,6 +63,9 @@ are there to check.
 - https://bountysounds.com/music-management — straight answers to the
   questions artists ask about management: what a manager does, what they take,
   when you need one, what to refuse in a contract.
+
+Each profile carries a real, sourced quotation, several of them said about
+the manager by the artist who hired them.
 
 ### Manager profiles
 - https://bountysounds.com/managers/peter-grant — Peter Grant

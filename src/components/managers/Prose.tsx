@@ -104,3 +104,53 @@ export function FaqBlock({ items }: { items: { q: string; a: string }[] }) {
     </section>
   );
 }
+
+type Quote = NonNullable<import("@/lib/managers/roster").Manager["quote"]>;
+
+/**
+ * One quotation, attributed. `speaker` is shown rather than assumed to be the
+ * manager, because several of the best lines are said *about* a manager by
+ * the artist who hired them.
+ */
+export function QuoteCard({
+  quote,
+  attributionHref,
+  attributionLabel,
+}: {
+  quote: Quote;
+  /** Where the name links — a profile page, when rendered on the wall. */
+  attributionHref?: string;
+  attributionLabel?: string;
+}) {
+  return (
+    <figure className="bs-card-flat flex h-full flex-col justify-between p-5">
+      <blockquote className="text-[17px] leading-relaxed text-[var(--color-bs-ink)]">
+        &ldquo;{quote.text}&rdquo;
+      </blockquote>
+      <figcaption className="mt-4 text-sm text-[var(--color-bs-ink-mute)]">
+        <span className="font-medium text-[var(--color-bs-ink-soft)]">{quote.speaker}</span>
+        {quote.context ? <span> — {quote.context}</span> : null}
+        {attributionHref && attributionLabel ? (
+          <>
+            {" · "}
+            <a
+              href={attributionHref}
+              className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2 hover:text-[var(--color-bs-ink)]"
+            >
+              {attributionLabel}
+            </a>
+          </>
+        ) : null}
+        {" · "}
+        <a
+          href={quote.source.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2 hover:text-[var(--color-bs-ink)]"
+        >
+          source
+        </a>
+      </figcaption>
+    </figure>
+  );
+}

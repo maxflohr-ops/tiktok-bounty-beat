@@ -72,6 +72,29 @@ describe("content invariants", () => {
     }
   });
 
+  // Quotes are the easiest thing on the site to get sued over and the easiest
+  // to fake. Every one must carry a speaker and a working source URL.
+  it("attributes and sources every quote", () => {
+    for (const m of ALL_MANAGERS) {
+      if (!m.quote) continue;
+      expect(m.quote.text.trim().length, `${m.slug} quote is empty`).toBeGreaterThan(0);
+      expect(m.quote.speaker.trim().length, `${m.slug} quote has no speaker`).toBeGreaterThan(0);
+      expect(m.quote.source.url, `${m.slug} quote source is not a URL`).toMatch(/^https?:\/\//);
+      // Quotes are rendered inside curly quotes, so a straight double quote in
+      // the text is a sign the line was pasted with its delimiters attached.
+      expect(m.quote.text, `${m.slug} quote includes its own quote marks`).not.toMatch(
+        /^["']|["']$/,
+      );
+    }
+  });
+
+  it("quotes every historical manager on the roster", () => {
+    const missing = ALL_MANAGERS.filter((m) => !m.quote && m.slug !== "max-flohr").map(
+      (m) => m.slug,
+    );
+    expect(missing, "these profiles have no quote").toEqual([]);
+  });
+
   it("only cross-links slugs that exist", () => {
     const managerSlugs = new Set(ALL_MANAGERS.map((m) => m.slug));
     const answerSlugs = new Set(ANSWERS.map((a) => a.slug));

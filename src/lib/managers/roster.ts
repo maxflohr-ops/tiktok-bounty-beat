@@ -27,6 +27,13 @@ export type Manager = {
   body: string[];
   /** The transferable part. Without this the page is trivia, not a resource. */
   lesson: { title: string; text: string };
+  /**
+   * A real, sourced quotation. `speaker` exists because the best line about a
+   * manager is often said by the artist rather than by the manager — Neil
+   * Young on Elliot Roberts being the obvious case. Never paraphrase into
+   * these: if the source only summarises, the entry goes without a quote.
+   */
+  quote?: { text: string; speaker: string; context?: string; source: Source };
   sources: Source[];
   /** Canonical external identity, for schema.org sameAs. */
   sameAs?: string[];
@@ -50,6 +57,15 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Own the scarce thing, then reprice it",
       text: "Grant did not win the 90/10 split by negotiating harder. He won it by first making Led Zeppelin's live show impossible to get any other way — no TV, no singles, no shortcuts — and only then sitting down with promoters. Leverage is manufactured upstream of the meeting where you spend it.",
+    },
+    quote: {
+      text: "His tough guy image came out of there being so many cowboys around and the way musicians were taken advantage of.",
+      speaker: "Robert Plant",
+      context: "on Peter Grant",
+      source: {
+        label: "The ultimate Peter Grant interview — Louder",
+        url: "https://www.loudersound.com/features/peter-grant-interview-life-with-led-zeppelin-and-the-death-of-john-bonham",
+      },
     },
     sources: [
       {
@@ -85,6 +101,14 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Be willing to tell your client to burn a working thing",
       text: "A manager on commission has a structural incentive to protect whatever currently generates income. The managers who last are the ones who will tell an artist to dismantle a functioning career because the next version is better — and who are trusted enough to be believed when they do.",
+    },
+    quote: {
+      text: "When you sign an artist, you're taking their life in your hands. You have to commit 100%.",
+      speaker: "Bill Curbishley",
+      source: {
+        label: "Bill Curbishley — Music Business Worldwide",
+        url: "https://www.musicbusinessworldwide.com/when-you-sign-an-artist-youre-taking-their-life-in-your-hands-you-have-to-commit-100/",
+      },
     },
     sources: [
       {
@@ -123,6 +147,15 @@ export const MANAGERS: Manager[] = [
       title: "Longevity is the deliverable",
       text: "Roberts left behind no famous negotiation. He left behind fifty years of one artist never being forced to make a record he didn't want to make. If you are managing a genuine original, the job is to absorb the commercial pressure so it never reaches them.",
     },
+    quote: {
+      text: "The greatest manager of all time.",
+      speaker: "Neil Young",
+      context: "on Elliot Roberts",
+      source: {
+        label: "Neil Young's tribute — NME",
+        url: "https://www.nme.com/news/music/elliot-roberts-manager-neil-young-joni-mitchell-died-2512960",
+      },
+    },
     sources: [
       { label: "Elliot Roberts — Wikipedia", url: "https://en.wikipedia.org/wiki/Elliot_Roberts" },
       {
@@ -158,6 +191,15 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Own your supply chain",
       text: "Herbert's insight was that a touring band pays rent on everything — production, video, merch fulfilment — and that those costs are someone else's margin. Building the vendor instead of hiring it turned Journey's overhead into an asset that kept earning after the band's chart run ended.",
+    },
+    quote: {
+      text: "A weird mix of Haight Street benevolence and Wall Street smarts.",
+      speaker: "Rolling Stone",
+      context: "on Herbert's method",
+      source: {
+        label: "Journey: The Platinum Game Plan — Rolling Stone",
+        url: "https://www.rollingstone.com/music/music-news/journey-the-platinum-game-plan-189450/",
+      },
     },
     sources: [
       { label: "Herbie Herbert — Wikipedia", url: "https://en.wikipedia.org/wiki/Herbie_Herbert" },
@@ -195,6 +237,15 @@ export const MANAGERS: Manager[] = [
       title: "Two managers, one artist, forty years",
       text: "The Q Prime model is a partnership where each artist gets a lead but the other principal is genuinely across the account. It removes the single point of failure that kills most management companies — the one person who holds the relationship, and leaves with it.",
     },
+    quote: {
+      text: "You get the acts, as a manager, you deserve.",
+      speaker: "Cliff Burnstein & Peter Mensch",
+      context: "a line they share",
+      source: {
+        label: "Q Prime on managing Metallica — Billboard",
+        url: "https://www.billboard.com/music/music-news/q-prime-cliff-burnstein-peter-mensch-managing-metallica-33-years-7290324/",
+      },
+    },
     sources: [
       { label: "Q Prime — Wikipedia", url: "https://en.wikipedia.org/wiki/Q_Prime" },
       {
@@ -226,6 +277,15 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "When they can't pay, take equity",
       text: "A counterparty who cannot pay you in cash is a counterparty with unusual flexibility on structure. McGuinness converted a bad-debt situation into ownership of the debtor. Ask what the other side has that isn't money.",
+    },
+    quote: {
+      text: "More than anyone in my life, he is a person who believed in me and gave me the confidence to realize my potential as an artist.",
+      speaker: "Bono",
+      context: "on Paul McGuinness",
+      source: {
+        label: "A toast to our manager, Paul McGuinness — U2.com",
+        url: "https://www.u2.com/media/player/732/22",
+      },
     },
     sources: [
       {
@@ -266,6 +326,14 @@ export const MANAGERS: Manager[] = [
       title: "The mailing list is the asset",
       text: "Capshaw's whole method is that the direct relationship with the audience outlasts every label deal, platform and format change. Everything else — merch, ticketing, festivals, the record — is monetisation of a list he made sure the artist owned.",
     },
+    quote: {
+      text: "Artist management, I'll put down, is the toughest part of our industry. It's a personal relationship with the artists. You've got to support their vision, help add to their vision, put your own vision forward.",
+      speaker: "Coran Capshaw",
+      source: {
+        label: "Coran Capshaw, Founder, Red Light Management — Pollstar",
+        url: "https://news.pollstar.com/2019/05/16/coran-capshaw-founder-red-light-management/",
+      },
+    },
     sources: [
       { label: "Coran Capshaw — Wikipedia", url: "https://en.wikipedia.org/wiki/Coran_Capshaw" },
       { label: "Red Light Management — About", url: "https://redlightmanagement.com/about/" },
@@ -298,6 +366,14 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Scarcity still works, and it is expensive",
       text: "The reason nobody copies Adele's release strategy is not that it doesn't work. It's that it requires forgoing years of revenue and holding your nerve while the algorithm forgets you. Most managers cannot afford the conviction; it is the conviction that is the product.",
+    },
+    quote: {
+      text: "It's disrespectful to presume that because 21 sold so many records, that you have got a divine right to sell that amount again.",
+      speaker: "Jonathan Dickins",
+      source: {
+        label: "'It's very important not to take anything for granted' — Music Business Worldwide",
+        url: "https://www.musicbusinessworldwide.com/jonathan-dickins-september-its-important-not-to-take-anything-for-granted-in-this-business/",
+      },
     },
     sources: [
       {
@@ -338,6 +414,14 @@ export const MANAGERS: Manager[] = [
       title: "A manager with a balance sheet is a different animal",
       text: "Most management companies are cash-flow businesses commissioning someone else's risk. Funding development in-house changes the negotiation with labels entirely, because you are no longer asking them to pay for the thing you need them to believe in.",
     },
+    quote: {
+      text: "For me personally to want to work with someone, it has to be based around an emotional connection.",
+      speaker: "Sarah Stennett",
+      source: {
+        label: "The Big Interview: Sarah Stennett — Music Week",
+        url: "https://www.musicweek.com/interviews/read/the-big-interview-sarah-stennett/068118",
+      },
+    },
     sources: [
       { label: "FAE grp — Wikipedia", url: "https://en.wikipedia.org/wiki/FAE_grp" },
       {
@@ -373,6 +457,15 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Scale the team, not the artist",
       text: "The default response to early traction is to professionalise the music — better rooms, bigger writers, known producers. Rukasin and Goodman professionalised everything around a bedroom operation and left the operation alone, because the bedroom was the product.",
+    },
+    quote: {
+      text: "They were never condescending to us ever — treating us like peers even though we were children at the time.",
+      speaker: "Billie Eilish & FINNEAS",
+      context: "on their managers",
+      source: {
+        label: "Billie Eilish and FINNEAS on their managers — Billboard",
+        url: "https://www.billboard.com/music/features/billie-eilish-finneas-managers-billboard-cover-story-2022-interview-1235061238/",
+      },
     },
     sources: [
       {
@@ -413,6 +506,14 @@ export const MANAGERS: Manager[] = [
       title: "Manage the capital, not just the career",
       text: "Artist income is front-loaded and finite; equity is neither. A manager who can credibly route earnings into ownership is doing something no percentage-of-gross model can replicate, and is worth keeping long after the touring slows down.",
     },
+    quote: {
+      text: "You can accomplish anything in the world if you don't care who gives the credit.",
+      speaker: "Anthony Saleh",
+      source: {
+        label: "Plus One: Anthony Saleh — XXL",
+        url: "https://www.xxlmag.com/plus-one-anthony-saleh/",
+      },
+    },
     sources: [
       {
         label: "Why every musician needs a manager like Anthony Saleh — Forbes",
@@ -450,6 +551,14 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "No access is not a blocker",
       text: "Zarou's entire career is evidence that the credential path into management is optional. Managers are validated by an artist who trusts them and results anyone can check, not by a résumé — which is why the field keeps being entered from the outside.",
+    },
+    quote: {
+      text: "If you manage your clients like they are your own mother, you will always end up doing what’s best.",
+      speaker: "Chris Zarou",
+      source: {
+        label: "How Visionary used free music and YouTube to mint stars — Digital Trends",
+        url: "https://www.digitaltrends.com/music/visionary-music-group-exclusive-interview/",
+      },
     },
     sources: [
       {

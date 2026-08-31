@@ -3,8 +3,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { FooterNav } from "@/components/FooterNav";
 import { BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
 import { findManager, ROSTER } from "@/lib/managers";
+import { MAX_CREDENTIALS } from "@/lib/managers/max";
 import { ANSWERS } from "@/lib/managers/answers";
-import { AuthorBox, KeyAnswer, Paragraphs, SourceList } from "@/components/managers/Prose";
+import {
+  AuthorBox,
+  KeyAnswer,
+  Paragraphs,
+  QuoteCard,
+  SourceList,
+} from "@/components/managers/Prose";
 import { MANAGERS_COLLECTION_ID, breadcrumbs, canonical, headFor } from "@/lib/managers/seo";
 
 export const Route = createFileRoute("/managers/$slug")({
@@ -42,6 +49,16 @@ export const Route = createFileRoute("/managers/$slug")({
             ...(m.sameAs?.length ? { sameAs: m.sameAs } : {}),
           },
           citation: m.sources.map((s) => ({ "@type": "CreativeWork", name: s.label, url: s.url })),
+          ...(m.quote
+            ? {
+                subjectOf: {
+                  "@type": "Quotation",
+                  text: m.quote.text,
+                  creator: { "@type": "Person", name: m.quote.speaker },
+                  citation: m.quote.source.url,
+                },
+              }
+            : {}),
         },
       ],
     });
@@ -84,9 +101,44 @@ function ManagerProfile() {
             <KeyAnswer>{m.claim}</KeyAnswer>
           </div>
 
+          {m.quote ? (
+            <div className="mt-6">
+              <QuoteCard quote={m.quote} />
+            </div>
+          ) : null}
+
           <div className="mt-8">
             <Paragraphs items={m.body} />
           </div>
+
+          {/* Credits render from MAX_CREDENTIALS, so adding a line there is
+              the only edit needed to put a new act on the page. */}
+          {m.slug === "max-flohr" && MAX_CREDENTIALS.roster.length ? (
+            <section className="mt-10">
+              <h2 className="bs-display text-2xl">Artists</h2>
+              <ul className="mt-4 space-y-3">
+                {MAX_CREDENTIALS.roster.map((r) => (
+                  <li key={r.name} className="bs-card-flat p-5">
+                    <h3 className="text-lg font-semibold text-[var(--color-bs-ink)]">
+                      {r.url ? (
+                        <a
+                          href={r.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-4"
+                        >
+                          {r.name}
+                        </a>
+                      ) : (
+                        r.name
+                      )}
+                    </h3>
+                    <p className="mt-2 leading-relaxed text-[var(--color-bs-ink-soft)]">{r.note}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           <section className="mt-10 border-2 border-[var(--color-bs-ink)] p-6">
             <BsEyebrow>What it teaches</BsEyebrow>

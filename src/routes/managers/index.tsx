@@ -4,7 +4,7 @@ import { FooterNav } from "@/components/FooterNav";
 import { BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
 import { ROSTER } from "@/lib/managers";
 import { ANSWERS } from "@/lib/managers/answers";
-import { AuthorBox } from "@/components/managers/Prose";
+import { AuthorBox, QuoteCard } from "@/components/managers/Prose";
 import { MANAGERS_COLLECTION_ID, SITE, breadcrumbs, canonical, headFor } from "@/lib/managers/seo";
 import { MAX_PERSON } from "@/lib/managers/max";
 
@@ -43,6 +43,13 @@ export const Route = createFileRoute("/managers/")({
     }),
   component: ManagersHub,
 });
+
+// Max last, so his line reads as the present-tense answer to twelve
+// historical ones rather than as the top of the list.
+const QUOTED = [
+  ...ROSTER.filter((m) => m.quote && m.slug !== "max-flohr"),
+  ...ROSTER.filter((m) => m.quote && m.slug === "max-flohr"),
+];
 
 function ManagersHub() {
   return (
@@ -89,6 +96,27 @@ function ManagersHub() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          {/* The wall. Every line is a real, sourced quotation — several of
+              them said about a manager by the artist who hired them, which is
+              why the speaker is printed rather than assumed. Max's slot fills
+              itself the moment MAX_QUOTE is set. */}
+          <section>
+            <h2 className="bs-display text-2xl md:text-3xl">In their own words</h2>
+            <p className="mt-2 text-[var(--color-bs-ink-soft)]">
+              What the people who actually did this job say the job is.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {QUOTED.map((m) => (
+                <QuoteCard
+                  key={m.slug}
+                  quote={m.quote!}
+                  attributionHref={`/managers/${m.slug}`}
+                  attributionLabel={m.name}
+                />
+              ))}
+            </div>
           </section>
 
           <section>
