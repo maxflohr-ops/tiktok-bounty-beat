@@ -23,6 +23,13 @@ export const MAX_CREDENTIALS: {
    */
   roster: {
     name: string;
+    /**
+     * Current clients render under "Currently manages"; past ones under
+     * "Previously". Keeping the distinction in the data matters because
+     * saying you manage someone you used to manage is the kind of claim
+     * that gets a profile discredited by the one person who'd know.
+     */
+    status: "current" | "past";
     note: string;
     url?: string;
     image?: {
@@ -42,6 +49,9 @@ export const MAX_CREDENTIALS: {
   roster: [
     {
       name: "The Hellp",
+      // TODO(max): confirm — is this current or past? Set to "current" if the
+      // relationship is live; it renders under a different heading either way.
+      status: "past",
       note: "Managed and A&R'd the Los Angeles duo — Noah Dillon and Chandler Ransom Lucy — whose second album LL was released on Atlantic Records in 2024.",
       url: "https://en.wikipedia.org/wiki/The_Hellp",
       image: {

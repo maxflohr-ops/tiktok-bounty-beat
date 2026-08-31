@@ -131,45 +131,56 @@ function ManagerProfile() {
           </div>
 
           {/* Credits render from MAX_CREDENTIALS, so adding a line there is
-              the only edit needed to put a new act on the page. */}
-          {m.slug === "max-flohr" && MAX_CREDENTIALS.roster.length ? (
-            <section className="mt-10">
-              <h2 className="bs-display text-2xl">Artists</h2>
-              <ul className="mt-4 space-y-3">
-                {MAX_CREDENTIALS.roster.map((r) => (
-                  <li key={r.name} className="bs-card-flat p-5">
-                    {r.image ? (
-                      <>
-                        <img
-                          src={r.image.src}
-                          alt={r.image.alt}
-                          loading="lazy"
-                          decoding="async"
-                          className="mb-3 w-full border border-[var(--color-bs-rule-strong)] object-cover"
-                        />
-                        <PortraitCredit portrait={r.image} />
-                      </>
-                    ) : null}
-                    <h3 className="text-lg font-semibold text-[var(--color-bs-ink)]">
-                      {r.url ? (
-                        <a
-                          href={r.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-4"
-                        >
-                          {r.name}
-                        </a>
-                      ) : (
-                        r.name
-                      )}
-                    </h3>
-                    <p className="mt-2 leading-relaxed text-[var(--color-bs-ink-soft)]">{r.note}</p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
+              the only edit needed to put a new act on the page. Current and
+              past are separate headings, never one merged list. */}
+          {m.slug === "max-flohr"
+            ? (["current", "past"] as const).map((status) => {
+                const acts = MAX_CREDENTIALS.roster.filter((r) => r.status === status);
+                if (!acts.length) return null;
+                return (
+                  <section key={status} className="mt-10">
+                    <h2 className="bs-display text-2xl">
+                      {status === "current" ? "Currently manages" : "Previously"}
+                    </h2>
+                    <ul className="mt-4 space-y-3">
+                      {acts.map((r) => (
+                        <li key={r.name} className="bs-card-flat p-5">
+                          {r.image ? (
+                            <>
+                              <img
+                                src={r.image.src}
+                                alt={r.image.alt}
+                                loading="lazy"
+                                decoding="async"
+                                className="mb-3 w-full border border-[var(--color-bs-rule-strong)] object-cover"
+                              />
+                              <PortraitCredit portrait={r.image} />
+                            </>
+                          ) : null}
+                          <h3 className="text-lg font-semibold text-[var(--color-bs-ink)]">
+                            {r.url ? (
+                              <a
+                                href={r.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-4"
+                              >
+                                {r.name}
+                              </a>
+                            ) : (
+                              r.name
+                            )}
+                          </h3>
+                          <p className="mt-2 leading-relaxed text-[var(--color-bs-ink-soft)]">
+                            {r.note}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })
+            : null}
 
           {/* The inside-baseball block: the mechanic, not the principle.
               Sits above the lesson because it's the reason most readers are

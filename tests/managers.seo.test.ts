@@ -128,6 +128,15 @@ describe("content invariants", () => {
     }
   });
 
+  // "Manages" and "used to manage" are different claims. The data has to carry
+  // which one, so a lapsed client can't quietly drift into the present tense.
+  it("marks every credit as current or past", () => {
+    for (const r of MAX_CREDENTIALS.roster) {
+      expect(["current", "past"], `${r.name} has no status`).toContain(r.status);
+      expect(r.note.trim().length, `${r.name} has no note`).toBeGreaterThan(0);
+    }
+  });
+
   it("only cross-links slugs that exist", () => {
     const managerSlugs = new Set(ALL_MANAGERS.map((m) => m.slug));
     const answerSlugs = new Set(ANSWERS.map((a) => a.slug));
