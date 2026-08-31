@@ -110,7 +110,7 @@ function AnswerPage() {
                           {m.known.slice(0, 2).join(" · ")}
                         </p>
                         <p className="mt-2 text-[15px] leading-relaxed text-[var(--color-bs-ink-soft)]">
-                          {m.lesson.title}
+                          {m.trick.title}
                         </p>
                       </BsCard>
                     </Link>

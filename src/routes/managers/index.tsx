@@ -64,9 +64,11 @@ function ManagersHub() {
           <p className="mx-auto mt-5 max-w-2xl text-lg text-[var(--color-bs-ink-soft)]">
             Everyone can name the bands. Almost nobody can name the person who decided the band
             wouldn't do television, or who took equity instead of a royalty cheque, or who told a
-            rock star to fire his entire band. Those decisions are the job. Here are the people who
-            made them, what each of them repriced, and what it means for anyone managing an artist
-            now.
+            rock star to fire his entire band. Those decisions are the job, and the mechanics of
+            them are kept deliberately vague by the people who benefit from that. Every profile here
+            ends with the specific move — the one you can run this week, with no budget and no
+            relationships. Written for underground acts and small brands, because they're the ones
+            nobody explains this to.
           </p>
         </section>
 
@@ -89,7 +91,7 @@ function ManagersHub() {
                         {m.known.slice(0, 3).join(" · ")}
                       </p>
                       <p className="mt-3 text-[15px] leading-relaxed text-[var(--color-bs-ink-soft)]">
-                        {m.lesson.title}
+                        {m.trick.title}
                       </p>
                     </BsCard>
                   </Link>

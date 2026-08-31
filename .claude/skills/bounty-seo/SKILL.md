@@ -73,6 +73,11 @@ Rules that keep it that way, enforced by `tests/managers.seo.test.ts`:
   they never hold copy. Sitemap, `llms.txt` and internal links are all checked
   against those same arrays, so adding a page and forgetting a surface fails
   the test rather than rotting quietly.
+- Every manager profile ends with a `trick` — the concrete move an underground
+  act or small brand can run this week, with no budget and no relationships.
+  This is the section's reason to exist, not a garnish: `lesson` is the
+  principle, `trick` is the mechanic. If a move can only be executed by someone
+  already managing a stadium act, rewrite it or cut it.
 - Max Flohr is the named author on every page (`MAX_PERSON` in
   `src/lib/managers/seo.ts`, rendered by `AuthorBox`). His profile only carries
   claims checkable against the product — extra credentials go in

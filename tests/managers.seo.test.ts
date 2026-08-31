@@ -95,6 +95,18 @@ describe("content invariants", () => {
     expect(missing, "these profiles have no quote").toEqual([]);
   });
 
+  // The tricks are the section's reason to exist. An empty or vague one is the
+  // failure mode that turns the page back into trivia.
+  it("gives every manager a concrete move", () => {
+    for (const m of ALL_MANAGERS) {
+      expect(m.trick.title.trim().length, `${m.slug} trick has no title`).toBeGreaterThan(0);
+      expect(m.trick.text.split(/\s+/).length, `${m.slug} trick is too thin`).toBeGreaterThan(25);
+      expect(m.trick.title, `${m.slug} trick title should not end in a full stop`).not.toMatch(
+        /\.$/,
+      );
+    }
+  });
+
   it("only cross-links slugs that exist", () => {
     const managerSlugs = new Set(ALL_MANAGERS.map((m) => m.slug));
     const answerSlugs = new Set(ANSWERS.map((a) => a.slug));

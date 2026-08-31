@@ -140,6 +140,17 @@ function ManagerProfile() {
             </section>
           ) : null}
 
+          {/* The inside-baseball block: the mechanic, not the principle.
+              Sits above the lesson because it's the reason most readers are
+              on the page. */}
+          <section className="mt-10 border-2 border-[var(--color-bs-ink)] bg-black/[0.03] p-6">
+            <BsEyebrow>The move you can steal</BsEyebrow>
+            <h2 className="mt-1.5 text-xl font-semibold text-[var(--color-bs-ink)]">
+              {m.trick.title}
+            </h2>
+            <p className="mt-2 leading-relaxed text-[var(--color-bs-ink-soft)]">{m.trick.text}</p>
+          </section>
+
           <section className="mt-10 border-2 border-[var(--color-bs-ink)] p-6">
             <BsEyebrow>What it teaches</BsEyebrow>
             <h2 className="mt-1.5 text-xl font-semibold text-[var(--color-bs-ink)]">

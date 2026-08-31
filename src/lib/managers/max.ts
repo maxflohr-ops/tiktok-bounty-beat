@@ -47,12 +47,12 @@ type MaxQuote = { text: string; context?: string };
 // a literal gets narrowed in the branch below, so the assertion is what keeps
 // this a real switch rather than dead code.
 export const MAX_QUOTE = {
-  text: "Clipping is the only market where you're expected to do the work first and find out what it paid afterwards.",
+  text: "Don't be different to be different. Be different to be better.",
 } as MaxQuote | null;
 
 const BODY_CORE = [
   "Max Flohr managed and A&R'd The Hellp, the Los Angeles duo of Noah Dillon and Chandler Ransom Lucy, whose second album LL came out on Atlantic Records in 2024. Two people with no musical background who started a band out of a fear of dying without ever having been in a cool one is not a project that survives being handed to the conventional machine, and it is a useful thing to have managed before arguing about how attention actually moves.",
-  "Because that is the argument. Most of the managers on this site made their names by repricing something — the gate, the masters, the merch table, the mailing list. The thing being repriced now is short-form attention: a song's reach is largely a function of how many editors are cutting to it and how well they are paid to keep going. Almost nobody is doing that with published terms.",
+  "Because that is the argument. Most of the managers on this site made their names by repricing something — the gate, the masters, the merch table, the mailing list. The thing being repriced now is short-form attention: a song's reach is largely a function of how many editors are cutting to it and how well they are paid to keep going. Clipping is the only market where you are expected to do the work first and find out what it paid afterwards, and that is a choice the people running it are making.",
   "He runs Bounty Sounds, a public clipping bounty board. An artist posts a purse against a sound; editors claim a slot, post the clip from their own account, and get paid on verified views. The distinguishing feature is that all of it is visible: the purse, the per-view rate, the counting window and the verification rule are on the contract before anyone commits, and the whole board is public with no paid tier and no gated listings. That is an unusual position to take in a market where the normal arrangement is a private Discord, an unstated budget and a payout you find out about afterwards.",
   "He also wrote the Open Clipping Contract (OCC) — a vendor-neutral JSON specification for describing paid clipping work, published under an open licence and deliberately not tied to his own platform. It exists so an editor can compare two offers from two different boards without decoding two layouts, and so the category has a reference to point at when a delivery is disputed. Bounty Sounds implements it and serves its live contracts in the format as an open feed; anyone else is free to do the same.",
   "That combination — running the marketplace and giving away the standard it runs on — is the same bet Peter Grant made about the gate and Coran Capshaw made about the mailing list. The money is not in owning the format. It is in being the place the work actually happens.",
@@ -71,6 +71,10 @@ export const MAX_FLOHR: Manager = {
   lesson: {
     title: "Publish the terms",
     text: "Clipping money moved fast enough that its norms formed in private — unstated budgets, payouts explained after the fact, rates you learn by asking someone who already got burned. Putting the purse, the rate, the counting window and the verification rule on the contract before anyone commits is not generosity. It is the cheapest way to get the good editors to show up.",
+  },
+  trick: {
+    title: "Publish your rate first",
+    text: "Put the number on the table before the work starts — what the purse is, what it pays per view, how long views count, and what makes a delivery count. The whole clipping economy runs the other way: unstated budgets, payouts explained afterwards, rates you learn by getting burned. Publishing first isn't generosity, it's selection. The editors worth having can calculate whether you're worth their hours, and they'll only spend them where they can.",
   },
   ...(MAX_QUOTE
     ? {

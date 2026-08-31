@@ -28,6 +28,13 @@ export type Manager = {
   /** The transferable part. Without this the page is trivia, not a resource. */
   lesson: { title: string; text: string };
   /**
+   * The inside-baseball part: the specific move an underground act or small
+   * brand can run on Monday, with no budget and no relationships. `lesson` is
+   * the principle; this is the mechanic. If it can only be executed by someone
+   * already managing a stadium act, it doesn't belong here.
+   */
+  trick: { title: string; text: string };
+  /**
    * A real, sourced quotation. `speaker` exists because the best line about a
    * manager is often said by the artist rather than by the manager — Neil
    * Young on Elliot Roberts being the obvious case. Never paraphrase into
@@ -57,6 +64,10 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Own the scarce thing, then reprice it",
       text: "Grant did not win the 90/10 split by negotiating harder. He won it by first making Led Zeppelin's live show impossible to get any other way — no TV, no singles, no shortcuts — and only then sitting down with promoters. Leverage is manufactured upstream of the meeting where you spend it.",
+    },
+    trick: {
+      title: "Withhold exactly one thing",
+      text: "Pick the single place everyone expects you to be — the full track on streaming, the whole set on YouTube, the feature everyone's asking for — and refuse it, publicly and consistently. Grant's leverage came from Led Zeppelin's live show being unavailable any other way. At your scale it costs nothing: the unreleased song only exists at the show, the full mix only on the vinyl. Scarcity is the one form of leverage that doesn't require money.",
     },
     quote: {
       text: "His tough guy image came out of there being so many cowboys around and the way musicians were taken advantage of.",
@@ -101,6 +112,10 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Be willing to tell your client to burn a working thing",
       text: "A manager on commission has a structural incentive to protect whatever currently generates income. The managers who last are the ones who will tell an artist to dismantle a functioning career because the next version is better — and who are trusted enough to be believed when they do.",
+    },
+    trick: {
+      title: "Kill the format that plateaued",
+      text: "Find the thing that got you here and has now been flat for two quarters — the series, the sound, the format — and end it deliberately instead of milking it down to nothing. Curbishley told Robert Plant to disband a working band. The tell is when engagement holds steady while reach stops growing: that's a ceiling, not a plateau, and no amount of posting fixes it.",
     },
     quote: {
       text: "When you sign an artist, you're taking their life in your hands. You have to commit 100%.",
@@ -147,6 +162,10 @@ export const MANAGERS: Manager[] = [
       title: "Longevity is the deliverable",
       text: "Roberts left behind no famous negotiation. He left behind fifty years of one artist never being forced to make a record he didn't want to make. If you are managing a genuine original, the job is to absorb the commercial pressure so it never reaches them.",
     },
+    trick: {
+      title: "Never forward the ask",
+      text: "When a label, brand, promoter or platform asks the artist for something, don't pass the message along. Convert it into a one-line yes/no with your recommendation attached. Roberts's fifty years with Neil Young ran on absorbing commercial pressure so it never reached the desk. If you're self-managing, do it to yourself: batch every ask into one weekly decision block instead of letting them interrupt the work.",
+    },
     quote: {
       text: "The greatest manager of all time.",
       speaker: "Neil Young",
@@ -191,6 +210,10 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Own your supply chain",
       text: "Herbert's insight was that a touring band pays rent on everything — production, video, merch fulfilment — and that those costs are someone else's margin. Building the vendor instead of hiring it turned Journey's overhead into an asset that kept earning after the band's chart run ended.",
+    },
+    trick: {
+      title: "In-house your biggest recurring cost",
+      text: "Look at your last six months of spend, find the line item that recurs and is predictable — video edits, photography, merch fulfilment, clip sourcing — and bring it in-house. Herbert built Journey's own production and lighting companies instead of renting them, and those companies outlived the band's chart run. Once it's in-house and working, sell it to three peers at your level. Overhead becomes an asset.",
     },
     quote: {
       text: "A weird mix of Haight Street benevolence and Wall Street smarts.",
@@ -237,6 +260,10 @@ export const MANAGERS: Manager[] = [
       title: "Two managers, one artist, forty years",
       text: "The Q Prime model is a partnership where each artist gets a lead but the other principal is genuinely across the account. It removes the single point of failure that kills most management companies — the one person who holds the relationship, and leaves with it.",
     },
+    trick: {
+      title: "Never be the only relationship",
+      text: "Q Prime run two principals across every account, so no artist is one person's private client. At your scale the equivalent is that every important relationship — the promoter, the sync contact, the playlist editor, the top clipper — needs a second person on your side who has spoken to them. If one person leaving takes the relationship with them, you don't have a relationship, you have a dependency.",
+    },
     quote: {
       text: "You get the acts, as a manager, you deserve.",
       speaker: "Cliff Burnstein & Peter Mensch",
@@ -277,6 +304,10 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "When they can't pay, take equity",
       text: "A counterparty who cannot pay you in cash is a counterparty with unusual flexibility on structure. McGuinness converted a bad-debt situation into ownership of the debtor. Ask what the other side has that isn't money.",
+    },
+    trick: {
+      title: "Ask what they have that isn't money",
+      text: "When someone wants to work with you and says the budget isn't there, don't take the payment plan and don't walk. Ask what else they've got. McGuinness took 10% of Island Records when they couldn't pay U2's royalties. Your version: ad inventory, studio time, a support slot, a data feed, a placement, equity in the brand. Counterparties who can't pay cash are unusually flexible on structure, and almost nobody asks.",
     },
     quote: {
       text: "More than anyone in my life, he is a person who believed in me and gave me the confidence to realize my potential as an artist.",
@@ -326,6 +357,10 @@ export const MANAGERS: Manager[] = [
       title: "The mailing list is the asset",
       text: "Capshaw's whole method is that the direct relationship with the audience outlasts every label deal, platform and format change. Everything else — merch, ticketing, festivals, the record — is monetisation of a list he made sure the artist owned.",
     },
+    trick: {
+      title: "End every campaign with more owned contacts",
+      text: "Set one number for every release, show, or collaboration: how many email addresses or phone numbers you own that you didn't before. Capshaw let fans tape the shows and built the list, then sold direct for thirty years across four format changes. If a campaign moved streams but added nobody to a list you control, you rented an audience. Platforms change their minds; a list doesn't.",
+    },
     quote: {
       text: "Artist management, I'll put down, is the toughest part of our industry. It's a personal relationship with the artists. You've got to support their vision, help add to their vision, put your own vision forward.",
       speaker: "Coran Capshaw",
@@ -366,6 +401,10 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Scarcity still works, and it is expensive",
       text: "The reason nobody copies Adele's release strategy is not that it doesn't work. It's that it requires forgoing years of revenue and holding your nerve while the algorithm forgets you. Most managers cannot afford the conviction; it is the conviction that is the product.",
+    },
+    trick: {
+      title: "Bank a deliberate gap",
+      text: "Schedule a period of total silence — no posts, no releases, no features — long enough that a return is an event rather than an update. Dickins built Adele's career on multi-year gaps while the industry insisted on constant output. This is the hardest play on the list because it costs real reach while it's happening, and it only works if you come back with something finished. Decide the length in advance and write it down.",
     },
     quote: {
       text: "It's disrespectful to presume that because 21 sold so many records, that you have got a divine right to sell that amount again.",
@@ -414,6 +453,10 @@ export const MANAGERS: Manager[] = [
       title: "A manager with a balance sheet is a different animal",
       text: "Most management companies are cash-flow businesses commissioning someone else's risk. Funding development in-house changes the negotiation with labels entirely, because you are no longer asking them to pay for the thing you need them to believe in.",
     },
+    trick: {
+      title: "Fund your own development",
+      text: "Every advance you take is equity sold at the worst possible price: before the thing works. Stennett went and got outside capital so First Access could develop artists itself rather than trading masters for a cheque. Underground version: keep one month of runway ring-fenced specifically for making the next thing, so you can say no to the deal that arrives while you're broke. Leverage is mostly just not needing the money this week.",
+    },
     quote: {
       text: "For me personally to want to work with someone, it has to be based around an emotional connection.",
       speaker: "Sarah Stennett",
@@ -457,6 +500,10 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Scale the team, not the artist",
       text: "The default response to early traction is to professionalise the music — better rooms, bigger writers, known producers. Rukasin and Goodman professionalised everything around a bedroom operation and left the operation alone, because the bedroom was the product.",
+    },
+    trick: {
+      title: "Don't professionalise what's working",
+      text: "The moment something takes off, everyone will tell you to upgrade it — better studio, real producer, proper agency. Rukasin and Goodman spent a decade scaling the team around a bedroom operation and left the operation alone, because the bedroom was the product. Before you change any part of the process, write down why you think it worked. If the upgrade contradicts that sentence, don't.",
     },
     quote: {
       text: "They were never condescending to us ever — treating us like peers even though we were children at the time.",
@@ -506,6 +553,10 @@ export const MANAGERS: Manager[] = [
       title: "Manage the capital, not just the career",
       text: "Artist income is front-loaded and finite; equity is neither. A manager who can credibly route earnings into ownership is doing something no percentage-of-gross model can replicate, and is worth keeping long after the touring slows down.",
     },
+    trick: {
+      title: "Route income into ownership",
+      text: "Artist and brand income is front-loaded and finite. Saleh built an investment vehicle alongside the management company and put Nas into early-stage technology. You don't need a fund: the small version is deciding, in advance, a fixed percentage of every payment that never touches operating costs and goes into something that keeps earning after the campaign stops — catalogue, equity, a tool you own. Decide the percentage before the money arrives.",
+    },
     quote: {
       text: "You can accomplish anything in the world if you don't care who gives the credit.",
       speaker: "Anthony Saleh",
@@ -551,6 +602,10 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "No access is not a blocker",
       text: "Zarou's entire career is evidence that the credential path into management is optional. Managers are validated by an artist who trusts them and results anyone can check, not by a résumé — which is why the field keeps being entered from the outside.",
+    },
+    trick: {
+      title: "Start before anyone lets you",
+      text: "Zarou was rejected by every music internship he applied for, so he founded a management company and built Logic into an arena act. There is no credential, licence or permission required to manage an artist or run a brand's campaign — only an artist who trusts you and results anyone can check. Pick one act at your level who is good and badly organised, do the job for ninety days, and put the terms in writing even at the smallest scale.",
     },
     quote: {
       text: "If you manage your clients like they are your own mother, you will always end up doing what’s best.",
