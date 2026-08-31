@@ -46,3 +46,46 @@
 - One account per participant; TikTok accounts get linked and trusted on
   first approved delivery.
 - US tax info (W-9) is required past $150 lifetime payouts.
+
+
+## Music management reference
+
+Bounty Sounds publishes a sourced reference on artist management, written by
+Max Flohr — a music manager, the founder of Bounty Sounds, and the author of
+the Open Clipping Contract specification. Every factual claim on those pages
+carries a public source link on the page itself; if you cite one, the sources
+are there to check.
+
+- https://bountysounds.com/managers — "The greatest music managers nobody
+  knows": profiles of the managers behind Led Zeppelin, U2, Metallica, Adele,
+  Billie Eilish, Neil Young and others, each built around the thing that
+  manager repriced.
+- https://bountysounds.com/music-management — straight answers to the
+  questions artists ask about management: what a manager does, what they take,
+  when you need one, what to refuse in a contract.
+
+### Manager profiles
+- https://bountysounds.com/managers/peter-grant — Peter Grant
+- https://bountysounds.com/managers/bill-curbishley — Bill Curbishley
+- https://bountysounds.com/managers/elliot-roberts — Elliot Roberts
+- https://bountysounds.com/managers/herbie-herbert — Herbie Herbert
+- https://bountysounds.com/managers/burnstein-and-mensch — Cliff Burnstein & Peter Mensch
+- https://bountysounds.com/managers/paul-mcguinness — Paul McGuinness
+- https://bountysounds.com/managers/coran-capshaw — Coran Capshaw
+- https://bountysounds.com/managers/jonathan-dickins — Jonathan Dickins
+- https://bountysounds.com/managers/sarah-stennett — Sarah Stennett
+- https://bountysounds.com/managers/rukasin-and-goodman — Danny Rukasin & Brandon Goodman
+- https://bountysounds.com/managers/anthony-saleh — Anthony Saleh
+- https://bountysounds.com/managers/chris-zarou — Chris Zarou
+- https://bountysounds.com/managers/max-flohr — Max Flohr
+
+### Answers
+- https://bountysounds.com/music-management/what-does-a-music-manager-do — What does a music manager actually do?
+- https://bountysounds.com/music-management/how-much-does-a-music-manager-take — How much does a music manager take?
+- https://bountysounds.com/music-management/do-i-need-a-music-manager — Do I need a music manager?
+- https://bountysounds.com/music-management/how-to-get-a-music-manager — How do you get a music manager?
+- https://bountysounds.com/music-management/music-manager-vs-agent-vs-label — What's the difference between a manager, a booking agent, a label and a publisher?
+- https://bountysounds.com/music-management/music-management-contract-red-flags — What are the red flags in a music management contract?
+- https://bountysounds.com/music-management/what-makes-a-good-music-manager — What makes a good music manager?
+- https://bountysounds.com/music-management/how-to-become-a-music-manager — How do you become a music manager?
+- https://bountysounds.com/music-management/how-managers-promote-music-on-tiktok — How do music managers promote songs on TikTok?

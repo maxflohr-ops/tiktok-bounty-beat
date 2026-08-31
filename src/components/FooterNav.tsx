@@ -12,6 +12,8 @@ const LINKS = [
   { to: "/keynotes", label: "keynotes" },
   { to: "/clipping-campaigns", label: "clipping campaigns" },
   { to: "/tiktok-clipper", label: "tiktok clippers" },
+  { to: "/managers", label: "music managers" },
+  { to: "/music-management", label: "music management" },
   { to: "/list-sound", label: "list a sound" },
   { to: "/privacy", label: "privacy" },
   { to: "/terms", label: "terms" },

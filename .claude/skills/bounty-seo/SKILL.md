@@ -53,6 +53,30 @@ plus a DataForSEO key; everything below works without them.
 | `/tiktok-clipper` | become a tiktok clipper, tiktok clipper jobs |
 | `/keynotes` | keynote clipping campaign, clip keynote speech |
 | `/list-sound` | promote my song on tiktok (transactional) |
+| `/managers` | greatest music managers, famous artist managers |
+| `/managers/<slug>` | one manager per page — "who managed <artist>" |
+| `/music-management` | music management answers hub |
+| `/music-management/<slug>` | one question per page (see below) |
+
+### The answer cluster
+
+`/music-management/*` exists to be quoted by answer engines, not just ranked.
+Rules that keep it that way, enforced by `tests/managers.seo.test.ts`:
+
+- Each page opens with a `shortAnswer` that answers the question completely in
+  under 90 words, rendered above everything else. If it needs the rest of the
+  page to make sense, it belongs in a section.
+- Every factual claim about a real person carries a public source link on the
+  page. No invented deal points, no invented quotes, no unsourced numbers.
+  A page that gets one fact wrong is a page that never gets cited again.
+- Content lives in `src/lib/managers/{roster,answers,max}.ts`. Routes render it;
+  they never hold copy. Sitemap, `llms.txt` and internal links are all checked
+  against those same arrays, so adding a page and forgetting a surface fails
+  the test rather than rotting quietly.
+- Max Flohr is the named author on every page (`MAX_PERSON` in
+  `src/lib/managers/seo.ts`, rendered by `AuthorBox`). His profile only carries
+  claims checkable against the product — extra credentials go in
+  `MAX_CREDENTIALS` in `src/lib/managers/max.ts`, with a URL each.
 
 ## When live data is wanted
 
