@@ -28,6 +28,27 @@ export type Manager = {
   /** The transferable part. Without this the page is trivia, not a resource. */
   lesson: { title: string; text: string };
   /**
+   * A portrait, but only ever a freely-licensed one.
+   *
+   * ⚠️ Do NOT add a photo scraped from a news site, a label site, an agency,
+   * Getty, or a social profile. Editorial photos of these people are almost
+   * all rights-managed, and hosting one is how a small site collects a
+   * four-figure demand letter. Only public-domain or Creative Commons files
+   * belong here, and the licence terms have to be satisfied on the page —
+   * which is why `author`, `licence` and `licenceUrl` are required, not
+   * optional. Most of the roster has no free photo and correctly renders a
+   * monogram instead; that is the expected state, not a gap to fill.
+   */
+  portrait?: {
+    src: string;
+    alt: string;
+    author: string;
+    licence: string;
+    licenceUrl: string;
+    /** The file's description page, so the claim is checkable. */
+    sourceUrl: string;
+  };
+  /**
    * The inside-baseball part: the specific move an underground act or small
    * brand can run on Monday, with no budget and no relationships. `lesson` is
    * the principle; this is the mechanic. If it can only be executed by someone
@@ -64,6 +85,14 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "Own the scarce thing, then reprice it",
       text: "Grant did not win the 90/10 split by negotiating harder. He won it by first making Led Zeppelin's live show impossible to get any other way — no TV, no singles, no shortcuts — and only then sitting down with promoters. Leverage is manufactured upstream of the meeting where you spend it.",
+    },
+    portrait: {
+      src: "/art/managers/peter-grant.jpg",
+      alt: "Peter Grant, manager of Led Zeppelin",
+      author: "The rakish fellow",
+      licence: "CC BY-SA 3.0",
+      licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+      sourceUrl: "https://commons.wikimedia.org/wiki/File:Peter_Grant.jpeg",
     },
     trick: {
       title: "Withhold exactly one thing",
@@ -304,6 +333,15 @@ export const MANAGERS: Manager[] = [
     lesson: {
       title: "When they can't pay, take equity",
       text: "A counterparty who cannot pay you in cash is a counterparty with unusual flexibility on structure. McGuinness converted a bad-debt situation into ownership of the debtor. Ask what the other side has that isn't money.",
+    },
+    portrait: {
+      src: "/art/managers/paul-mcguinness.jpg",
+      alt: "Paul McGuinness, manager of U2, at the Stade de France",
+      author: "Gaëtan Grivel",
+      licence: "CC BY-SA 4.0",
+      licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+      sourceUrl:
+        "https://commons.wikimedia.org/wiki/File:Paul_McGuinness_with_U2_and_Gerard_Drouot_at_Stade_de_France_(cropped).jpg",
     },
     trick: {
       title: "Ask what they have that isn't money",

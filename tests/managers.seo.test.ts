@@ -1,8 +1,9 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { ALL_MANAGERS } from "../src/lib/managers";
 import { ANSWERS } from "../src/lib/managers/answers";
+import { MAX_CREDENTIALS } from "../src/lib/managers/max";
 
 const sitemap = readFileSync("public/sitemap.xml", "utf8");
 const llms = readFileSync("public/llms.txt", "utf8");
@@ -104,6 +105,26 @@ describe("content invariants", () => {
       expect(m.trick.title, `${m.slug} trick title should not end in a full stop`).not.toMatch(
         /\.$/,
       );
+    }
+  });
+
+  // Portraits are the one place on this site where getting it wrong costs
+  // money rather than credibility. A photo without a licence, an author and a
+  // checkable source page is not usable, so it fails here rather than shipping.
+  it("licenses and attributes every portrait, and the file exists", () => {
+    const withPhoto = [
+      ...ALL_MANAGERS.filter((m) => m.portrait).map((m) => ({ slug: m.slug, img: m.portrait! })),
+      ...MAX_CREDENTIALS.roster
+        .filter((r) => r.image)
+        .map((r) => ({ slug: `credit:${r.name}`, img: r.image! })),
+    ];
+    for (const { slug, img } of withPhoto) {
+      expect(img.author.trim().length, `${slug} photo has no author`).toBeGreaterThan(0);
+      expect(img.licence.trim().length, `${slug} photo has no licence`).toBeGreaterThan(0);
+      expect(img.licenceUrl, `${slug} photo has no licence URL`).toMatch(/^https:\/\//);
+      expect(img.sourceUrl, `${slug} photo has no source page`).toMatch(/^https:\/\//);
+      expect(img.alt.trim().length, `${slug} photo has no alt text`).toBeGreaterThan(0);
+      expect(existsSync(`public${img.src}`), `${slug} photo file is missing`).toBe(true);
     }
   });
 

@@ -9,6 +9,8 @@ import {
   AuthorBox,
   KeyAnswer,
   Paragraphs,
+  Portrait,
+  PortraitCredit,
   QuoteCard,
   SourceList,
 } from "@/components/managers/Prose";
@@ -47,6 +49,17 @@ export const Route = createFileRoute("/managers/$slug")({
             url: canonical(path),
             ...(m.company ? { worksFor: { "@type": "Organization", name: m.company } } : {}),
             ...(m.sameAs?.length ? { sameAs: m.sameAs } : {}),
+            ...(m.portrait
+              ? {
+                  image: {
+                    "@type": "ImageObject",
+                    url: `https://bountysounds.com${m.portrait.src}`,
+                    creditText: m.portrait.author,
+                    license: m.portrait.licenceUrl,
+                    acquireLicensePage: m.portrait.sourceUrl,
+                  },
+                }
+              : {}),
           },
           citation: m.sources.map((s) => ({ "@type": "CreativeWork", name: s.label, url: s.url })),
           ...(m.quote
@@ -86,15 +99,21 @@ function ManagerProfile() {
             <span className="text-[var(--color-bs-ink-soft)]">{m.name}</span>
           </nav>
 
-          <header className="mt-6">
-            <BsEyebrow>
-              {m.era}
-              {m.company ? ` · ${m.company}` : ""}
-            </BsEyebrow>
-            <BsDisplay as="h1" size="md" className="mt-2">
-              {m.name}
-            </BsDisplay>
-            <p className="mt-3 text-[var(--color-bs-ink-mute)]">{m.known.join(" · ")}</p>
+          <header className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
+            <div>
+              <Portrait name={m.name} portrait={m.portrait} size="lg" />
+              <PortraitCredit portrait={m.portrait} />
+            </div>
+            <div>
+              <BsEyebrow>
+                {m.era}
+                {m.company ? ` · ${m.company}` : ""}
+              </BsEyebrow>
+              <BsDisplay as="h1" size="md" className="mt-2">
+                {m.name}
+              </BsDisplay>
+              <p className="mt-3 text-[var(--color-bs-ink-mute)]">{m.known.join(" · ")}</p>
+            </div>
           </header>
 
           <div className="mt-7">
@@ -119,6 +138,18 @@ function ManagerProfile() {
               <ul className="mt-4 space-y-3">
                 {MAX_CREDENTIALS.roster.map((r) => (
                   <li key={r.name} className="bs-card-flat p-5">
+                    {r.image ? (
+                      <>
+                        <img
+                          src={r.image.src}
+                          alt={r.image.alt}
+                          loading="lazy"
+                          decoding="async"
+                          className="mb-3 w-full border border-[var(--color-bs-rule-strong)] object-cover"
+                        />
+                        <PortraitCredit portrait={r.image} />
+                      </>
+                    ) : null}
                     <h3 className="text-lg font-semibold text-[var(--color-bs-ink)]">
                       {r.url ? (
                         <a

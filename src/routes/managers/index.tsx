@@ -4,7 +4,7 @@ import { FooterNav } from "@/components/FooterNav";
 import { BsCard, BsDisplay, BsEyebrow } from "@/components/bs";
 import { ROSTER } from "@/lib/managers";
 import { ANSWERS } from "@/lib/managers/answers";
-import { AuthorBox, QuoteCard } from "@/components/managers/Prose";
+import { AuthorBox, Portrait, QuoteCard } from "@/components/managers/Prose";
 import { MANAGERS_COLLECTION_ID, SITE, breadcrumbs, canonical, headFor } from "@/lib/managers/seo";
 import { MAX_PERSON } from "@/lib/managers/max";
 
@@ -83,10 +83,15 @@ function ManagersHub() {
                 <li key={m.slug}>
                   <Link to="/managers/$slug" params={{ slug: m.slug }} className="block h-full">
                     <BsCard className="flex h-full flex-col p-5">
-                      <span className="bs-eyebrow">{m.era}</span>
-                      <h3 className="mt-1.5 text-xl font-semibold text-[var(--color-bs-ink)]">
-                        {m.name}
-                      </h3>
+                      <div className="flex items-start gap-3">
+                        <Portrait name={m.name} portrait={m.portrait} />
+                        <div>
+                          <span className="bs-eyebrow">{m.era}</span>
+                          <h3 className="mt-1.5 text-xl font-semibold text-[var(--color-bs-ink)]">
+                            {m.name}
+                          </h3>
+                        </div>
+                      </div>
                       <p className="mt-1 text-sm text-[var(--color-bs-ink-mute)]">
                         {m.known.slice(0, 3).join(" · ")}
                       </p>

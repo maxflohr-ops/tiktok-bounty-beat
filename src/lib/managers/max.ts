@@ -16,8 +16,24 @@ import type { Manager, Source } from "./roster";
  * Left empty, the page renders correctly without them — it just says less.
  */
 export const MAX_CREDENTIALS: {
-  /** Artists or campaigns that can be publicly named. */
-  roster: { name: string; note: string; url?: string }[];
+  /**
+   * Artists or campaigns that can be publicly named. `image` follows the same
+   * rule as the roster portraits: freely-licensed files only, never a press
+   * or agency photo, and the licence terms get rendered on the page.
+   */
+  roster: {
+    name: string;
+    note: string;
+    url?: string;
+    image?: {
+      src: string;
+      alt: string;
+      author: string;
+      licence: string;
+      licenceUrl: string;
+      sourceUrl: string;
+    };
+  }[];
   /** Anything with a citable URL: press, panels, podcasts, credits. */
   press: Source[];
   /** Social / professional profiles, for schema.org sameAs. */
@@ -28,6 +44,14 @@ export const MAX_CREDENTIALS: {
       name: "The Hellp",
       note: "Managed and A&R'd the Los Angeles duo — Noah Dillon and Chandler Ransom Lucy — whose second album LL was released on Atlantic Records in 2024.",
       url: "https://en.wikipedia.org/wiki/The_Hellp",
+      image: {
+        src: "/art/managers/the-hellp.jpg",
+        alt: "The Hellp — Noah Dillon and Chandler Ransom Lucy",
+        author: "Anemoia99",
+        licence: "CC BY-SA 4.0",
+        licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Thehellppress2.jpg",
+      },
     },
   ],
   press: [],

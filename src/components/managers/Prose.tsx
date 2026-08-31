@@ -154,3 +154,91 @@ export function QuoteCard({
     </figure>
   );
 }
+
+type Portrait = NonNullable<import("@/lib/managers/roster").Manager["portrait"]>;
+
+/** Initials, for the managers with no freely-licensed photograph. */
+function monogram(name: string) {
+  return name
+    .replace(/\s*&\s*/g, " ")
+    .split(/\s+/)
+    .filter((w) => /^[A-Za-z]/.test(w))
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join("");
+}
+
+/**
+ * A photo when one is freely licensed, a monogram when it isn't — same frame
+ * either way, so a roster that is mostly monograms still reads as deliberate
+ * rather than broken. Only ten of thirteen will ever be monograms: free
+ * photographs of music managers barely exist.
+ */
+export function Portrait({
+  name,
+  portrait,
+  size = "sm",
+}: {
+  name: string;
+  portrait?: Portrait;
+  size?: "sm" | "lg";
+}) {
+  const box = size === "lg" ? "h-28 w-28 md:h-36 md:w-36" : "h-14 w-14";
+  if (!portrait) {
+    return (
+      <div
+        aria-hidden
+        className={`${box} shrink-0 select-none border border-[var(--color-bs-rule-strong)] bg-black/[0.04] grid place-items-center`}
+      >
+        <span
+          className={`bs-display leading-none text-[var(--color-bs-ink-mute)] ${
+            size === "lg" ? "text-3xl md:text-4xl" : "text-lg"
+          }`}
+        >
+          {monogram(name)}
+        </span>
+      </div>
+    );
+  }
+  return (
+    <img
+      src={portrait.src}
+      alt={portrait.alt}
+      loading="lazy"
+      decoding="async"
+      className={`${box} shrink-0 border border-[var(--color-bs-rule-strong)] object-cover`}
+    />
+  );
+}
+
+/**
+ * The credit line. CC BY-SA is only satisfied if the author, the licence and
+ * a link to the licence are all present, so this is not decorative — it is
+ * the condition of using the photograph at all.
+ */
+export function PortraitCredit({ portrait }: { portrait?: Portrait }) {
+  if (!portrait) return null;
+  return (
+    <p className="mt-2 text-xs text-[var(--color-bs-ink-mute)]">
+      Photo:{" "}
+      <a
+        href={portrait.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2"
+      >
+        {portrait.author}
+      </a>
+      {" · "}
+      <a
+        href={portrait.licenceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2"
+      >
+        {portrait.licence}
+      </a>
+      , via Wikimedia Commons
+    </p>
+  );
+}
