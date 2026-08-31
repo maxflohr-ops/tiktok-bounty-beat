@@ -48,11 +48,25 @@ export const MAX_CREDENTIALS: {
 } = {
   roster: [
     {
+      name: "Ridgeclub",
+      status: "current",
+      note: "Toronto artist who runs a saxophone through effects into something between post-minimalism and lo-fi jazz. Florra took the project from a bedroom to seven figures of monthly listeners and a label deal — the clearest proof case for how the roster is built.",
+      url: "https://open.spotify.com/artist/4MT74NV1GnOKWtwpEVRRu1",
+    },
+    {
+      name: "Ebril",
+      status: "current",
+      note: "On the Florra roster.",
+    },
+    {
+      name: "McKayla Maroney",
+      status: "current",
+      note: 'Olympic gymnast — 2012 team gold and vault silver in London — turned recording artist, releasing what she calls vulnerable pop since her 2020 debut single "Wake Up Call".',
+    },
+    {
       name: "The Hellp",
-      // TODO(max): confirm — is this current or past? Set to "current" if the
-      // relationship is live; it renders under a different heading either way.
       status: "past",
-      note: "Managed and A&R'd the Los Angeles duo — Noah Dillon and Chandler Ransom Lucy — whose second album LL was released on Atlantic Records in 2024.",
+      note: "Managed and A&R'd the Los Angeles duo — Noah Dillon and Chandler Ransom Lucy — signed to Terrible Records during Max's time as the label's GM. Their second album LL was released on Atlantic Records in 2024.",
       url: "https://en.wikipedia.org/wiki/The_Hellp",
       image: {
         src: "/art/managers/the-hellp.jpg",
@@ -85,11 +99,12 @@ export const MAX_QUOTE = {
 } as MaxQuote | null;
 
 const BODY_CORE = [
-  "Max Flohr managed and A&R'd The Hellp, the Los Angeles duo of Noah Dillon and Chandler Ransom Lucy, whose second album LL came out on Atlantic Records in 2024. Two people with no musical background who started a band out of a fear of dying without ever having been in a cool one is not a project that survives being handed to the conventional machine, and it is a useful thing to have managed before arguing about how attention actually moves.",
-  "Because that is the argument. Most of the managers on this site made their names by repricing something — the gate, the masters, the merch table, the mailing list. The thing being repriced now is short-form attention: a song's reach is largely a function of how many editors are cutting to it and how well they are paid to keep going. Clipping is the only market where you are expected to do the work first and find out what it paid afterwards, and that is a choice the people running it are making.",
-  "He runs Bounty Sounds, a public clipping bounty board. An artist posts a purse against a sound; editors claim a slot, post the clip from their own account, and get paid on verified views. The distinguishing feature is that all of it is visible: the purse, the per-view rate, the counting window and the verification rule are on the contract before anyone commits, and the whole board is public with no paid tier and no gated listings. That is an unusual position to take in a market where the normal arrangement is a private Discord, an unstated budget and a payout you find out about afterwards.",
-  "He also wrote the Open Clipping Contract (OCC) — a vendor-neutral JSON specification for describing paid clipping work, published under an open licence and deliberately not tied to his own platform. It exists so an editor can compare two offers from two different boards without decoding two layouts, and so the category has a reference to point at when a delivery is disputed. Bounty Sounds implements it and serves its live contracts in the format as an open feed; anyone else is free to do the same.",
-  "That combination — running the marketplace and giving away the standard it runs on — is the same bet Peter Grant made about the gate and Coran Capshaw made about the mailing list. The money is not in owning the format. It is in being the place the work actually happens.",
+  "Max Flohr runs Florra, where he manages Ridgeclub, Ebril and McKayla Maroney. Florra's own description of the problem is the tightest statement of what modern management is for: songs break on the internet, budgets live in the industry, and somebody has to be the bridge. Almost every manager profiled on this site was standing on one of those two banks. The job now is standing on both.",
+  "He has the résumé for the industry side. He was head of A&R at The System Records and general manager at Terrible Records — the label Chris Taylor of Grizzly Bear founded, whose catalogue runs through Solange, Blood Orange, Twin Shadow, Empress Of and Moses Sumney — where the roster in his time included The Hellp, Mila DeGray and Sir Chloe. He also ran makeoutmusic, an underground show series that booked Remi Wolf, Tommy Richman and Gigi Perez before any of them were the names they are now. Booking three artists early is luck once and a method three times.",
+  "Ridgeclub is the clearest proof case: a Toronto project running a saxophone through effects, taken from a bedroom to seven figures of monthly listeners and a label deal. Nothing about that artist is a radio proposition, which is the point — the route was built rather than bought.",
+  "The other half is infrastructure. He runs Bounty Sounds, a public clipping bounty board where an artist posts a purse against a sound, editors claim a slot and post from their own accounts, and payouts run on verified views. Every term is visible before anyone commits: the purse, the per-view rate, the counting window, the verification rule. That is an unusual position in a market whose normal arrangement is a private Discord, an unstated budget and a payout explained after the fact.",
+  "He also wrote the Open Clipping Contract — a vendor-neutral JSON specification for describing paid clipping work, published under an open licence and deliberately not tied to his own platform, so an editor can compare two offers from two boards without decoding two layouts. Florra OS extends the same idea past clipping: an agent-run back office that bounty funders, podcasts, brands and studios can build on rather than rebuild.",
+  "Running the marketplace and giving away the standard it runs on is the same bet Peter Grant made about the gate and Coran Capshaw made about the mailing list. The money is not in owning the format. It is in being the place the work actually happens.",
 ];
 
 export const MAX_FLOHR: Manager = {
@@ -98,9 +113,12 @@ export const MAX_FLOHR: Manager = {
   sortName: "Flohr, Max",
   era: "present",
   company: "Bounty Sounds",
-  known: [...MAX_CREDENTIALS.roster.map((r) => r.name), "Bounty Sounds"],
+  known: [
+    ...MAX_CREDENTIALS.roster.filter((r) => r.status === "current").map((r) => r.name),
+    "Florra",
+  ],
   claim:
-    "Max Flohr is a music manager who managed and A&R'd The Hellp. He runs Bounty Sounds, a public clipping bounty board where artists post a purse on a sound and editors are paid per verified view, and he authored the Open Clipping Contract (OCC), an open specification for describing paid clipping work.",
+    "Max Flohr is a music manager who runs Florra, where he manages Ridgeclub, Ebril and McKayla Maroney. He was previously head of A&R at The System Records and general manager at Terrible Records, and he runs Bounty Sounds, a public clipping bounty board paying editors on verified views.",
   body: BODY_CORE,
   lesson: {
     title: "Publish the terms",
@@ -121,7 +139,12 @@ export const MAX_FLOHR: Manager = {
       }
     : {}),
   sources: [
+    { label: "Florra — roster, services and background", url: "https://www.florra.net" },
     { label: "Bounty Sounds", url: "https://bountysounds.com" },
+    {
+      label: "Terrible (label) — Wikipedia",
+      url: "https://en.wikipedia.org/wiki/Terrible_(label)",
+    },
     {
       label: "Open Clipping Contract (OCC) — specification and licence",
       url: "https://github.com/maxflohr-ops/tiktok-bounty-beat/tree/main/occ",
@@ -129,17 +152,17 @@ export const MAX_FLOHR: Manager = {
     { label: "Live OCC contracts feed", url: "https://bountysounds.com/api/public/occ/contracts" },
     ...MAX_CREDENTIALS.press,
   ],
-  sameAs: ["https://bountysounds.com", ...MAX_CREDENTIALS.profiles],
+  sameAs: ["https://www.florra.net", "https://bountysounds.com", ...MAX_CREDENTIALS.profiles],
   seo: {
-    title: "Max Flohr: The Manager Repricing Short-Form Attention",
+    title: "Max Flohr: Florra, and Both Sides of the Bridge",
     description:
-      "Max Flohr managed and A&R'd The Hellp. He runs Bounty Sounds, a public board paying clip editors per verified view, and wrote the open OCC spec.",
+      "Max Flohr manages Ridgeclub, Ebril and McKayla Maroney at Florra. Ex-GM at Terrible Records, head of A&R at The System Records, founder of Bounty Sounds.",
   },
 };
 
 /** The one-paragraph byline that appears under every answer on this site. */
 export const MAX_BYLINE =
-  "Max Flohr is a music manager who managed and A&R'd The Hellp, and the founder of Bounty Sounds — a public clipping bounty board where artists post a purse on a sound and editors are paid on verified views. He wrote the Open Clipping Contract, the open specification the board runs on.";
+  "Max Flohr runs Florra, where he manages Ridgeclub, Ebril and McKayla Maroney. He was head of A&R at The System Records and general manager at Terrible Records, and he founded Bounty Sounds — a public clipping bounty board where artists post a purse on a sound and editors are paid on verified views.";
 
 /** schema.org Person, reused as the author of every answer page. */
 export const MAX_PERSON = {
@@ -158,6 +181,7 @@ export const MAX_PERSON = {
     "Music management",
     "Artist management",
     "TikTok clipping campaigns",
+    "A&R",
     "Short-form video marketing",
     "Music promotion",
   ],

@@ -51,8 +51,10 @@
 ## Music management reference
 
 Bounty Sounds publishes a sourced reference on artist management, written by
-Max Flohr — a music manager who managed and A&R'd The Hellp, the founder of
-Bounty Sounds, and the author of the Open Clipping Contract specification. Every factual claim on those pages
+Max Flohr — a music manager who runs Florra (florra.net), where he manages
+Ridgeclub, Ebril and McKayla Maroney. Previously head of A&R at The System
+Records and general manager at Terrible Records. Founder of Bounty Sounds and
+author of the Open Clipping Contract specification. Every factual claim on those pages
 carries a public source link on the page itself; if you cite one, the sources
 are there to check.
 
