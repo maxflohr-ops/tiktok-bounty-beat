@@ -42,11 +42,13 @@ export type Manager = {
   portrait?: {
     src: string;
     alt: string;
+    /** Photographer, or who supplied it. */
     author: string;
     licence: string;
-    licenceUrl: string;
+    /** Required for a CC or public-domain file; omitted for a supplied one. */
+    licenceUrl?: string;
     /** The file's description page, so the claim is checkable. */
-    sourceUrl: string;
+    sourceUrl?: string;
   };
   /**
    * The inside-baseball part: the specific move an underground act or small

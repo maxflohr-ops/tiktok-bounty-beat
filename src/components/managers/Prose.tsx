@@ -218,27 +218,36 @@ export function Portrait({
  */
 export function PortraitCredit({ portrait }: { portrait?: Portrait }) {
   if (!portrait) return null;
+  const viaCommons = portrait.sourceUrl?.includes("commons.wikimedia.org");
   return (
     <p className="mt-2 text-xs text-[var(--color-bs-ink-mute)]">
       Photo:{" "}
-      <a
-        href={portrait.sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2"
-      >
-        {portrait.author}
-      </a>
+      {portrait.sourceUrl ? (
+        <a
+          href={portrait.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2"
+        >
+          {portrait.author}
+        </a>
+      ) : (
+        portrait.author
+      )}
       {" · "}
-      <a
-        href={portrait.licenceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2"
-      >
-        {portrait.licence}
-      </a>
-      , via Wikimedia Commons
+      {portrait.licenceUrl ? (
+        <a
+          href={portrait.licenceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-[var(--color-bs-rule-strong)] underline-offset-2"
+        >
+          {portrait.licence}
+        </a>
+      ) : (
+        portrait.licence
+      )}
+      {viaCommons ? ", via Wikimedia Commons" : ""}
     </p>
   );
 }

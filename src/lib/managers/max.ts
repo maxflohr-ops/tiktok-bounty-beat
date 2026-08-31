@@ -124,6 +124,12 @@ export const MAX_FLOHR: Manager = {
     title: "Publish the terms",
     text: "Clipping money moved fast enough that its norms formed in private — unstated budgets, payouts explained after the fact, rates you learn by asking someone who already got burned. Putting the purse, the rate, the counting window and the verification rule on the contract before anyone commits is not generosity. It is the cheapest way to get the good editors to show up.",
   },
+  portrait: {
+    src: "/art/managers/max-flohr.jpg",
+    alt: "Max Flohr",
+    author: "Supplied by Max Flohr",
+    licence: "Used with permission",
+  },
   trick: {
     title: "Publish your rate first",
     text: "Put the number on the table before the work starts — what the purse is, what it pays per view, how long views count, and what makes a delivery count. The whole clipping economy runs the other way: unstated budgets, payouts explained afterwards, rates you learn by getting burned. Publishing first isn't generosity, it's selection. The editors worth having can calculate whether you're worth their hours, and they'll only spend them where they can.",

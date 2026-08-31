@@ -121,8 +121,13 @@ describe("content invariants", () => {
     for (const { slug, img } of withPhoto) {
       expect(img.author.trim().length, `${slug} photo has no author`).toBeGreaterThan(0);
       expect(img.licence.trim().length, `${slug} photo has no licence`).toBeGreaterThan(0);
-      expect(img.licenceUrl, `${slug} photo has no licence URL`).toMatch(/^https:\/\//);
-      expect(img.sourceUrl, `${slug} photo has no source page`).toMatch(/^https:\/\//);
+      // A third-party file must carry a licence URL and a checkable source
+      // page. A photo supplied by its subject carries neither, and saying it
+      // is CC when it isn't would be the worse error.
+      if (/^(CC|Public domain)/i.test(img.licence)) {
+        expect(img.licenceUrl, `${slug} photo has no licence URL`).toMatch(/^https:\/\//);
+        expect(img.sourceUrl, `${slug} photo has no source page`).toMatch(/^https:\/\//);
+      }
       expect(img.alt.trim().length, `${slug} photo has no alt text`).toBeGreaterThan(0);
       expect(existsSync(`public${img.src}`), `${slug} photo file is missing`).toBe(true);
     }
