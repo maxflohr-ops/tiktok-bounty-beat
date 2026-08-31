@@ -9,97 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TiktokClipperRouteImport } from './routes/tiktok-clipper'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as TasteRouteImport } from './routes/taste'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PayoutsRouteImport } from './routes/payouts'
-import { Route as ListSoundRouteImport } from './routes/list-sound'
-import { Route as KeynotesRouteImport } from './routes/keynotes'
-import { Route as JoinRouteImport } from './routes/join'
-import { Route as HowItWorksRouteImport } from './routes/how-it-works'
-import { Route as ForEditorsRouteImport } from './routes/for-editors'
-import { Route as ForArtistsRouteImport } from './routes/for-artists'
-import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
-import { Route as BoardRouteImport } from './routes/board'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BountyIdRouteImport } from './routes/bounty.$id'
-import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
-import { Route as AuthenticatedStartRouteImport } from './routes/_authenticated/start'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BoardRouteImport } from './routes/board'
+import { Route as ClippingCampaignsRouteImport } from './routes/clipping-campaigns'
+import { Route as ForArtistsRouteImport } from './routes/for-artists'
+import { Route as ForEditorsRouteImport } from './routes/for-editors'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as JoinRouteImport } from './routes/join'
+import { Route as KeynotesRouteImport } from './routes/keynotes'
+import { Route as ListSoundRouteImport } from './routes/list-sound'
+import { Route as PayoutsRouteImport } from './routes/payouts'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TasteRouteImport } from './routes/taste'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TiktokClipperRouteImport } from './routes/tiktok-clipper'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedStartRouteImport } from './routes/_authenticated/start'
+import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
+import { Route as BountyIdRouteImport } from './routes/bounty.$id'
+import { Route as DigitalMarketingIndexRouteImport } from './routes/digital-marketing/index'
+import { Route as DigitalMarketingSlugRouteImport } from './routes/digital-marketing/$slug'
+import { Route as ManagersIndexRouteImport } from './routes/managers/index'
+import { Route as ManagersSlugRouteImport } from './routes/managers/$slug'
+import { Route as MusicManagementIndexRouteImport } from './routes/music-management/index'
+import { Route as MusicManagementSlugRouteImport } from './routes/music-management/$slug'
 import { Route as ApiGoToolRouteImport } from './routes/api/go.$tool'
-import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
-import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public/webhooks/stripe'
-import { Route as ApiPublicOccListingsRouteImport } from './routes/api/public/occ/listings'
+import { Route as ApiPublicManagersRouteImport } from './routes/api/public/managers'
 import { Route as ApiPublicOccContractsRouteImport } from './routes/api/public/occ/contracts'
+import { Route as ApiPublicOccListingsRouteImport } from './routes/api/public/occ/listings'
+import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public/webhooks/stripe'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
-const TiktokClipperRoute = TiktokClipperRouteImport.update({
-  id: '/tiktok-clipper',
-  path: '/tiktok-clipper',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TasteRoute = TasteRouteImport.update({
-  id: '/taste',
-  path: '/taste',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PayoutsRoute = PayoutsRouteImport.update({
-  id: '/payouts',
-  path: '/payouts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ListSoundRoute = ListSoundRouteImport.update({
-  id: '/list-sound',
-  path: '/list-sound',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KeynotesRoute = KeynotesRouteImport.update({
-  id: '/keynotes',
-  path: '/keynotes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JoinRoute = JoinRouteImport.update({
-  id: '/join',
-  path: '/join',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HowItWorksRoute = HowItWorksRouteImport.update({
-  id: '/how-it-works',
-  path: '/how-it-works',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForEditorsRoute = ForEditorsRouteImport.update({
-  id: '/for-editors',
-  path: '/for-editors',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForArtistsRoute = ForArtistsRouteImport.update({
-  id: '/for-artists',
-  path: '/for-artists',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClippingCampaignsRoute = ClippingCampaignsRouteImport.update({
-  id: '/clipping-campaigns',
-  path: '/clipping-campaigns',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BoardRoute = BoardRouteImport.update({
-  id: '/board',
-  path: '/board',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -107,33 +58,74 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const BoardRoute = BoardRouteImport.update({
+  id: '/board',
+  path: '/board',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ClippingCampaignsRoute = ClippingCampaignsRouteImport.update({
+  id: '/clipping-campaigns',
+  path: '/clipping-campaigns',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BountyIdRoute = BountyIdRouteImport.update({
-  id: '/bounty/$id',
-  path: '/bounty/$id',
+const ForArtistsRoute = ForArtistsRouteImport.update({
+  id: '/for-artists',
+  path: '/for-artists',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedSubmitRoute = AuthenticatedSubmitRouteImport.update({
-  id: '/submit',
-  path: '/submit',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const ForEditorsRoute = ForEditorsRouteImport.update({
+  id: '/for-editors',
+  path: '/for-editors',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedStartRoute = AuthenticatedStartRouteImport.update({
-  id: '/start',
-  path: '/start',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KeynotesRoute = KeynotesRouteImport.update({
+  id: '/keynotes',
+  path: '/keynotes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListSoundRoute = ListSoundRouteImport.update({
+  id: '/list-sound',
+  path: '/list-sound',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayoutsRoute = PayoutsRouteImport.update({
+  id: '/payouts',
+  path: '/payouts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TasteRoute = TasteRouteImport.update({
+  id: '/taste',
+  path: '/taste',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TiktokClipperRoute = TiktokClipperRouteImport.update({
+  id: '/tiktok-clipper',
+  path: '/tiktok-clipper',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
@@ -141,14 +133,79 @@ const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedStartRoute = AuthenticatedStartRouteImport.update({
+  id: '/start',
+  path: '/start',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSubmitRoute = AuthenticatedSubmitRouteImport.update({
+  id: '/submit',
+  path: '/submit',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const BountyIdRoute = BountyIdRouteImport.update({
+  id: '/bounty/$id',
+  path: '/bounty/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigitalMarketingIndexRoute = DigitalMarketingIndexRouteImport.update({
+  id: '/digital-marketing/',
+  path: '/digital-marketing/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DigitalMarketingSlugRoute = DigitalMarketingSlugRouteImport.update({
+  id: '/digital-marketing/$slug',
+  path: '/digital-marketing/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagersIndexRoute = ManagersIndexRouteImport.update({
+  id: '/managers/',
+  path: '/managers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagersSlugRoute = ManagersSlugRouteImport.update({
+  id: '/managers/$slug',
+  path: '/managers/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MusicManagementIndexRoute = MusicManagementIndexRouteImport.update({
+  id: '/music-management/',
+  path: '/music-management/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MusicManagementSlugRoute = MusicManagementSlugRouteImport.update({
+  id: '/music-management/$slug',
+  path: '/music-management/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiGoToolRoute = ApiGoToolRouteImport.update({
   id: '/api/go/$tool',
   path: '/api/go/$tool',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicManagersRoute = ApiPublicManagersRouteImport.update({
+  id: '/api/public/managers',
+  path: '/api/public/managers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicOccContractsRoute = ApiPublicOccContractsRouteImport.update({
+  id: '/api/public/occ/contracts',
+  path: '/api/public/occ/contracts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicOccListingsRoute = ApiPublicOccListingsRouteImport.update({
+  id: '/api/public/occ/listings',
+  path: '/api/public/occ/listings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicWebhooksStripeRoute = ApiPublicWebhooksStripeRouteImport.update({
+  id: '/api/public/webhooks/stripe',
+  path: '/api/public/webhooks/stripe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailTransactionalPreviewRoute =
@@ -157,21 +214,6 @@ const LovableEmailTransactionalPreviewRoute =
     path: '/lovable/email/transactional/preview',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicWebhooksStripeRoute = ApiPublicWebhooksStripeRouteImport.update({
-  id: '/api/public/webhooks/stripe',
-  path: '/api/public/webhooks/stripe',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicOccListingsRoute = ApiPublicOccListingsRouteImport.update({
-  id: '/api/public/occ/listings',
-  path: '/api/public/occ/listings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicOccContractsRoute = ApiPublicOccContractsRouteImport.update({
-  id: '/api/public/occ/contracts',
-  path: '/api/public/occ/contracts',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -195,7 +237,14 @@ export interface FileRoutesByFullPath {
   '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/digital-marketing/$slug': typeof DigitalMarketingSlugRoute
+  '/managers/$slug': typeof ManagersSlugRoute
+  '/music-management/$slug': typeof MusicManagementSlugRoute
+  '/digital-marketing/': typeof DigitalMarketingIndexRoute
+  '/managers/': typeof ManagersIndexRoute
+  '/music-management/': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/api/public/managers': typeof ApiPublicManagersRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -223,7 +272,14 @@ export interface FileRoutesByTo {
   '/start': typeof AuthenticatedStartRoute
   '/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/digital-marketing/$slug': typeof DigitalMarketingSlugRoute
+  '/managers/$slug': typeof ManagersSlugRoute
+  '/music-management/$slug': typeof MusicManagementSlugRoute
+  '/digital-marketing': typeof DigitalMarketingIndexRoute
+  '/managers': typeof ManagersIndexRoute
+  '/music-management': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/api/public/managers': typeof ApiPublicManagersRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -253,7 +309,14 @@ export interface FileRoutesById {
   '/_authenticated/start': typeof AuthenticatedStartRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
   '/bounty/$id': typeof BountyIdRoute
+  '/digital-marketing/$slug': typeof DigitalMarketingSlugRoute
+  '/managers/$slug': typeof ManagersSlugRoute
+  '/music-management/$slug': typeof MusicManagementSlugRoute
+  '/digital-marketing/': typeof DigitalMarketingIndexRoute
+  '/managers/': typeof ManagersIndexRoute
+  '/music-management/': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/api/public/managers': typeof ApiPublicManagersRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -283,7 +346,14 @@ export interface FileRouteTypes {
     | '/start'
     | '/submit'
     | '/bounty/$id'
+    | '/digital-marketing/$slug'
+    | '/managers/$slug'
+    | '/music-management/$slug'
+    | '/digital-marketing/'
+    | '/managers/'
+    | '/music-management/'
     | '/api/go/$tool'
+    | '/api/public/managers'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -311,7 +381,14 @@ export interface FileRouteTypes {
     | '/start'
     | '/submit'
     | '/bounty/$id'
+    | '/digital-marketing/$slug'
+    | '/managers/$slug'
+    | '/music-management/$slug'
+    | '/digital-marketing'
+    | '/managers'
+    | '/music-management'
     | '/api/go/$tool'
+    | '/api/public/managers'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -340,7 +417,14 @@ export interface FileRouteTypes {
     | '/_authenticated/start'
     | '/_authenticated/submit'
     | '/bounty/$id'
+    | '/digital-marketing/$slug'
+    | '/managers/$slug'
+    | '/music-management/$slug'
+    | '/digital-marketing/'
+    | '/managers/'
+    | '/music-management/'
     | '/api/go/$tool'
+    | '/api/public/managers'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -365,7 +449,14 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   TiktokClipperRoute: typeof TiktokClipperRoute
   BountyIdRoute: typeof BountyIdRoute
+  DigitalMarketingSlugRoute: typeof DigitalMarketingSlugRoute
+  ManagersSlugRoute: typeof ManagersSlugRoute
+  MusicManagementSlugRoute: typeof MusicManagementSlugRoute
+  DigitalMarketingIndexRoute: typeof DigitalMarketingIndexRoute
+  ManagersIndexRoute: typeof ManagersIndexRoute
+  MusicManagementIndexRoute: typeof MusicManagementIndexRoute
   ApiGoToolRoute: typeof ApiGoToolRoute
+  ApiPublicManagersRoute: typeof ApiPublicManagersRoute
   ApiPublicOccContractsRoute: typeof ApiPublicOccContractsRoute
   ApiPublicOccListingsRoute: typeof ApiPublicOccListingsRoute
   ApiPublicWebhooksStripeRoute: typeof ApiPublicWebhooksStripeRoute
@@ -374,102 +465,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/tiktok-clipper': {
-      id: '/tiktok-clipper'
-      path: '/tiktok-clipper'
-      fullPath: '/tiktok-clipper'
-      preLoaderRoute: typeof TiktokClipperRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/taste': {
-      id: '/taste'
-      path: '/taste'
-      fullPath: '/taste'
-      preLoaderRoute: typeof TasteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/payouts': {
-      id: '/payouts'
-      path: '/payouts'
-      fullPath: '/payouts'
-      preLoaderRoute: typeof PayoutsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/list-sound': {
-      id: '/list-sound'
-      path: '/list-sound'
-      fullPath: '/list-sound'
-      preLoaderRoute: typeof ListSoundRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/keynotes': {
-      id: '/keynotes'
-      path: '/keynotes'
-      fullPath: '/keynotes'
-      preLoaderRoute: typeof KeynotesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/join': {
-      id: '/join'
-      path: '/join'
-      fullPath: '/join'
-      preLoaderRoute: typeof JoinRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/how-it-works': {
-      id: '/how-it-works'
-      path: '/how-it-works'
-      fullPath: '/how-it-works'
-      preLoaderRoute: typeof HowItWorksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/for-editors': {
-      id: '/for-editors'
-      path: '/for-editors'
-      fullPath: '/for-editors'
-      preLoaderRoute: typeof ForEditorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/for-artists': {
-      id: '/for-artists'
-      path: '/for-artists'
-      fullPath: '/for-artists'
-      preLoaderRoute: typeof ForArtistsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/clipping-campaigns': {
-      id: '/clipping-campaigns'
-      path: '/clipping-campaigns'
-      fullPath: '/clipping-campaigns'
-      preLoaderRoute: typeof ClippingCampaignsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/board': {
-      id: '/board'
-      path: '/board'
-      fullPath: '/board'
-      preLoaderRoute: typeof BoardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -479,39 +479,109 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bounty/$id': {
-      id: '/bounty/$id'
-      path: '/bounty/$id'
-      fullPath: '/bounty/$id'
-      preLoaderRoute: typeof BountyIdRouteImport
+    '/board': {
+      id: '/board'
+      path: '/board'
+      fullPath: '/board'
+      preLoaderRoute: typeof BoardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/submit': {
-      id: '/_authenticated/submit'
-      path: '/submit'
-      fullPath: '/submit'
-      preLoaderRoute: typeof AuthenticatedSubmitRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/clipping-campaigns': {
+      id: '/clipping-campaigns'
+      path: '/clipping-campaigns'
+      fullPath: '/clipping-campaigns'
+      preLoaderRoute: typeof ClippingCampaignsRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/start': {
-      id: '/_authenticated/start'
-      path: '/start'
-      fullPath: '/start'
-      preLoaderRoute: typeof AuthenticatedStartRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/for-artists': {
+      id: '/for-artists'
+      path: '/for-artists'
+      fullPath: '/for-artists'
+      preLoaderRoute: typeof ForArtistsRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+    '/for-editors': {
+      id: '/for-editors'
+      path: '/for-editors'
+      fullPath: '/for-editors'
+      preLoaderRoute: typeof ForEditorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/keynotes': {
+      id: '/keynotes'
+      path: '/keynotes'
+      fullPath: '/keynotes'
+      preLoaderRoute: typeof KeynotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/list-sound': {
+      id: '/list-sound'
+      path: '/list-sound'
+      fullPath: '/list-sound'
+      preLoaderRoute: typeof ListSoundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payouts': {
+      id: '/payouts'
+      path: '/payouts'
+      fullPath: '/payouts'
+      preLoaderRoute: typeof PayoutsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/taste': {
+      id: '/taste'
+      path: '/taste'
+      fullPath: '/taste'
+      preLoaderRoute: typeof TasteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tiktok-clipper': {
+      id: '/tiktok-clipper'
+      path: '/tiktok-clipper'
+      fullPath: '/tiktok-clipper'
+      preLoaderRoute: typeof TiktokClipperRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/analytics': {
@@ -521,12 +591,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/start': {
+      id: '/_authenticated/start'
+      path: '/start'
+      fullPath: '/start'
+      preLoaderRoute: typeof AuthenticatedStartRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/submit': {
+      id: '/_authenticated/submit'
+      path: '/submit'
+      fullPath: '/submit'
+      preLoaderRoute: typeof AuthenticatedSubmitRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/bounty/$id': {
+      id: '/bounty/$id'
+      path: '/bounty/$id'
+      fullPath: '/bounty/$id'
+      preLoaderRoute: typeof BountyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digital-marketing/': {
+      id: '/digital-marketing/'
+      path: '/digital-marketing'
+      fullPath: '/digital-marketing/'
+      preLoaderRoute: typeof DigitalMarketingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/digital-marketing/$slug': {
+      id: '/digital-marketing/$slug'
+      path: '/digital-marketing/$slug'
+      fullPath: '/digital-marketing/$slug'
+      preLoaderRoute: typeof DigitalMarketingSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/managers/': {
+      id: '/managers/'
+      path: '/managers'
+      fullPath: '/managers/'
+      preLoaderRoute: typeof ManagersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/managers/$slug': {
+      id: '/managers/$slug'
+      path: '/managers/$slug'
+      fullPath: '/managers/$slug'
+      preLoaderRoute: typeof ManagersSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/music-management/': {
+      id: '/music-management/'
+      path: '/music-management'
+      fullPath: '/music-management/'
+      preLoaderRoute: typeof MusicManagementIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/music-management/$slug': {
+      id: '/music-management/$slug'
+      path: '/music-management/$slug'
+      fullPath: '/music-management/$slug'
+      preLoaderRoute: typeof MusicManagementSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/go/$tool': {
       id: '/api/go/$tool'
@@ -535,18 +668,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGoToolRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/transactional/preview': {
-      id: '/lovable/email/transactional/preview'
-      path: '/lovable/email/transactional/preview'
-      fullPath: '/lovable/email/transactional/preview'
-      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+    '/api/public/managers': {
+      id: '/api/public/managers'
+      path: '/api/public/managers'
+      fullPath: '/api/public/managers'
+      preLoaderRoute: typeof ApiPublicManagersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/webhooks/stripe': {
-      id: '/api/public/webhooks/stripe'
-      path: '/api/public/webhooks/stripe'
-      fullPath: '/api/public/webhooks/stripe'
-      preLoaderRoute: typeof ApiPublicWebhooksStripeRouteImport
+    '/api/public/occ/contracts': {
+      id: '/api/public/occ/contracts'
+      path: '/api/public/occ/contracts'
+      fullPath: '/api/public/occ/contracts'
+      preLoaderRoute: typeof ApiPublicOccContractsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/occ/listings': {
@@ -556,11 +689,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicOccListingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/occ/contracts': {
-      id: '/api/public/occ/contracts'
-      path: '/api/public/occ/contracts'
-      fullPath: '/api/public/occ/contracts'
-      preLoaderRoute: typeof ApiPublicOccContractsRouteImport
+    '/api/public/webhooks/stripe': {
+      id: '/api/public/webhooks/stripe'
+      path: '/api/public/webhooks/stripe'
+      fullPath: '/api/public/webhooks/stripe'
+      preLoaderRoute: typeof ApiPublicWebhooksStripeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -603,7 +743,14 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   TiktokClipperRoute: TiktokClipperRoute,
   BountyIdRoute: BountyIdRoute,
+  DigitalMarketingSlugRoute: DigitalMarketingSlugRoute,
+  ManagersSlugRoute: ManagersSlugRoute,
+  MusicManagementSlugRoute: MusicManagementSlugRoute,
+  DigitalMarketingIndexRoute: DigitalMarketingIndexRoute,
+  ManagersIndexRoute: ManagersIndexRoute,
+  MusicManagementIndexRoute: MusicManagementIndexRoute,
   ApiGoToolRoute: ApiGoToolRoute,
+  ApiPublicManagersRoute: ApiPublicManagersRoute,
   ApiPublicOccContractsRoute: ApiPublicOccContractsRoute,
   ApiPublicOccListingsRoute: ApiPublicOccListingsRoute,
   ApiPublicWebhooksStripeRoute: ApiPublicWebhooksStripeRoute,

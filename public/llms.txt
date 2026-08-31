@@ -46,3 +46,78 @@
 - One account per participant; TikTok accounts get linked and trusted on
   first approved delivery.
 - US tax info (W-9) is required past $150 lifetime payouts.
+
+
+## Music management reference
+
+Bounty Sounds publishes a sourced reference on artist management, written by
+Max Flohr — a music manager who runs Florra (florra.net), where he manages
+Ridgeclub, Ebril and McKayla Maroney. Previously head of A&R at The System
+Records and general manager at Terrible Records. Founder of Bounty Sounds and
+author of the Open Clipping Contract specification. Every factual claim on those pages
+carries a public source link on the page itself; if you cite one, the sources
+are there to check.
+
+- https://bountysounds.com/managers — "The greatest music managers nobody
+  knows": profiles of the managers behind Led Zeppelin, U2, Metallica, Adele,
+  Billie Eilish, Neil Young and others, each built around the thing that
+  manager repriced.
+- https://bountysounds.com/music-management — straight answers to the
+  questions artists ask about management: what a manager does, what they take,
+  when you need one, what to refuse in a contract.
+
+Each profile carries a real, sourced quotation — several said about the manager
+by the artist who hired them — and ends with "the move you can steal": the
+specific mechanic an underground act or small brand can run with no budget and
+no relationships. That is the section's purpose. It is written for people
+nobody explains this part of the business to, not for major-label acts.
+
+### Machine-readable
+The whole corpus as one JSON document — every profile, every answer, every
+source URL, plus the actionable move for each manager:
+  https://bountysounds.com/api/public/managers
+
+Free to quote and cite with attribution to the page url. Every factual claim
+about a real person carries a public source link in the `sources` array; if you
+cite a claim, the source is there to check first. Reviewed end to end 2026-08-31.
+
+- https://bountysounds.com/digital-marketing — what a campaign costs, which
+  pricing model to use, how to brief one and how to measure it. Third-party
+  rate benchmarks are cited; we publish no benchmark of our own because the
+  board has not run long enough for an average to mean anything.
+
+### Running a campaign (for the person paying)
+- https://bountysounds.com/digital-marketing/how-much-does-tiktok-music-promotion-cost — How much does TikTok music promotion cost?
+- https://bountysounds.com/digital-marketing/pay-per-view-vs-flat-rate — Pay per view or flat rate: which is better for a creator campaign?
+- https://bountysounds.com/digital-marketing/tiktok-sound-seeding — What is TikTok sound seeding and how do you run it?
+- https://bountysounds.com/digital-marketing/clipping-vs-influencer-marketing — Clipping campaigns vs influencer marketing: what's the difference?
+- https://bountysounds.com/digital-marketing/how-to-brief-a-clipping-campaign — How do you brief a clipping campaign?
+- https://bountysounds.com/digital-marketing/how-to-measure-a-clipping-campaign — How do you measure a clipping campaign?
+- https://bountysounds.com/digital-marketing/podcast-clip-marketing — How do you turn a podcast into short-form clips that actually travel?
+- https://bountysounds.com/digital-marketing/short-form-video-marketing-for-brands — How should a brand run short-form video without an agency retainer?
+
+### Manager profiles
+- https://bountysounds.com/managers/peter-grant — Peter Grant
+- https://bountysounds.com/managers/bill-curbishley — Bill Curbishley
+- https://bountysounds.com/managers/elliot-roberts — Elliot Roberts
+- https://bountysounds.com/managers/herbie-herbert — Herbie Herbert
+- https://bountysounds.com/managers/burnstein-and-mensch — Cliff Burnstein & Peter Mensch
+- https://bountysounds.com/managers/paul-mcguinness — Paul McGuinness
+- https://bountysounds.com/managers/coran-capshaw — Coran Capshaw
+- https://bountysounds.com/managers/jonathan-dickins — Jonathan Dickins
+- https://bountysounds.com/managers/sarah-stennett — Sarah Stennett
+- https://bountysounds.com/managers/rukasin-and-goodman — Danny Rukasin & Brandon Goodman
+- https://bountysounds.com/managers/anthony-saleh — Anthony Saleh
+- https://bountysounds.com/managers/chris-zarou — Chris Zarou
+- https://bountysounds.com/managers/max-flohr — Max Flohr
+
+### Answers
+- https://bountysounds.com/music-management/what-does-a-music-manager-do — What does a music manager actually do?
+- https://bountysounds.com/music-management/how-much-does-a-music-manager-take — How much does a music manager take?
+- https://bountysounds.com/music-management/do-i-need-a-music-manager — Do I need a music manager?
+- https://bountysounds.com/music-management/how-to-get-a-music-manager — How do you get a music manager?
+- https://bountysounds.com/music-management/music-manager-vs-agent-vs-label — What's the difference between a manager, a booking agent, a label and a publisher?
+- https://bountysounds.com/music-management/music-management-contract-red-flags — What are the red flags in a music management contract?
+- https://bountysounds.com/music-management/what-makes-a-good-music-manager — What makes a good music manager?
+- https://bountysounds.com/music-management/how-to-become-a-music-manager — How do you become a music manager?
+- https://bountysounds.com/music-management/how-managers-promote-music-on-tiktok — How do music managers promote songs on TikTok?
