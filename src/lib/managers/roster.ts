@@ -396,55 +396,6 @@ export const MANAGERS: Manager[] = [
     },
   },
   {
-    slug: "coran-capshaw",
-    name: "Coran Capshaw",
-    sortName: "Capshaw, Coran",
-    era: "1991–present",
-    company: "Red Light Management",
-    known: ["Dave Matthews Band", "Phish", "Chris Stapleton", "The Strokes"],
-    claim:
-      "Coran Capshaw built Dave Matthews Band from a weekly club gig at his own venue into a stadium act, then turned the method into Red Light Management — now the largest independent management company in the world — while founding the direct-to-fan business Musictoday and backing Bonnaroo.",
-    body: [
-      "In 1991 Capshaw owned Trax, a club in Charlottesville, Virginia, and gave a local band a weekly slot. He started managing them out of the venue. The strategy he used is now so standard it is hard to see as a strategy: let the audience tape and trade the shows, build the mailing list, sell direct, treat the live room as the product and the record as marketing. At the time, labels considered tape-trading theft.",
-      "Musictoday made the direct-to-fan part into infrastructure — merchandise, ticketing and fan clubs run for other artists, years before 'D2C' was a phrase anyone used. He was also the primary early investor in Bonnaroo, which is to say he was betting on the American festival market before there was one. He later reacquired Musictoday from Live Nation.",
-      "Red Light grew from that single client into the largest independent management firm in the business, with Phish, Chris Stapleton and The Strokes among many others, alongside stakes in ATO Records and other ventures. Capshaw is a fixture of the industry power lists and almost entirely unknown outside them.",
-    ],
-    lesson: {
-      title: "The mailing list is the asset",
-      text: "Capshaw's whole method is that the direct relationship with the audience outlasts every label deal, platform and format change. Everything else — merch, ticketing, festivals, the record — is monetisation of a list he made sure the artist owned.",
-    },
-    trick: {
-      title: "End every campaign with more owned contacts",
-      text: "Set one number for every release, show, or collaboration: how many email addresses or phone numbers you own that you didn't before. Capshaw let fans tape the shows and built the list, then sold direct for thirty years across four format changes. If a campaign moved streams but added nobody to a list you control, you rented an audience. Platforms change their minds; a list doesn't.",
-    },
-    quote: {
-      text: "Artist management, I'll put down, is the toughest part of our industry. It's a personal relationship with the artists. You've got to support their vision, help add to their vision, put your own vision forward.",
-      speaker: "Coran Capshaw",
-      source: {
-        label: "Coran Capshaw, Founder, Red Light Management — Pollstar",
-        url: "https://news.pollstar.com/2019/05/16/coran-capshaw-founder-red-light-management/",
-      },
-    },
-    sources: [
-      { label: "Coran Capshaw — Wikipedia", url: "https://en.wikipedia.org/wiki/Coran_Capshaw" },
-      { label: "Red Light Management — About", url: "https://redlightmanagement.com/about/" },
-      {
-        label: "Coran Capshaw, Founder, Red Light Management — Pollstar",
-        url: "https://news.pollstar.com/2019/05/16/coran-capshaw-founder-red-light-management/",
-      },
-    ],
-    sameAs: [
-      "https://en.wikipedia.org/wiki/Coran_Capshaw",
-      "https://www.wikidata.org/wiki/Q5169638",
-      "https://redlightmanagement.com",
-    ],
-    seo: {
-      title: "Coran Capshaw: Dave Matthews Band to Red Light Management",
-      description:
-        "Coran Capshaw built DMB from his own club into a stadium act, founded Red Light Management and direct-to-fan pioneer Musictoday, and bankrolled early Bonnaroo.",
-    },
-  },
-  {
     slug: "jonathan-dickins",
     name: "Jonathan Dickins",
     sortName: "Dickins, Jonathan",

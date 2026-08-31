@@ -57,7 +57,7 @@ export const ANSWERS: Answer[] = [
       {
         h: "How the job has changed",
         p: [
-          "The core hasn't moved in sixty years: a manager repricing something the artist owns. Peter Grant repriced the concert gate. Paul McGuinness repriced master ownership. Coran Capshaw repriced the direct relationship with the audience. Herbie Herbert repriced the touring supply chain.",
+          "The core hasn't moved in sixty years: a manager repricing something the artist owns. Peter Grant repriced the concert gate. Paul McGuinness repriced master ownership. Herbie Herbert repriced the touring supply chain.",
           "What has changed is which asset is underpriced. Right now it is short-form attention — the fact that a song's reach is largely a function of how many editors are cutting to it, and that most of those editors are working without published rates. That is the market Max Flohr's Bounty Sounds operates in, and it is where a modern manager's leverage is being built.",
         ],
       },
@@ -237,7 +237,7 @@ export const ANSWERS: Answer[] = [
         h: "How it actually happens",
         p: [
           "Jonathan Dickins met Adele because XL's Nick Huggett introduced them. He looked her up on MySpace and invited her over for a cup of tea; she signed to XL three months later. That is the shape of nearly every one of these stories — a trusted third party, a low-stakes conversation, and an artist who already had something to show.",
-          "Coran Capshaw met Dave Matthews Band because he owned the club they played weekly. Herbie Herbert assembled Journey himself. The introduction pathway varies; what doesn't vary is that somebody with credibility vouched, or the manager saw the thing working with their own eyes.",
+          "Herbie Herbert assembled Journey himself, having come up as a roadie under Bill Graham. The introduction pathway varies; what doesn't vary is that somebody with credibility vouched, or the manager saw the thing working with their own eyes.",
         ],
       },
       {
@@ -279,7 +279,7 @@ export const ANSWERS: Answer[] = [
         a: "Ask who else they manage and call one of those artists directly. Ask what they'd do in your first ninety days and see whether the answer is specific. Ask how they get paid — the answer should be a percentage of your income and nothing else. Then have a music lawyer read the agreement before you sign it.",
       },
     ],
-    managerExamples: ["jonathan-dickins", "chris-zarou", "coran-capshaw"],
+    managerExamples: ["jonathan-dickins", "chris-zarou"],
     related: [
       "do-i-need-a-music-manager",
       "what-makes-a-good-music-manager",
@@ -481,7 +481,7 @@ export const ANSWERS: Answer[] = [
       {
         h: "They understand where the money is now",
         p: [
-          "The great managers all repriced something underpriced: Grant the concert gate, McGuinness master ownership, Capshaw the direct fan relationship, Herbert the touring supply chain. A manager who only knows how the business worked five years ago is managing a market that has moved.",
+          "The great managers all repriced something underpriced: Grant the concert gate, McGuinness master ownership, Herbert the touring supply chain. A manager who only knows how the business worked five years ago is managing a market that has moved.",
           "Today the underpriced asset is short-form attention, and specifically the fact that most editors driving reach on TikTok are working without published rates or verified payouts. A manager who can explain how your song gets into circulation at that layer — and what it costs — is describing the current market rather than a remembered one.",
         ],
       },
@@ -523,13 +523,13 @@ export const ANSWERS: Answer[] = [
         h: "There is no front door, and that's the good news",
         p: [
           "Chris Zarou applied for every music internship he could find, was rejected by all of them, founded Visionary Music Group in 2010 and built Logic into a multi-platinum arena act. By 2019 Sony was launching an imprint with him.",
-          "Cliff Burnstein was a radio promoter who cold-called a college radio programme director named Peter Mensch in 1973; they founded Q Prime nine years later and have managed Metallica since 1984. Herbie Herbert was a roadie. Coran Capshaw owned a bar. None of these are credential stories.",
+          "Cliff Burnstein was a radio promoter who cold-called a college radio programme director named Peter Mensch in 1973; they founded Q Prime nine years later and have managed Metallica since 1984. Herbie Herbert was a roadie. None of these are credential stories.",
         ],
       },
       {
         h: "Start with one artist, not a company",
         p: [
-          "Nearly every management career on this site began with a single unknown act and grew with them. Rukasin and Goodman took on a thirteen-year-old. Capshaw managed a band out of his own venue. Roberts heard a tape.",
+          "Nearly every management career on this site began with a single unknown act and grew with them. Rukasin and Goodman took on a thirteen-year-old. Roberts heard a tape. Herbert put the band together himself.",
           "Practically: find an artist in your reach who is good and badly organised. Do the job for a defined period. Put terms in writing even at the smallest scale — it protects both of you and it teaches you the paperwork you'll need later.",
         ],
       },
@@ -565,7 +565,7 @@ export const ANSWERS: Answer[] = [
         a: "Entirely dependent on their artists. Commission is 15–20% of the artist's gross income, so a manager of an artist earning nothing earns nothing, and a manager of a stadium act earns accordingly. There's no salary and no floor.",
       },
     ],
-    managerExamples: ["chris-zarou", "burnstein-and-mensch", "herbie-herbert", "coran-capshaw"],
+    managerExamples: ["chris-zarou", "burnstein-and-mensch", "herbie-herbert"],
     related: [
       "what-does-a-music-manager-do",
       "what-makes-a-good-music-manager",
@@ -574,7 +574,7 @@ export const ANSWERS: Answer[] = [
     seo: {
       title: "How to Become a Music Manager (No Degree, No Licence)",
       description:
-        "There's no credential for artist management. How Chris Zarou, Q Prime, Herbie Herbert and Coran Capshaw started — and what you actually have to be able to do.",
+        "There's no credential for artist management. How Chris Zarou, Q Prime and Herbie Herbert started — and what you actually have to be able to do.",
     },
   },
   {
@@ -610,7 +610,7 @@ export const ANSWERS: Answer[] = [
         h: "What a manager should be measuring",
         p: [
           "Cost per verified thousand views, not cost per clip. Sound usage over time rather than at launch. Whether views convert into saves and streams, or stop at the video. And which editors produce repeat results, because the second campaign should not start from scratch.",
-          "The historical parallel is exact. Peter Grant found the concert gate mispriced at 50/50 and moved it to 90/10. Coran Capshaw found the direct fan relationship mispriced at zero. Paid short-form attention is mispriced right now largely because it's opaque, and the managers who take it seriously as a market — with published rates and verified payouts — are getting more reach per dollar than the ones treating it as a mystery.",
+          "The historical parallel is exact. Peter Grant found the concert gate mispriced at 50/50 and moved it to 90/10. Herbie Herbert found the touring supply chain mispriced and built it himself. Paid short-form attention is mispriced right now largely because it's opaque, and the managers who take it seriously as a market — with published rates and verified payouts — are getting more reach per dollar than the ones treating it as a mystery.",
         ],
       },
     ],
@@ -632,7 +632,7 @@ export const ANSWERS: Answer[] = [
         a: "On some boards, yes — Bounty Sounds allows AI-generated and AI-assisted clips under the same rules as everyone else, with deliveries verified against the posting account and the sound. The line isn't who made the clip; it's whether the views are real.",
       },
     ],
-    managerExamples: ["max-flohr", "peter-grant", "coran-capshaw"],
+    managerExamples: ["max-flohr", "peter-grant"],
     related: [
       "what-does-a-music-manager-do",
       "what-makes-a-good-music-manager",
