@@ -14,7 +14,13 @@ import {
   QuoteCard,
   SourceList,
 } from "@/components/managers/Prose";
-import { MANAGERS_COLLECTION_ID, breadcrumbs, canonical, headFor } from "@/lib/managers/seo";
+import {
+  MANAGERS_COLLECTION_ID,
+  REVIEWED,
+  breadcrumbs,
+  canonical,
+  headFor,
+} from "@/lib/managers/seo";
 
 export const Route = createFileRoute("/managers/$slug")({
   loader: ({ params }) => {
@@ -40,6 +46,8 @@ export const Route = createFileRoute("/managers/$slug")({
           "@context": "https://schema.org",
           "@type": "ProfilePage",
           url: canonical(path),
+          dateModified: REVIEWED,
+          inLanguage: "en",
           isPartOf: { "@id": MANAGERS_COLLECTION_ID },
           mainEntity: {
             "@type": "Person",

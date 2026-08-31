@@ -40,7 +40,10 @@ export function Paragraphs({ items }: { items: string[] }) {
 /** The answer that answer engines are meant to lift. Kept visually first. */
 export function KeyAnswer({ children }: { children: ReactNode }) {
   return (
-    <div className="border-l-2 border-[var(--color-bs-ink)] bg-black/[0.03] px-5 py-4">
+    <div
+      data-key-answer
+      className="border-l-2 border-[var(--color-bs-ink)] bg-black/[0.03] px-5 py-4"
+    >
       <p className="text-[19px] leading-relaxed text-[var(--color-bs-ink)]">{children}</p>
     </div>
   );

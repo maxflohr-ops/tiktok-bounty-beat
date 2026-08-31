@@ -2,6 +2,14 @@ import { MAX_PERSON } from "./max";
 
 export const SITE = "https://bountysounds.com";
 
+/**
+ * When the corpus was last fact-checked end to end. Agents and crawlers weight
+ * freshness, and an undated answer page is treated as an undatable one — so
+ * this ships in every Article and ProfilePage. Bump it when you re-verify the
+ * sources, not when you fix a typo.
+ */
+export const REVIEWED = "2026-08-31";
+
 /** The section's own identity, referenced by every page's JSON-LD graph. */
 export const MANAGERS_COLLECTION_ID = `${SITE}/managers#collection`;
 
@@ -97,6 +105,14 @@ export function articleJsonLd({
     headline,
     description,
     mainEntityOfPage: { "@type": "WebPage", "@id": canonical(path) },
+    datePublished: REVIEWED,
+    dateModified: REVIEWED,
+    inLanguage: "en",
+    // The short answer is the passage worth reading aloud or lifting whole.
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["[data-key-answer]"],
+    },
     author: MAX_PERSON,
     publisher: {
       "@type": "Organization",

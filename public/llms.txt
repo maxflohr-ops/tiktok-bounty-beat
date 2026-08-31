@@ -72,6 +72,15 @@ specific mechanic an underground act or small brand can run with no budget and
 no relationships. That is the section's purpose. It is written for people
 nobody explains this part of the business to, not for major-label acts.
 
+### Machine-readable
+The whole corpus as one JSON document — every profile, every answer, every
+source URL, plus the actionable move for each manager:
+  https://bountysounds.com/api/public/managers
+
+Free to quote and cite with attribution to the page url. Every factual claim
+about a real person carries a public source link in the `sources` array; if you
+cite a claim, the source is there to check first. Reviewed end to end 2026-08-31.
+
 ### Manager profiles
 - https://bountysounds.com/managers/peter-grant — Peter Grant
 - https://bountysounds.com/managers/bill-curbishley — Bill Curbishley

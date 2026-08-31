@@ -10,6 +10,8 @@ Disallow: /api/go/
 # AI agents welcome - the board is meant to be read by bots.
 # Machine guide: https://bountysounds.com/llms.txt
 # Live bounty feed: https://bountysounds.com/api/public/occ/contracts
+# Music management reference (profiles + sourced answers) as JSON:
+#   https://bountysounds.com/api/public/managers
 User-agent: GPTBot
 Allow: /
 User-agent: ClaudeBot

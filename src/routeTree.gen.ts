@@ -36,6 +36,7 @@ import { Route as ManagersSlugRouteImport } from './routes/managers/$slug'
 import { Route as MusicManagementIndexRouteImport } from './routes/music-management/index'
 import { Route as MusicManagementSlugRouteImport } from './routes/music-management/$slug'
 import { Route as ApiGoToolRouteImport } from './routes/api/go.$tool'
+import { Route as ApiPublicManagersRouteImport } from './routes/api/public/managers'
 import { Route as ApiPublicOccContractsRouteImport } from './routes/api/public/occ/contracts'
 import { Route as ApiPublicOccListingsRouteImport } from './routes/api/public/occ/listings'
 import { Route as ApiPublicWebhooksStripeRouteImport } from './routes/api/public/webhooks/stripe'
@@ -175,6 +176,11 @@ const ApiGoToolRoute = ApiGoToolRouteImport.update({
   path: '/api/go/$tool',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicManagersRoute = ApiPublicManagersRouteImport.update({
+  id: '/api/public/managers',
+  path: '/api/public/managers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOccContractsRoute = ApiPublicOccContractsRouteImport.update({
   id: '/api/public/occ/contracts',
   path: '/api/public/occ/contracts',
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/managers/': typeof ManagersIndexRoute
   '/music-management/': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/api/public/managers': typeof ApiPublicManagersRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByTo {
   '/managers': typeof ManagersIndexRoute
   '/music-management': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/api/public/managers': typeof ApiPublicManagersRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/managers/': typeof ManagersIndexRoute
   '/music-management/': typeof MusicManagementIndexRoute
   '/api/go/$tool': typeof ApiGoToolRoute
+  '/api/public/managers': typeof ApiPublicManagersRoute
   '/api/public/occ/contracts': typeof ApiPublicOccContractsRoute
   '/api/public/occ/listings': typeof ApiPublicOccListingsRoute
   '/api/public/webhooks/stripe': typeof ApiPublicWebhooksStripeRoute
@@ -324,6 +333,7 @@ export interface FileRouteTypes {
     | '/managers/'
     | '/music-management/'
     | '/api/go/$tool'
+    | '/api/public/managers'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/managers'
     | '/music-management'
     | '/api/go/$tool'
+    | '/api/public/managers'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -389,6 +400,7 @@ export interface FileRouteTypes {
     | '/managers/'
     | '/music-management/'
     | '/api/go/$tool'
+    | '/api/public/managers'
     | '/api/public/occ/contracts'
     | '/api/public/occ/listings'
     | '/api/public/webhooks/stripe'
@@ -418,6 +430,7 @@ export interface RootRouteChildren {
   ManagersIndexRoute: typeof ManagersIndexRoute
   MusicManagementIndexRoute: typeof MusicManagementIndexRoute
   ApiGoToolRoute: typeof ApiGoToolRoute
+  ApiPublicManagersRoute: typeof ApiPublicManagersRoute
   ApiPublicOccContractsRoute: typeof ApiPublicOccContractsRoute
   ApiPublicOccListingsRoute: typeof ApiPublicOccListingsRoute
   ApiPublicWebhooksStripeRoute: typeof ApiPublicWebhooksStripeRoute
@@ -615,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGoToolRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/managers': {
+      id: '/api/public/managers'
+      path: '/api/public/managers'
+      fullPath: '/api/public/managers'
+      preLoaderRoute: typeof ApiPublicManagersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/occ/contracts': {
       id: '/api/public/occ/contracts'
       path: '/api/public/occ/contracts'
@@ -688,6 +708,7 @@ const rootRouteChildren: RootRouteChildren = {
   ManagersIndexRoute: ManagersIndexRoute,
   MusicManagementIndexRoute: MusicManagementIndexRoute,
   ApiGoToolRoute: ApiGoToolRoute,
+  ApiPublicManagersRoute: ApiPublicManagersRoute,
   ApiPublicOccContractsRoute: ApiPublicOccContractsRoute,
   ApiPublicOccListingsRoute: ApiPublicOccListingsRoute,
   ApiPublicWebhooksStripeRoute: ApiPublicWebhooksStripeRoute,

@@ -33,6 +33,12 @@ describe("managers section is discoverable", () => {
     expect(sitemap).toContain("https://bountysounds.com/music-management<");
   });
 
+  it("points agents at the JSON corpus from llms.txt and robots.txt", () => {
+    const robots = readFileSync("public/robots.txt", "utf8");
+    expect(llms).toContain("https://bountysounds.com/api/public/managers");
+    expect(robots).toContain("https://bountysounds.com/api/public/managers");
+  });
+
   it("lists every page in llms.txt for AI crawlers", () => {
     for (const m of ALL_MANAGERS) {
       expect(llms, `missing llms.txt entry for ${m.slug}`).toContain(`/managers/${m.slug}`);
@@ -139,6 +145,20 @@ describe("content invariants", () => {
     for (const r of MAX_CREDENTIALS.roster) {
       expect(["current", "past"], `${r.name} has no status`).toContain(r.status);
       expect(r.note.trim().length, `${r.name} has no note`).toBeGreaterThan(0);
+    }
+  });
+
+  // A sameAs pointing at a company's Wikidata entity from a person's profile
+  // tells an agent the wrong thing, which is worse than telling it nothing.
+  it("only claims person identities on person sameAs", () => {
+    const COMPANY_QIDS = ["Q42291466", "Q55315890"];
+    for (const m of ALL_MANAGERS) {
+      for (const u of m.sameAs ?? []) {
+        expect(u, `${m.slug} sameAs is not a URL`).toMatch(/^https:\/\//);
+        for (const q of COMPANY_QIDS) {
+          expect(u, `${m.slug} links a company entity as a person`).not.toContain(q);
+        }
+      }
     }
   });
 

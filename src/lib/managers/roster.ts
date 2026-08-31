@@ -119,7 +119,10 @@ export const MANAGERS: Manager[] = [
         url: "https://www.wbur.org/hereandnow/2018/11/26/led-zeppelin-peter-grant-manager",
       },
     ],
-    sameAs: ["https://en.wikipedia.org/wiki/Peter_Grant_(music_manager)"],
+    sameAs: [
+      "https://en.wikipedia.org/wiki/Peter_Grant_(music_manager)",
+      "https://www.wikidata.org/wiki/Q433123",
+    ],
     seo: {
       title: "Peter Grant: The Manager Who Rewrote Touring Economics",
       description:
@@ -168,7 +171,11 @@ export const MANAGERS: Manager[] = [
       },
       { label: "Trinifold Management", url: "https://www.trinifold.co.uk/about-us" },
     ],
-    sameAs: ["https://en.wikipedia.org/wiki/Bill_Curbishley"],
+    sameAs: [
+      "https://en.wikipedia.org/wiki/Bill_Curbishley",
+      "https://www.wikidata.org/wiki/Q2490682",
+      "https://www.trinifold.co.uk",
+    ],
     seo: {
       title: "Bill Curbishley: Fifty Years Managing The Who",
       description:
@@ -217,7 +224,10 @@ export const MANAGERS: Manager[] = [
         url: "https://www.rollingstone.com/music/music-news/elliot-roberts-neil-young-manager-dead-851390/",
       },
     ],
-    sameAs: ["https://en.wikipedia.org/wiki/Elliot_Roberts"],
+    sameAs: [
+      "https://en.wikipedia.org/wiki/Elliot_Roberts",
+      "https://www.wikidata.org/wiki/Q5365559",
+    ],
     seo: {
       title: "Elliot Roberts: Fifty Years With Neil Young",
       description:
@@ -266,7 +276,10 @@ export const MANAGERS: Manager[] = [
         url: "https://news.pollstar.com/2021/10/27/herbie-herbert-original-journey-manager-and-bill-graham-protege-dies-at-73/",
       },
     ],
-    sameAs: ["https://en.wikipedia.org/wiki/Herbie_Herbert"],
+    sameAs: [
+      "https://en.wikipedia.org/wiki/Herbie_Herbert",
+      "https://www.wikidata.org/wiki/Q7965128",
+    ],
     seo: {
       title: "Herbie Herbert: The Manager Who Built the Stadium Show",
       description:
@@ -312,7 +325,7 @@ export const MANAGERS: Manager[] = [
       },
       { label: "Q Prime Artist Management", url: "https://qprime.com/" },
     ],
-    sameAs: ["https://en.wikipedia.org/wiki/Q_Prime"],
+    sameAs: ["https://en.wikipedia.org/wiki/Q_Prime", "https://qprime.com"],
     seo: {
       title: "Q Prime: Cliff Burnstein & Peter Mensch, Metallica's Managers",
       description:
@@ -372,7 +385,10 @@ export const MANAGERS: Manager[] = [
         url: "https://www.irishtimes.com/life-and-style/people/u2-and-paul-mcguinness-the-end-of-the-affair-1.1596313",
       },
     ],
-    sameAs: ["https://en.wikipedia.org/wiki/Paul_McGuinness"],
+    sameAs: [
+      "https://en.wikipedia.org/wiki/Paul_McGuinness",
+      "https://www.wikidata.org/wiki/Q1317221",
+    ],
     seo: {
       title: "Paul McGuinness: The Manager Who Got U2 Their Masters",
       description:
@@ -417,7 +433,11 @@ export const MANAGERS: Manager[] = [
         url: "https://news.pollstar.com/2019/05/16/coran-capshaw-founder-red-light-management/",
       },
     ],
-    sameAs: ["https://en.wikipedia.org/wiki/Coran_Capshaw"],
+    sameAs: [
+      "https://en.wikipedia.org/wiki/Coran_Capshaw",
+      "https://www.wikidata.org/wiki/Q5169638",
+      "https://redlightmanagement.com",
+    ],
     seo: {
       title: "Coran Capshaw: Dave Matthews Band to Red Light Management",
       description:
