@@ -9,11 +9,17 @@ export const getMe = createServerFn({ method: "GET" })
     const [{ data: profile }, { data: roles }, { data: tiktokAccounts }] = await Promise.all([
       context.supabase
         .from("profiles")
-        .select("id,display_name,tiktok_handle,avatar_url,points,wallet_address,payout_preference,signup_logged_at")
+        .select(
+          "id,display_name,tiktok_handle,avatar_url,points,wallet_address,payout_preference,signup_logged_at",
+        )
         .eq("id", context.userId)
         .maybeSingle(),
       context.supabase.from("user_roles").select("role").eq("user_id", context.userId),
-      context.supabase.from("tiktok_accounts").select("handle,status").eq("user_id", context.userId).order("created_at"),
+      context.supabase
+        .from("tiktok_accounts")
+        .select("handle,status")
+        .eq("user_id", context.userId)
+        .order("created_at"),
     ]);
     const roleSet = new Set((roles ?? []).map((r) => r.role));
 
@@ -81,7 +87,9 @@ export const updateMyProfile = createServerFn({ method: "POST" })
         display_name: data.display_name,
         tiktok_handle: data.tiktok_handle,
         ...(data.wallet_address !== undefined ? { wallet_address: data.wallet_address } : {}),
-        ...(data.payout_preference !== undefined ? { payout_preference: data.payout_preference } : {}),
+        ...(data.payout_preference !== undefined
+          ? { payout_preference: data.payout_preference }
+          : {}),
       })
       .eq("id", context.userId);
     if (error) throw new Error(error.message);
@@ -98,12 +106,9 @@ export const leaderboard = createServerFn({ method: "GET" }).handler(async () =>
   return data ?? [];
 });
 
-
 export const addTiktokAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
-    z.object({ handle: z.string().trim().max(60) }).parse(d),
-  )
+  .inputValidator((d: unknown) => z.object({ handle: z.string().trim().max(60) }).parse(d))
   .handler(async ({ data, context }) => {
     const { tiktokHandleSchema } = await import("@/lib/claim-validation");
     const handle = tiktokHandleSchema.parse(data.handle);
@@ -130,7 +135,6 @@ export const removeTiktokAccount = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-
 // Public leaderboard: who got paid in the last 7 days, from real payout
 // records (paid_cash_cents), not points.
 export const weeklyPayouts = createServerFn({ method: "GET" }).handler(async () => {
@@ -142,7 +146,8 @@ export const weeklyPayouts = createServerFn({ method: "GET" }).handler(async () 
     .gte("paid_at", since)
     .gt("paid_cash_cents", 0);
   const byEditor = new Map<string, number>();
-  for (const s of subs ?? []) byEditor.set(s.editor_id, (byEditor.get(s.editor_id) ?? 0) + (s.paid_cash_cents ?? 0));
+  for (const s of subs ?? [])
+    byEditor.set(s.editor_id, (byEditor.get(s.editor_id) ?? 0) + (s.paid_cash_cents ?? 0));
   if (byEditor.size === 0) return [];
   const { data: profs } = await supabaseAdmin
     .from("profiles")
@@ -188,19 +193,26 @@ export const recordAttribution = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-
 // ---- Tax info (W-9 style), required past the lifetime payout threshold ----
 // All access via service role: the client can submit but never read a TIN back.
 
 const taxInput = z.object({
   legal_name: z.string().trim().min(2).max(160),
   address_line1: z.string().trim().min(2).max(200),
-  address_line2: z.string().trim().max(200).optional().or(z.literal("").transform(() => undefined)),
+  address_line2: z
+    .string()
+    .trim()
+    .max(200)
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
   city: z.string().trim().min(1).max(100),
   region: z.string().trim().min(1).max(100),
   postal_code: z.string().trim().min(3).max(20),
   country: z.string().trim().length(2).default("US"),
-  tin: z.string().trim().regex(/^\d{9}$/, "Enter 9 digits, no dashes (SSN or EIN)."),
+  tin: z
+    .string()
+    .trim()
+    .regex(/^\d{9}$/, "Enter 9 digits, no dashes (SSN or EIN)."),
   tin_type: z.enum(["ssn", "ein"]).default("ssn"),
 });
 
@@ -211,7 +223,10 @@ export const submitTaxInfo = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("tax_profiles")
-      .upsert({ user_id: context.userId, ...data, address_line2: data.address_line2 ?? null }, { onConflict: "user_id" });
+      .upsert(
+        { user_id: context.userId, ...data, address_line2: data.address_line2 ?? null },
+        { onConflict: "user_id" },
+      );
     if (error) throw new Error(error.message);
     notifyAsync({
       event: "tax.submitted",
@@ -229,8 +244,16 @@ export const getTaxStatus = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { TAX_THRESHOLD_CENTS } = await import("@/lib/submissions.functions");
     const [{ data: paidRows }, { data: tax }] = await Promise.all([
-      supabaseAdmin.from("submissions").select("paid_cash_cents").eq("editor_id", context.userId).gt("paid_cash_cents", 0),
-      supabaseAdmin.from("tax_profiles").select("legal_name,updated_at").eq("user_id", context.userId).maybeSingle(),
+      supabaseAdmin
+        .from("submissions")
+        .select("paid_cash_cents")
+        .eq("editor_id", context.userId)
+        .gt("paid_cash_cents", 0),
+      supabaseAdmin
+        .from("tax_profiles")
+        .select("legal_name,updated_at")
+        .eq("user_id", context.userId)
+        .maybeSingle(),
     ]);
     const lifetime_cents = (paidRows ?? []).reduce((t, r) => t + (r.paid_cash_cents ?? 0), 0);
     return {

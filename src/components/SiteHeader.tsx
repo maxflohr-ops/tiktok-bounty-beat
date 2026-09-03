@@ -32,7 +32,9 @@ export function SiteHeader() {
 
   const navLink =
     "px-2.5 py-2 font-body text-sm font-medium text-[var(--color-bs-ink-mute)] transition hover:text-[var(--color-bs-ink)]";
-  const navActive = { className: "px-2.5 py-2 font-body text-sm font-medium text-[var(--color-bs-ink)]" };
+  const navActive = {
+    className: "px-2.5 py-2 font-body text-sm font-medium text-[var(--color-bs-ink)]",
+  };
   const crimsonPill =
     "rounded-full bg-[var(--color-bs-crimson)] px-5 py-2.5 font-body text-[13.5px] font-semibold leading-none text-white transition hover:bg-[var(--color-bs-crimson-deep)]";
   const drawerLink =
@@ -73,7 +75,11 @@ export function SiteHeader() {
     >
       <div className="container-board flex min-h-[64px] items-center justify-between gap-3 md:grid md:grid-cols-[1fr_auto_1fr]">
         {/* Left: the seal, then the name */}
-        <Link to="/" className="flex min-h-[44px] items-center gap-2.5 justify-self-start" onClick={() => setDrawerOpen(false)}>
+        <Link
+          to="/"
+          className="flex min-h-[44px] items-center gap-2.5 justify-self-start"
+          onClick={() => setDrawerOpen(false)}
+        >
           <img
             src="/art/great-seal.png"
             alt=""
@@ -88,16 +94,24 @@ export function SiteHeader() {
 
         {/* Middle: three doors (desktop only) */}
         <nav className="hidden items-center gap-3 justify-self-center md:flex">
-          <Link to="/board" className={navLink} activeProps={navActive}>Board</Link>
-          <Link to="/how-it-works" className={navLink} activeProps={navActive}>How it works</Link>
-          <Link to="/payouts" className={navLink} activeProps={navActive}>Payouts</Link>
+          <Link to="/board" className={navLink} activeProps={navActive}>
+            Board
+          </Link>
+          <Link to="/how-it-works" className={navLink} activeProps={navActive}>
+            How it works
+          </Link>
+          <Link to="/payouts" className={navLink} activeProps={navActive}>
+            Payouts
+          </Link>
           <HeaderLedger />
         </nav>
 
         {/* Right: quiet editor door + the one filled button */}
         <div className="flex items-center gap-2 justify-self-end">
           <div className="hidden items-center gap-2 md:flex">
-            <Link to="/for-editors" className={navLink} activeProps={navActive}>For editors</Link>
+            <Link to="/for-editors" className={navLink} activeProps={navActive}>
+              For editors
+            </Link>
             {authedLinks}
           </div>
           <Link to="/list-sound" className={crimsonPill} onClick={() => setDrawerOpen(false)}>
@@ -116,7 +130,10 @@ export function SiteHeader() {
 
       {/* Mobile drawer: every link except the button */}
       {drawerOpen ? (
-        <nav className="border-t border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] pb-2 md:hidden" aria-label="Site menu">
+        <nav
+          className="border-t border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] pb-2 md:hidden"
+          aria-label="Site menu"
+        >
           {[
             { to: "/board", label: "Board" },
             { to: "/how-it-works", label: "How it works" },
@@ -131,10 +148,14 @@ export function SiteHeader() {
           {loading ? null : user ? (
             <>
               <Link to="/dashboard" className={drawerLink} onClick={() => setDrawerOpen(false)}>
-                Dashboard{typeof me?.profile?.points === "number" ? ` · ${me.profile.points} pts` : ""}
+                Dashboard
+                {typeof me?.profile?.points === "number" ? ` · ${me.profile.points} pts` : ""}
               </Link>
               <button
-                onClick={() => { setDrawerOpen(false); supabase.auth.signOut(); }}
+                onClick={() => {
+                  setDrawerOpen(false);
+                  supabase.auth.signOut();
+                }}
                 className={`${drawerLink} w-full text-left`}
               >
                 Sign out

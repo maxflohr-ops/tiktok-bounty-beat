@@ -10,7 +10,13 @@ import { NotifyForm } from "@/components/NotifyForm";
 import { useSession } from "@/lib/session";
 import { Reveal } from "@/components/Reveal";
 import { BsBadge, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
-import { GuillocheRosette, InkCardinal, InkDogwood, InkSeal, MicroRule } from "@/components/ArtMarks";
+import {
+  GuillocheRosette,
+  InkCardinal,
+  InkDogwood,
+  InkSeal,
+  MicroRule,
+} from "@/components/ArtMarks";
 
 const HOME_TITLE = "Bounty Sounds — Clip it. Claim it. Cash it.";
 const HOME_DESC =
@@ -98,9 +104,15 @@ function LandingPage() {
                 className="bs-hero-mark pointer-events-none absolute inset-x-6 bottom-2 h-4 bg-[var(--color-bs-accent-soft)] md:bottom-4 md:h-6"
               />
               <BsDisplay as="h1" size="xl" className="relative">
-                <span className="bs-hero-in block" style={{ "--i": 1 } as React.CSSProperties}>Clip it.</span>
-                <span className="bs-hero-in block" style={{ "--i": 2 } as React.CSSProperties}>Claim it.</span>
-                <span className="bs-hero-in block" style={{ "--i": 3 } as React.CSSProperties}>Cash it.</span>
+                <span className="bs-hero-in block" style={{ "--i": 1 } as React.CSSProperties}>
+                  Clip it.
+                </span>
+                <span className="bs-hero-in block" style={{ "--i": 2 } as React.CSSProperties}>
+                  Claim it.
+                </span>
+                <span className="bs-hero-in block" style={{ "--i": 3 } as React.CSSProperties}>
+                  Cash it.
+                </span>
               </BsDisplay>
             </div>
 
@@ -118,7 +130,10 @@ function LandingPage() {
               The purse is posted before you cut. Verified views pay out.
             </p>
 
-            <div className="bs-hero-in mt-8 flex justify-center" style={{ "--i": 7 } as React.CSSProperties}>
+            <div
+              className="bs-hero-in mt-8 flex justify-center"
+              style={{ "--i": 7 } as React.CSSProperties}
+            >
               <Link
                 to="/board"
                 className="inline-flex items-center justify-center rounded-full bg-[var(--color-bs-ink)] px-7 py-3 text-sm font-semibold uppercase tracking-wide text-[var(--color-bs-paper)] shadow-[0_4px_0_rgba(13,13,13,0.3)] ring-2 ring-[var(--color-bs-ink)] transition hover:-translate-y-0.5"
@@ -143,7 +158,10 @@ function LandingPage() {
               ) : null}
               <div className="mb-3 flex items-center justify-between">
                 <BsBadge variant="live">Live · {open.length} open</BsBadge>
-                <Link to="/board" className="bs-mono inline-flex min-h-[44px] items-center underline underline-offset-2 hover:text-[var(--color-bs-ink)] md:min-h-0">
+                <Link
+                  to="/board"
+                  className="bs-mono inline-flex min-h-[44px] items-center underline underline-offset-2 hover:text-[var(--color-bs-ink)] md:min-h-0"
+                >
                   see all →
                 </Link>
               </div>
@@ -164,7 +182,9 @@ function LandingPage() {
                         params={{ id: b.id }}
                         className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 py-3 transition hover:bg-[var(--color-bs-ink)]/[0.04]"
                       >
-                        <BsMono className="text-[var(--color-bs-ink-mute)]">#{pad(b.contract_no)}</BsMono>
+                        <BsMono className="text-[var(--color-bs-ink-mute)]">
+                          #{pad(b.contract_no)}
+                        </BsMono>
                         <span className="min-w-0 truncate [font-family:var(--font-brand)] text-base font-semibold text-[var(--color-bs-ink)] md:text-lg">
                           {b.title}
                         </span>
@@ -211,31 +231,31 @@ function LandingPage() {
 
       <section className="container-board py-14">
         <Reveal from="left">
-        <nav aria-label="Explore Bounty Sounds" className="mx-auto max-w-3xl">
-          <BsEyebrow className="block text-center">Explore</BsEyebrow>
-          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-            {[
-              { to: "/how-it-works", label: "How it works" },
-              { to: "/payouts", label: "Payouts" },
-              { to: "/for-artists", label: "For artists" },
-              { to: "/for-editors", label: "For editors" },
-              { to: "/clipping-campaigns", label: "Clipping campaigns" },
-              { to: "/tiktok-clipper", label: "TikTok clippers" },
-              { to: "/keynotes", label: "Keynotes" },
-              { to: "/board", label: "The Bounty Board" },
-            ].map((l) => (
-              <li key={l.to}>
-                <Link
-                  to={l.to}
-                  className="flex min-h-[44px] items-center justify-between border-b border-[var(--iron)] py-2 text-bone hover:text-bone-soft"
-                >
-                  <span className="font-display text-base">{l.label}</span>
-                  <span className="font-mono text-xs text-bone-soft">→</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <nav aria-label="Explore Bounty Sounds" className="mx-auto max-w-3xl">
+            <BsEyebrow className="block text-center">Explore</BsEyebrow>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              {[
+                { to: "/how-it-works", label: "How it works" },
+                { to: "/payouts", label: "Payouts" },
+                { to: "/for-artists", label: "For artists" },
+                { to: "/for-editors", label: "For editors" },
+                { to: "/clipping-campaigns", label: "Clipping campaigns" },
+                { to: "/tiktok-clipper", label: "TikTok clippers" },
+                { to: "/keynotes", label: "Keynotes" },
+                { to: "/board", label: "The Bounty Board" },
+              ].map((l) => (
+                <li key={l.to}>
+                  <Link
+                    to={l.to}
+                    className="flex min-h-[44px] items-center justify-between border-b border-[var(--iron)] py-2 text-bone hover:text-bone-soft"
+                  >
+                    <span className="font-display text-base">{l.label}</span>
+                    <span className="font-mono text-xs text-bone-soft">→</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </Reveal>
       </section>
 
@@ -247,7 +267,9 @@ function LandingPage() {
           <span>Good to the bearer for verified views, payable from the posted purse.</span>
           <span>
             © {new Date().getFullYear()} Bounty Sounds ·{" "}
-            <Link to="/admin" className="tap-inline opacity-60 hover:opacity-100">admin desk</Link>
+            <Link to="/admin" className="tap-inline opacity-60 hover:opacity-100">
+              admin desk
+            </Link>
           </span>
         </div>
       </footer>

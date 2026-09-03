@@ -40,7 +40,11 @@ async function sendToAirtable(p: EventPayload, ts: string) {
       },
     ],
   };
-  const res = await fetch(url, { method: "POST", headers: gwHeaders(key), body: JSON.stringify(body) });
+  const res = await fetch(url, {
+    method: "POST",
+    headers: gwHeaders(key),
+    body: JSON.stringify(body),
+  });
   if (!res.ok) {
     const t = await res.text();
     console.error(`[notify.airtable] ${res.status}: ${t}`);
@@ -55,7 +59,11 @@ async function sendToSheet(p: EventPayload, ts: string) {
   const body = {
     values: [[ts, p.event, p.actor ?? "", p.reference ?? "", JSON.stringify(p.details ?? {})]],
   };
-  const res = await fetch(url, { method: "POST", headers: gwHeaders(key), body: JSON.stringify(body) });
+  const res = await fetch(url, {
+    method: "POST",
+    headers: gwHeaders(key),
+    body: JSON.stringify(body),
+  });
   if (!res.ok) {
     const t = await res.text();
     console.error(`[notify.sheet] ${res.status}: ${t}`);
@@ -129,7 +137,6 @@ export function sendApprovalEmailAsync(opts: ApprovalEmailOptions): void {
     }
   })();
 }
-
 
 export async function notify(p: EventPayload): Promise<void> {
   const ts = new Date().toISOString();

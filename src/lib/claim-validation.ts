@@ -36,7 +36,11 @@ export type ClaimContractInput = z.infer<typeof claimContractSchema>;
 
 export type ClaimFieldErrors = { tiktok_handle?: string; paypal_email?: string };
 
-export function validateClaimFields(input: { tiktok_handle: string; paypal_email: string; paypalOptional?: boolean }) {
+export function validateClaimFields(input: {
+  tiktok_handle: string;
+  paypal_email: string;
+  paypalOptional?: boolean;
+}) {
   const result = z
     .object({
       tiktok_handle: tiktokHandleSchema,
@@ -45,7 +49,8 @@ export function validateClaimFields(input: { tiktok_handle: string; paypal_email
         : paypalEmailSchema,
     })
     .safeParse(input);
-  if (result.success) return { ok: true as const, data: result.data, errors: {} as ClaimFieldErrors };
+  if (result.success)
+    return { ok: true as const, data: result.data, errors: {} as ClaimFieldErrors };
   const errors: ClaimFieldErrors = {};
   for (const issue of result.error.issues) {
     const key = issue.path[0] as keyof ClaimFieldErrors | undefined;
@@ -64,4 +69,3 @@ export function validatePaypalEmail(value: string): string | undefined {
   const r = paypalEmailSchema.safeParse(value);
   return r.success ? undefined : r.error.issues[0]?.message;
 }
-

@@ -16,10 +16,16 @@ export const Route = createFileRoute("/_authenticated/analytics")({
 });
 
 function money(cents: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: cents % 100 === 0 ? 0 : 2 }).format(cents / 100);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: cents % 100 === 0 ? 0 : 2,
+  }).format(cents / 100);
 }
 function compact(n: number) {
-  return new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+  return new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(
+    n,
+  );
 }
 function ago(iso: string | null) {
   if (!iso) return "—";
@@ -47,10 +53,17 @@ function StatusBars({ data }: { data: Record<string, number> }) {
   return (
     <div className="space-y-2">
       {rows.map(([k, v]) => (
-        <div key={k} className="grid grid-cols-[7rem_1fr_2.5rem] items-center gap-3" title={`${k}: ${v}`}>
+        <div
+          key={k}
+          className="grid grid-cols-[7rem_1fr_2.5rem] items-center gap-3"
+          title={`${k}: ${v}`}
+        >
           <span className="truncate text-xs text-bone-soft">{k.replace(/_/g, " ")}</span>
           <div className="h-4 rounded-[4px] bg-[var(--wall-2)]">
-            <div className="h-4 rounded-[4px] bg-[#1d1d1f]" style={{ width: `${Math.max(2, (v / max) * 100)}%` }} />
+            <div
+              className="h-4 rounded-[4px] bg-[#1d1d1f]"
+              style={{ width: `${Math.max(2, (v / max) * 100)}%` }}
+            />
           </div>
           <span className="text-right text-xs font-semibold tabular-nums">{v}</span>
         </div>
@@ -61,7 +74,15 @@ function StatusBars({ data }: { data: Record<string, number> }) {
 }
 
 // Mini daily bar chart — one measure per chart (small multiples, one axis).
-function DayBars({ days, field, label }: { days: { day: string; claims: number; deliveries: number }[]; field: "claims" | "deliveries"; label: string }) {
+function DayBars({
+  days,
+  field,
+  label,
+}: {
+  days: { day: string; claims: number; deliveries: number }[];
+  field: "claims" | "deliveries";
+  label: string;
+}) {
   const max = Math.max(1, ...days.map((d) => d[field]));
   const total = days.reduce((a, d) => a + d[field], 0);
   return (
@@ -76,7 +97,10 @@ function DayBars({ days, field, label }: { days: { day: string; claims: number; 
             key={d.day}
             title={`${d.day}: ${d[field]}`}
             className="min-w-0 flex-1 rounded-t-[3px] bg-[#1d1d1f]"
-            style={{ height: `${Math.max(d[field] > 0 ? 8 : 2, (d[field] / max) * 100)}%`, opacity: d[field] > 0 ? 1 : 0.12 }}
+            style={{
+              height: `${Math.max(d[field] > 0 ? 8 : 2, (d[field] / max) * 100)}%`,
+              opacity: d[field] > 0 ? 1 : 0.12,
+            }}
           />
         ))}
       </div>
@@ -99,13 +123,20 @@ function AnalyticsPage() {
     refetchInterval: 60_000,
   });
 
-  if (meLoading) return <Frame><p className="text-bone-soft">loading…</p></Frame>;
+  if (meLoading)
+    return (
+      <Frame>
+        <p className="text-bone-soft">loading…</p>
+      </Frame>
+    );
   if (!me?.isStaff)
     return (
       <Frame>
         <h1 className="text-3xl font-semibold">Staff only.</h1>
         <p className="mt-2 text-bone-soft">This page requires an admin account.</p>
-        <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the Bounty Board</Link>
+        <Link to="/board" className="silver-btn mt-6 inline-flex">
+          Back to the Bounty Board
+        </Link>
       </Frame>
     );
 
@@ -122,7 +153,9 @@ function AnalyticsPage() {
           </div>
           <div className="flex items-center gap-3 text-xs text-bone-soft">
             {data ? <span>updated {ago(data.generated_at)}</span> : null}
-            <Link to="/admin" className="ink-btn">Admin desk</Link>
+            <Link to="/admin" className="ink-btn">
+              Admin desk
+            </Link>
           </div>
         </div>
 
@@ -132,18 +165,46 @@ function AnalyticsPage() {
           <>
             {/* Money + reach */}
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Tile label="Paid out" value={money(t.paid_cents)} sub={`${money(t.awarded_cents - t.paid_cents)} approved, unpaid`} />
-              <Tile label="Posted purses" value={money(t.funded_cents)} sub={`${t.bounties} bounties total`} />
-              <Tile label="Verified views" value={compact(t.views_verified)} sub={`${compact(t.views_reported)} self-reported`} />
-              <Tile label="Listing revenue" value={money(t.listing_revenue_cents)} sub={`${t.listings} listings`} />
+              <Tile
+                label="Paid out"
+                value={money(t.paid_cents)}
+                sub={`${money(t.awarded_cents - t.paid_cents)} approved, unpaid`}
+              />
+              <Tile
+                label="Posted purses"
+                value={money(t.funded_cents)}
+                sub={`${t.bounties} bounties total`}
+              />
+              <Tile
+                label="Verified views"
+                value={compact(t.views_verified)}
+                sub={`${compact(t.views_reported)} self-reported`}
+              />
+              <Tile
+                label="Listing revenue"
+                value={money(t.listing_revenue_cents)}
+                sub={`${t.listings} listings`}
+              />
             </div>
 
             {/* People + pipeline */}
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Tile label="People" value={String(t.users)} sub={`${t.editors_active} have claimed a contract`} />
-              <Tile label="Deliveries" value={String(t.submissions)} sub={`${t.auto_check_passed} auto-verified`} />
+              <Tile
+                label="People"
+                value={String(t.users)}
+                sub={`${t.editors_active} have claimed a contract`}
+              />
+              <Tile
+                label="Deliveries"
+                value={String(t.submissions)}
+                sub={`${t.auto_check_passed} auto-verified`}
+              />
               <Tile label="Open disputes" value={String(t.disputes_open)} />
-              <Tile label="Live contracts" value={String(t.bounties_by_status["active"] ?? 0)} sub={`${t.bounties_by_status["fulfilled"] ?? 0} fulfilled`} />
+              <Tile
+                label="Live contracts"
+                value={String(t.bounties_by_status["active"] ?? 0)}
+                sub={`${t.bounties_by_status["fulfilled"] ?? 0} fulfilled`}
+              />
             </div>
 
             {/* Activity small multiples */}
@@ -156,11 +217,15 @@ function AnalyticsPage() {
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl bg-white p-6">
                 <p className="label-cap">Submission pipeline</p>
-                <div className="mt-4"><StatusBars data={t.submissions_by_status} /></div>
+                <div className="mt-4">
+                  <StatusBars data={t.submissions_by_status} />
+                </div>
               </div>
               <div className="rounded-2xl bg-white p-6">
                 <p className="label-cap">Contracts by status</p>
-                <div className="mt-4"><StatusBars data={t.bounties_by_status} /></div>
+                <div className="mt-4">
+                  <StatusBars data={t.bounties_by_status} />
+                </div>
               </div>
             </div>
 
@@ -203,12 +268,18 @@ function AnalyticsPage() {
                       <td className="py-2.5 pr-3 text-right tabular-nums">{p.delivered}</td>
                       <td className="py-2.5 pr-3 text-right tabular-nums">{p.approved}</td>
                       <td className="py-2.5 pr-3 text-right tabular-nums">{compact(p.views)}</td>
-                      <td className="py-2.5 pr-3 text-right tabular-nums">{money(p.earned_cents)}</td>
+                      <td className="py-2.5 pr-3 text-right tabular-nums">
+                        {money(p.earned_cents)}
+                      </td>
                       <td className="py-2.5 text-right tabular-nums">{money(p.paid_cents)}</td>
                     </tr>
                   ))}
                   {data.people.length === 0 ? (
-                    <tr><td colSpan={10} className="py-6 text-center text-bone-soft">No people yet.</td></tr>
+                    <tr>
+                      <td colSpan={10} className="py-6 text-center text-bone-soft">
+                        No people yet.
+                      </td>
+                    </tr>
                   ) : null}
                 </tbody>
               </table>
@@ -225,10 +296,14 @@ function AnalyticsPage() {
                       <span className="text-bone-soft">{r.kind}</span>{" "}
                       <span className="text-bone-soft">· {r.bounty}</span>
                     </span>
-                    <span className="text-xs text-bone-soft">{ago(r.at as string)} · {r.status.replace(/_/g, " ")}</span>
+                    <span className="text-xs text-bone-soft">
+                      {ago(r.at as string)} · {r.status.replace(/_/g, " ")}
+                    </span>
                   </li>
                 ))}
-                {data.recent.length === 0 ? <li className="py-4 text-bone-soft">Quiet so far.</li> : null}
+                {data.recent.length === 0 ? (
+                  <li className="py-4 text-bone-soft">Quiet so far.</li>
+                ) : null}
               </ul>
             </div>
           </>

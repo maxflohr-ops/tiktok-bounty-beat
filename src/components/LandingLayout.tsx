@@ -37,9 +37,7 @@ export function LandingLayout({
           <BsDisplay as="h1" size="lg" className="mt-3">
             {h1}
           </BsDisplay>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--color-bs-ink-soft)]">
-            {intro}
-          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[var(--color-bs-ink-soft)]">{intro}</p>
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to={primaryHref}
@@ -77,26 +75,18 @@ export function LandingLayout({
   );
 }
 
-export function LandingSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
+export function LandingSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <BsDisplay as="h2" size="sm">{title}</BsDisplay>
+      <BsDisplay as="h2" size="sm">
+        {title}
+      </BsDisplay>
       <div className="mt-4 space-y-4 text-[var(--color-bs-ink-soft)]">{children}</div>
     </section>
   );
 }
 
-export function FaqList({
-  items,
-}: {
-  items: { q: string; a: string }[];
-}) {
+export function FaqList({ items }: { items: { q: string; a: string }[] }) {
   return (
     <dl className="space-y-4">
       {items.map((it) => (

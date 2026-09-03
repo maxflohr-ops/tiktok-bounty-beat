@@ -12,7 +12,9 @@ export const Route = createFileRoute("/api/public/webhooks/stripe")({
         const sig = process.env.STRIPE_WEBHOOK_SECRET;
 
         if (!sig) {
-          console.warn("[stripe webhook] STRIPE_WEBHOOK_SECRET is not configured; skipping event processing.");
+          console.warn(
+            "[stripe webhook] STRIPE_WEBHOOK_SECRET is not configured; skipping event processing.",
+          );
           return new Response("ok (webhook secret not configured)", { status: 200 });
         }
 
@@ -92,7 +94,6 @@ export const Route = createFileRoute("/api/public/webhooks/stripe")({
             }
           }
         } else if (event.type === "transfer.created") {
-
           const transfer = event.data.object as { id: string; amount: number };
           const { data: subRaw } = await supabaseAdmin
             .from("submissions")

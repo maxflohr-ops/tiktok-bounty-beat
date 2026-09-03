@@ -87,7 +87,11 @@ export const applyToBounty = createServerFn({ method: "POST" })
       event: "campaign.application",
       actor: (context.claims as { email?: string })?.email ?? context.userId,
       reference: b.title,
-      details: { bounty_id: data.bounty_id, tiktok_handle: data.tiktok_handle, message: data.message },
+      details: {
+        bounty_id: data.bounty_id,
+        tiktok_handle: data.tiktok_handle,
+        message: data.message,
+      },
     });
     return { ok: true, status: "applied" as const };
   });
@@ -108,7 +112,10 @@ export const listMyPrivateBounties = createServerFn({ method: "GET" })
     const { data: bounties, error: be } = await supabaseAdmin
       .from("bounties")
       .select(PRIVATE_BOUNTY_COLS)
-      .in("id", list.map((r) => r.bounty_id))
+      .in(
+        "id",
+        list.map((r) => r.bounty_id),
+      )
       .neq("status", "draft");
     if (be) throw new Error(be.message);
     const statusBy = new Map(list.map((r) => [r.bounty_id, r.status]));
@@ -130,7 +137,9 @@ export const listBountyAccessStaff = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("bounty_access")
-      .select("id,bounty_id,user_id,status,message,tiktok_handle,invited_email,created_at,decided_at")
+      .select(
+        "id,bounty_id,user_id,status,message,tiktok_handle,invited_email,created_at,decided_at",
+      )
       .order("created_at", { ascending: false })
       .limit(500);
     if (error) throw new Error(error.message);
@@ -145,10 +154,18 @@ export const listBountyAccessStaff = createServerFn({ method: "GET" })
         .in("id", ids);
       names = new Map((profs ?? []).map((p) => [p.id, p.display_name ?? p.tiktok_handle ?? p.id]));
     }
-    return rows.map((r) => ({ ...r, display_name: r.user_id ? names.get(r.user_id) ?? null : null }));
+    return rows.map((r) => ({
+      ...r,
+      display_name: r.user_id ? (names.get(r.user_id) ?? null) : null,
+    }));
   });
 
-async function emailCreator(userId: string | null, email: string | null, title: string, body: string) {
+async function emailCreator(
+  userId: string | null,
+  email: string | null,
+  title: string,
+  body: string,
+) {
   try {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     let to = email;
@@ -183,12 +200,18 @@ export const decideBountyApplication = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
-    const { data: b } = await supabaseAdmin.from("bounties").select("title").eq("id", row.bounty_id).maybeSingle();
+    const { data: b } = await supabaseAdmin
+      .from("bounties")
+      .select("title")
+      .eq("id", row.bounty_id)
+      .maybeSingle();
     const bountyTitle = b?.title ?? "a private campaign";
     void emailCreator(
       row.user_id,
       row.invited_email,
-      data.decision === "approved" ? "You're in — private campaign approved" : "Application not accepted",
+      data.decision === "approved"
+        ? "You're in — private campaign approved"
+        : "Application not accepted",
       data.decision === "approved"
         ? `You've been approved for “${bountyTitle}”. Head back to the contract page to claim your clip slots.`
         : `Your application for “${bountyTitle}” wasn't accepted this time. Plenty of other contracts on the Bounty Board.`,
@@ -232,7 +255,11 @@ export const inviteToBounty = createServerFn({ method: "POST" })
       if (existing) {
         await supabaseAdmin
           .from("bounty_access")
-          .update({ status: "invited", invited_email: data.email, decided_at: new Date().toISOString() })
+          .update({
+            status: "invited",
+            invited_email: data.email,
+            decided_at: new Date().toISOString(),
+          })
           .eq("id", existing.id);
       } else {
         const { error } = await supabaseAdmin.from("bounty_access").insert({
@@ -253,7 +280,11 @@ export const inviteToBounty = createServerFn({ method: "POST" })
       if (error) throw new Error(error.message);
     }
 
-    const { data: b } = await supabaseAdmin.from("bounties").select("title").eq("id", data.bounty_id).maybeSingle();
+    const { data: b } = await supabaseAdmin
+      .from("bounties")
+      .select("title")
+      .eq("id", data.bounty_id)
+      .maybeSingle();
     const bountyTitle = b?.title ?? "a private campaign";
     void emailCreator(
       match?.id ?? null,

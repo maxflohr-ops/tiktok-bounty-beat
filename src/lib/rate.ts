@@ -4,7 +4,11 @@
 // "$5 per 5,000 views" reads better than "$100 per 100,000 views".
 export function formatPerViewRate(centsPer100k: number, currency = "USD", compact = false): string {
   const money = (c: number) =>
-    new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(c / 100);
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(c / 100);
   if (centsPer100k >= 2000 && centsPer100k % 2000 === 0) {
     return `${money(centsPer100k / 20)}${compact ? " / 5k views" : " per 5,000 views"}`;
   }

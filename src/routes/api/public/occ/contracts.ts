@@ -34,7 +34,10 @@ export const Route = createFileRoute("/api/public/occ/contracts")({
             const { data: subs } = await supabaseAdmin
               .from("submissions")
               .select("bounty_id,status")
-              .in("bounty_id", list.map((b) => b.id));
+              .in(
+                "bounty_id",
+                list.map((b) => b.id),
+              );
             for (const s of subs ?? []) {
               const row = counts.get(s.bounty_id) ?? { claims: 0, approved: 0 };
               row.claims += 1;
@@ -63,7 +66,8 @@ export const Route = createFileRoute("/api/public/occ/contracts")({
         const body = {
           format: "open-clipping-contract",
           occ_version: "0.1",
-          schema: "https://raw.githubusercontent.com/maxflohr-ops/tiktok-bounty-beat/main/occ/spec/contract.schema.json",
+          schema:
+            "https://raw.githubusercontent.com/maxflohr-ops/tiktok-bounty-beat/main/occ/spec/contract.schema.json",
           generated_at: new Date().toISOString(),
           count: contracts.length,
           contracts,

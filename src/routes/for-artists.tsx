@@ -64,7 +64,9 @@ function ForArtists() {
     >
       <LandingSection title="How it works">
         <ol className="list-decimal space-y-3 pl-6">
-          <li>Submit your artist name, song, and TikTok sound link — $200 opens a 30-day campaign.</li>
+          <li>
+            Submit your artist name, song, and TikTok sound link — $200 opens a 30-day campaign.
+          </li>
           <li>Your contract goes on the board with the per-view rate you set.</li>
           <li>Editors claim it, post TikToks with your sound, and deliver the links.</li>
           <li>We verify views; you pay for results only.</li>
@@ -86,8 +88,22 @@ function ForArtists() {
       </LandingSection>
       <LandingSection title="Related">
         <ul className="list-disc space-y-2 pl-6">
-          <li><a href="/clipping-campaigns" className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0">How campaigns work</a></li>
-          <li><a href="/for-editors" className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0">For editors</a></li>
+          <li>
+            <a
+              href="/clipping-campaigns"
+              className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0"
+            >
+              How campaigns work
+            </a>
+          </li>
+          <li>
+            <a
+              href="/for-editors"
+              className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0"
+            >
+              For editors
+            </a>
+          </li>
         </ul>
       </LandingSection>
     </LandingLayout>

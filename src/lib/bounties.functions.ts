@@ -75,7 +75,8 @@ const LAUNCH_SEEDS = [
     deadline: "2026-12-31T23:59:00Z",
     status: "active" as const,
     funded_cash_cents: 10000, // the $100 purse — two approved pages capture it
-    rules: "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
+    rules:
+      "Campaign logo overlay required on every delivered clip — grab it from the logo pack on this contract.",
     logo_pack_url: null, // Google Drive link to the campaign logos - paste when ready
   },
 ];
@@ -85,13 +86,12 @@ const LAUNCH_SEEDS = [
 // OCC feed, clips walls). Mirrors 20260811010000_purge_zeds_dead.sql for
 // publishes that skip git-synced migrations. Dependents cascade with the row.
 const BANNED_LISTING_PATTERN = /zed'?s\s*dead|zedsdead/i;
-const BANNED_OR_FILTER = [
-  "title",
-  "artist_song",
-  "sound_name",
-  "description",
-]
-  .flatMap((col) => [`${col}.ilike.*zeds dead*`, `${col}.ilike.*zed's dead*`, `${col}.ilike.*zedsdead*`])
+const BANNED_OR_FILTER = ["title", "artist_song", "sound_name", "description"]
+  .flatMap((col) => [
+    `${col}.ilike.*zeds dead*`,
+    `${col}.ilike.*zed's dead*`,
+    `${col}.ilike.*zedsdead*`,
+  ])
   .join(",");
 
 export async function purgeBannedListings(supabaseAdmin: any) {
@@ -109,7 +109,11 @@ export async function purgeBannedListings(supabaseAdmin: any) {
   }
 
   const listingFilter = ["artist_name", "song_title", "notes"]
-    .flatMap((col) => [`${col}.ilike.*zeds dead*`, `${col}.ilike.*zed's dead*`, `${col}.ilike.*zedsdead*`])
+    .flatMap((col) => [
+      `${col}.ilike.*zeds dead*`,
+      `${col}.ilike.*zed's dead*`,
+      `${col}.ilike.*zedsdead*`,
+    ])
     .join(",");
   const { data: listingRows } = await supabaseAdmin
     .from("sound_listings")
@@ -119,7 +123,8 @@ export async function purgeBannedListings(supabaseAdmin: any) {
     const hay = `${l.artist_name ?? ""} ${l.song_title ?? ""} ${l.notes ?? ""}`;
     if (!BANNED_LISTING_PATTERN.test(hay)) continue;
     const { error } = await supabaseAdmin.from("sound_listings").delete().eq("id", l.id);
-    if (error) console.error("purgeBannedListings listing delete failed:", l.artist_name, error.message);
+    if (error)
+      console.error("purgeBannedListings listing delete failed:", l.artist_name, error.message);
   }
 }
 
@@ -159,7 +164,7 @@ async function healBountyTitles(supabaseAdmin: any) {
     .in("title", STALE_TITLES);
 
   const doomed = [
-    ...(((staleRaw ?? []) as { id: string; title: string }[])),
+    ...((staleRaw ?? []) as { id: string; title: string }[]),
     ...clipRows.filter((r) => STALE_TITLES.includes(r.title.slice(5))),
   ];
   const doomedIds = new Set<string>();
@@ -185,7 +190,10 @@ async function healBountyTitles(supabaseAdmin: any) {
       const { error } = await supabaseAdmin.from("bounties").delete().eq("id", row.id);
       if (error) console.error("healBountyTitles dedupe failed:", row.title, error.message);
     } else {
-      const { error } = await supabaseAdmin.from("bounties").update({ title: target }).eq("id", row.id);
+      const { error } = await supabaseAdmin
+        .from("bounties")
+        .update({ title: target })
+        .eq("id", row.id);
       if (error) console.error("healBountyTitles rename failed:", row.title, error.message);
     }
   }
@@ -226,12 +234,14 @@ async function ensureLaunchBounties(supabaseAdmin: any) {
           .from("bounties")
           .update(patch)
           .eq("id", existing.id);
-        if (syncError) console.error("ensureLaunchBounties sync failed:", seed.title, syncError.message);
+        if (syncError)
+          console.error("ensureLaunchBounties sync failed:", seed.title, syncError.message);
       }
       continue;
     }
     const { error: insertError } = await supabaseAdmin.from("bounties").insert(seed);
-    if (insertError) console.error("ensureLaunchBounties insert failed:", seed.title, insertError.message);
+    if (insertError)
+      console.error("ensureLaunchBounties insert failed:", seed.title, insertError.message);
   }
 }
 
@@ -255,7 +265,8 @@ export const listPublicBounties = createServerFn({ method: "GET" }).handler(asyn
       .neq("status", "draft")
       .order("contract_no", { ascending: false });
     error = retry.error;
-    bounties = (retry.data?.map((b) => ({ ...LATE_COLUMN_DEFAULTS, ...b })) ?? null) as typeof bounties;
+    bounties = (retry.data?.map((b) => ({ ...LATE_COLUMN_DEFAULTS, ...b })) ??
+      null) as typeof bounties;
   }
   if (error) throw new Error(error.message);
   const list = bounties ?? [];
@@ -342,7 +353,8 @@ export const pastCaptures = createServerFn({ method: "GET" }).handler(async () =
     verified_view_count: s.verified_view_count,
     paid_cash_cents: s.paid_cash_cents,
     bounty_title: (s as unknown as { bounties: { title: string } | null }).bounties?.title ?? null,
-    contract_no: (s as unknown as { bounties: { contract_no: number } | null }).bounties?.contract_no ?? null,
+    contract_no:
+      (s as unknown as { bounties: { contract_no: number } | null }).bounties?.contract_no ?? null,
   }));
 });
 
@@ -355,7 +367,9 @@ export const listBountyClips = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
       .from("submissions")
-      .select("id,tiktok_handle,tiktok_video_url,view_count,verified_view_count,status,counting_ends_at,submitted_at,paid_cash_cents")
+      .select(
+        "id,tiktok_handle,tiktok_video_url,view_count,verified_view_count,status,counting_ends_at,submitted_at,paid_cash_cents",
+      )
       .eq("bounty_id", data.bounty_id)
       .in("status", ["submitted", "pending", "approved", "paid"])
       .not("tiktok_video_url", "is", null)
@@ -370,10 +384,33 @@ const upsertBountyInput = z.object({
   title: z.string().trim().min(2).max(120),
   description: z.string().trim().min(2).max(2000),
   sound_name: z.string().trim().min(1).max(160),
-  artist_song: z.string().trim().max(200).optional().transform((v) => v || null),
-  tiktok_sound_url: z.string().trim().url().optional().or(z.literal("")).transform((v) => v || null),
-  source_assets_url: z.string().trim().url().optional().or(z.literal("")).transform((v) => v || null),
-  cover_url: z.string().trim().url().optional().or(z.literal("")).transform((v) => v || null),
+  artist_song: z
+    .string()
+    .trim()
+    .max(200)
+    .optional()
+    .transform((v) => v || null),
+  tiktok_sound_url: z
+    .string()
+    .trim()
+    .url()
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => v || null),
+  source_assets_url: z
+    .string()
+    .trim()
+    .url()
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => v || null),
+  cover_url: z
+    .string()
+    .trim()
+    .url()
+    .optional()
+    .or(z.literal(""))
+    .transform((v) => v || null),
   reward_points: z.number().int().min(0).max(1_000_000),
   reward_cash_cents: z.number().int().min(0).max(1_000_000_00),
   currency: z.string().trim().length(3).default("USD"),
@@ -388,12 +425,25 @@ const upsertBountyInput = z.object({
   // Stored lowercase without '#'; clippers see them as chips and the
   // delivery check counts them as a caption signal.
   hashtags: z
-    .array(z.string().trim().regex(/^#?[A-Za-z0-9_]{2,40}$/))
+    .array(
+      z
+        .string()
+        .trim()
+        .regex(/^#?[A-Za-z0-9_]{2,40}$/),
+    )
     .max(10)
     .default([])
     .transform((arr) => [...new Set(arr.map((t) => t.replace(/^#/, "").toLowerCase()))]),
-  rules: z.string().trim().max(2000).nullable().optional().transform((v) => v || null),
-  status: z.enum(["draft", "active", "claimed", "in_review", "fulfilled", "expired", "closed"]).default("active"),
+  rules: z
+    .string()
+    .trim()
+    .max(2000)
+    .nullable()
+    .optional()
+    .transform((v) => v || null),
+  status: z
+    .enum(["draft", "active", "claimed", "in_review", "fulfilled", "expired", "closed"])
+    .default("active"),
   visibility: z.enum(["public", "private"]).default("public"),
   access_mode: z.enum(["invite", "apply"]).nullable().optional(),
 });
@@ -427,8 +477,7 @@ export const upsertBounty = createServerFn({ method: "POST" })
       rules: data.rules,
       status: data.status,
       visibility: data.visibility,
-      access_mode:
-        data.visibility === "private" ? (data.access_mode ?? "invite") : null,
+      access_mode: data.visibility === "private" ? (data.access_mode ?? "invite") : null,
       created_by: context.userId,
     };
     if (data.id) {

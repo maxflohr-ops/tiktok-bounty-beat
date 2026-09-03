@@ -60,10 +60,7 @@ function SubmitPage() {
   const [viewsDraft, setViewsDraft] = useState<Record<string, string>>({});
 
   const openClaims = useMemo(
-    () =>
-      claims.filter(
-        (c: any) => c.status === "claimed" || c.status === "rejected",
-      ),
+    () => claims.filter((c: any) => c.status === "claimed" || c.status === "rejected"),
     [claims],
   );
   const inFlight = useMemo(
@@ -130,8 +127,7 @@ function SubmitPage() {
     }
   };
 
-  const bountyOf = (bountyId: string) =>
-    bounties.find((b: any) => b.id === bountyId) as any;
+  const bountyOf = (bountyId: string) => bounties.find((b: any) => b.id === bountyId) as any;
 
   return (
     <div className="relative min-h-screen">
@@ -151,26 +147,25 @@ function SubmitPage() {
             </div>
           </div>
           <p className="mt-2 text-bone-soft">
-            Paste your posted TikTok URL. It's matched to your open contract, the account
-            and sound are checked. Each clip's views count for the contract's counting window (usually 14 days from delivery), then pay out pro-rata from the purse.
+            Paste your posted TikTok URL. It's matched to your open contract, the account and sound
+            are checked. Each clip's views count for the contract's counting window (usually 14 days
+            from delivery), then pay out pro-rata from the purse.
           </p>
           {me?.profile?.tiktok_handle ? (
             <p className="mt-2 text-sm text-bone-soft">
-              posting as{" "}
-              <span className="text-bone">@{me.profile.tiktok_handle}</span>
+              posting as <span className="text-bone">@{me.profile.tiktok_handle}</span>
             </p>
           ) : (
             <p className="mt-2 text-sm text-bone-soft">
               set your TikTok handle in{" "}
-              <Link to="/dashboard" className="underline">the dashboard</Link>{" "}
+              <Link to="/dashboard" className="underline">
+                the dashboard
+              </Link>{" "}
               before delivering.
             </p>
           )}
 
-          <form
-            onSubmit={deliver}
-            className="mt-6 board-frame relative p-5"
-          >
+          <form onSubmit={deliver} className="mt-6 board-frame relative p-5">
             <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
             <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
             <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
@@ -190,12 +185,12 @@ function SubmitPage() {
                 />
               </div>
               {url && !urlValid ? (
-                <p className="mt-1 text-xs text-bone-soft">
-                  must be a tiktok.com link
-                </p>
+                <p className="mt-1 text-xs text-bone-soft">must be a tiktok.com link</p>
               ) : (
                 <p className="mt-1 text-xs text-bone-soft">
-                  post from any TikTok account on your profile. Use the contract's sound and put #bountysounds in the caption so checks pass instantly. New accounts are fine, the first delivery just gets a review.
+                  post from any TikTok account on your profile. Use the contract's sound and put
+                  #bountysounds in the caption so checks pass instantly. New accounts are fine, the
+                  first delivery just gets a review.
                 </p>
               )}
             </label>
@@ -206,14 +201,16 @@ function SubmitPage() {
                   eyebrow="delivery office"
                   title="No open contracts."
                   body="Take one from the Bounty Board first, then come back to deliver proof."
-                  action={<Link to="/board" className="bs-btn bs-btn-ghost">go to the Bounty Board</Link>}
+                  action={
+                    <Link to="/board" className="bs-btn bs-btn-ghost">
+                      go to the Bounty Board
+                    </Link>
+                  }
                 />
               </div>
             ) : (
               <fieldset className="mt-4">
-                <legend className="label-cap text-bone-soft">
-                  deliver against
-                </legend>
+                <legend className="label-cap text-bone-soft">deliver against</legend>
                 <div className="mt-2 grid gap-2">
                   {openClaims.map((c: any) => {
                     const b = c.bounty ?? bountyOf(c.bounty_id);
@@ -236,9 +233,7 @@ function SubmitPage() {
                         />
                         <div className="flex-1">
                           <div className="flex items-baseline justify-between gap-3">
-                            <span className="font-display text-bone">
-                              {b?.title ?? "contract"}
-                            </span>
+                            <span className="font-display text-bone">{b?.title ?? "contract"}</span>
                             {b?.contract_no ? (
                               <span className="label-cap text-silver">
                                 No. {pad(b.contract_no)}
@@ -247,8 +242,7 @@ function SubmitPage() {
                           </div>
                           <div className="mt-0.5 text-xs text-bone-soft">
                             {b?.artist_song ? <>“{b.artist_song}” · </> : null}
-                            sound {b?.sound_name} · claimed as{" "}
-                            @{c.tiktok_handle}
+                            sound {b?.sound_name} · claimed as @{c.tiktok_handle}
                           </div>
                         </div>
                       </label>
@@ -272,29 +266,26 @@ function SubmitPage() {
           {inFlight.length > 0 ? (
             <section className="mt-10">
               <div className="rule-double" />
-              <h2 className="mt-4 font-display text-2xl text-bone">
-                Deliveries in flight
-              </h2>
+              <h2 className="mt-4 font-display text-2xl text-bone">Deliveries in flight</h2>
               <div className="mt-4 space-y-3">
                 {inFlight.map((c: any) => {
                   const b = c.bounty ?? bountyOf(c.bounty_id);
                   const isPer1k = b?.payout_type === "per_1k_views";
                   return (
-                    <div
-                      key={c.id}
-                      className="board-frame relative p-4"
-                    >
+                    <div key={c.id} className="board-frame relative p-4">
                       <div className="corner-bracket absolute top-2 left-2 border-t-2 border-l-2" />
                       <div className="corner-bracket absolute top-2 right-2 border-t-2 border-r-2" />
                       <div className="corner-bracket absolute bottom-2 left-2 border-b-2 border-l-2" />
                       <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <div>
-                          <div className="font-display text-bone">
-                            {b?.title ?? "contract"}
-                          </div>
+                          <div className="font-display text-bone">{b?.title ?? "contract"}</div>
                           <div className="mt-1 flex flex-wrap items-center gap-2">
-                            {b?.contract_no ? <span className="label-cap text-silver">No. {pad(b.contract_no)}</span> : null}
+                            {b?.contract_no ? (
+                              <span className="label-cap text-silver">
+                                No. {pad(b.contract_no)}
+                              </span>
+                            ) : null}
                             <span className="digital-badge-amber">{statusLabel(c.status)}</span>
                             {c.counting_ends_at && isPer1k ? (
                               <span className="label-cap text-bone-soft">
@@ -318,26 +309,17 @@ function SubmitPage() {
                       </div>
 
                       {c.auto_check_notes ? (
-                        <p className="mt-2 text-xs text-bone-soft">
-                          {c.auto_check_notes}
-                        </p>
+                        <p className="mt-2 text-xs text-bone-soft">{c.auto_check_notes}</p>
                       ) : null}
 
                       {c.paid_cash_cents > 0 ? (
                         <p className="mt-2 text-sm text-bone-soft">
-                          paid{" "}
-                          <Money
-                            cents={c.paid_cash_cents}
-                            currency={b?.currency ?? "USD"}
-                          />
+                          paid <Money cents={c.paid_cash_cents} currency={b?.currency ?? "USD"} />
                         </p>
                       ) : c.awarded_cash_cents > 0 ? (
                         <p className="mt-2 text-sm text-bone">
                           award pending —{" "}
-                          <Money
-                            cents={c.awarded_cash_cents}
-                            currency={b?.currency ?? "USD"}
-                          />
+                          <Money cents={c.awarded_cash_cents} currency={b?.currency ?? "USD"} />
                         </p>
                       ) : null}
 
@@ -348,9 +330,7 @@ function SubmitPage() {
                         c.status === "approved") ? (
                         <div className="mt-3 flex flex-wrap items-end gap-2">
                           <label className="block">
-                            <span className="label-cap text-bone-soft">
-                              current views
-                            </span>
+                            <span className="label-cap text-bone-soft">current views</span>
                             <input
                               inputMode="numeric"
                               placeholder={String(c.view_count ?? 0)}
@@ -366,12 +346,16 @@ function SubmitPage() {
                             />
                           </label>
                           {(() => {
-                            const v = Number((viewsDraft[c.id] ?? "").replace(/\D/g, "")) || c.view_count || 0;
+                            const v =
+                              Number((viewsDraft[c.id] ?? "").replace(/\D/g, "")) ||
+                              c.view_count ||
+                              0;
                             const rate = b?.reward_cash_cents ?? 0;
                             const est = Math.floor((v * rate) / 100000);
                             return v > 0 && rate > 0 ? (
                               <span className="pb-2 text-xs text-bone-soft">
-                                ≈ <span className="silver">${(est / 100).toFixed(2)}</span> at {v.toLocaleString()} views
+                                ≈ <span className="silver">${(est / 100).toFixed(2)}</span> at{" "}
+                                {v.toLocaleString()} views
                               </span>
                             ) : null;
                           })()}

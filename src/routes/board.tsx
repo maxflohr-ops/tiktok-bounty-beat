@@ -50,7 +50,11 @@ function serial(n: number, star = false) {
 }
 function money(cents: number, currency = "USD") {
   if (!cents) return null;
-  return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 }
 function isExpired(b: Bounty) {
   if (b.status === "expired" || b.status === "fulfilled") return b.status;
@@ -65,11 +69,18 @@ function isFeatured(b: Bounty) {
 }
 function bottomLine(b: Bounty) {
   const overridden = isExpired(b);
-  if (overridden === "expired") return { text: "expired", seal: false, variant: "magenta" as const };
-  if (overridden === "fulfilled" || b.status === "fulfilled") return { text: "fulfilled", seal: true, variant: "cyan" as const };
+  if (overridden === "expired")
+    return { text: "expired", seal: false, variant: "magenta" as const };
+  if (overridden === "fulfilled" || b.status === "fulfilled")
+    return { text: "fulfilled", seal: true, variant: "cyan" as const };
   if (b.max_submissions && b.claims_count > 0)
-    return { text: `claimed ${b.claims_count} of ${b.max_submissions}`, seal: false, variant: "amber" as const };
-  if (b.claims_count > 0) return { text: `claimed ${b.claims_count}`, seal: false, variant: "amber" as const };
+    return {
+      text: `claimed ${b.claims_count} of ${b.max_submissions}`,
+      seal: false,
+      variant: "amber" as const,
+    };
+  if (b.claims_count > 0)
+    return { text: `claimed ${b.claims_count}`, seal: false, variant: "amber" as const };
   return { text: "open", seal: false, variant: "cyan" as const };
 }
 // Explicit sort picks. "rate" keeps per-view rates ahead of flat rewards since
@@ -82,7 +93,9 @@ function compareBounties(sort: "rate" | "purse" | "ending", x: Bounty, y: Bounty
     return (y.reward_cash_cents ?? 0) - (x.reward_cash_cents ?? 0) || y.contract_no - x.contract_no;
   }
   if (sort === "purse")
-    return ((y as any).purse_cents ?? 0) - ((x as any).purse_cents ?? 0) || y.contract_no - x.contract_no;
+    return (
+      ((y as any).purse_cents ?? 0) - ((x as any).purse_cents ?? 0) || y.contract_no - x.contract_no
+    );
   const xDue = x.deadline ? new Date(x.deadline).getTime() : Infinity;
   const yDue = y.deadline ? new Date(y.deadline).getTime() : Infinity;
   return xDue - yDue || y.contract_no - x.contract_no;
@@ -97,9 +110,16 @@ function BoardPage() {
   });
   const { data: top = [] } = useQuery({ queryKey: ["leaderboard"], queryFn: () => boardFn() });
   const weeklyFn = useServerFn(weeklyPayouts);
-  const { data: weekly = [] } = useQuery({ queryKey: ["weeklyPayouts"], queryFn: () => weeklyFn() });
+  const { data: weekly = [] } = useQuery({
+    queryKey: ["weeklyPayouts"],
+    queryFn: () => weeklyFn(),
+  });
   const capturesFn = useServerFn(pastCaptures);
-  const { data: captures = [] } = useQuery({ queryKey: ["pastCaptures"], queryFn: () => capturesFn(), retry: false });
+  const { data: captures = [] } = useQuery({
+    queryKey: ["pastCaptures"],
+    queryFn: () => capturesFn(),
+    retry: false,
+  });
 
   const [taste, setTaste] = useState<TasteProfile | null>(null);
   useEffect(() => setTaste(loadTaste()), []);
@@ -124,7 +144,8 @@ function BoardPage() {
       : base
           .map((b) => ({ b, score: scoreBounty(taste, b) }))
           .sort((x, y) => y.score - x.score || y.b.contract_no - x.b.contract_no);
-    const ordered = sort === "board" ? scored : [...scored].sort((x, y) => compareBounties(sort, x.b, y.b));
+    const ordered =
+      sort === "board" ? scored : [...scored].sort((x, y) => compareBounties(sort, x.b, y.b));
     // The flagship LIVE campaign pins first, then paid featured slots, keeping
     // the chosen order within each group.
     return [
@@ -179,14 +200,15 @@ function BoardPage() {
             </p>
           </div>
 
-
           {/* Taste banner */}
           <div className="mb-6 flex justify-center">
             {taste ? (
               <div className="digital-badge">
                 <span className="status-dot" />
                 ranked to your taste
-                <Link to="/taste" className="ml-1 underline hover:text-bone">retune</Link>
+                <Link to="/taste" className="ml-1 underline hover:text-bone">
+                  retune
+                </Link>
               </div>
             ) : (
               <Link to="/taste" className="digital-badge hover:text-bone">
@@ -311,7 +333,9 @@ function BoardPage() {
                     <p className="mt-1 truncate text-xs text-bone-soft">{c.bounty_title}</p>
                     <p className="mt-2 flex items-baseline justify-between text-sm">
                       <span className="tabular-nums text-bone">
-                        {c.verified_view_count ? `${(c.verified_view_count / 1000).toFixed(0)}k views` : "verified"}
+                        {c.verified_view_count
+                          ? `${(c.verified_view_count / 1000).toFixed(0)}k views`
+                          : "verified"}
                       </span>
                       <span className="tabular-nums font-semibold text-gold">
                         <Money cents={c.paid_cash_cents} currency="USD" />
@@ -335,7 +359,9 @@ function BoardPage() {
                     <li key={i} className="flex items-center justify-between py-2 text-sm">
                       <span className="flex items-center gap-3 text-bone">
                         <span className="w-4 tabular-nums text-gold">{pad(i + 1)}</span>
-                        <span className="font-body italic">{p.display_name || "unnamed editor"}</span>
+                        <span className="font-body italic">
+                          {p.display_name || "unnamed editor"}
+                        </span>
                         {p.tiktok_handle ? (
                           <span className="text-bone-soft">@{p.tiktok_handle}</span>
                         ) : null}
@@ -348,7 +374,8 @@ function BoardPage() {
                 </ol>
                 {weekly.length > 0 ? (
                   <p className="mt-3 text-center text-xs text-bone-soft">
-                    <Money cents={weekly.reduce((s: number, p: any) => s + p.paid_cents, 0)} /> paid out in the last 7 days
+                    <Money cents={weekly.reduce((s: number, p: any) => s + p.paid_cents, 0)} /> paid
+                    out in the last 7 days
                   </p>
                 ) : null}
               </div>
@@ -360,28 +387,48 @@ function BoardPage() {
             <h2 className="text-center font-display text-2xl text-bone">Explore Bounty Sounds</h2>
             <ul className="mx-auto mt-6 grid max-w-4xl gap-4 sm:grid-cols-2">
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/for-artists" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
+                <Link
+                  to="/for-artists"
+                  className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0"
+                >
                   TikTok music promotion for artists →
                 </Link>
-                <p className="mt-1 text-sm text-bone-soft">List your song, set a per-view rate, only pay for verified views.</p>
+                <p className="mt-1 text-sm text-bone-soft">
+                  List your song, set a per-view rate, only pay for verified views.
+                </p>
               </li>
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/for-editors" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
+                <Link
+                  to="/for-editors"
+                  className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0"
+                >
                   UGC creator jobs for editors →
                 </Link>
-                <p className="mt-1 text-sm text-bone-soft">Claim contracts, post TikToks, cash in via PayPal, Stripe, or USDC.</p>
+                <p className="mt-1 text-sm text-bone-soft">
+                  Claim contracts, post TikToks, cash in via PayPal, Stripe, or USDC.
+                </p>
               </li>
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/clipping-campaigns" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
+                <Link
+                  to="/clipping-campaigns"
+                  className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0"
+                >
                   Clipping campaigns →
                 </Link>
-                <p className="mt-1 text-sm text-bone-soft">How pay-per-view clipping campaigns work end to end.</p>
+                <p className="mt-1 text-sm text-bone-soft">
+                  How pay-per-view clipping campaigns work end to end.
+                </p>
               </li>
               <li className="border border-[var(--iron)] bg-black/30 p-4">
-                <Link to="/tiktok-clipper" className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0">
+                <Link
+                  to="/tiktok-clipper"
+                  className="inline-flex min-h-[44px] items-center font-display text-lg text-bone hover:text-silver-glow md:min-h-0"
+                >
                   Become a TikTok clipper →
                 </Link>
-                <p className="mt-1 text-sm text-bone-soft">Turn your edits into per-view income. No follower minimum.</p>
+                <p className="mt-1 text-sm text-bone-soft">
+                  Turn your edits into per-view income. No follower minimum.
+                </p>
               </li>
             </ul>
           </nav>
@@ -390,7 +437,9 @@ function BoardPage() {
           <div className="mt-12 text-center opacity-60">
             <InkCardinal className="mx-auto w-32" />
             <div className="inline-block border-t border-[var(--iron)] p-4">
-              <p className="text-xs tracking-wide text-bone-soft">Posted purses · verified views · real payouts</p>
+              <p className="text-xs tracking-wide text-bone-soft">
+                Posted purses · verified views · real payouts
+              </p>
             </div>
           </div>
         </div>
@@ -400,11 +449,17 @@ function BoardPage() {
         <div className="container-board flex flex-col items-center gap-3 py-8 text-center text-xs text-bone-soft">
           <FooterNav />
           <span>
-            <Link to="/" className="tap-inline hover:text-bone">home</Link>
+            <Link to="/" className="tap-inline hover:text-bone">
+              home
+            </Link>
             {" · "}
-            <Link to="/admin" className="tap-inline opacity-60 hover:text-bone hover:opacity-100">admin desk</Link>
+            <Link to="/admin" className="tap-inline opacity-60 hover:text-bone hover:opacity-100">
+              admin desk
+            </Link>
           </span>
-          <span className="script-note text-sm">Every bounty shows its purse, its rate, and its deadline before you seize it.</span>
+          <span className="script-note text-sm">
+            Every bounty shows its purse, its rate, and its deadline before you seize it.
+          </span>
           <span>© {new Date().getFullYear()} · Bounty Sounds</span>
         </div>
       </footer>
@@ -460,11 +515,17 @@ function EmptyBoard() {
         </p>
         <NotifyForm accountEmail={user?.email ?? null} />
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/how-it-works" className="bs-btn bs-btn-accent">how it works</Link>
-          <Link to="/for-editors" className="bs-btn">how clippers earn</Link>
+          <Link to="/how-it-works" className="bs-btn bs-btn-accent">
+            how it works
+          </Link>
+          <Link to="/for-editors" className="bs-btn">
+            how clippers earn
+          </Link>
         </div>
       </div>
-      <p className="mt-12 mb-4 text-center font-body italic text-bone-soft">What a contract looks like</p>
+      <p className="mt-12 mb-4 text-center font-body italic text-bone-soft">
+        What a contract looks like
+      </p>
       <ul className="mx-auto grid max-w-3xl grid-cols-1 gap-8 md:grid-cols-2">
         <li>
           <GhostCard
@@ -511,8 +572,12 @@ function GhostCard({
       <span className="wax-seal">example</span>
       <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
-          <span className="terminal text-[9px] tracking-[0.15em] text-[var(--color-bs-accent)]">{serial(no)}</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">
+            Contract
+          </span>
+          <span className="terminal text-[9px] tracking-[0.15em] text-[var(--color-bs-accent)]">
+            {serial(no)}
+          </span>
         </div>
         <span className="label-cap silver">{purse}</span>
       </div>
@@ -520,14 +585,26 @@ function GhostCard({
       <p className="mt-1 font-body italic text-ink-soft">for “{song}”</p>
       <div className="mt-5 border-t border-[var(--paper-dark)] pt-3">
         <div className="label-cap text-ink-soft">Reward</div>
-        <div className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{rate}</div>
+        <div className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">
+          {rate}
+        </div>
         <div className="mt-1 text-xs text-ink-soft">{note}</div>
       </div>
       <div className="mt-4 text-center">
         <span className="digital-badge">coming soon</span>
       </div>
-      <span aria-hidden className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80">{serial(no)}</span>
-      <span aria-hidden className="terminal absolute bottom-2 right-3 text-[9px] text-ink-soft opacity-60">{pad(no)}</span>
+      <span
+        aria-hidden
+        className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80"
+      >
+        {serial(no)}
+      </span>
+      <span
+        aria-hidden
+        className="terminal absolute bottom-2 right-3 text-[9px] text-ink-soft opacity-60"
+      >
+        {pad(no)}
+      </span>
     </article>
   );
 }
@@ -555,11 +632,7 @@ function ContractCard({
           : "Reward set on delivery";
 
   const glowClass =
-    bl.variant === "cyan"
-      ? "holo-glow"
-      : bl.variant === "amber"
-        ? "holo-glow-amber"
-        : "holo-glow";
+    bl.variant === "cyan" ? "holo-glow" : bl.variant === "amber" ? "holo-glow-amber" : "holo-glow";
 
   const badgeClass =
     bl.variant === "cyan"
@@ -576,7 +649,9 @@ function ContractCard({
         : "status-dot-magenta";
 
   return (
-    <article className={`contract contract-nail ${glowClass} group relative cursor-pointer hover:-translate-y-1 hover:rotate-0`}>
+    <article
+      className={`contract contract-nail ${glowClass} group relative cursor-pointer hover:-translate-y-1 hover:rotate-0`}
+    >
       {bl.seal ? (
         <span className="wax-seal">Fulfilled</span>
       ) : featured ? (
@@ -589,7 +664,9 @@ function ContractCard({
 
       <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">
+            Contract
+          </span>
           <span className="terminal text-[9px] tracking-[0.15em] text-[var(--color-bs-accent)]">
             {serial(b.contract_no, featured)}
           </span>
@@ -598,7 +675,10 @@ function ContractCard({
           <span className="label-cap silver">
             Purse: <Money cents={(b as any).purse_cents} currency={b.currency} />
             {(b as any).paid_out_cents > 0 ? (
-              <> · <Money cents={(b as any).paid_out_cents} currency={b.currency} /> paid out</>
+              <>
+                {" "}
+                · <Money cents={(b as any).paid_out_cents} currency={b.currency} /> paid out
+              </>
             ) : null}
           </span>
         ) : (
@@ -621,7 +701,9 @@ function ContractCard({
         </div>
       ) : null}
 
-      <h3 className="[font-family:var(--font-brand)] text-2xl font-semibold leading-snug text-ink">{b.title}</h3>
+      <h3 className="[font-family:var(--font-brand)] text-2xl font-semibold leading-snug text-ink">
+        {b.title}
+      </h3>
       {b.artist_song ? (
         <p className="mt-1 font-body italic text-ink-soft">for “{b.artist_song}”</p>
       ) : (
@@ -632,12 +714,20 @@ function ContractCard({
 
       <div className="mt-5 border-t border-[var(--paper-dark)] pt-3">
         <div className="label-cap text-ink-soft">Reward</div>
-        <div className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</div>
+        <div className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">
+          {reward}
+        </div>
         <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-ink-soft">
           <span>{live ? "tiktok + reels" : b.platform_target}</span>
 
           {b.deadline ? (
-            <span>by {new Date(b.deadline).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
+            <span>
+              by{" "}
+              {new Date(b.deadline).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
           ) : (
             <span>no deadline set</span>
           )}
@@ -651,14 +741,21 @@ function ContractCard({
       </div>
 
       {/* Serial lower-left in green (like a note's second serial), numeral lower-right */}
-      <span aria-hidden className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80">
+      <span
+        aria-hidden
+        className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80"
+      >
         {serial(b.contract_no, featured)}
       </span>
-      <span aria-hidden className="terminal absolute bottom-2 right-3 text-[9px] text-ink-soft opacity-60">{pad(b.contract_no)}</span>
+      <span
+        aria-hidden
+        className="terminal absolute bottom-2 right-3 text-[9px] text-ink-soft opacity-60"
+      >
+        {pad(b.contract_no)}
+      </span>
     </article>
   );
 }
-
 
 // Loader appears only after 240ms so fast responses never flash it
 // (pattern from Instatic's spotlight skeletons); visual is BsLoading.

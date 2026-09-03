@@ -14,8 +14,10 @@ import { getAttribution } from "@/lib/attribution";
 import { setReturnTo } from "@/lib/return-to";
 
 const LIST_URL = "https://bountysounds.com/list-sound";
-const LIST_TITLE = "List a Sound, Stream, Keynote, or Podcast for Clipping — $200 / 30 Days | Bounty Sounds";
-const LIST_DESC = "Get your song, stream, keynote, or podcast in front of TikTok clippers. $200 lists it on Bounty Sounds for a 30-day pay-per-view clipping campaign.";
+const LIST_TITLE =
+  "List a Sound, Stream, Keynote, or Podcast for Clipping — $200 / 30 Days | Bounty Sounds";
+const LIST_DESC =
+  "Get your song, stream, keynote, or podcast in front of TikTok clippers. $200 lists it on Bounty Sounds for a 30-day pay-per-view clipping campaign.";
 
 export const Route = createFileRoute("/list-sound")({
   head: () => ({
@@ -41,7 +43,10 @@ export const Route = createFileRoute("/list-sound")({
     success: s.success === "1" || s.success === 1 ? true : undefined,
     cancelled: s.cancelled === "1" || s.cancelled === 1 ? true : undefined,
     id: typeof s.id === "string" ? s.id : undefined,
-    type: s.type === "stream" || s.type === "keynote" || s.type === "podcast" ? (s.type as "stream" | "keynote" | "podcast") : undefined,
+    type:
+      s.type === "stream" || s.type === "keynote" || s.type === "podcast"
+        ? (s.type as "stream" | "keynote" | "podcast")
+        : undefined,
   }),
   component: ListSoundPage,
 });
@@ -60,7 +65,9 @@ function ListSoundPage() {
     enabled: !!user,
   });
 
-  const [kind, setKind] = useState<"sound" | "stream" | "keynote" | "podcast">(search.type ?? "sound");
+  const [kind, setKind] = useState<"sound" | "stream" | "keynote" | "podcast">(
+    search.type ?? "sound",
+  );
   const [when, setWhen] = useState<"upcoming" | "previous">("upcoming");
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
@@ -73,12 +80,18 @@ function ListSoundPage() {
   const [hashtags, setHashtags] = useState("");
   const [rules, setRules] = useState("");
   const [featuredTier, setFeaturedTier] = useState<"none" | "featured" | "featured_plus">("none");
-  const [campaignAccess, setCampaignAccess] = useState<"public" | "private_invite" | "private_apply">("public");
+  const [campaignAccess, setCampaignAccess] = useState<
+    "public" | "private_invite" | "private_apply"
+  >("public");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) { setReturnTo(window.location.pathname + window.location.search); navigate({ to: "/auth" }); return; }
+    if (!user) {
+      setReturnTo(window.location.pathname + window.location.search);
+      navigate({ to: "/auth" });
+      return;
+    }
     setBusy(true);
     try {
       const res = await createFn({
@@ -129,7 +142,10 @@ function ListSoundPage() {
           <p className="mx-auto mt-3 max-w-xl text-[var(--color-bs-ink-soft)]">
             Thirty days on the Bounty Board. Editors take contracts and deliver TikToks cut from
             your footage — upcoming or already out.{" "}
-            <a href="/for-artists" className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+            <a
+              href="/for-artists"
+              className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]"
+            >
               the full breakdown →
             </a>
           </p>
@@ -137,7 +153,9 @@ function ListSoundPage() {
 
         {search.success ? (
           <BsCard variant="flat" className="mx-auto mt-6 max-w-2xl text-center">
-            <BsMono className="uppercase text-[var(--color-bs-ink)]">payment received · listing queued for review</BsMono>
+            <BsMono className="uppercase text-[var(--color-bs-ink)]">
+              payment received · listing queued for review
+            </BsMono>
             <p className="mt-1 text-sm text-[var(--color-bs-ink-soft)]">
               We'll review and publish your listing shortly. Watch your inbox.
             </p>
@@ -145,14 +163,23 @@ function ListSoundPage() {
         ) : null}
         {search.cancelled ? (
           <BsCard variant="flat" className="mx-auto mt-6 max-w-2xl text-center">
-            <BsMono className="uppercase text-[var(--color-bs-ink-mute)]">payment cancelled · your draft is saved below</BsMono>
+            <BsMono className="uppercase text-[var(--color-bs-ink-mute)]">
+              payment cancelled · your draft is saved below
+            </BsMono>
           </BsCard>
         ) : null}
 
         {!ready ? null : !user ? (
           <div className="mx-auto mt-8 max-w-2xl text-center">
             <p className="mb-4 text-[var(--color-bs-ink-soft)]">Sign in to list your campaign.</p>
-            <BsButton onClick={() => { setReturnTo(window.location.pathname + window.location.search); navigate({ to: "/auth" }); }}>sign in</BsButton>
+            <BsButton
+              onClick={() => {
+                setReturnTo(window.location.pathname + window.location.search);
+                navigate({ to: "/auth" });
+              }}
+            >
+              sign in
+            </BsButton>
           </div>
         ) : (
           <div className="mx-auto mt-10 grid max-w-5xl gap-8 md:grid-cols-[2fr,1fr]">
@@ -168,27 +195,97 @@ function ListSoundPage() {
                         role="tab"
                         aria-selected={kind === k}
                         onClick={() => setKind(k)}
-                        className={kind === k ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
+                        className={
+                          kind === k
+                            ? "bs-btn px-4 py-1.5 text-xs"
+                            : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"
+                        }
                       >
-                        {k === "sound" ? "a sound" : k === "stream" ? "a livestream" : k === "keynote" ? "a keynote" : "a podcast"}
+                        {k === "sound"
+                          ? "a sound"
+                          : k === "stream"
+                            ? "a livestream"
+                            : k === "keynote"
+                              ? "a keynote"
+                              : "a podcast"}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div className="mt-4 grid gap-4">
-                  <Field label={kind === "sound" ? "Artist name" : kind === "stream" ? "Streamer name" : kind === "keynote" ? "Speaker or company" : "Podcast or host"} required>
-                    <input required value={artist} onChange={(e) => setArtist(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Ridgeclub" : kind === "stream" ? "ebbionline" : kind === "keynote" ? "Meridian" : "The Grind Show"} />
+                  <Field
+                    label={
+                      kind === "sound"
+                        ? "Artist name"
+                        : kind === "stream"
+                          ? "Streamer name"
+                          : kind === "keynote"
+                            ? "Speaker or company"
+                            : "Podcast or host"
+                    }
+                    required
+                  >
+                    <input
+                      required
+                      value={artist}
+                      onChange={(e) => setArtist(e.target.value)}
+                      className="bs-input"
+                      placeholder={
+                        kind === "sound"
+                          ? "Ridgeclub"
+                          : kind === "stream"
+                            ? "ebbionline"
+                            : kind === "keynote"
+                              ? "Meridian"
+                              : "The Grind Show"
+                      }
+                    />
                   </Field>
-                  <Field label={kind === "sound" ? "Song title" : kind === "stream" ? "Stream title" : kind === "keynote" ? "Keynote title" : "Episode title"} required>
-                    <input required value={song} onChange={(e) => setSong(e.target.value)} className="bs-input" placeholder={kind === "sound" ? "Do I Clench My Fist" : kind === "stream" ? "Thursday variety stream" : kind === "keynote" ? "Developer Keynote '26" : "Ep. 41 — the comeback"} />
+                  <Field
+                    label={
+                      kind === "sound"
+                        ? "Song title"
+                        : kind === "stream"
+                          ? "Stream title"
+                          : kind === "keynote"
+                            ? "Keynote title"
+                            : "Episode title"
+                    }
+                    required
+                  >
+                    <input
+                      required
+                      value={song}
+                      onChange={(e) => setSong(e.target.value)}
+                      className="bs-input"
+                      placeholder={
+                        kind === "sound"
+                          ? "Do I Clench My Fist"
+                          : kind === "stream"
+                            ? "Thursday variety stream"
+                            : kind === "keynote"
+                              ? "Developer Keynote '26"
+                              : "Ep. 41 — the comeback"
+                      }
+                    />
                   </Field>
                   {kind === "sound" ? (
                     <>
                       <Field label="TikTok sound URL" hint="Optional but strongly recommended">
-                        <input value={tiktok} onChange={(e) => setTiktok(e.target.value)} className="bs-input" placeholder="https://www.tiktok.com/music/..." />
+                        <input
+                          value={tiktok}
+                          onChange={(e) => setTiktok(e.target.value)}
+                          className="bs-input"
+                          placeholder="https://www.tiktok.com/music/..."
+                        />
                       </Field>
                       <Field label="Spotify / streaming link" hint="Optional">
-                        <input value={spotify} onChange={(e) => setSpotify(e.target.value)} className="bs-input" placeholder="https://open.spotify.com/track/..." />
+                        <input
+                          value={spotify}
+                          onChange={(e) => setSpotify(e.target.value)}
+                          className="bs-input"
+                          placeholder="https://open.spotify.com/track/..."
+                        />
                       </Field>
                     </>
                   ) : (
@@ -196,9 +293,23 @@ function ListSoundPage() {
                       <Field
                         label={kind === "stream" ? "Channel or VOD link" : "Footage link"}
                         required
-                        hint={kind === "stream" ? "Twitch, YouTube, or Kick" : "YouTube, Spotify, Drive — anywhere clippers can watch it"}
+                        hint={
+                          kind === "stream"
+                            ? "Twitch, YouTube, or Kick"
+                            : "YouTube, Spotify, Drive — anywhere clippers can watch it"
+                        }
                       >
-                        <input required value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} className="bs-input" placeholder={kind === "stream" ? "https://twitch.tv/ebbionline" : "https://youtube.com/watch?v=…"} />
+                        <input
+                          required
+                          value={streamUrl}
+                          onChange={(e) => setStreamUrl(e.target.value)}
+                          className="bs-input"
+                          placeholder={
+                            kind === "stream"
+                              ? "https://twitch.tv/ebbionline"
+                              : "https://youtube.com/watch?v=…"
+                          }
+                        />
                       </Field>
                       <Field label="When">
                         <div className="flex flex-wrap items-center gap-2">
@@ -208,11 +319,21 @@ function ListSoundPage() {
                               type="button"
                               aria-pressed={when === w}
                               onClick={() => setWhen(w)}
-                              className={when === w ? "bs-btn px-4 py-1.5 text-xs" : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"}
+                              className={
+                                when === w
+                                  ? "bs-btn px-4 py-1.5 text-xs"
+                                  : "bs-btn bs-btn-ghost px-4 py-1.5 text-xs"
+                              }
                             >
                               {w === "upcoming"
-                                ? kind === "stream" ? "upcoming stream" : kind === "keynote" ? "upcoming keynote" : "upcoming episode"
-                                : kind === "stream" ? "previous stream / VOD" : "already out"}
+                                ? kind === "stream"
+                                  ? "upcoming stream"
+                                  : kind === "keynote"
+                                    ? "upcoming keynote"
+                                    : "upcoming episode"
+                                : kind === "stream"
+                                  ? "previous stream / VOD"
+                                  : "already out"}
                             </button>
                           ))}
                           {when === "upcoming" ? (
@@ -229,26 +350,65 @@ function ListSoundPage() {
                     </>
                   )}
                   <Field label="Campaign hashtags" hint="Clippers put these in their captions">
-                    <input value={hashtags} onChange={(e) => setHashtags(e.target.value)} className="bs-input" placeholder="#yoursound #yourname" />
+                    <input
+                      value={hashtags}
+                      onChange={(e) => setHashtags(e.target.value)}
+                      className="bs-input"
+                      placeholder="#yoursound #yourname"
+                    />
                   </Field>
                   <Field label="Campaign rules" hint="Shown to every clipper before they post">
-                    <textarea value={rules} onChange={(e) => setRules(e.target.value)} className="bs-input min-h-[80px]" placeholder="9:16 only. Subtitles on. No logo overlays. Keep the drop at full volume…" />
+                    <textarea
+                      value={rules}
+                      onChange={(e) => setRules(e.target.value)}
+                      className="bs-input min-h-[80px]"
+                      placeholder="9:16 only. Subtitles on. No logo overlays. Keep the drop at full volume…"
+                    />
                   </Field>
                   <Field label="Contact email" required>
-                    <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bs-input" />
+                    <input
+                      required
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="bs-input"
+                    />
                   </Field>
-                  <Field label="Notes for the review team" hint={kind === "sound" ? "Genre, sync history, campaign goals, budget…" : "Which moments to cut, what to avoid, budget…"}>
-                    <textarea value={notes} onChange={(e) => setNotes(e.target.value)} className="bs-input min-h-[100px]" />
+                  <Field
+                    label="Notes for the review team"
+                    hint={
+                      kind === "sound"
+                        ? "Genre, sync history, campaign goals, budget…"
+                        : "Which moments to cut, what to avoid, budget…"
+                    }
+                  >
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      className="bs-input min-h-[100px]"
+                    />
                   </Field>
                 </div>
 
                 <fieldset className="mt-6 border border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] p-4">
-                  <legend className="px-1 font-[var(--font-display)] text-sm font-semibold text-[var(--color-bs-ink)]">Campaign access</legend>
-                  {([
-                    { v: "public", label: "Public", sub: "Any verified editor can claim it." },
-                    { v: "private_invite", label: "Private — invite only", sub: "Only creators you invite can submit clips." },
-                    { v: "private_apply", label: "Private — creators apply", sub: "Editors pitch first; you approve who gets in." },
-                  ] as const).map((o) => (
+                  <legend className="px-1 font-[var(--font-display)] text-sm font-semibold text-[var(--color-bs-ink)]">
+                    Campaign access
+                  </legend>
+                  {(
+                    [
+                      { v: "public", label: "Public", sub: "Any verified editor can claim it." },
+                      {
+                        v: "private_invite",
+                        label: "Private — invite only",
+                        sub: "Only creators you invite can submit clips.",
+                      },
+                      {
+                        v: "private_apply",
+                        label: "Private — creators apply",
+                        sub: "Editors pitch first; you approve who gets in.",
+                      },
+                    ] as const
+                  ).map((o) => (
                     <label key={o.v} className="flex cursor-pointer items-start gap-3 py-2">
                       <input
                         type="radio"
@@ -258,8 +418,12 @@ function ListSoundPage() {
                         className="mt-1 h-4 w-4 accent-[var(--color-bs-accent)]"
                       />
                       <span>
-                        <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">{o.label}</span>
-                        <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">{o.sub}</span>
+                        <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">
+                          {o.label}
+                        </span>
+                        <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">
+                          {o.sub}
+                        </span>
                       </span>
                     </label>
                   ))}
@@ -269,12 +433,28 @@ function ListSoundPage() {
                 </fieldset>
 
                 <fieldset className="mt-6 border border-[var(--color-bs-rule)] bg-[var(--color-bs-paper)] p-4">
-                  <legend className="px-1 font-[var(--font-display)] text-sm font-semibold text-[var(--color-bs-ink)]">Placement</legend>
-                  {([
-                    { v: "none", label: "Standard listing", sub: "On the board with everything else." },
-                    { v: "featured", label: "Featured — $1,000 / month", sub: "Pinned #1 with the featured stamp. First month billed now." },
-                    { v: "featured_plus", label: "Featured+ — $2,500 / month", sub: "Pinned #1, plus the presented-by line on the front page. First month billed now." },
-                  ] as const).map((o) => (
+                  <legend className="px-1 font-[var(--font-display)] text-sm font-semibold text-[var(--color-bs-ink)]">
+                    Placement
+                  </legend>
+                  {(
+                    [
+                      {
+                        v: "none",
+                        label: "Standard listing",
+                        sub: "On the board with everything else.",
+                      },
+                      {
+                        v: "featured",
+                        label: "Featured — $1,000 / month",
+                        sub: "Pinned #1 with the featured stamp. First month billed now.",
+                      },
+                      {
+                        v: "featured_plus",
+                        label: "Featured+ — $2,500 / month",
+                        sub: "Pinned #1, plus the presented-by line on the front page. First month billed now.",
+                      },
+                    ] as const
+                  ).map((o) => (
                     <label key={o.v} className="flex cursor-pointer items-start gap-3 py-2">
                       <input
                         type="radio"
@@ -284,14 +464,23 @@ function ListSoundPage() {
                         className="mt-1 h-4 w-4 accent-[var(--color-bs-accent)]"
                       />
                       <span>
-                        <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">{o.label}</span>
-                        <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">{o.sub}</span>
+                        <span className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">
+                          {o.label}
+                        </span>
+                        <span className="mt-0.5 block text-sm text-[var(--color-bs-ink-soft)]">
+                          {o.sub}
+                        </span>
                       </span>
                     </label>
                   ))}
                   <p className="mt-1 border-t border-[var(--color-bs-rule)] pt-2 text-xs text-[var(--color-bs-ink-mute)]">
                     bigger than featured?{" "}
-                    <a href="/api/go/florra" target="_blank" rel="noreferrer" className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+                    <a
+                      href="/api/go/florra"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]"
+                    >
                       florra.club
                     </a>
                   </p>
@@ -301,7 +490,12 @@ function ListSoundPage() {
                   <div>
                     <BsEyebrow>due today</BsEyebrow>
                     <div className="font-[var(--font-display)] text-2xl font-bold text-[var(--color-bs-ink)]">
-                      {featuredTier === "featured_plus" ? "$2,700" : featuredTier === "featured" ? "$1,200" : "$200"} · 30 days
+                      {featuredTier === "featured_plus"
+                        ? "$2,700"
+                        : featuredTier === "featured"
+                          ? "$1,200"
+                          : "$200"}{" "}
+                      · 30 days
                     </div>
                   </div>
                   <BsButton type="submit" variant="accent" disabled={busy} aria-busy={busy}>
@@ -310,7 +504,8 @@ function ListSoundPage() {
                   </BsButton>
                 </div>
                 <p className="mt-3 text-xs text-[var(--color-bs-ink-mute)]">
-                  Secure payment through Stripe. Your listing enters review the moment payment clears.
+                  Secure payment through Stripe. Your listing enters review the moment payment
+                  clears.
                 </p>
               </BsCard>
             </form>
@@ -333,8 +528,12 @@ function ListSoundPage() {
                     <ul className="mt-3 space-y-3 text-sm">
                       {mine.map((l) => (
                         <li key={l.id} className="border border-[var(--color-bs-rule)] p-3">
-                          <div className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">{l.song_title}</div>
-                          <div className="text-xs text-[var(--color-bs-ink-mute)]">{l.artist_name}</div>
+                          <div className="font-[var(--font-display)] font-semibold text-[var(--color-bs-ink)]">
+                            {l.song_title}
+                          </div>
+                          <div className="text-xs text-[var(--color-bs-ink-mute)]">
+                            {l.artist_name}
+                          </div>
                           <BsBadge className="mt-2">{l.status.replace(/_/g, " ")}</BsBadge>
                           {l.expires_at ? (
                             <div className="mt-1 text-xs text-[var(--color-bs-ink-mute)]">
@@ -362,12 +561,23 @@ function ListSoundPage() {
   );
 }
 
-function Field({ label, hint, required, children }: { label: string; hint?: string; required?: boolean; children: React.ReactNode }) {
+function Field({
+  label,
+  hint,
+  required,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <label className="block">
       <div className="mb-1 flex items-baseline justify-between">
         <BsEyebrow>
-          {label}{required ? " *" : ""}
+          {label}
+          {required ? " *" : ""}
         </BsEyebrow>
         {hint ? <span className="text-xs text-[var(--color-bs-ink-mute)]">{hint}</span> : null}
       </div>

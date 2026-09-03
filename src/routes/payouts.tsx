@@ -64,17 +64,21 @@ function PayoutsPage() {
             <div className="border border-[var(--color-bs-rule)] bg-white p-6">
               <h2 className="font-display text-2xl text-bone">The payout</h2>
               <p className="mt-2 text-sm leading-relaxed text-bone-soft">
-                Each clip's views count for a set window — usually 14 days. At the close
-                they're verified and paid pro-rata to your PayPal or USDC wallet. Views
-                stack across your clips on the same bounty — two 250k clips cash like one
-                500k clip. Post inside the window; the purse cashes whenever the views clear.
+                Each clip's views count for a set window — usually 14 days. At the close they're
+                verified and paid pro-rata to your PayPal or USDC wallet. Views stack across your
+                clips on the same bounty — two 250k clips cash like one 500k clip. Post inside the
+                window; the purse cashes whenever the views clear.
               </p>
             </div>
           </div>
         </Reveal>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/board" className="silver-btn px-7">See the live rates</Link>
-          <Link to="/how-it-works" className="ink-btn px-7">The full flow</Link>
+          <Link to="/board" className="silver-btn px-7">
+            See the live rates
+          </Link>
+          <Link to="/how-it-works" className="ink-btn px-7">
+            The full flow
+          </Link>
         </div>
       </section>
 
@@ -87,8 +91,8 @@ function PayoutsPage() {
               Paid clippers make the leaderboard.
             </h2>
             <p className="mx-auto mt-4 max-w-md text-bone-soft">
-              The board shows who got paid this week and how much each campaign has paid out
-              so far. If the numbers were embarrassing, we couldn't put them there.
+              The board shows who got paid this week and how much each campaign has paid out so far.
+              If the numbers were embarrassing, we couldn't put them there.
             </p>
           </Reveal>
         </div>
@@ -98,10 +102,12 @@ function PayoutsPage() {
         <InkDogwood className="absolute -bottom-8 right-0 w-44 rotate-[5deg] opacity-[0.08] md:w-56" />
         <h2 className="mx-auto max-w-xl text-3xl md:text-4xl">Getting paid in USDC</h2>
         <p className="mx-auto mt-4 max-w-md text-bone-soft">
-          Connect a wallet on your dashboard — or paste an address — and approved payouts can
-          settle in USDC instead of PayPal.
+          Connect a wallet on your dashboard — or paste an address — and approved payouts can settle
+          in USDC instead of PayPal.
         </p>
-        <Link to="/dashboard" className="silver-btn mt-7 inline-flex px-7">Add a wallet</Link>
+        <Link to="/dashboard" className="silver-btn mt-7 inline-flex px-7">
+          Add a wallet
+        </Link>
       </section>
 
       <footer className="border-t border-[var(--border)]">

@@ -8,11 +8,7 @@ import {
   applyToBounty,
   listMyPrivateBounties,
 } from "@/lib/access.functions";
-import {
-  claimContract,
-  deliverProof,
-  listMyClaims,
-} from "@/lib/submissions.functions";
+import { claimContract, deliverProof, listMyClaims } from "@/lib/submissions.functions";
 import { listBountyClips } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { PARTNERS, partnerGoHref } from "@/lib/partners";
@@ -23,7 +19,13 @@ import { useSession } from "@/lib/session";
 import { getMe } from "@/lib/me.functions";
 import { soundLinks } from "@/lib/sound-links";
 import { FLAGSHIP, isFlagship } from "@/lib/flagship";
-import { FlagshipPanels, FlagshipTopMedia, LiveNowBadge, PlatformIcons, PurseBar } from "@/components/FlagshipCampaign";
+import {
+  FlagshipPanels,
+  FlagshipTopMedia,
+  LiveNowBadge,
+  PlatformIcons,
+  PurseBar,
+} from "@/components/FlagshipCampaign";
 
 import { ArrowLeft, ExternalLink, Loader2, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -33,7 +35,8 @@ export const Route = createFileRoute("/bounty/$id")({
   head: ({ params }) => {
     const url = `https://bountysounds.com/bounty/${params.id}`;
     const title = "Clipping contract — Bounty Sounds";
-    const desc = "Take this TikTok clipping contract on Bounty Sounds. Post an edit using the artist's sound, deliver proof, and get paid per verified view.";
+    const desc =
+      "Take this TikTok clipping contract on Bounty Sounds. Post an edit using the artist's sound, deliver proof, and get paid per verified view.";
     return {
       meta: [
         { title },
@@ -51,12 +54,20 @@ export const Route = createFileRoute("/bounty/$id")({
   component: BountyDetail,
 });
 
-function pad(n: number) { return n.toString().padStart(3, "0"); }
+function pad(n: number) {
+  return n.toString().padStart(3, "0");
+}
 // Serial in the style of a note: district letter + 8 digits, star suffix on featured runs.
-function serial(n: number, star = false) { return `B ${n.toString().padStart(8, "0")}${star ? " ★" : ""}`; }
+function serial(n: number, star = false) {
+  return `B ${n.toString().padStart(8, "0")}${star ? " ★" : ""}`;
+}
 function money(cents: number, currency = "USD") {
   if (!cents) return null;
-  return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 }
 
 function BountyDetail() {
@@ -116,8 +127,7 @@ function BountyDetail() {
   const bounty =
     bounties.find((b) => b.id === id) ??
     (privateBounties.find((b) => (b as { id: string }).id === id) as
-      | (typeof bounties)[number]
-      | undefined);
+      (typeof bounties)[number] | undefined);
   const myClaimsHere = myClaims.filter((c) => c.bounty_id === id);
   const wallet = me?.profile?.wallet_address ?? null;
 
@@ -128,7 +138,9 @@ function BountyDetail() {
   const [clips, setClips] = useState(1);
   const [deliverBusyId, setDeliverBusyId] = useState<string | null>(null);
   const [claimBusy, setClaimBusy] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<{ tiktok_handle?: string; paypal_email?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{ tiktok_handle?: string; paypal_email?: string }>(
+    {},
+  );
   const [touched, setTouched] = useState<{ tiktok_handle?: boolean; paypal_email?: boolean }>({});
   useEffect(() => {
     if (me?.profile?.tiktok_handle) setHandle(me.profile.tiktok_handle);
@@ -142,7 +154,11 @@ function BountyDetail() {
 
   const submitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) { setReturnTo(`/bounty/${id}`); navigate({ to: "/auth" }); return; }
+    if (!user) {
+      setReturnTo(`/bounty/${id}`);
+      navigate({ to: "/auth" });
+      return;
+    }
     setApplyBusy(true);
     try {
       await applyFn({ data: { bounty_id: id, message: pitch, tiktok_handle: applyHandle } });
@@ -150,35 +166,65 @@ function BountyDetail() {
       refetchAccess();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send your application.");
-    } finally { setApplyBusy(false); }
+    } finally {
+      setApplyBusy(false);
+    }
   };
 
   const take = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) { setReturnTo(`/bounty/${id}`); navigate({ to: "/auth" }); return; }
-    if (clips < 1) { toast.error("Pick at least one clip slot."); return; }
+    if (!user) {
+      setReturnTo(`/bounty/${id}`);
+      navigate({ to: "/auth" });
+      return;
+    }
+    if (clips < 1) {
+      toast.error("Pick at least one clip slot.");
+      return;
+    }
     const { validateClaimFields } = await import("@/lib/claim-validation");
-    const check = validateClaimFields({ tiktok_handle: handle, paypal_email: paypal, paypalOptional: Boolean(wallet) });
+    const check = validateClaimFields({
+      tiktok_handle: handle,
+      paypal_email: paypal,
+      paypalOptional: Boolean(wallet),
+    });
     setTouched({ tiktok_handle: true, paypal_email: true });
-    if (!check.ok) { setFieldErrors(check.errors); return; }
+    if (!check.ok) {
+      setFieldErrors(check.errors);
+      return;
+    }
     setFieldErrors({});
     setClaimBusy(true);
     try {
-      await claimFn({ data: { bounty_id: id, tiktok_handle: check.data.tiktok_handle, paypal_email: check.data.paypal_email || undefined, clips } });
-      toast.success(clips === 1 ? "Slot claimed. Deliver proof before the deadline." : `${clips} slots claimed. Deliver each clip before the deadline.`);
+      await claimFn({
+        data: {
+          bounty_id: id,
+          tiktok_handle: check.data.tiktok_handle,
+          paypal_email: check.data.paypal_email || undefined,
+          clips,
+        },
+      });
+      toast.success(
+        clips === 1
+          ? "Slot claimed. Deliver proof before the deadline."
+          : `${clips} slots claimed. Deliver each clip before the deadline.`,
+      );
       setClips(1);
-      refetchClaims(); refetchBounties();
+      refetchClaims();
+      refetchBounties();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not seize this bounty.");
-    } finally { setClaimBusy(false); }
+    } finally {
+      setClaimBusy(false);
+    }
   };
 
   const validateField = async (field: "tiktok_handle" | "paypal_email", value: string) => {
     const mod = await import("@/lib/claim-validation");
-    const msg = field === "tiktok_handle" ? mod.validateTiktokHandle(value) : mod.validatePaypalEmail(value);
+    const msg =
+      field === "tiktok_handle" ? mod.validateTiktokHandle(value) : mod.validatePaypalEmail(value);
     setFieldErrors((prev) => ({ ...prev, [field]: msg }));
   };
-
 
   const deliver = async (e: React.FormEvent, submissionId: string) => {
     e.preventDefault();
@@ -190,7 +236,9 @@ function BountyDetail() {
       const ends = (r as { counting_ends_at?: string | null }).counting_ends_at;
       toast.success(
         `Proof delivered${r.auto_check_passed ? " — auto-verified" : ""}. ${
-          ends ? `Counting window open until ${new Date(ends).toLocaleDateString()}.` : "Awaiting review."
+          ends
+            ? `Counting window open until ${new Date(ends).toLocaleDateString()}.`
+            : "Awaiting review."
         }`,
       );
       setClipUrls((m) => ({ ...m, [submissionId]: "" }));
@@ -198,7 +246,9 @@ function BountyDetail() {
       refetchClaims();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Delivery refused.");
-    } finally { setDeliverBusyId(null); }
+    } finally {
+      setDeliverBusyId(null);
+    }
   };
 
   const accessStatus = access?.status ?? null;
@@ -218,7 +268,10 @@ function BountyDetail() {
           setHandle={setApplyHandle}
           busy={applyBusy}
           onApply={submitApplication}
-          onSignIn={() => { setReturnTo(`/bounty/${id}`); navigate({ to: "/auth" }); }}
+          onSignIn={() => {
+            setReturnTo(`/bounty/${id}`);
+            navigate({ to: "/auth" });
+          }}
         />
       );
     }
@@ -226,8 +279,12 @@ function BountyDetail() {
       <div className="min-h-screen">
         <SiteHeader />
         <div className="container-board py-20 text-center">
-          <p className="script-note text-3xl text-bone-soft">No such contract on the Bounty Board.</p>
-          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the Bounty Board</Link>
+          <p className="script-note text-3xl text-bone-soft">
+            No such contract on the Bounty Board.
+          </p>
+          <Link to="/board" className="silver-btn mt-6 inline-flex">
+            Back to the Bounty Board
+          </Link>
         </div>
       </div>
     );
@@ -245,7 +302,7 @@ function BountyDetail() {
   // Star note: featured contracts carry the ★ suffix, like a replacement bill's serial.
   const isStarNote = Boolean(
     (bounty as any).featured_plus ||
-      ((bounty as any).featured_until && new Date((bounty as any).featured_until) > new Date()),
+    ((bounty as any).featured_until && new Date((bounty as any).featured_until) > new Date()),
   );
 
   return (
@@ -255,7 +312,10 @@ function BountyDetail() {
       <SiteHeader />
       <div className="container-board relative z-10 py-8">
         <div className="flex items-center justify-between">
-          <Link to="/board" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
+          <Link
+            to="/board"
+            className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone"
+          >
             <ArrowLeft className="h-3.5 w-3.5" /> back to the Bounty Board
           </Link>
           <div className="system-bar">
@@ -271,8 +331,15 @@ function BountyDetail() {
             <div className="mb-3 border-b border-[var(--paper-dark)] pb-2">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <span aria-hidden className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-[var(--ink)] font-display text-[11px] leading-none text-ink opacity-70">B</span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">Contract</span>
+                  <span
+                    aria-hidden
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-[var(--ink)] font-display text-[11px] leading-none text-ink opacity-70"
+                  >
+                    B
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--wax-red)]">
+                    Contract
+                  </span>
                 </span>
                 <span className="terminal text-[10px] tracking-[0.15em] text-[var(--color-bs-accent)]">
                   {serial(bounty.contract_no, isStarNote)}
@@ -289,14 +356,18 @@ function BountyDetail() {
                 <PlatformIcons />
               </div>
             ) : null}
-            <h1 className="[font-family:var(--font-brand)] text-3xl font-semibold leading-tight text-ink md:text-4xl">{bounty.title}</h1>
+            <h1 className="[font-family:var(--font-brand)] text-3xl font-semibold leading-tight text-ink md:text-4xl">
+              {bounty.title}
+            </h1>
             {bounty.artist_song ? (
               <p className="mt-1 font-body italic text-ink-soft">for “{bounty.artist_song}”</p>
             ) : null}
             {flagship ? <FlagshipTopMedia /> : null}
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
               <span>sound · {bounty.sound_name}</span>
-              <span>platform · {flagship ? "tiktok + instagram reels" : bounty.platform_target}</span>
+              <span>
+                platform · {flagship ? "tiktok + instagram reels" : bounty.platform_target}
+              </span>
               {flagship ? <span>funder · {FLAGSHIP.funder}</span> : null}
               {flagship ? <span>views verify over 72 hours</span> : null}
               {bounty.deadline ? (
@@ -304,7 +375,6 @@ function BountyDetail() {
               ) : null}
               {bounty.max_submissions ? <span>cap · {bounty.max_submissions} clips</span> : null}
             </div>
-
 
             {flagship ? (
               <PurseBar
@@ -316,7 +386,9 @@ function BountyDetail() {
 
             <div className="mt-5 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Brief</div>
-              <p className="mt-2 whitespace-pre-wrap font-body leading-relaxed text-ink-soft">{bounty.description}</p>
+              <p className="mt-2 whitespace-pre-wrap font-body leading-relaxed text-ink-soft">
+                {bounty.description}
+              </p>
             </div>
 
             {((bounty as any).hashtags ?? []).length > 0 ? (
@@ -324,12 +396,17 @@ function BountyDetail() {
                 <div className="label-cap text-ink-soft">Caption tags</div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {((bounty as any).hashtags as string[]).map((t) => (
-                    <span key={t} className="border border-[var(--paper-dark)] px-2 py-0.5 font-body text-sm text-ink">
+                    <span
+                      key={t}
+                      className="border border-[var(--paper-dark)] px-2 py-0.5 font-body text-sm text-ink"
+                    >
                       #{t}
                     </span>
                   ))}
                 </div>
-                <p className="mt-1 text-xs text-ink-soft">Put these in your caption — they count toward verification.</p>
+                <p className="mt-1 text-xs text-ink-soft">
+                  Put these in your caption — they count toward verification.
+                </p>
               </div>
             ) : null}
 
@@ -346,17 +423,29 @@ function BountyDetail() {
               </details>
             ) : null}
 
-
-            <div className={`mt-5 grid gap-4 border-t border-[var(--paper-dark)] pt-4 ${flagship ? "" : "sm:grid-cols-2"}`}>
+            <div
+              className={`mt-5 grid gap-4 border-t border-[var(--paper-dark)] pt-4 ${flagship ? "" : "sm:grid-cols-2"}`}
+            >
               <div>
                 <div className="label-cap text-ink-soft">Reward</div>
-                <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</p>
+                <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">
+                  {reward}
+                </p>
                 <p className="mt-1 text-xs text-ink-soft">
                   {(bounty as any).purse_cents > 0 ? (
                     <>
-                      Purse: <Money cents={(bounty as any).purse_cents} currency={bounty.currency} />
+                      Purse:{" "}
+                      <Money cents={(bounty as any).purse_cents} currency={bounty.currency} />
                       {(bounty as any).paid_out_cents > 0 ? (
-                        <> · <Money cents={(bounty as any).paid_out_cents} currency={bounty.currency} /> paid out</>
+                        <>
+                          {" "}
+                          ·{" "}
+                          <Money
+                            cents={(bounty as any).paid_out_cents}
+                            currency={bounty.currency}
+                          />{" "}
+                          paid out
+                        </>
                       ) : null}
                     </>
                   ) : (
@@ -392,7 +481,9 @@ function BountyDetail() {
                           >
                             {l.label} <ExternalLink className="h-3 w-3" />
                           </a>
-                          {!l.exact ? <span className="ml-1 text-xs text-ink-soft">auto-matched</span> : null}
+                          {!l.exact ? (
+                            <span className="ml-1 text-xs text-ink-soft">auto-matched</span>
+                          ) : null}
                         </li>
                       ))}
                     </ul>
@@ -416,33 +507,41 @@ function BountyDetail() {
                       download the logo pack <ExternalLink className="h-3 w-3" />
                     </a>
                   ) : (
-                    <p className="mt-1 font-body text-xs italic text-ink-soft">logo pack link landing here shortly</p>
+                    <p className="mt-1 font-body text-xs italic text-ink-soft">
+                      logo pack link landing here shortly
+                    </p>
                   )}
                 </div>
               </div>
             </div>
 
-
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Clipper toolkit</div>
               <ul className="mt-2 space-y-1 text-sm text-ink-soft">
-                {Object.entries(PARTNERS).filter(([, p]) => p.kit !== false).map(([id, p]) => (
-                  <li key={id}>
-                    <a
-                      href={partnerGoHref(id)}
-                      target="_blank"
-                      rel="sponsored noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-ink underline"
-                    >
-                      {p.name.toLowerCase()} <ExternalLink className="h-3 w-3" />
-                    </a>{" "}
-                    — {p.blurb}
-                  </li>
-                ))}
+                {Object.entries(PARTNERS)
+                  .filter(([, p]) => p.kit !== false)
+                  .map(([id, p]) => (
+                    <li key={id}>
+                      <a
+                        href={partnerGoHref(id)}
+                        target="_blank"
+                        rel="sponsored noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-ink underline"
+                      >
+                        {p.name.toLowerCase()} <ExternalLink className="h-3 w-3" />
+                      </a>{" "}
+                      — {p.blurb}
+                    </li>
+                  ))}
                 {bounty.tiktok_sound_url ? (
                   <li>
                     then swap in{" "}
-                    <a href={bounty.tiktok_sound_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline">
+                    <a
+                      href={bounty.tiktok_sound_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-ink underline"
+                    >
                       the contract's sound <ExternalLink className="h-3 w-3" />
                     </a>{" "}
                     before you post
@@ -454,13 +553,16 @@ function BountyDetail() {
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Send it to your community</div>
               <p className="mt-1 text-xs text-ink-soft">
-                Running this campaign? Drop it in your Discord, subreddit, or group chat — every clipper it recruits cuts for your purse.
+                Running this campaign? Drop it in your Discord, subreddit, or group chat — every
+                clipper it recruits cuts for your purse.
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={async () => {
-                    const tags = (((bounty as any).hashtags ?? []) as string[]).map((t) => `#${t}`).join(" ");
+                    const tags = (((bounty as any).hashtags ?? []) as string[])
+                      .map((t) => `#${t}`)
+                      .join(" ");
                     const url = `https://bountysounds.com/bounty/${bounty.id}`;
                     const text = `Clipping bounty: ${bounty.title} — ${reward}. Post a TikTok${tags ? ` with ${tags}` : " with the sound"} and verified views pay out. ${url}`;
                     try {
@@ -495,13 +597,20 @@ function BountyDetail() {
 
             {/* Every clip riding on this bounty - delivered, counting, captured */}
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
-              <div className="label-cap text-ink-soft">Clips on this bounty · {bountyClips.length}</div>
+              <div className="label-cap text-ink-soft">
+                Clips on this bounty · {bountyClips.length}
+              </div>
               {bountyClips.length === 0 ? (
-                <p className="mt-1 text-xs italic text-ink-soft">No clips delivered yet — the purse is untouched.</p>
+                <p className="mt-1 text-xs italic text-ink-soft">
+                  No clips delivered yet — the purse is untouched.
+                </p>
               ) : (
                 <ul className="mt-2 divide-y divide-[var(--paper-dark)]">
                   {bountyClips.map((c) => (
-                    <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
+                    <li
+                      key={c.id}
+                      className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm"
+                    >
                       <a
                         href={c.tiktok_video_url ?? "#"}
                         target="_blank"
@@ -521,7 +630,8 @@ function BountyDetail() {
                             ? "captured"
                             : c.status === "approved"
                               ? "approved"
-                              : c.counting_ends_at && new Date(c.counting_ends_at).getTime() > Date.now()
+                              : c.counting_ends_at &&
+                                  new Date(c.counting_ends_at).getTime() > Date.now()
                                 ? `counting until ${new Date(c.counting_ends_at).toLocaleDateString()}`
                                 : "in review"}
                         </span>
@@ -544,15 +654,23 @@ function BountyDetail() {
                 2026
               </span>
               <span className="text-right">
-                <span className="script-note block text-xl leading-none text-ink">Bounty Sounds</span>
+                <span className="script-note block text-xl leading-none text-ink">
+                  Bounty Sounds
+                </span>
                 <span className="block text-[8px] italic text-ink-soft">Keeper of the Purse.</span>
               </span>
             </div>
 
-            <span aria-hidden className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80">
+            <span
+              aria-hidden
+              className="terminal absolute bottom-2 left-3 text-[8px] tracking-[0.15em] text-[var(--color-bs-accent)] opacity-80"
+            >
               {serial(bounty.contract_no, isStarNote)}
             </span>
-            <span aria-hidden className="terminal absolute bottom-2 right-3 text-[8px] text-ink-soft opacity-50">
+            <span
+              aria-hidden
+              className="terminal absolute bottom-2 right-3 text-[8px] text-ink-soft opacity-50"
+            >
               FW B 26
             </span>
           </article>
@@ -564,7 +682,9 @@ function BountyDetail() {
             <div className="corner-bracket absolute bottom-2 right-2 border-b-2 border-r-2" />
             <div className="mb-3 flex items-center justify-between">
               <h2 className="font-display text-2xl text-bone">The take</h2>
-              <span className="terminal text-[10px] text-bone-soft">ID: #{pad(bounty.contract_no)}</span>
+              <span className="terminal text-[10px] text-bone-soft">
+                ID: #{pad(bounty.contract_no)}
+              </span>
             </div>
             {(bounty as any).visibility === "private" && hasAccess ? (
               <div className="mb-3 inline-flex items-center gap-2 border border-[var(--color-bs-accent)] px-2 py-1 terminal text-[10px] uppercase tracking-[0.15em] text-[var(--color-bs-accent)]">
@@ -573,9 +693,7 @@ function BountyDetail() {
             ) : null}
             {!user ? (
               <>
-                <p className="mt-3 text-bone-soft">
-                  Sign in to take this contract.
-                </p>
+                <p className="mt-3 text-bone-soft">Sign in to take this contract.</p>
                 <Link
                   to="/auth"
                   className="silver-btn mt-5 w-full"
@@ -615,7 +733,9 @@ function BountyDetail() {
                                 required
                                 type="url"
                                 value={clipUrls[c.id] ?? ""}
-                                onChange={(e) => setClipUrls((m) => ({ ...m, [c.id]: e.target.value }))}
+                                onChange={(e) =>
+                                  setClipUrls((m) => ({ ...m, [c.id]: e.target.value }))
+                                }
                                 placeholder={
                                   flagship
                                     ? "TikTok or Instagram Reels URL"
@@ -635,14 +755,23 @@ function BountyDetail() {
                                 className="silver-btn w-full disabled:opacity-60"
                               >
                                 <span className="inline-flex items-center justify-center gap-2">
-                                  {deliverBusyId === c.id ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                                  {deliverBusyId === c.id ? "delivering…" : replacing[c.id] ? "replace the link" : "deliver proof"}
+                                  {deliverBusyId === c.id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : null}
+                                  {deliverBusyId === c.id
+                                    ? "delivering…"
+                                    : replacing[c.id]
+                                      ? "replace the link"
+                                      : "deliver proof"}
                                 </span>
                               </button>
                             </form>
-                          ) : (["submitted", "pending", "in_review"] as string[]).includes(c.status as string) ? (
+                          ) : (["submitted", "pending", "in_review"] as string[]).includes(
+                              c.status as string,
+                            ) ? (
                             <p className="mt-2 text-xs text-bone-soft">
-                              In review — payout follows the close of the counting window, usually within days.{" "}
+                              In review — payout follows the close of the counting window, usually
+                              within days.{" "}
                               <button
                                 type="button"
                                 onClick={() => setReplacing((m) => ({ ...m, [c.id]: true }))}
@@ -652,32 +781,48 @@ function BountyDetail() {
                               </button>
                             </p>
                           ) : c.status === "approved" ? (
-                            <p className="mt-2 text-xs text-bone-soft">Approved. Payout on the way.</p>
+                            <p className="mt-2 text-xs text-bone-soft">
+                              Approved. Payout on the way.
+                            </p>
                           ) : c.status === "paid" ? (
                             <p className="mt-2 text-xs text-silver-glow">Paid out. Nice work.</p>
                           ) : null}
                         </li>
                       ))}
                     </ul>
-                      {myClaimsHere.length > 1 ? (
-                        <p className="mt-2 text-right text-xs text-bone-soft">
-                          combined across your {myClaimsHere.length} clips:{" "}
-                          <span className="tabular-nums text-bone">
-                            {myClaimsHere.reduce((a, c) => a + (c.view_count ?? 0), 0).toLocaleString()} views
-                          </span>{" "}
-                          — views stack; they cash together.
-                        </p>
-                      ) : null}
+                    {myClaimsHere.length > 1 ? (
+                      <p className="mt-2 text-right text-xs text-bone-soft">
+                        combined across your {myClaimsHere.length} clips:{" "}
+                        <span className="tabular-nums text-bone">
+                          {myClaimsHere
+                            .reduce((a, c) => a + (c.view_count ?? 0), 0)
+                            .toLocaleString()}{" "}
+                          views
+                        </span>{" "}
+                        — views stack; they cash together.
+                      </p>
+                    ) : null}
 
                     {(() => {
                       const maxClips = Math.min(15, (bounty as any).max_clips_per_editor ?? 15);
                       const remaining = maxClips - myClaimsHere.length;
                       if (remaining <= 0)
-                        return <p className="text-xs text-bone-soft">You hold the max of {maxClips} clips on this contract.</p>;
+                        return (
+                          <p className="text-xs text-bone-soft">
+                            You hold the max of {maxClips} clips on this contract.
+                          </p>
+                        );
                       return (
-                        <form onSubmit={take} className="flex items-center justify-between gap-3 border border-[var(--border)] p-3">
+                        <form
+                          onSubmit={take}
+                          className="flex items-center justify-between gap-3 border border-[var(--border)] p-3"
+                        >
                           <SlotStepper value={clips} setValue={setClips} max={remaining} />
-                          <button type="submit" disabled={claimBusy || clips < 1} className="silver-btn disabled:opacity-60">
+                          <button
+                            type="submit"
+                            disabled={claimBusy || clips < 1}
+                            className="silver-btn disabled:opacity-60"
+                          >
                             {claimBusy ? "claiming…" : `claim ${clips} more`}
                           </button>
                         </form>
@@ -685,7 +830,10 @@ function BountyDetail() {
                     })()}
 
                     <p className="text-center">
-                      <Link to="/submit" className="terminal text-[10px] text-bone-soft underline hover:text-bone">
+                      <Link
+                        to="/submit"
+                        className="terminal text-[10px] text-bone-soft underline hover:text-bone"
+                      >
                         report your view counts on the submit page →
                       </Link>
                     </p>
@@ -707,7 +855,8 @@ function BountyDetail() {
                           value={handle}
                           onChange={(e) => {
                             setHandle(e.target.value);
-                            if (touched.tiktok_handle) validateField("tiktok_handle", e.target.value);
+                            if (touched.tiktok_handle)
+                              validateField("tiktok_handle", e.target.value);
                           }}
                           onBlur={(e) => {
                             setTouched((t) => ({ ...t, tiktok_handle: true }));
@@ -722,7 +871,11 @@ function BountyDetail() {
                         />
                       </div>
                       {touched.tiktok_handle && fieldErrors.tiktok_handle && (
-                        <p id="tiktok-handle-error" role="alert" className="mt-1 text-xs text-red-400">
+                        <p
+                          id="tiktok-handle-error"
+                          role="alert"
+                          className="mt-1 text-xs text-red-400"
+                        >
                           {fieldErrors.tiktok_handle}
                         </p>
                       )}
@@ -737,11 +890,13 @@ function BountyDetail() {
                         value={paypal}
                         onChange={(e) => {
                           setPaypal(e.target.value);
-                          if (touched.paypal_email && e.target.value) validateField("paypal_email", e.target.value);
+                          if (touched.paypal_email && e.target.value)
+                            validateField("paypal_email", e.target.value);
                         }}
                         onBlur={(e) => {
                           setTouched((t) => ({ ...t, paypal_email: true }));
-                          if (e.target.value || !wallet) validateField("paypal_email", e.target.value);
+                          if (e.target.value || !wallet)
+                            validateField("paypal_email", e.target.value);
                         }}
                         maxLength={160}
                         aria-invalid={!!(touched.paypal_email && fieldErrors.paypal_email)}
@@ -749,18 +904,28 @@ function BountyDetail() {
                         className={`dark-input mt-2 ${
                           touched.paypal_email && fieldErrors.paypal_email ? "border-red-500" : ""
                         }`}
-                        placeholder={wallet ? `leave blank to get paid at ${wallet.slice(0, 6)}…${wallet.slice(-4)}` : "you@paypal.com"}
+                        placeholder={
+                          wallet
+                            ? `leave blank to get paid at ${wallet.slice(0, 6)}…${wallet.slice(-4)}`
+                            : "you@paypal.com"
+                        }
                         disabled={claimBusy}
                       />
                       {touched.paypal_email && fieldErrors.paypal_email && (
-                        <p id="paypal-email-error" role="alert" className="mt-1 text-xs text-red-400">
+                        <p
+                          id="paypal-email-error"
+                          role="alert"
+                          className="mt-1 text-xs text-red-400"
+                        >
                           {fieldErrors.paypal_email}
                         </p>
                       )}
                       {!wallet ? (
                         <p className="mt-1 text-xs text-bone-soft">
                           No PayPal?{" "}
-                          <Link to="/dashboard" className="underline hover:text-bone">connect a USDC wallet</Link>{" "}
+                          <Link to="/dashboard" className="underline hover:text-bone">
+                            connect a USDC wallet
+                          </Link>{" "}
                           and claim without one.
                         </p>
                       ) : null}
@@ -783,17 +948,25 @@ function BountyDetail() {
                     >
                       <span className="inline-flex items-center justify-center gap-2">
                         {claimBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                        {claimBusy ? "taking contract…" : clips === 1 ? "seize this bounty" : `take ${clips} clip slots`}
+                        {claimBusy
+                          ? "taking contract…"
+                          : clips === 1
+                            ? "seize this bounty"
+                            : `take ${clips} clip slots`}
                       </span>
                     </button>
                     <p className="text-center text-xs text-bone-soft">
-                      Each clip's views count for {(bounty as any).counting_days ?? 14} days after delivery, then pay out pro-rata.
+                      Each clip's views count for {(bounty as any).counting_days ?? 14} days after
+                      delivery, then pay out pro-rata.
                     </p>
                     <p className="script-note text-center text-lg text-bone-soft">
                       The Bounty Board keeps a record.
                     </p>
                     <p className="text-center">
-                      <Link to="/how-it-works" className="terminal text-[10px] text-bone-soft underline hover:text-bone">
+                      <Link
+                        to="/how-it-works"
+                        className="terminal text-[10px] text-bone-soft underline hover:text-bone"
+                      >
                         first contract? how it works
                       </Link>
                     </p>
@@ -810,18 +983,32 @@ function BountyDetail() {
 
 function prettyStatus(s: string) {
   switch (s) {
-    case "claimed": return "active — deliver proof";
+    case "claimed":
+      return "active — deliver proof";
     case "submitted":
     case "pending":
-    case "in_review": return "in review";
-    case "approved": return "approved — payout pending";
-    case "rejected": return "disputed — you may re-deliver";
-    case "paid": return "paid out";
-    default: return s;
+    case "in_review":
+      return "in review";
+    case "approved":
+      return "approved — payout pending";
+    case "rejected":
+      return "disputed — you may re-deliver";
+    case "paid":
+      return "paid out";
+    default:
+      return s;
   }
 }
 
-function SlotStepper({ value, setValue, max }: { value: number; setValue: (n: number) => void; max: number }) {
+function SlotStepper({
+  value,
+  setValue,
+  max,
+}: {
+  value: number;
+  setValue: (n: number) => void;
+  max: number;
+}) {
   return (
     <span className="inline-flex items-center gap-3">
       <button
@@ -862,7 +1049,16 @@ type Teaser = {
 };
 
 function LockedCampaign({
-  teaser, accessStatus, signedIn, pitch, setPitch, handle, setHandle, busy, onApply, onSignIn,
+  teaser,
+  accessStatus,
+  signedIn,
+  pitch,
+  setPitch,
+  handle,
+  setHandle,
+  busy,
+  onApply,
+  onSignIn,
 }: {
   teaser: Teaser;
   accessStatus: string | null;
@@ -889,7 +1085,10 @@ function LockedCampaign({
       <SiteHeader />
       <div className="container-board relative z-10 py-8">
         <div className="flex items-center justify-between">
-          <Link to="/board" className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone">
+          <Link
+            to="/board"
+            className="label-cap inline-flex items-center gap-2 text-bone-soft hover:text-bone"
+          >
             <ArrowLeft className="h-3.5 w-3.5" /> back to the Bounty Board
           </Link>
           <div className="system-bar">
@@ -909,23 +1108,33 @@ function LockedCampaign({
               </span>
             </div>
 
-            <h1 className="font-display text-3xl leading-tight text-ink md:text-4xl">{teaser.title}</h1>
-            {teaser.artist_song ? <p className="mt-1 font-body italic text-ink-soft">for “{teaser.artist_song}”</p> : null}
+            <h1 className="font-display text-3xl leading-tight text-ink md:text-4xl">
+              {teaser.title}
+            </h1>
+            {teaser.artist_song ? (
+              <p className="mt-1 font-body italic text-ink-soft">for “{teaser.artist_song}”</p>
+            ) : null}
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-soft">
               <span>sound · {teaser.sound_name}</span>
               <span>platform · {teaser.platform_target}</span>
-              {teaser.deadline ? <span>deadline · {new Date(teaser.deadline).toLocaleDateString()}</span> : null}
+              {teaser.deadline ? (
+                <span>deadline · {new Date(teaser.deadline).toLocaleDateString()}</span>
+              ) : null}
             </div>
 
             <div className="mt-6 border-t border-[var(--paper-dark)] pt-4">
               <div className="label-cap text-ink-soft">Reward</div>
-              <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">{reward}</p>
+              <p className="mt-1 [font-family:var(--font-brand)] text-lg font-semibold text-ink">
+                {reward}
+              </p>
             </div>
 
             {teaser.rules ? (
               <div className="mt-4 border-t border-[var(--paper-dark)] pt-4">
                 <div className="label-cap text-ink-soft">Rules · preview</div>
-                <p className="mt-1 whitespace-pre-wrap font-body text-sm leading-relaxed text-ink-soft">{teaser.rules}</p>
+                <p className="mt-1 whitespace-pre-wrap font-body text-sm leading-relaxed text-ink-soft">
+                  {teaser.rules}
+                </p>
               </div>
             ) : null}
           </article>
@@ -949,19 +1158,25 @@ function LockedCampaign({
                 <p className="mt-2 text-bone-soft">
                   This campaign passed on your application. There's plenty else on the board.
                 </p>
-                <Link to="/board" className="silver-btn mt-5 w-full">browse open contracts</Link>
+                <Link to="/board" className="silver-btn mt-5 w-full">
+                  browse open contracts
+                </Link>
               </>
             ) : teaser.access_mode === "invite" ? (
               <>
                 <h2 className="font-display text-2xl text-bone">Invite-only campaign</h2>
                 <p className="mt-2 text-bone-soft">
-                  This contract is locked to invited clippers. If you were promised a seat, sign in with the email you
-                  were invited on.
+                  This contract is locked to invited clippers. If you were promised a seat, sign in
+                  with the email you were invited on.
                 </p>
                 {!signedIn ? (
-                  <button type="button" onClick={onSignIn} className="silver-btn mt-5 w-full">sign in</button>
+                  <button type="button" onClick={onSignIn} className="silver-btn mt-5 w-full">
+                    sign in
+                  </button>
                 ) : null}
-                <Link to="/board" className="ink-btn mt-3 block w-full text-center">back to the public board</Link>
+                <Link to="/board" className="ink-btn mt-3 block w-full text-center">
+                  back to the public board
+                </Link>
               </>
             ) : (
               <>
@@ -970,7 +1185,9 @@ function LockedCampaign({
                   Private campaign — the owner reviews every clipper before slots open.
                 </p>
                 {!signedIn ? (
-                  <button type="button" onClick={onSignIn} className="silver-btn mt-5 w-full">sign in to apply</button>
+                  <button type="button" onClick={onSignIn} className="silver-btn mt-5 w-full">
+                    sign in to apply
+                  </button>
                 ) : (
                   <form onSubmit={onApply} className="mt-4 space-y-4">
                     <label className="block">
@@ -1002,7 +1219,12 @@ function LockedCampaign({
                         className="dark-input mt-2 resize-y"
                       />
                     </label>
-                    <button type="submit" disabled={busy} aria-busy={busy} className="silver-btn w-full disabled:opacity-60">
+                    <button
+                      type="submit"
+                      disabled={busy}
+                      aria-busy={busy}
+                      className="silver-btn w-full disabled:opacity-60"
+                    >
                       <span className="inline-flex items-center justify-center gap-2">
                         {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                         {busy ? "sending…" : "apply to this campaign"}

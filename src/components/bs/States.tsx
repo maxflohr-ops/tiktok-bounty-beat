@@ -25,7 +25,11 @@ export function BsLoading({
   );
   if (variant === "inline") {
     return (
-      <div className={cn("flex items-center justify-center gap-2 py-6", className)} role="status" aria-live="polite">
+      <div
+        className={cn("flex items-center justify-center gap-2 py-6", className)}
+        role="status"
+        aria-live="polite"
+      >
         <Loader2 className="h-4 w-4 animate-spin text-[var(--color-bs-ink-mute)]" aria-hidden />
         <BsMono className="uppercase text-[var(--color-bs-ink-mute)]">{label}…</BsMono>
       </div>
@@ -34,13 +38,17 @@ export function BsLoading({
   if (variant === "well") {
     return (
       <BsWell className={className}>
-        <div role="status" aria-live="polite">{inner}</div>
+        <div role="status" aria-live="polite">
+          {inner}
+        </div>
       </BsWell>
     );
   }
   return (
     <BsCard variant="flat" className={className}>
-      <div role="status" aria-live="polite">{inner}</div>
+      <div role="status" aria-live="polite">
+        {inner}
+      </div>
     </BsCard>
   );
 }
@@ -70,9 +78,7 @@ export function BsEmpty({
       <p className="font-[var(--font-display)] text-xl font-semibold text-[var(--color-bs-ink)] md:text-2xl">
         {title}
       </p>
-      {body ? (
-        <div className="max-w-md text-sm text-[var(--color-bs-ink-soft)]">{body}</div>
-      ) : null}
+      {body ? <div className="max-w-md text-sm text-[var(--color-bs-ink-soft)]">{body}</div> : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>
   );

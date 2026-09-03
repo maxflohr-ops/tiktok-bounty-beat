@@ -28,7 +28,8 @@ function keySets(text: string): string[][] {
     if (Array.isArray(node)) return node.forEach(walk);
     if (!node || typeof node !== "object") return;
     const obj = node as Record<string, unknown>;
-    if (Array.isArray(obj.k) && obj.k.every((k) => typeof k === "string")) out.push(obj.k as string[]);
+    if (Array.isArray(obj.k) && obj.k.every((k) => typeof k === "string"))
+      out.push(obj.k as string[]);
     Object.values(obj).forEach(walk);
   };
   walk(payload);
@@ -50,7 +51,10 @@ describe("Bounty Board smoke", () => {
   });
 
   it("listPublicBounties returns bounty fields without error", async () => {
-    const { status, text } = await callServerFn("/src/lib/bounties.functions.ts", "listPublicBounties_createServerFn_handler");
+    const { status, text } = await callServerFn(
+      "/src/lib/bounties.functions.ts",
+      "listPublicBounties_createServerFn_handler",
+    );
     expect(status).toBe(200);
     expect(hasKeys(text, ["result", "error", "context"])).toBe(true);
     expect(text).not.toContain('"error":{"t"');
@@ -74,15 +78,23 @@ describe("Bounty Board smoke", () => {
   });
 
   it("leaderboard returns profile fields without error", async () => {
-    const { status, text } = await callServerFn("/src/lib/me.functions.ts", "leaderboard_createServerFn_handler");
+    const { status, text } = await callServerFn(
+      "/src/lib/me.functions.ts",
+      "leaderboard_createServerFn_handler",
+    );
     expect(status).toBe(200);
     expect(text).not.toContain('"error":{"t"');
     const empty = hasKeys(text, ["result", "error", "context"]) && !text.includes("display_name");
-    expect(empty || hasKeys(text, ["display_name", "tiktok_handle", "avatar_url", "points"])).toBe(true);
+    expect(empty || hasKeys(text, ["display_name", "tiktok_handle", "avatar_url", "points"])).toBe(
+      true,
+    );
   });
 
   it("weeklyPayouts responds without error", async () => {
-    const { status, text } = await callServerFn("/src/lib/me.functions.ts", "weeklyPayouts_createServerFn_handler");
+    const { status, text } = await callServerFn(
+      "/src/lib/me.functions.ts",
+      "weeklyPayouts_createServerFn_handler",
+    );
     expect(status).toBe(200);
     expect(text).not.toContain('"error":{"t"');
     const empty = !text.includes("paid_cents");

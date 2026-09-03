@@ -20,13 +20,7 @@ export function BsCard({
  * BsWell — three nested frames pulling focus to the center.
  * Reuse for hero/CTA moments that should feel like the homepage.
  */
-export function BsWell({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+export function BsWell({ className, children }: { className?: string; children: ReactNode }) {
   return (
     <div className={cn("bs-well-outer", className)}>
       <div className="bs-well-frame">

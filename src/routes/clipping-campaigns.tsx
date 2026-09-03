@@ -79,13 +79,39 @@ function ClippingCampaigns() {
       </LandingSection>
       <LandingSection title="Related">
         <ul className="list-disc space-y-2 pl-6">
-          <li><a href="/keynotes" className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0">Keynote campaigns</a></li>
-          <li><a href="/for-artists" className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0">For artists</a></li>
-          <li><a href="/for-editors" className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0">For editors</a></li>
+          <li>
+            <a
+              href="/keynotes"
+              className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0"
+            >
+              Keynote campaigns
+            </a>
+          </li>
+          <li>
+            <a
+              href="/for-artists"
+              className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0"
+            >
+              For artists
+            </a>
+          </li>
+          <li>
+            <a
+              href="/for-editors"
+              className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0"
+            >
+              For editors
+            </a>
+          </li>
         </ul>
         <p className="pt-2 text-xs text-[var(--color-bs-ink-mute)]">
           running something bigger?{" "}
-          <a href="/api/go/florra" target="_blank" rel="noreferrer" className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]">
+          <a
+            href="/api/go/florra"
+            target="_blank"
+            rel="noreferrer"
+            className="tap-inline underline underline-offset-2 hover:text-[var(--color-bs-ink)]"
+          >
             florra.club
           </a>
         </p>

@@ -29,10 +29,10 @@ const CLIP_URL = /^https?:\/\/.+/i;
 
 async function fetchOembed(url: string) {
   try {
-    const res = await fetch(
-      `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`,
-      { headers: { "User-Agent": "Mozilla/5.0 TheBoard/1.0" }, signal: AbortSignal.timeout(8000) },
-    );
+    const res = await fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`, {
+      headers: { "User-Agent": "Mozilla/5.0 TheBoard/1.0" },
+      signal: AbortSignal.timeout(8000),
+    });
     if (!res.ok) return null;
     return (await res.json()) as {
       title?: string;
@@ -92,7 +92,9 @@ export const claimContract = createServerFn({ method: "POST" })
         .eq("id", context.userId)
         .single();
       if (!prof?.wallet_address)
-        throw new Error("Add a PayPal email here, or connect a USDC wallet on your dashboard first.");
+        throw new Error(
+          "Add a PayPal email here, or connect a USDC wallet on your dashboard first.",
+        );
     }
 
     const clips = data.clips ?? 1;
@@ -103,7 +105,9 @@ export const claimContract = createServerFn({ method: "POST" })
       .eq("bounty_id", data.bounty_id)
       .eq("editor_id", context.userId);
     if ((mineCount ?? 0) + clips > perEditorMax)
-      throw new Error(`This contract allows ${perEditorMax} clip${perEditorMax === 1 ? "" : "s"} per editor — you already hold ${mineCount ?? 0}.`);
+      throw new Error(
+        `This contract allows ${perEditorMax} clip${perEditorMax === 1 ? "" : "s"} per editor — you already hold ${mineCount ?? 0}.`,
+      );
 
     // Enforce the contract-wide cap across all editors.
     if (bounty.max_submissions) {
@@ -176,15 +180,27 @@ export const deliverProof = createServerFn({ method: "POST" })
     // before the bounty deadline. A claim already delivered in-window keeps
     // its clock and may replace the link; payouts settle any time after.
     const bountyDeadline =
-      (sub as unknown as { bounties: { deadline?: string | null } | null }).bounties?.deadline ?? null;
+      (sub as unknown as { bounties: { deadline?: string | null } | null }).bounties?.deadline ??
+      null;
     const firstDelivery = !(sub as { counting_ends_at?: string | null }).counting_ends_at;
     if (firstDelivery && bountyDeadline && new Date(bountyDeadline).getTime() < Date.now())
-      throw new Error("The posting window for this bounty closed before this clip was delivered. Approved clips still cash out - only new deliveries are closed.");
+      throw new Error(
+        "The posting window for this bounty closed before this clip was delivered. Approved clips still cash out - only new deliveries are closed.",
+      );
 
-    const bounty = (sub as unknown as {
-      bounties: { platform_target: string; tiktok_sound_url: string | null; sound_name: string; hashtags?: string[] | null; counting_days?: number | null };
-    }).bounties;
-    const { parseMusicId, handleFromAuthorUrl, musicIdInHtml } = await import("@/lib/tiktok-verify");
+    const bounty = (
+      sub as unknown as {
+        bounties: {
+          platform_target: string;
+          tiktok_sound_url: string | null;
+          sound_name: string;
+          hashtags?: string[] | null;
+          counting_days?: number | null;
+        };
+      }
+    ).bounties;
+    const { parseMusicId, handleFromAuthorUrl, musicIdInHtml } =
+      await import("@/lib/tiktok-verify");
 
     const isTikTok = bounty?.platform_target === "tiktok" && TIKTOK_URL.test(data.clip_url);
     const oembed = isTikTok ? await fetchOembed(data.clip_url) : null;
@@ -211,12 +227,14 @@ export const deliverProof = createServerFn({ method: "POST" })
       const known = (accounts ?? []).find((a) => a.handle === author);
       accountTrusted = known ? known.status === "trusted" : author === sub.tiktok_handle;
       if (!known) {
-        await supabaseAdmin
-          .from("tiktok_accounts")
-          .upsert(
-            { user_id: context.userId, handle: author, status: author === sub.tiktok_handle ? "trusted" : "unverified" },
-            { onConflict: "user_id,handle", ignoreDuplicates: true },
-          );
+        await supabaseAdmin.from("tiktok_accounts").upsert(
+          {
+            user_id: context.userId,
+            handle: author,
+            status: author === sub.tiktok_handle ? "trusted" : "unverified",
+          },
+          { onConflict: "user_id,handle", ignoreDuplicates: true },
+        );
       }
     }
 
@@ -297,7 +315,11 @@ export const deliverProof = createServerFn({ method: "POST" })
       },
     });
     {
-      const meta = (sub as unknown as { bounties: { title?: string | null; contract_no?: number | null } | null }).bounties;
+      const meta = (
+        sub as unknown as {
+          bounties: { title?: string | null; contract_no?: number | null } | null;
+        }
+      ).bounties;
       const base = approvalBaseUrl();
       sendApprovalEmailAsync({
         kind: "delivery",
@@ -315,13 +337,22 @@ export const deliverProof = createServerFn({ method: "POST" })
       .select("counting_ends_at")
       .eq("id", data.submission_id)
       .single();
-    return { ok: true, auto_check_passed: passed, counting_ends_at: after?.counting_ends_at ?? null };
+    return {
+      ok: true,
+      auto_check_passed: passed,
+      counting_ends_at: after?.counting_ends_at ?? null,
+    };
   });
 
 export const updateViewCount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({ submission_id: z.string().uuid(), view_count: z.number().int().min(0).max(2_000_000_000) }).parse(d),
+    z
+      .object({
+        submission_id: z.string().uuid(),
+        view_count: z.number().int().min(0).max(2_000_000_000),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { data: sub } = await context.supabase
@@ -354,10 +385,12 @@ export const updateViewCount = createServerFn({ method: "POST" })
 export const verifyViewCount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      submission_id: z.string().uuid(),
-      verified_view_count: z.number().int().min(0).max(2_000_000_000),
-    }).parse(d),
+    z
+      .object({
+        submission_id: z.string().uuid(),
+        verified_view_count: z.number().int().min(0).max(2_000_000_000),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const staff = await isStaff(context.supabase, context.userId);
@@ -414,7 +447,8 @@ export const listAllSubmissionsStaff = createServerFn({ method: "GET" })
         .from("profiles")
         .select("id,display_name,tiktok_handle")
         .in("id", editorIds);
-      for (const p of profs ?? []) map[p.id] = { display_name: p.display_name, tiktok_handle: p.tiktok_handle };
+      for (const p of profs ?? [])
+        map[p.id] = { display_name: p.display_name, tiktok_handle: p.tiktok_handle };
     }
     return rows.map((r) => ({ ...r, editor: map[r.editor_id] ?? null }));
   });
@@ -438,7 +472,9 @@ export const reviewSubmission = createServerFn({ method: "POST" })
 
     const { data: sub, error: se } = await context.supabase
       .from("submissions")
-      .select("id,editor_id,status,view_count,verified_view_count,tiktok_handle,bounties:bounty_id(payout_type,reward_cash_cents)")
+      .select(
+        "id,editor_id,status,view_count,verified_view_count,tiktok_handle,bounties:bounty_id(payout_type,reward_cash_cents)",
+      )
       .eq("id", data.id)
       .single();
     if (se || !sub) throw new Error("Not found.");
@@ -446,7 +482,9 @@ export const reviewSubmission = createServerFn({ method: "POST" })
     if (cur !== "submitted" && cur !== "in_review" && cur !== "pending")
       throw new Error("This claim is not awaiting review.");
 
-    const bounty = (sub as unknown as { bounties: { payout_type: string; reward_cash_cents: number } }).bounties;
+    const bounty = (
+      sub as unknown as { bounties: { payout_type: string; reward_cash_cents: number } }
+    ).bounties;
     let computedCash = data.awarded_cash_cents;
     if (data.decision === "approved" && bounty) {
       if (bounty.payout_type === "per_1k_views") {
@@ -527,10 +565,12 @@ export const reviewSubmission = createServerFn({ method: "POST" })
 export const reopenSubmission = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({
-      id: z.string().uuid(),
-      reason: z.string().trim().min(3).max(1000),
-    }).parse(d),
+    z
+      .object({
+        id: z.string().uuid(),
+        reason: z.string().trim().min(3).max(1000),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const staff = await isStaff(context.supabase, context.userId);
@@ -545,7 +585,10 @@ export const reopenSubmission = createServerFn({ method: "POST" })
     if ((sub.status as string) !== "rejected")
       throw new Error("Only a rejected delivery can be reopened.");
     // Paid work is settled; reopening it would invite a double payout.
-    if (((sub as { paid_cash_cents: number | null }).paid_cash_cents ?? 0) > 0 || sub.stripe_transfer_id)
+    if (
+      ((sub as { paid_cash_cents: number | null }).paid_cash_cents ?? 0) > 0 ||
+      sub.stripe_transfer_id
+    )
       throw new Error("This delivery has already been paid.");
 
     const trail = `${sub.review_notes ? sub.review_notes + " | " : ""}reopened: ${data.reason}`;
@@ -598,7 +641,8 @@ export const markPaid = createServerFn({ method: "POST" })
         .select("paid_cash_cents")
         .eq("editor_id", target.editor_id)
         .gt("paid_cash_cents", 0);
-      const lifetime = (paidRows ?? []).reduce((t, r) => t + (r.paid_cash_cents ?? 0), 0) + thisPayout;
+      const lifetime =
+        (paidRows ?? []).reduce((t, r) => t + (r.paid_cash_cents ?? 0), 0) + thisPayout;
       if (lifetime > TAX_THRESHOLD_CENTS) {
         const { data: tax } = await supabaseAdmin
           .from("tax_profiles")
@@ -630,9 +674,16 @@ export const markPaid = createServerFn({ method: "POST" })
     // The status filter means a non-approved submission matches nothing —
     // fail loudly instead of telling the editor money moved when it didn't.
     if (!updated || updated.length === 0)
-      throw new Error("Only approved submissions can be marked paid — this one wasn't in 'approved'.");
+      throw new Error(
+        "Only approved submissions can be marked paid — this one wasn't in 'approved'.",
+      );
     // Tell the editor their money moved (best-effort).
-    if (target) notifyEditorAsync(target.editor_id, "Payout sent", "Your bounty payout was sent to your payout method on file.");
+    if (target)
+      notifyEditorAsync(
+        target.editor_id,
+        "Payout sent",
+        "Your bounty payout was sent to your payout method on file.",
+      );
     notifyAsync({
       event: "payment.marked_paid",
       actor: (context.claims as { email?: string })?.email ?? context.userId,

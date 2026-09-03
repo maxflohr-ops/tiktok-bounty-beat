@@ -33,12 +33,11 @@ function KeynotesPage() {
         <p className="label-cap">Keynote campaigns</p>
         <h1 className="mx-auto mt-4 max-w-3xl text-5xl leading-[1.05] md:text-7xl">
           Your keynote.
-          <br />
-          A thousand cuts.
+          <br />A thousand cuts.
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-xl text-bone-soft">
-          The best ninety seconds of your announcement shouldn't stay trapped in a
-          two-hour video. Post a purse. Clippers find the moments. Verified views pay out.
+          The best ninety seconds of your announcement shouldn't stay trapped in a two-hour video.
+          Post a purse. Clippers find the moments. Verified views pay out.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Link to="/list-sound" search={{ type: "keynote" }} className="silver-btn px-7">
@@ -48,38 +47,39 @@ function KeynotesPage() {
             See the Bounty Board
           </Link>
         </div>
-        <p className="mt-4 text-sm text-bone-soft">Your footage. Your rate. Pay only for verified views.</p>
+        <p className="mt-4 text-sm text-bone-soft">
+          Your footage. Your rate. Pay only for verified views.
+        </p>
       </section>
 
       {/* Why keynotes clip — black band */}
       <section className="bg-[#000] py-24 text-center text-white md:py-32">
         <div className="container-board">
-        <Reveal from="left">
-          <p className="label-cap text-[#86868b]">Why it works</p>
-          <h2 className="mx-auto mt-4 max-w-2xl text-4xl leading-tight text-white md:text-6xl">
-            Launch day is a clip economy.
-          </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-[#a1a1a6]">
-            Every big announcement gets clipped within hours, by strangers, for free,
-            with no brief and no rights. A campaign puts you in charge of it:
-            your footage, your talking points, a hundred editors racing to make
-            the version that travels.
-          </p>
-          <div className="mx-auto mt-12 grid max-w-3xl gap-px overflow-hidden rounded-2xl bg-[#333] sm:grid-cols-3">
-            <div className="bg-[#111] p-8">
-              <p className="text-3xl font-semibold text-white">Post</p>
-              <p className="mt-2 text-sm text-[#a1a1a6]">a purse on your own keynote footage.</p>
+          <Reveal from="left">
+            <p className="label-cap text-[#86868b]">Why it works</p>
+            <h2 className="mx-auto mt-4 max-w-2xl text-4xl leading-tight text-white md:text-6xl">
+              Launch day is a clip economy.
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl text-lg text-[#a1a1a6]">
+              Every big announcement gets clipped within hours, by strangers, for free, with no
+              brief and no rights. A campaign puts you in charge of it: your footage, your talking
+              points, a hundred editors racing to make the version that travels.
+            </p>
+            <div className="mx-auto mt-12 grid max-w-3xl gap-px overflow-hidden rounded-2xl bg-[#333] sm:grid-cols-3">
+              <div className="bg-[#111] p-8">
+                <p className="text-3xl font-semibold text-white">Post</p>
+                <p className="mt-2 text-sm text-[#a1a1a6]">a purse on your own keynote footage.</p>
+              </div>
+              <div className="bg-[#111] p-8">
+                <p className="text-3xl font-semibold text-white">Brief</p>
+                <p className="mt-2 text-sm text-[#a1a1a6]">the moments, the tone, the don'ts.</p>
+              </div>
+              <div className="bg-[#111] p-8">
+                <p className="text-3xl font-semibold text-white">Approve</p>
+                <p className="mt-2 text-sm text-[#a1a1a6]">payouts against verified views only.</p>
+              </div>
             </div>
-            <div className="bg-[#111] p-8">
-              <p className="text-3xl font-semibold text-white">Brief</p>
-              <p className="mt-2 text-sm text-[#a1a1a6]">the moments, the tone, the don'ts.</p>
-            </div>
-            <div className="bg-[#111] p-8">
-              <p className="text-3xl font-semibold text-white">Approve</p>
-              <p className="mt-2 text-sm text-[#a1a1a6]">payouts against verified views only.</p>
-            </div>
-          </div>
-        </Reveal>
+          </Reveal>
         </div>
       </section>
 
@@ -90,8 +90,8 @@ function KeynotesPage() {
             <h2 className="text-4xl md:text-5xl">What a fulfilled campaign looks like.</h2>
             <p className="mx-auto mt-4 max-w-xl text-bone-soft">
               An illustrative example.{" "}
-              <span className="font-semibold">Meridian is a fictional company</span>. When the
-              first real keynote campaign settles, its numbers replace these.
+              <span className="font-semibold">Meridian is a fictional company</span>. When the first
+              real keynote campaign settles, its numbers replace these.
             </p>
           </div>
 
@@ -105,8 +105,8 @@ function KeynotesPage() {
             </div>
 
             <p className="mt-5 text-sm text-bone-soft">
-              Brief: cut the wearable reveal and the on-stage demo fail recovery. Keep the
-              crowd audio. No logo overlays. 9:16 only, subtitles required.
+              Brief: cut the wearable reveal and the on-stage demo fail recovery. Keep the crowd
+              audio. No logo overlays. 9:16 only, subtitles required.
             </p>
 
             <div className="mt-7 grid grid-cols-2 gap-y-6 text-left sm:grid-cols-4">
@@ -149,9 +149,9 @@ function KeynotesPage() {
           We handle the clipping.
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg text-bone-soft">
-          Keynote campaigns run on footage you own or control: your launch, your
-          conference, your talk. The brief travels with the contract, so every clipper
-          knows the rules before the first cut.
+          Keynote campaigns run on footage you own or control: your launch, your conference, your
+          talk. The brief travels with the contract, so every clipper knows the rules before the
+          first cut.
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <Link to="/list-sound" search={{ type: "keynote" }} className="silver-btn px-7">
@@ -163,7 +163,12 @@ function KeynotesPage() {
         </div>
         <p className="mt-8 text-center text-xs text-bone-soft">
           bigger than a board listing?{" "}
-          <a href="/api/go/florra" target="_blank" rel="noreferrer" className="tap-inline underline underline-offset-2 hover:text-bone">
+          <a
+            href="/api/go/florra"
+            target="_blank"
+            rel="noreferrer"
+            className="tap-inline underline underline-offset-2 hover:text-bone"
+          >
             florra.club
           </a>
         </p>

@@ -81,7 +81,10 @@ export function LegalDoc({
           <div className="mt-14 border-t border-[var(--color-bs-rule)] pt-6 text-sm text-bone-soft">
             <p>
               Read alongside our{" "}
-              <Link to="/privacy" className="tap-inline underline underline-offset-2 hover:text-bone">
+              <Link
+                to="/privacy"
+                className="tap-inline underline underline-offset-2 hover:text-bone"
+              >
                 Privacy Policy
               </Link>{" "}
               and{" "}
@@ -97,7 +100,9 @@ export function LegalDoc({
       <footer className="border-t border-[var(--color-bs-rule)]">
         <div className="container-board flex flex-col items-center gap-2 py-8 text-center text-xs text-bone-soft">
           <FooterNav />
-          <span>© {new Date().getFullYear()} Bounty Sounds · {OPERATOR}</span>
+          <span>
+            © {new Date().getFullYear()} Bounty Sounds · {OPERATOR}
+          </span>
         </div>
       </footer>
     </div>

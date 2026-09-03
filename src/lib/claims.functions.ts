@@ -15,7 +15,9 @@ export const listBridgeClaims = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("bounty_claims")
-      .select("id,bounty_id,copula_user_id,copula_clip_id,clip_url,status,verified_views,paid_cents,created_at,updated_at")
+      .select(
+        "id,bounty_id,copula_user_id,copula_clip_id,clip_url,status,verified_views,paid_cents,created_at,updated_at",
+      )
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) throw new Error(error.message);
@@ -60,8 +62,16 @@ export const payBridgeClaim = createServerFn({ method: "POST" })
 
     // The purse is shared with site-native submissions, so count both sides.
     const [{ data: claimRows }, { data: subRows }] = await Promise.all([
-      supabaseAdmin.from("bounty_claims").select("paid_cents").eq("bounty_id", bounty.id).gt("paid_cents", 0),
-      supabaseAdmin.from("submissions").select("paid_cash_cents").eq("bounty_id", bounty.id).gt("paid_cash_cents", 0),
+      supabaseAdmin
+        .from("bounty_claims")
+        .select("paid_cents")
+        .eq("bounty_id", bounty.id)
+        .gt("paid_cents", 0),
+      supabaseAdmin
+        .from("submissions")
+        .select("paid_cash_cents")
+        .eq("bounty_id", bounty.id)
+        .gt("paid_cash_cents", 0),
     ]);
     const alreadyPaid =
       (claimRows ?? []).reduce((s, r) => s + r.paid_cents, 0) +

@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LegalDoc, LEGAL_EMAIL, OPERATOR, PRIVACY_EMAIL, type LegalSection } from "@/components/LegalDoc";
+import {
+  LegalDoc,
+  LEGAL_EMAIL,
+  OPERATOR,
+  PRIVACY_EMAIL,
+  type LegalSection,
+} from "@/components/LegalDoc";
 
 const TITLE = "Privacy Policy · Bounty Sounds";
 const DESC =
@@ -76,20 +82,20 @@ const SECTIONS: LegalSection[] = [
           paid.
         </p>
         <p>
-          <strong className="text-bone">Tax information.</strong> If your lifetime earnings reach the
-          reporting threshold (currently US$150), we collect the information required for United
+          <strong className="text-bone">Tax information.</strong> If your lifetime earnings reach
+          the reporting threshold (currently US$150), we collect the information required for United
           States tax reporting: legal name, postal address, and taxpayer identification number. This
           is collected only when the threshold is met.
         </p>
         <p>
           <strong className="text-bone">Bounty poster information.</strong> If you post a bounty, we
           collect your contact email, artist or campaign name, the sound or source material details
-          you supply, and payment records associated with posting the purse. Card details are entered
-          directly with our payment processor; we never receive or store full card numbers.
+          you supply, and payment records associated with posting the purse. Card details are
+          entered directly with our payment processor; we never receive or store full card numbers.
         </p>
         <p>
-          <strong className="text-bone">Communications.</strong> Email addresses submitted to receive
-          board alerts, and the content of messages you send us.
+          <strong className="text-bone">Communications.</strong> Email addresses submitted to
+          receive board alerts, and the content of messages you send us.
         </p>
         <p>
           <strong className="text-bone">Technical information.</strong> IP address, browser and
@@ -188,8 +194,8 @@ const SECTIONS: LegalSection[] = [
             <strong className="text-bone">Resend</strong> — transactional email delivery.
           </li>
           <li>
-            <strong className="text-bone">Google (Tag Manager / Analytics) and Meta (Pixel)</strong> —
-            website measurement, where enabled. See “Cookies and measurement” below.
+            <strong className="text-bone">Google (Tag Manager / Analytics) and Meta (Pixel)</strong>{" "}
+            — website measurement, where enabled. See “Cookies and measurement” below.
           </li>
         </ul>
         <p>
@@ -202,8 +208,8 @@ const SECTIONS: LegalSection[] = [
         <p>
           We may also disclose information where we reasonably believe it is required by law, legal
           process, or a government request; to enforce our Terms of Service; to protect the rights,
-          safety, or property of users or the public; or in connection with a merger, acquisition, or
-          sale of assets, in which case we will require the recipient to honour this policy.
+          safety, or property of users or the public; or in connection with a merger, acquisition,
+          or sale of assets, in which case we will require the recipient to honour this policy.
         </p>
       </>
     ),
@@ -316,9 +322,9 @@ const SECTIONS: LegalSection[] = [
         <p>
           Bounty Sounds is not directed to children. You must be at least 13 years old to use the
           service, and at least 18 years old to claim a bounty or receive a payout. We do not
-          knowingly collect personal information from children under 13. If you believe a child under
-          13 has given us personal information, email {MAIL(PRIVACY_EMAIL)} and we will delete it
-          promptly.
+          knowingly collect personal information from children under 13. If you believe a child
+          under 13 has given us personal information, email {MAIL(PRIVACY_EMAIL)} and we will delete
+          it promptly.
         </p>
       </>
     ),
@@ -348,8 +354,8 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <p>
-          We are based in the United States, and our service providers may process information in the
-          United States and other countries. Where we transfer personal information out of the
+          We are based in the United States, and our service providers may process information in
+          the United States and other countries. Where we transfer personal information out of the
           European Economic Area or the United Kingdom, we rely on appropriate safeguards, including
           the European Commission&rsquo;s Standard Contractual Clauses.
         </p>
@@ -366,11 +372,11 @@ const SECTIONS: LegalSection[] = [
           These cannot be switched off without breaking the service.
         </p>
         <p>
-          Where enabled, we also use Google Tag Manager and the Meta Pixel to measure how people find
-          and use the board, including which campaigns bring visitors and how many go on to claim a
-          bounty. These set cookies and share limited event data with those providers. You can opt out
-          using your browser&rsquo;s cookie controls, an ad blocker, or a Global Privacy Control
-          signal, which we honour where required by law. We do not use these tools to build
+          Where enabled, we also use Google Tag Manager and the Meta Pixel to measure how people
+          find and use the board, including which campaigns bring visitors and how many go on to
+          claim a bounty. These set cookies and share limited event data with those providers. You
+          can opt out using your browser&rsquo;s cookie controls, an ad blocker, or a Global Privacy
+          Control signal, which we honour where required by law. We do not use these tools to build
           advertising profiles from platform account data.
         </p>
       </>
@@ -387,12 +393,12 @@ const SECTIONS: LegalSection[] = [
           commercial information, internet activity, financial information for payouts, and
           government identifiers for tax reporting. We collect these for the business purposes
           described above. We have not sold personal information or shared it for cross-context
-          behavioural advertising. You may exercise your rights to know, delete, correct, and opt out
-          by emailing {MAIL(PRIVACY_EMAIL)}, and you may use an authorised agent.
+          behavioural advertising. You may exercise your rights to know, delete, correct, and opt
+          out by emailing {MAIL(PRIVACY_EMAIL)}, and you may use an authorised agent.
         </p>
         <p>
-          <strong className="text-bone">EEA and UK.</strong> You may lodge a complaint with your local
-          supervisory authority. For data protection questions, contact {MAIL(PRIVACY_EMAIL)}.
+          <strong className="text-bone">EEA and UK.</strong> You may lodge a complaint with your
+          local supervisory authority. For data protection questions, contact {MAIL(PRIVACY_EMAIL)}.
         </p>
       </>
     ),

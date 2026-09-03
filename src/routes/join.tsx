@@ -3,7 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listPublicBounties } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
-import { BsBadge, BsButton, BsCard, BsDisplay, BsEyebrow, BsMarker, BsMono, BsWell } from "@/components/bs";
+import {
+  BsBadge,
+  BsButton,
+  BsCard,
+  BsDisplay,
+  BsEyebrow,
+  BsMarker,
+  BsMono,
+  BsWell,
+} from "@/components/bs";
 import { formatPerViewRate } from "@/lib/rate";
 import { setReturnTo } from "@/lib/return-to";
 import { useNavigate } from "@tanstack/react-router";
@@ -55,7 +64,10 @@ const STEPS = [
 function JoinPage() {
   const navigate = useNavigate();
   const listFn = useServerFn(listPublicBounties);
-  const { data: bounties = [] } = useQuery({ queryKey: ["publicBounties"], queryFn: () => listFn() });
+  const { data: bounties = [] } = useQuery({
+    queryKey: ["publicBounties"],
+    queryFn: () => listFn(),
+  });
   const live = bounties.filter((b) => b.status === "active").slice(0, 3);
 
   const start = () => {
@@ -74,12 +86,16 @@ function JoinPage() {
             You already make the edits. Start getting paid for them.
           </BsDisplay>
           <p className="mx-auto mt-4 max-w-xl text-[var(--color-bs-ink-soft)]">
-            Bounty Sounds is where artists post money on their sounds and editors cash in per verified view.
-            Free to join. Nothing to pitch. Claim a contract and post.
+            Bounty Sounds is where artists post money on their sounds and editors cash in per
+            verified view. Free to join. Nothing to pitch. Claim a contract and post.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <BsButton size="lg" onClick={start}>Join and claim a bounty</BsButton>
-            <Link to="/board" className="bs-btn bs-btn-ghost px-7 py-4 text-sm">See open bounties</Link>
+            <BsButton size="lg" onClick={start}>
+              Join and claim a bounty
+            </BsButton>
+            <Link to="/board" className="bs-btn bs-btn-ghost px-7 py-4 text-sm">
+              See open bounties
+            </Link>
           </div>
           <p className="mt-5">
             <BsMarker>paid in verified views</BsMarker>
@@ -88,7 +104,9 @@ function JoinPage() {
 
         <section className="mt-14">
           <BsEyebrow>how it runs</BsEyebrow>
-          <BsDisplay as="h2" size="sm" className="mt-2">Four steps, start to payout</BsDisplay>
+          <BsDisplay as="h2" size="sm" className="mt-2">
+            Four steps, start to payout
+          </BsDisplay>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((s) => (
               <BsCard key={s.n} className="p-5">
@@ -103,16 +121,22 @@ function JoinPage() {
         {live.length > 0 ? (
           <section className="mt-14">
             <BsEyebrow>open right now</BsEyebrow>
-            <BsDisplay as="h2" size="sm" className="mt-2">Contracts you could take today</BsDisplay>
+            <BsDisplay as="h2" size="sm" className="mt-2">
+              Contracts you could take today
+            </BsDisplay>
             <ul className="mt-6 grid gap-4 md:grid-cols-3">
               {live.map((b) => (
                 <li key={b.id}>
                   <Link to="/bounty/$id" params={{ id: b.id }} className="block">
                     <BsCard className="h-full p-5">
                       <BsBadge variant="live">live</BsBadge>
-                      <h3 className="mt-3 text-lg font-semibold text-[var(--color-bs-ink)]">{b.title}</h3>
+                      <h3 className="mt-3 text-lg font-semibold text-[var(--color-bs-ink)]">
+                        {b.title}
+                      </h3>
                       {b.artist_song ? (
-                        <p className="mt-1 text-sm text-[var(--color-bs-ink-soft)]">{b.artist_song}</p>
+                        <p className="mt-1 text-sm text-[var(--color-bs-ink-soft)]">
+                          {b.artist_song}
+                        </p>
                       ) : null}
                       <p className="mt-3 text-sm font-medium text-[var(--color-bs-ink)]">
                         {b.payout_type === "per_1k_views"
@@ -131,28 +155,45 @@ function JoinPage() {
           <BsEyebrow>the fine print, plainly</BsEyebrow>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             <BsCard variant="flat" className="p-5">
-              <h3 className="text-base font-semibold text-[var(--color-bs-ink)]">It costs you nothing</h3>
-              <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">No fee, no subscription, no revenue share on your own account.</p>
+              <h3 className="text-base font-semibold text-[var(--color-bs-ink)]">
+                It costs you nothing
+              </h3>
+              <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">
+                No fee, no subscription, no revenue share on your own account.
+              </p>
             </BsCard>
             <BsCard variant="flat" className="p-5">
-              <h3 className="text-base font-semibold text-[var(--color-bs-ink)]">You keep your account</h3>
-              <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">Post from your own TikTok. We only need the handle to verify the clip is yours.</p>
+              <h3 className="text-base font-semibold text-[var(--color-bs-ink)]">
+                You keep your account
+              </h3>
+              <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">
+                Post from your own TikTok. We only need the handle to verify the clip is yours.
+              </p>
             </BsCard>
             <BsCard variant="flat" className="p-5">
-              <h3 className="text-base font-semibold text-[var(--color-bs-ink)]">Views are verified</h3>
-              <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">Counts are checked against the live post before a payout is approved. Mismatch? File a dispute.</p>
+              <h3 className="text-base font-semibold text-[var(--color-bs-ink)]">
+                Views are verified
+              </h3>
+              <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">
+                Counts are checked against the live post before a payout is approved. Mismatch? File
+                a dispute.
+              </p>
             </BsCard>
           </div>
         </section>
 
         <div className="mt-14">
           <BsWell className="text-center">
-            <BsDisplay as="h2" size="sm">Ready when you are</BsDisplay>
+            <BsDisplay as="h2" size="sm">
+              Ready when you are
+            </BsDisplay>
             <p className="mx-auto mt-3 max-w-md text-[var(--color-bs-ink-soft)]">
               Sign in, set your handle and payout, take your first contract. Two minutes.
             </p>
             <div className="mt-6 flex justify-center">
-              <BsButton size="lg" onClick={start}>Create my clipper account</BsButton>
+              <BsButton size="lg" onClick={start}>
+                Create my clipper account
+              </BsButton>
             </div>
           </BsWell>
         </div>

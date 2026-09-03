@@ -3,8 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { listMyPrivateBounties } from "@/lib/access.functions";
 import { listMyClaims, updateViewCount } from "@/lib/submissions.functions";
-import { getMe, updateMyProfile, addTiktokAccount, removeTiktokAccount, getTaxStatus, submitTaxInfo } from "@/lib/me.functions";
-import { getMyPayoutMethod, connectStripeAccount, refreshConnectStatus } from "@/lib/stripe.functions";
+import {
+  getMe,
+  updateMyProfile,
+  addTiktokAccount,
+  removeTiktokAccount,
+  getTaxStatus,
+  submitTaxInfo,
+} from "@/lib/me.functions";
+import {
+  getMyPayoutMethod,
+  connectStripeAccount,
+  refreshConnectStatus,
+} from "@/lib/stripe.functions";
 import { fileDispute, listMyDisputes } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
@@ -23,9 +34,15 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
 });
 
-function pad(n: number) { return n.toString().padStart(3, "0"); }
+function pad(n: number) {
+  return n.toString().padStart(3, "0");
+}
 function money(cents: number, currency = "USD") {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(cents / 100);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
 }
 
 function Dashboard() {
@@ -36,8 +53,14 @@ function Dashboard() {
   const disputesFn = useServerFn(listMyDisputes);
   const fileFn = useServerFn(fileDispute);
   const { data: me, refetch: refetchMe } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
-  const { data: claims = [], refetch } = useQuery({ queryKey: ["myClaims"], queryFn: () => claimsFn() });
-  const { data: disputes = [], refetch: refetchDisputes } = useQuery({ queryKey: ["myDisputes"], queryFn: () => disputesFn() });
+  const { data: claims = [], refetch } = useQuery({
+    queryKey: ["myClaims"],
+    queryFn: () => claimsFn(),
+  });
+  const { data: disputes = [], refetch: refetchDisputes } = useQuery({
+    queryKey: ["myDisputes"],
+    queryFn: () => disputesFn(),
+  });
   const disputesBySub = useMemo(() => {
     const m: Record<string, typeof disputes> = {};
     for (const d of disputes) (m[d.submission_id] ||= []).push(d);
@@ -66,7 +89,9 @@ function Dashboard() {
 
   const ledger = claims.filter((c) => c.status === "approved" || c.status === "paid");
   const silverEarned = ledger.reduce((s, c) => s + (c.awarded_cash_cents || 0), 0);
-  const silverPaid = claims.filter((c) => c.status === "paid").reduce((s, c) => s + (c.awarded_cash_cents || 0), 0);
+  const silverPaid = claims
+    .filter((c) => c.status === "paid")
+    .reduce((s, c) => s + (c.awarded_cash_cents || 0), 0);
   const pointsEarned = ledger.reduce((s, c) => s + (c.awarded_points || 0), 0);
 
   return (
@@ -97,7 +122,11 @@ function Dashboard() {
                 eyebrow="your contracts"
                 title="You've taken nothing yet."
                 body="Grab a contract from the Bounty Board to start earning."
-                action={<Link to="/board" className="bs-btn bs-btn-accent">Visit the Bounty Board</Link>}
+                action={
+                  <Link to="/board" className="bs-btn bs-btn-accent">
+                    Visit the Bounty Board
+                  </Link>
+                }
                 variant="well"
               />
             </div>
@@ -109,8 +138,13 @@ function Dashboard() {
                   claim={c}
                   disputes={disputesBySub[c.id] ?? []}
                   onSaveViews={async (v) => {
-                    try { await viewsFn({ data: { submission_id: c.id, view_count: v } }); toast.success("Views logged."); refetch(); }
-                    catch (err) { toast.error(err instanceof Error ? err.message : "Failed."); }
+                    try {
+                      await viewsFn({ data: { submission_id: c.id, view_count: v } });
+                      toast.success("Views logged.");
+                      refetch();
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : "Failed.");
+                    }
                   }}
                   onFileDispute={async (payload) => {
                     try {
@@ -137,13 +171,23 @@ function Dashboard() {
             <form onSubmit={save} className="mt-3 space-y-4">
               <label className="block">
                 <span className="label-cap text-bone-soft">name</span>
-                <input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} className="dark-input mt-2" />
+                <input
+                  value={name}
+                  maxLength={80}
+                  onChange={(e) => setName(e.target.value)}
+                  className="dark-input mt-2"
+                />
               </label>
               <label className="block">
                 <span className="label-cap text-bone-soft">tiktok handle</span>
                 <div className="mt-2 flex items-center border border-[var(--border)] px-3 py-2">
                   <span className="text-bone-soft">@</span>
-                  <input value={handle} maxLength={60} onChange={(e) => setHandle(e.target.value)} className="w-full bg-transparent px-1 text-bone outline-none" />
+                  <input
+                    value={handle}
+                    maxLength={60}
+                    onChange={(e) => setHandle(e.target.value)}
+                    className="w-full bg-transparent px-1 text-bone outline-none"
+                  />
                 </div>
               </label>
               <button className="silver-btn w-full">Save profile</button>
@@ -175,7 +219,10 @@ function PaymentSetup() {
   const getFn = useServerFn(getMyPayoutMethod);
   const connectFn = useServerFn(connectStripeAccount);
   const refreshFn = useServerFn(refreshConnectStatus);
-  const { data, refetch, isLoading } = useQuery({ queryKey: ["payoutMethod"], queryFn: () => getFn() });
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ["payoutMethod"],
+    queryFn: () => getFn(),
+  });
   const [busy, setBusy] = useState(false);
 
   const status = data?.stripe_connect_status ?? "not_connected";
@@ -233,7 +280,9 @@ function PaymentSetup() {
         </div>
       ) : (
         <div className="mt-3 space-y-3">
-          <p className="text-bone-soft">Link a Stripe account so the Bounty Board can pay you directly.</p>
+          <p className="text-bone-soft">
+            Link a Stripe account so the Bounty Board can pay you directly.
+          </p>
           <button onClick={link} disabled={busy} className="silver-btn">
             <Link2 className="h-3.5 w-3.5" /> link stripe account for payouts
           </button>
@@ -242,7 +291,9 @@ function PaymentSetup() {
       <CryptoPayout />
       <PayoutPreference />
       <TaxCard />
-      <p className="mt-3 text-xs text-bone-soft">PayPal payouts run through the email on your claims.</p>
+      <p className="mt-3 text-xs text-bone-soft">
+        PayPal payouts run through the email on your claims.
+      </p>
     </div>
   );
 }
@@ -256,7 +307,9 @@ function PayoutPreference() {
   const set = async (p: "paypal" | "usdc") => {
     try {
       await saveFn({ data: { payout_preference: p } as any });
-      toast.success(p === "usdc" ? "Payouts will prefer your USDC wallet." : "Payouts will prefer PayPal.");
+      toast.success(
+        p === "usdc" ? "Payouts will prefer your USDC wallet." : "Payouts will prefer PayPal.",
+      );
       refetch();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not save preference.");
@@ -278,7 +331,9 @@ function PayoutPreference() {
           </button>
         ))}
       </div>
-      <p className="mt-2 text-xs text-bone-soft">Used when both are on file. Unset = whatever's on the claim.</p>
+      <p className="mt-2 text-xs text-bone-soft">
+        Used when both are on file. Unset = whatever's on the claim.
+      </p>
     </div>
   );
 }
@@ -293,7 +348,15 @@ function TaxCard() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [f, setF] = useState({
-    legal_name: "", address_line1: "", address_line2: "", city: "", region: "", postal_code: "", country: "US", tin: "", tin_type: "ssn" as "ssn" | "ein",
+    legal_name: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    region: "",
+    postal_code: "",
+    country: "US",
+    tin: "",
+    tin_type: "ssn" as "ssn" | "ein",
   });
 
   if (!tax) return null;
@@ -310,7 +373,9 @@ function TaxCard() {
       refetch();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not save tax info.");
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -333,13 +398,54 @@ function TaxCard() {
       ) : null}
       {open && !tax.on_file ? (
         <form onSubmit={submit} className="mt-3 grid gap-2">
-          <input required placeholder="Legal name" value={f.legal_name} onChange={(e) => setF({ ...f, legal_name: e.target.value })} className="dark-input" maxLength={160} />
-          <input required placeholder="Street address" value={f.address_line1} onChange={(e) => setF({ ...f, address_line1: e.target.value })} className="dark-input" maxLength={200} />
-          <input placeholder="Apt / unit (optional)" value={f.address_line2} onChange={(e) => setF({ ...f, address_line2: e.target.value })} className="dark-input" maxLength={200} />
+          <input
+            required
+            placeholder="Legal name"
+            value={f.legal_name}
+            onChange={(e) => setF({ ...f, legal_name: e.target.value })}
+            className="dark-input"
+            maxLength={160}
+          />
+          <input
+            required
+            placeholder="Street address"
+            value={f.address_line1}
+            onChange={(e) => setF({ ...f, address_line1: e.target.value })}
+            className="dark-input"
+            maxLength={200}
+          />
+          <input
+            placeholder="Apt / unit (optional)"
+            value={f.address_line2}
+            onChange={(e) => setF({ ...f, address_line2: e.target.value })}
+            className="dark-input"
+            maxLength={200}
+          />
           <div className="grid grid-cols-3 gap-2">
-            <input required placeholder="City" value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} className="dark-input" maxLength={100} />
-            <input required placeholder="State" value={f.region} onChange={(e) => setF({ ...f, region: e.target.value })} className="dark-input" maxLength={100} />
-            <input required placeholder="ZIP" value={f.postal_code} onChange={(e) => setF({ ...f, postal_code: e.target.value })} className="dark-input" maxLength={20} />
+            <input
+              required
+              placeholder="City"
+              value={f.city}
+              onChange={(e) => setF({ ...f, city: e.target.value })}
+              className="dark-input"
+              maxLength={100}
+            />
+            <input
+              required
+              placeholder="State"
+              value={f.region}
+              onChange={(e) => setF({ ...f, region: e.target.value })}
+              className="dark-input"
+              maxLength={100}
+            />
+            <input
+              required
+              placeholder="ZIP"
+              value={f.postal_code}
+              onChange={(e) => setF({ ...f, postal_code: e.target.value })}
+              className="dark-input"
+              maxLength={20}
+            />
           </div>
           <div className="grid grid-cols-[1fr_auto] gap-2">
             <input
@@ -351,7 +457,11 @@ function TaxCard() {
               inputMode="numeric"
               autoComplete="off"
             />
-            <select value={f.tin_type} onChange={(e) => setF({ ...f, tin_type: e.target.value as "ssn" | "ein" })} className="dark-input w-auto">
+            <select
+              value={f.tin_type}
+              onChange={(e) => setF({ ...f, tin_type: e.target.value as "ssn" | "ein" })}
+              className="dark-input w-auto"
+            >
               <option value="ssn">SSN</option>
               <option value="ein">EIN</option>
             </select>
@@ -379,7 +489,8 @@ function CryptoPayout() {
   const saved = me?.profile?.wallet_address as string | null | undefined;
 
   const connect = async () => {
-    const eth = (window as { ethereum?: { request: (a: { method: string }) => Promise<string[]> } }).ethereum;
+    const eth = (window as { ethereum?: { request: (a: { method: string }) => Promise<string[]> } })
+      .ethereum;
     if (!eth) {
       toast.error("No wallet extension found — paste your address instead.");
       return;
@@ -421,7 +532,8 @@ function CryptoPayout() {
       ) : (
         <div className="mt-2 space-y-2">
           <p className="text-sm text-bone-soft">
-            Connect a wallet or paste an EVM address. USDC payouts are sent manually by the Bounty Board after approval.
+            Connect a wallet or paste an EVM address. USDC payouts are sent manually by the Bounty
+            Board after approval.
           </p>
           <div className="flex flex-wrap items-center gap-2">
             <button onClick={connect} disabled={busy} className="ink-btn">
@@ -502,7 +614,12 @@ function ClaimRow({
             {b?.deadline ? ` · by ${new Date(b.deadline).toLocaleDateString()}` : ""}
           </div>
           {claim.tiktok_video_url ? (
-            <a href={claim.tiktok_video_url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs italic underline text-bone-soft">
+            <a
+              href={claim.tiktok_video_url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 inline-flex items-center gap-1 text-xs italic underline text-bone-soft"
+            >
               open the clip <ExternalLink className="h-3 w-3" />
             </a>
           ) : (
@@ -525,7 +642,9 @@ function ClaimRow({
             </div>
           )}
           {claim.awarded_cash_cents > 0 ? (
-            <div className="mt-1 font-display text-lg silver">{money(claim.awarded_cash_cents, b?.currency ?? "USD")}</div>
+            <div className="mt-1 font-display text-lg silver">
+              {money(claim.awarded_cash_cents, b?.currency ?? "USD")}
+            </div>
           ) : null}
           {claim.awarded_points > 0 ? (
             <div className="text-xs text-bone-soft">+{claim.awarded_points} pts</div>
@@ -542,24 +661,18 @@ function ClaimRow({
             onChange={(e) => setViews(Number(e.target.value))}
             className="dark-input max-w-[160px]"
           />
-          <button onClick={() => onSaveViews(views)} className="silver-btn">log</button>
+          <button onClick={() => onSaveViews(views)} className="silver-btn">
+            log
+          </button>
           {canDispute ? (
-            <button
-              type="button"
-              onClick={() => setShowDispute((s) => !s)}
-              className="ink-btn"
-            >
+            <button type="button" onClick={() => setShowDispute((s) => !s)} className="ink-btn">
               <Flag className="h-3.5 w-3.5" /> flag view count
             </button>
           ) : null}
         </div>
       ) : canDispute ? (
         <div className="mt-3 border-t border-[var(--border)] pt-3">
-          <button
-            type="button"
-            onClick={() => setShowDispute((s) => !s)}
-            className="ink-btn"
-          >
+          <button type="button" onClick={() => setShowDispute((s) => !s)} className="ink-btn">
             <Flag className="h-3.5 w-3.5" /> dispute payout
           </button>
         </div>
@@ -612,7 +725,9 @@ function ClaimRow({
               />
             </label>
             <label className="block">
-              <span className="label-cap text-bone-soft">evidence link (screenshot, analytics)</span>
+              <span className="label-cap text-bone-soft">
+                evidence link (screenshot, analytics)
+              </span>
               <input
                 type="url"
                 value={dEvidence}
@@ -634,12 +749,10 @@ function ClaimRow({
             />
           </label>
           <div className="flex gap-2">
-            <button type="submit" className="silver-btn">Request manual review</button>
-            <button
-              type="button"
-              onClick={() => setShowDispute(false)}
-              className="ink-btn"
-            >
+            <button type="submit" className="silver-btn">
+              Request manual review
+            </button>
+            <button type="button" onClick={() => setShowDispute(false)} className="ink-btn">
               cancel
             </button>
           </div>
@@ -651,17 +764,22 @@ function ClaimRow({
 
 function prettyStatus(s: string) {
   switch (s) {
-    case "claimed": return "active";
+    case "claimed":
+      return "active";
     case "submitted":
     case "pending":
-    case "in_review": return "in review";
-    case "approved": return "honored";
-    case "rejected": return "disputed";
-    case "paid": return "paid";
-    default: return s;
+    case "in_review":
+      return "in review";
+    case "approved":
+      return "honored";
+    case "rejected":
+      return "disputed";
+    case "paid":
+      return "paid";
+    default:
+      return s;
   }
 }
-
 
 // Linked TikTok accounts — deliver from any of them. New accounts appearing
 // in a delivery are auto-linked as unverified; staff approval trusts them.
@@ -705,8 +823,8 @@ function TikTokAccounts() {
     <div className="board-frame relative p-5">
       <h2 className="font-display text-2xl text-bone">TikTok accounts</h2>
       <p className="mt-1 text-xs text-bone-soft">
-        Deliver from any account linked here. New accounts you post from get linked
-        automatically and verified on your first approved delivery.
+        Deliver from any account linked here. New accounts you post from get linked automatically
+        and verified on your first approved delivery.
       </p>
       <ul className="mt-3 space-y-2">
         {accounts.map((a) => (
@@ -727,7 +845,9 @@ function TikTokAccounts() {
             </span>
           </li>
         ))}
-        {accounts.length === 0 ? <li className="text-sm text-bone-soft">No accounts linked yet.</li> : null}
+        {accounts.length === 0 ? (
+          <li className="text-sm text-bone-soft">No accounts linked yet.</li>
+        ) : null}
       </ul>
       <form onSubmit={add} className="mt-3 flex items-center gap-2">
         <div className="flex flex-1 items-center border border-[var(--border)] px-3 py-2">
@@ -740,7 +860,9 @@ function TikTokAccounts() {
             placeholder="another.account"
           />
         </div>
-        <button className="silver-btn" disabled={busy || handle.trim().length < 2}>add</button>
+        <button className="silver-btn" disabled={busy || handle.trim().length < 2}>
+          add
+        </button>
       </form>
     </div>
   );
@@ -760,14 +882,17 @@ function MyPrivateCampaigns() {
             <div className="min-w-0">
               <div className="truncate text-bone">{b.title}</div>
               <div className="text-xs text-bone-soft">
-                {b.sound_name} · {b.access_status === "applied"
+                {b.sound_name} ·{" "}
+                {b.access_status === "applied"
                   ? "application pending"
                   : b.access_status === "rejected"
                     ? "not selected"
                     : "you're in"}
               </div>
             </div>
-            <Link to="/bounty/$id" params={{ id: b.id }} className="silver-btn px-3 py-1 text-xs">open</Link>
+            <Link to="/bounty/$id" params={{ id: b.id }} className="silver-btn px-3 py-1 text-xs">
+              open
+            </Link>
           </li>
         ))}
       </ul>

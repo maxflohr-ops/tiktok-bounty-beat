@@ -84,8 +84,22 @@ function TiktokClipperPage() {
       </LandingSection>
       <LandingSection title="Related">
         <ul className="list-disc space-y-2 pl-6">
-          <li><a href="/for-editors" className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0">For editors — live campaigns</a></li>
-          <li><a href="/clipping-campaigns" className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0">How campaigns work</a></li>
+          <li>
+            <a
+              href="/for-editors"
+              className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0"
+            >
+              For editors — live campaigns
+            </a>
+          </li>
+          <li>
+            <a
+              href="/clipping-campaigns"
+              className="inline-flex min-h-[44px] items-center underline hover:text-bone md:min-h-0"
+            >
+              How campaigns work
+            </a>
+          </li>
         </ul>
       </LandingSection>
     </LandingLayout>

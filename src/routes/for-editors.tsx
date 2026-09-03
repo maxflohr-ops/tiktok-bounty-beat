@@ -77,7 +77,11 @@ export const Route = createFileRoute("/for-editors")({
 type Bounty = Awaited<ReturnType<typeof listPublicBounties>>[number];
 
 function money(cents: number, currency = "USD") {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 }
 
 function rate(b: Bounty) {
@@ -108,7 +112,13 @@ function ForEditors() {
     retry: false,
   });
   const live = bounties
-    .filter((b) => b.status !== "expired" && b.status !== "fulfilled" && b.status !== "closed" && b.status !== "draft")
+    .filter(
+      (b) =>
+        b.status !== "expired" &&
+        b.status !== "fulfilled" &&
+        b.status !== "closed" &&
+        b.status !== "draft",
+    )
     .slice(0, 6);
 
   return (
@@ -138,8 +148,12 @@ function ForEditors() {
                   </div>
                   <p className="mt-2 text-sm text-[var(--color-bs-ink-soft)]">{editorsRead(b)}</p>
                   <p className="mt-2 text-xs text-[var(--color-bs-ink-mute)]">
-                    {b.claims_count > 0 ? `${b.claims_count} editor${b.claims_count === 1 ? "" : "s"} on it` : "no one on it yet"}
-                    {b.deadline ? ` · closes ${new Date(b.deadline).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : ""}
+                    {b.claims_count > 0
+                      ? `${b.claims_count} editor${b.claims_count === 1 ? "" : "s"} on it`
+                      : "no one on it yet"}
+                    {b.deadline
+                      ? ` · closes ${new Date(b.deadline).toLocaleDateString(undefined, { month: "short", day: "numeric" })}`
+                      : ""}
                   </p>
                 </Link>
               </li>
@@ -159,19 +173,21 @@ function ForEditors() {
 
       <LandingSection title="Toolkit">
         <ul className="list-disc space-y-2 pl-6">
-          {Object.entries(PARTNERS).filter(([, p]) => p.kit !== false).map(([id, p]) => (
-            <li key={id}>
-              <a
-                href={partnerGoHref(id)}
-                target="_blank"
-                rel="sponsored noopener noreferrer"
-                className="tap-inline underline hover:text-bone"
-              >
-                {p.name}
-              </a>{" "}
-              — {p.blurb}
-            </li>
-          ))}
+          {Object.entries(PARTNERS)
+            .filter(([, p]) => p.kit !== false)
+            .map(([id, p]) => (
+              <li key={id}>
+                <a
+                  href={partnerGoHref(id)}
+                  target="_blank"
+                  rel="sponsored noopener noreferrer"
+                  className="tap-inline underline hover:text-bone"
+                >
+                  {p.name}
+                </a>{" "}
+                — {p.blurb}
+              </li>
+            ))}
           <li>Every contract links its exact TikTok sound — post with that one</li>
         </ul>
       </LandingSection>

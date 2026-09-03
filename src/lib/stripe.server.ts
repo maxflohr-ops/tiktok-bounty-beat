@@ -27,7 +27,11 @@ export async function createConnectAccount(userId: string, email: string | null)
   return { accountId: account.id };
 }
 
-export async function createConnectOnboardingLink(accountId: string, refreshUrl: string, returnUrl: string) {
+export async function createConnectOnboardingLink(
+  accountId: string,
+  refreshUrl: string,
+  returnUrl: string,
+) {
   const stripe = getStripe();
   const link = await stripe.accountLinks.create({
     account: accountId,

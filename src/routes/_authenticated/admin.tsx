@@ -6,11 +6,7 @@ import {
   decideBountyApplication,
   inviteToBounty,
 } from "@/lib/access.functions";
-import {
-  listAllBountiesStaff,
-  upsertBounty,
-  deleteBounty,
-} from "@/lib/bounties.functions";
+import { listAllBountiesStaff, upsertBounty, deleteBounty } from "@/lib/bounties.functions";
 import {
   listAllSubmissionsStaff,
   reviewSubmission,
@@ -19,13 +15,32 @@ import {
   reopenSubmission,
 } from "@/lib/submissions.functions";
 import { getMe } from "@/lib/me.functions";
-import { createBountyTopUp, requestPayout, listPayoutApprovals, approveAndSendPayout, rejectPayout } from "@/lib/stripe.functions";
+import {
+  createBountyTopUp,
+  requestPayout,
+  listPayoutApprovals,
+  approveAndSendPayout,
+  rejectPayout,
+} from "@/lib/stripe.functions";
 import { listAllDisputesStaff, resolveDispute } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, ExternalLink, Check, X, Pencil, Coins, Wallet, Flag, Eye, AlertTriangle, RefreshCw } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  ExternalLink,
+  Check,
+  X,
+  Pencil,
+  Coins,
+  Wallet,
+  Flag,
+  Eye,
+  AlertTriangle,
+  RefreshCw,
+} from "lucide-react";
 import { BsEmpty, BsLoading } from "@/components/bs";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -53,9 +68,15 @@ export const Route = createFileRoute("/_authenticated/admin")({
 function isTruthyParam(v: unknown) {
   return v === 1 || v === "1" || v === true || v === "true";
 }
-function pad(n: number) { return n.toString().padStart(3, "0"); }
+function pad(n: number) {
+  return n.toString().padStart(3, "0");
+}
 function money(cents: number, currency = "USD") {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(cents / 100);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
 }
 
 // The desk is one job at a time: triage deliveries, then move money. Tabs keep
@@ -83,7 +104,10 @@ function useFocusRow() {
         if (el) {
           el.scrollIntoView({ behavior: "smooth", block: "center" });
           el.classList.add("ring-2", "ring-amber-400", "transition-shadow");
-          setTimeout(() => el.classList.remove("ring-2", "ring-amber-400", "transition-shadow"), 4000);
+          setTimeout(
+            () => el.classList.remove("ring-2", "ring-amber-400", "transition-shadow"),
+            4000,
+          );
           if (timer) clearInterval(timer);
           return true;
         }
@@ -93,7 +117,9 @@ function useFocusRow() {
       return false;
     };
     if (!tryFocus()) timer = setInterval(tryFocus, 250);
-    return () => { if (timer) clearInterval(timer); };
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [focus, tab]);
 }
 
@@ -103,16 +129,20 @@ function Admin() {
   const { data: me, isLoading } = useQuery({ queryKey: ["me"], queryFn: () => meFn() });
 
   if (isLoading)
-    return <Frame><BsLoading label="opening the ledger" variant="well" /></Frame>;
+    return (
+      <Frame>
+        <BsLoading label="opening the ledger" variant="well" />
+      </Frame>
+    );
   if (!me?.isStaff)
     return (
       <Frame>
         <div className="text-center">
           <h1 className="font-display text-3xl text-bone">Staff only.</h1>
-          <p className="script-note mt-2 text-xl text-bone-soft">
-            Request a seal from an admin.
-          </p>
-          <Link to="/board" className="silver-btn mt-6 inline-flex">Back to the Bounty Board</Link>
+          <p className="script-note mt-2 text-xl text-bone-soft">Request a seal from an admin.</p>
+          <Link to="/board" className="silver-btn mt-6 inline-flex">
+            Back to the Bounty Board
+          </Link>
         </div>
       </Frame>
     );
@@ -222,14 +252,19 @@ function useDeskCounts() {
     // Money waiting on a second pair of eyes should surface without a reload.
     refetchInterval: 60_000,
   });
-  const { data: disputes = [] } = useQuery({ queryKey: ["disputesStaff"], queryFn: () => disputesFn() });
+  const { data: disputes = [] } = useQuery({
+    queryKey: ["disputesStaff"],
+    queryFn: () => disputesFn(),
+  });
 
   const deliveries = subs.filter((x) => {
     const st = x.status as string;
     return st === "submitted" || st === "pending" || st === "in_review";
   }).length;
   const payouts = (approvals as any[]).filter((a) => a.status === "pending").length;
-  const openDisputes = (disputes as any[]).filter((d) => d.status === "open" || d.status === "under_review").length;
+  const openDisputes = (disputes as any[]).filter(
+    (d) => d.status === "open" || d.status === "under_review",
+  ).length;
   const owed = subs
     .filter((x) => x.status === "approved")
     .reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
@@ -243,8 +278,18 @@ function useDeskCounts() {
 function DeskSummary({ counts }: { counts: ReturnType<typeof useDeskCounts> }) {
   // Short labels so nothing wraps to a second line in a narrow column.
   const items = [
-    { short: "review", label: "awaiting review", value: String(counts.deliveries), tone: counts.deliveries > 0 },
-    { short: "approve", label: "payouts to approve", value: String(counts.payouts), tone: counts.payouts > 0 },
+    {
+      short: "review",
+      label: "awaiting review",
+      value: String(counts.deliveries),
+      tone: counts.deliveries > 0,
+    },
+    {
+      short: "approve",
+      label: "payouts to approve",
+      value: String(counts.payouts),
+      tone: counts.payouts > 0,
+    },
     { short: "owed", label: "owed to clippers", value: money(counts.owed), tone: false },
     { short: "paid", label: "paid out", value: money(counts.paid), tone: false },
   ];
@@ -311,7 +356,11 @@ function TopUpReturnNotice() {
           : "border-[var(--border)] bg-[var(--paper-shade)]"
       }`}
     >
-      {topup_success ? <Check className="mt-0.5 h-5 w-5 shrink-0" /> : <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />}
+      {topup_success ? (
+        <Check className="mt-0.5 h-5 w-5 shrink-0" />
+      ) : (
+        <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+      )}
       <div>
         <p className="font-display text-lg text-ink">
           {topup_success ? "Top-up received." : "Top-up cancelled."}
@@ -330,7 +379,9 @@ function Frame({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
       <SiteHeader />
-      <div className="container-board flex min-h-[60vh] items-center justify-center py-20">{children}</div>
+      <div className="container-board flex min-h-[60vh] items-center justify-center py-20">
+        {children}
+      </div>
     </div>
   );
 }
@@ -393,7 +444,8 @@ function BountiesPanel() {
           access_mode: (((editing as any).visibility ?? "public") === "private"
             ? ((editing as any).access_mode ?? "invite")
             : null) as "invite" | "apply" | null,
-          status: (editing.status ?? "active") as "draft" | "active" | "claimed" | "in_review" | "fulfilled" | "expired" | "closed",
+          status: (editing.status ?? "active") as
+            "draft" | "active" | "claimed" | "in_review" | "fulfilled" | "expired" | "closed",
         },
       });
       toast.success("Posted to the Bounty Board.");
@@ -435,21 +487,33 @@ function BountiesPanel() {
                   {(b as any).visibility === "private"
                     ? `private · ${(b as any).access_mode === "apply" ? "apply" : "invite only"} · `
                     : ""}
-                  {b.sound_name} · {b.status} · Purse: <Money cents={(b as any).funded_cash_cents ?? 0} currency={b.currency} />
+                  {b.sound_name} · {b.status} · Purse:{" "}
+                  <Money cents={(b as any).funded_cash_cents ?? 0} currency={b.currency} />
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <button className="rounded p-2 text-bone-soft hover:text-bone" onClick={() => setEditing(b)} title="edit">
+                <button
+                  className="rounded p-2 text-bone-soft hover:text-bone"
+                  onClick={() => setEditing(b)}
+                  title="edit"
+                >
                   <Pencil className="h-4 w-4" />
                 </button>
-                <button className="rounded p-2 text-bone-soft hover:text-bone" onClick={() => remove(b.id)} title="delete">
+                <button
+                  className="rounded p-2 text-bone-soft hover:text-bone"
+                  onClick={() => remove(b.id)}
+                  title="delete"
+                >
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
             </div>
             <TopUpControl bountyId={b.id} />
             {(b as any).visibility === "private" ? (
-              <AccessPanel bountyId={b.id} mode={((b as any).access_mode ?? "invite") as "invite" | "apply"} />
+              <AccessPanel
+                bountyId={b.id}
+                mode={((b as any).access_mode ?? "invite") as "invite" | "apply"}
+              />
             ) : null}
           </li>
         ))}
@@ -460,64 +524,210 @@ function BountiesPanel() {
 
       {editing ? (
         <form onSubmit={save} className="mt-6 space-y-4 border-t border-[var(--border)] pt-5">
-          <h3 className="font-display text-xl text-bone">{editing.id ? "Amend contract" : "Post a new contract"}</h3>
+          <h3 className="font-display text-xl text-bone">
+            {editing.id ? "Amend contract" : "Post a new contract"}
+          </h3>
           <Field label="title">
-            <input required maxLength={120} value={editing.title ?? ""} onChange={(e) => setEditing({ ...editing, title: e.target.value })} className="dark-input" />
+            <input
+              required
+              maxLength={120}
+              value={editing.title ?? ""}
+              onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+              className="dark-input"
+            />
           </Field>
           <Field label="brief (what the clip should do)">
-            <textarea required rows={4} maxLength={2000} value={editing.description ?? ""} onChange={(e) => setEditing({ ...editing, description: e.target.value })} className="dark-input" />
+            <textarea
+              required
+              rows={4}
+              maxLength={2000}
+              value={editing.description ?? ""}
+              onChange={(e) => setEditing({ ...editing, description: e.target.value })}
+              className="dark-input"
+            />
           </Field>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="artist / song"><input maxLength={200} value={editing.artist_song ?? ""} onChange={(e) => setEditing({ ...editing, artist_song: e.target.value })} className="dark-input" /></Field>
-            <Field label="sound name"><input required maxLength={160} value={editing.sound_name ?? ""} onChange={(e) => setEditing({ ...editing, sound_name: e.target.value })} className="dark-input" /></Field>
+            <Field label="artist / song">
+              <input
+                maxLength={200}
+                value={editing.artist_song ?? ""}
+                onChange={(e) => setEditing({ ...editing, artist_song: e.target.value })}
+                className="dark-input"
+              />
+            </Field>
+            <Field label="sound name">
+              <input
+                required
+                maxLength={160}
+                value={editing.sound_name ?? ""}
+                onChange={(e) => setEditing({ ...editing, sound_name: e.target.value })}
+                className="dark-input"
+              />
+            </Field>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="sound URL"><input type="url" value={editing.tiktok_sound_url ?? ""} onChange={(e) => setEditing({ ...editing, tiktok_sound_url: e.target.value })} className="dark-input" /></Field>
-            <Field label="source assets URL"><input type="url" value={editing.source_assets_url ?? ""} onChange={(e) => setEditing({ ...editing, source_assets_url: e.target.value })} className="dark-input" /></Field>
+            <Field label="sound URL">
+              <input
+                type="url"
+                value={editing.tiktok_sound_url ?? ""}
+                onChange={(e) => setEditing({ ...editing, tiktok_sound_url: e.target.value })}
+                className="dark-input"
+              />
+            </Field>
+            <Field label="source assets URL">
+              <input
+                type="url"
+                value={editing.source_assets_url ?? ""}
+                onChange={(e) => setEditing({ ...editing, source_assets_url: e.target.value })}
+                className="dark-input"
+              />
+            </Field>
           </div>
           <div className="grid grid-cols-3 gap-3">
             <Field label="platform">
-              <select value={editing.platform_target ?? "tiktok"} onChange={(e) => setEditing({ ...editing, platform_target: e.target.value as Bounty["platform_target"] })} className="dark-input">
+              <select
+                value={editing.platform_target ?? "tiktok"}
+                onChange={(e) =>
+                  setEditing({
+                    ...editing,
+                    platform_target: e.target.value as Bounty["platform_target"],
+                  })
+                }
+                className="dark-input"
+              >
                 <option value="tiktok">tiktok</option>
                 <option value="shorts">shorts</option>
               </select>
             </Field>
             <Field label="payout">
-              <select value={editing.payout_type ?? "flat"} onChange={(e) => setEditing({ ...editing, payout_type: e.target.value as Bounty["payout_type"] })} className="dark-input">
+              <select
+                value={editing.payout_type ?? "flat"}
+                onChange={(e) =>
+                  setEditing({ ...editing, payout_type: e.target.value as Bounty["payout_type"] })
+                }
+                className="dark-input"
+              >
                 <option value="flat">flat / clip</option>
                 <option value="per_1k_views">per 100k views</option>
               </select>
             </Field>
             <Field label="cap (max clips)">
-              <input type="number" min={1} value={editing.max_submissions ?? 5} onChange={(e) => setEditing({ ...editing, max_submissions: Number(e.target.value) })} className="dark-input" />
+              <input
+                type="number"
+                min={1}
+                value={editing.max_submissions ?? 5}
+                onChange={(e) =>
+                  setEditing({ ...editing, max_submissions: Number(e.target.value) })
+                }
+                className="dark-input"
+              />
             </Field>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            <Field label="cash (cents)"><input type="number" min={0} value={editing.reward_cash_cents ?? 0} onChange={(e) => setEditing({ ...editing, reward_cash_cents: Number(e.target.value) })} className="dark-input" /></Field>
-            <Field label="points"><input type="number" min={0} value={editing.reward_points ?? 0} onChange={(e) => setEditing({ ...editing, reward_points: Number(e.target.value) })} className="dark-input" /></Field>
-            <Field label="currency"><input maxLength={3} value={editing.currency ?? "USD"} onChange={(e) => setEditing({ ...editing, currency: e.target.value.toUpperCase() })} className="dark-input" /></Field>
+            <Field label="cash (cents)">
+              <input
+                type="number"
+                min={0}
+                value={editing.reward_cash_cents ?? 0}
+                onChange={(e) =>
+                  setEditing({ ...editing, reward_cash_cents: Number(e.target.value) })
+                }
+                className="dark-input"
+              />
+            </Field>
+            <Field label="points">
+              <input
+                type="number"
+                min={0}
+                value={editing.reward_points ?? 0}
+                onChange={(e) => setEditing({ ...editing, reward_points: Number(e.target.value) })}
+                className="dark-input"
+              />
+            </Field>
+            <Field label="currency">
+              <input
+                maxLength={3}
+                value={editing.currency ?? "USD"}
+                onChange={(e) => setEditing({ ...editing, currency: e.target.value.toUpperCase() })}
+                className="dark-input"
+              />
+            </Field>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <Field label="deadline">
-              <input type="datetime-local" value={editing.deadline ? editing.deadline.slice(0, 16) : ""} onChange={(e) => setEditing({ ...editing, deadline: e.target.value ? new Date(e.target.value).toISOString() : null })} className="dark-input" />
+              <input
+                type="datetime-local"
+                value={editing.deadline ? editing.deadline.slice(0, 16) : ""}
+                onChange={(e) =>
+                  setEditing({
+                    ...editing,
+                    deadline: e.target.value ? new Date(e.target.value).toISOString() : null,
+                  })
+                }
+                className="dark-input"
+              />
             </Field>
             <Field label="featured until ($1k/mo slot)">
-              <input type="datetime-local" value={(editing as any).featured_until ? (editing as any).featured_until.slice(0, 16) : ""} onChange={(e) => setEditing({ ...editing, featured_until: e.target.value ? new Date(e.target.value).toISOString() : null } as any)} className="dark-input" />
+              <input
+                type="datetime-local"
+                value={
+                  (editing as any).featured_until
+                    ? (editing as any).featured_until.slice(0, 16)
+                    : ""
+                }
+                onChange={(e) =>
+                  setEditing({
+                    ...editing,
+                    featured_until: e.target.value ? new Date(e.target.value).toISOString() : null,
+                  } as any)
+                }
+                className="dark-input"
+              />
             </Field>
             <Field label="counting window (days per clip)">
-              <input type="number" min={1} max={90} value={(editing as any).counting_days ?? 14} onChange={(e) => setEditing({ ...editing, counting_days: Number(e.target.value) } as any)} className="dark-input" />
+              <input
+                type="number"
+                min={1}
+                max={90}
+                value={(editing as any).counting_days ?? 14}
+                onChange={(e) =>
+                  setEditing({ ...editing, counting_days: Number(e.target.value) } as any)
+                }
+                className="dark-input"
+              />
             </Field>
             <Field label="max clips per editor">
-              <input type="number" min={1} max={50} value={(editing as any).max_clips_per_editor ?? 15} onChange={(e) => setEditing({ ...editing, max_clips_per_editor: Number(e.target.value) } as any)} className="dark-input" />
+              <input
+                type="number"
+                min={1}
+                max={50}
+                value={(editing as any).max_clips_per_editor ?? 15}
+                onChange={(e) =>
+                  setEditing({ ...editing, max_clips_per_editor: Number(e.target.value) } as any)
+                }
+                className="dark-input"
+              />
             </Field>
             <Field label="featured+ ($2.5k/mo · presented-by)">
               <label className="flex items-center gap-2 py-2 text-sm text-bone-soft">
-                <input type="checkbox" checked={Boolean((editing as any).featured_plus)} onChange={(e) => setEditing({ ...editing, featured_plus: e.target.checked } as any)} />
+                <input
+                  type="checkbox"
+                  checked={Boolean((editing as any).featured_plus)}
+                  onChange={(e) =>
+                    setEditing({ ...editing, featured_plus: e.target.checked } as any)
+                  }
+                />
                 presented-by line on the front page
               </label>
             </Field>
             <Field label="status">
-              <select value={editing.status ?? "active"} onChange={(e) => setEditing({ ...editing, status: e.target.value as Bounty["status"] })} className="dark-input">
+              <select
+                value={editing.status ?? "active"}
+                onChange={(e) =>
+                  setEditing({ ...editing, status: e.target.value as Bounty["status"] })
+                }
+                className="dark-input"
+              >
                 <option value="active">active (open)</option>
                 <option value="draft">draft</option>
                 <option value="in_review">in review</option>
@@ -576,7 +786,9 @@ function BountiesPanel() {
               placeholder="9:16 only. Subtitles on. No logo overlays…"
             />
           </Field>
-          <p className="script-note text-bone-soft">Payment tracked here manually · PayPal/Stripe later.</p>
+          <p className="script-note text-bone-soft">
+            Payment tracked here manually · PayPal/Stripe later.
+          </p>
           <div className="flex gap-2 pt-2">
             <button className="silver-btn">post</button>
             <button type="button" onClick={() => setEditing(null)} className="ink-btn">
@@ -651,7 +863,8 @@ const AWAITING = new Set(["submitted", "pending", "in_review"]);
 
 function statusTone(status: string) {
   if (status === "paid" || status === "approved") return "border-[var(--gold)]/40 silver";
-  if (status === "rejected") return "border-[var(--color-bs-crimson)] text-[var(--color-bs-crimson)]";
+  if (status === "rejected")
+    return "border-[var(--color-bs-crimson)] text-[var(--color-bs-crimson)]";
   return "border-[var(--border)] text-bone-soft";
 }
 
@@ -685,18 +898,38 @@ function SubmissionsPanel() {
 
   const countFor = (k: DeliveryFilter) => {
     switch (k) {
-      case "queue": return pending.length;
-      case "failed": return delivered.filter((s) => !s.auto_check_passed).length;
-      case "rejected": return delivered.filter((s) => s.status === "rejected").length;
-      case "approved": return delivered.filter((s) => s.status === "approved").length;
-      case "paid": return delivered.filter((s) => s.status === "paid").length;
-      default: return delivered.length;
+      case "queue":
+        return pending.length;
+      case "failed":
+        return delivered.filter((s) => !s.auto_check_passed).length;
+      case "rejected":
+        return delivered.filter((s) => s.status === "rejected").length;
+      case "approved":
+        return delivered.filter((s) => s.status === "approved").length;
+      case "paid":
+        return delivered.filter((s) => s.status === "paid").length;
+      default:
+        return delivered.length;
     }
   };
 
-  const decide = async (id: string, decision: "approved" | "rejected", points: number, cash: number, notes: string) => {
+  const decide = async (
+    id: string,
+    decision: "approved" | "rejected",
+    points: number,
+    cash: number,
+    notes: string,
+  ) => {
     try {
-      await reviewFn({ data: { id, decision, awarded_points: points, awarded_cash_cents: cash, review_notes: notes } });
+      await reviewFn({
+        data: {
+          id,
+          decision,
+          awarded_points: points,
+          awarded_cash_cents: cash,
+          review_notes: notes,
+        },
+      });
       toast.success(decision === "approved" ? "Contract honored." : "Contract disputed.");
       refetch();
     } catch (err) {
@@ -793,9 +1026,13 @@ function DeliveryRow({ s, onReopened }: { s: Sub; onReopened: () => void }) {
         )}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</span>
+            <span className="label-cap silver">
+              No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}
+            </span>
             <span className={`label-cap border px-2 py-0.5 ${statusTone(status)}`}>{status}</span>
-            <span className={`label-cap ${s.auto_check_passed ? "text-bone-soft" : "text-[var(--color-bs-crimson)]"}`}>
+            <span
+              className={`label-cap ${s.auto_check_passed ? "text-bone-soft" : "text-[var(--color-bs-crimson)]"}`}
+            >
               {s.auto_check_passed ? "auto-check ✓" : "auto-check ✗"}
             </span>
           </div>
@@ -810,7 +1047,9 @@ function DeliveryRow({ s, onReopened }: { s: Sub; onReopened: () => void }) {
                 ? `${reported.toLocaleString()} reported, unverified`
                 : "no view count"}
             {s.awarded_cash_cents ? ` · awarded ${money(s.awarded_cash_cents, currency)}` : ""}
-            {(s as any).paid_cash_cents ? ` · paid ${money((s as any).paid_cash_cents, currency)}` : ""}
+            {(s as any).paid_cash_cents
+              ? ` · paid ${money((s as any).paid_cash_cents, currency)}`
+              : ""}
           </div>
           {s.auto_check_notes ? (
             <p className="mt-1 text-xs text-bone-soft">check: {s.auto_check_notes}</p>
@@ -831,10 +1070,12 @@ function DeliveryRow({ s, onReopened }: { s: Sub; onReopened: () => void }) {
           {status === "rejected" && !paid ? (
             <div className="mt-3">
               <button type="button" onClick={reopen} disabled={reopening} className="ink-btn">
-                <RefreshCw className="h-3.5 w-3.5" /> {reopening ? "reopening…" : "reopen for review"}
+                <RefreshCw className="h-3.5 w-3.5" />{" "}
+                {reopening ? "reopening…" : "reopen for review"}
               </button>
               <p className="mt-1 text-xs text-bone-soft">
-                Puts it back in the queue so it can be ruled on again — for an appeal you agree with.
+                Puts it back in the queue so it can be ruled on again — for an appeal you agree
+                with.
               </p>
             </div>
           ) : null}
@@ -858,7 +1099,13 @@ function ReviewCard({
   onVerified,
 }: {
   s: Sub;
-  onDecide: (id: string, decision: "approved" | "rejected", points: number, cash: number, notes: string) => void;
+  onDecide: (
+    id: string,
+    decision: "approved" | "rejected",
+    points: number,
+    cash: number,
+    notes: string,
+  ) => void;
   onVerified: () => void;
 }) {
   const verifyFn = useServerFn(verifyViewCount);
@@ -875,7 +1122,9 @@ function ReviewCard({
     if (perView) return verified != null ? (payoutForViews(verified, rate) / 100).toFixed(2) : "";
     return ((s.bounty?.reward_cash_cents ?? 0) / 100).toFixed(2);
   });
-  const [views, setViews] = useState<string>(verified != null ? String(verified) : selfReported != null ? String(selfReported) : "");
+  const [views, setViews] = useState<string>(
+    verified != null ? String(verified) : selfReported != null ? String(selfReported) : "",
+  );
   const [notes, setNotes] = useState("");
   const [verifying, setVerifying] = useState(false);
 
@@ -891,7 +1140,9 @@ function ReviewCard({
     }
     setVerifying(true);
     try {
-      await verifyFn({ data: { submission_id: s.id, verified_view_count: Math.round(pendingViews) } });
+      await verifyFn({
+        data: { submission_id: s.id, verified_view_count: Math.round(pendingViews) },
+      });
       setDollars((payoutForViews(Math.round(pendingViews), rate) / 100).toFixed(2));
       toast.success(`Verified ${Math.round(pendingViews).toLocaleString()} views.`);
       onVerified();
@@ -908,10 +1159,14 @@ function ReviewCard({
         {s.oembed_thumbnail ? (
           <img src={s.oembed_thumbnail} alt="" className="h-24 w-20 object-cover" />
         ) : (
-          <div className="flex h-24 w-20 items-center justify-center border border-[var(--border)] text-xs text-bone-soft">no thumb</div>
+          <div className="flex h-24 w-20 items-center justify-center border border-[var(--border)] text-xs text-bone-soft">
+            no thumb
+          </div>
         )}
         <div className="min-w-0 flex-1">
-          <div className="label-cap silver">No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}</div>
+          <div className="label-cap silver">
+            No. {s.bounty?.contract_no != null ? pad(s.bounty.contract_no) : "—"}
+          </div>
           <div className="line-clamp-2 text-bone md:truncate">{s.bounty?.title}</div>
           {(s as any).counting_ends_at && perView ? (
             <div className="mt-0.5 text-xs text-bone-soft">
@@ -924,15 +1179,24 @@ function ReviewCard({
             by {s.editor?.display_name || "editor"} · @{s.tiktok_handle}
           </div>
           {s.tiktok_video_url ? (
-            <a href={s.tiktok_video_url} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 text-xs italic underline text-bone-soft">
+            <a
+              href={s.tiktok_video_url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 inline-flex items-center gap-1 text-xs italic underline text-bone-soft"
+            >
               open clip <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}
           <div className="mt-2">
-            <span className={`label-cap ${s.auto_check_passed ? "silver border border-[var(--gold)]/40 px-2 py-1" : "text-bone-soft"}`}>
+            <span
+              className={`label-cap ${s.auto_check_passed ? "silver border border-[var(--gold)]/40 px-2 py-1" : "text-bone-soft"}`}
+            >
               {s.auto_check_passed ? "auto-check ✓" : "needs eyes"}
             </span>
-            {s.auto_check_notes ? <p className="mt-1 text-xs text-bone-soft">{s.auto_check_notes}</p> : null}
+            {s.auto_check_notes ? (
+              <p className="mt-1 text-xs text-bone-soft">{s.auto_check_notes}</p>
+            ) : null}
           </div>
         </div>
       </div>
@@ -952,7 +1216,8 @@ function ReviewCard({
               />
             </label>
             <button type="button" onClick={verify} disabled={verifying} className="silver-btn">
-              <Eye className="h-3.5 w-3.5" /> {verifying ? "recording…" : verified != null ? "re-verify" : "verify views"}
+              <Eye className="h-3.5 w-3.5" />{" "}
+              {verifying ? "recording…" : verified != null ? "re-verify" : "verify views"}
             </button>
             <div className="text-sm text-bone-soft">
               <div>
@@ -971,7 +1236,8 @@ function ReviewCard({
           {needsVerification ? (
             <p className="mt-2 inline-flex items-center gap-2 text-xs text-[var(--color-bs-crimson)]">
               <AlertTriangle className="h-3.5 w-3.5" />
-              Verify the view count before honoring — a per-view payout cannot be approved without it.
+              Verify the view count before honoring — a per-view payout cannot be approved without
+              it.
             </p>
           ) : null}
         </div>
@@ -980,7 +1246,13 @@ function ReviewCard({
       <div className="mt-4 grid gap-2 border-t border-[var(--border)] pt-4 md:grid-cols-[1fr_1fr_2fr_auto]">
         <label className="block">
           <span className="label-cap text-bone-soft">points</span>
-          <input type="number" min={0} value={points} onChange={(e) => setPoints(Number(e.target.value))} className="dark-input mt-1" />
+          <input
+            type="number"
+            min={0}
+            value={points}
+            onChange={(e) => setPoints(Number(e.target.value))}
+            className="dark-input mt-1"
+          />
         </label>
         <label className="block">
           <span className="label-cap text-bone-soft">payout ({currency})</span>
@@ -996,7 +1268,13 @@ function ReviewCard({
         </label>
         <label className="block">
           <span className="label-cap text-bone-soft">note</span>
-          <input value={notes} maxLength={1000} onChange={(e) => setNotes(e.target.value)} className="dark-input mt-1" placeholder="well cut / re-cut with a wider crop / …" />
+          <input
+            value={notes}
+            maxLength={1000}
+            onChange={(e) => setNotes(e.target.value)}
+            className="dark-input mt-1"
+            placeholder="well cut / re-cut with a wider crop / …"
+          />
         </label>
         <div className="flex items-end gap-2">
           <button
@@ -1025,12 +1303,21 @@ function Ledger() {
   const [payingId, setPayingId] = useState<string | null>(null);
 
   const rows = data.filter((s) => s.status === "approved" || s.status === "paid");
-  const owed = rows.filter((s) => s.status === "approved").reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
-  const paid = rows.filter((s) => s.status === "paid").reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
+  const owed = rows
+    .filter((s) => s.status === "approved")
+    .reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
+  const paid = rows
+    .filter((s) => s.status === "paid")
+    .reduce((a, r) => a + (r.awarded_cash_cents || 0), 0);
 
   const payManually = async (id: string) => {
-    try { await payFn({ data: { id } }); toast.success("Silver logged."); refetch(); }
-    catch (err) { toast.error(err instanceof Error ? err.message : "Payment log refused."); }
+    try {
+      await payFn({ data: { id } });
+      toast.success("Silver logged.");
+      refetch();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Payment log refused.");
+    }
   };
 
   const requestPay = async (id: string) => {
@@ -1056,35 +1343,62 @@ function Ledger() {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <h2 className="label-cap silver">Earnings</h2>
-          <p className="script-note text-lg text-bone-soft">A running weight of honored contracts.</p>
-          <p className="mt-1 text-xs text-bone-soft">Payouts are sent via Stripe to the clipper's linked account.</p>
+          <p className="script-note text-lg text-bone-soft">
+            A running weight of honored contracts.
+          </p>
+          <p className="mt-1 text-xs text-bone-soft">
+            Payouts are sent via Stripe to the clipper's linked account.
+          </p>
         </div>
         <div className="flex gap-6 text-right">
-          <div><div className="label-cap text-bone-soft">owed</div><div className="font-display text-xl silver">{money(owed)}</div></div>
-          <div><div className="label-cap text-bone-soft">paid</div><div className="font-display text-xl silver">{money(paid)}</div></div>
+          <div>
+            <div className="label-cap text-bone-soft">owed</div>
+            <div className="font-display text-xl silver">{money(owed)}</div>
+          </div>
+          <div>
+            <div className="label-cap text-bone-soft">paid</div>
+            <div className="font-display text-xl silver">{money(paid)}</div>
+          </div>
         </div>
       </div>
       <ul className="mt-4 divide-y divide-[var(--border)]">
         {rows.map((r) => (
           <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
             <div className="min-w-0">
-              <span className="label-cap silver mr-2">No. {r.bounty?.contract_no != null ? pad(r.bounty.contract_no) : "—"}</span>
+              <span className="label-cap silver mr-2">
+                No. {r.bounty?.contract_no != null ? pad(r.bounty.contract_no) : "—"}
+              </span>
               <span className="text-bone">{r.bounty?.title}</span>
-              <span className="ml-2 text-bone-soft">to {r.editor?.display_name || "editor"} @{r.tiktok_handle}</span>
+              <span className="ml-2 text-bone-soft">
+                to {r.editor?.display_name || "editor"} @{r.tiktok_handle}
+              </span>
               {r.status === "paid" && (r as any).stripe_transfer_id ? (
                 <div className="mt-1 text-xs text-bone-soft">
-                  transfer: {(r as any).stripe_transfer_id} · paid <Money cents={(r as any).paid_cash_cents ?? r.awarded_cash_cents ?? 0} currency={r.bounty?.currency || "USD"} />
+                  transfer: {(r as any).stripe_transfer_id} · paid{" "}
+                  <Money
+                    cents={(r as any).paid_cash_cents ?? r.awarded_cash_cents ?? 0}
+                    currency={r.bounty?.currency || "USD"}
+                  />
                 </div>
               ) : null}
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-display silver">{money(r.awarded_cash_cents || 0, r.bounty?.currency || "USD")}</span>
+              <span className="font-display silver">
+                {money(r.awarded_cash_cents || 0, r.bounty?.currency || "USD")}
+              </span>
               {r.status === "paid" ? (
-                <span className="label-cap silver border border-[var(--gold)]/40 px-2 py-1">paid</span>
+                <span className="label-cap silver border border-[var(--gold)]/40 px-2 py-1">
+                  paid
+                </span>
               ) : (
                 <>
-                  <button onClick={() => requestPay(r.id)} disabled={payingId === r.id} className="silver-btn">
-                    <Coins className="h-3.5 w-3.5" /> {payingId === r.id ? "requesting…" : "request payout"}
+                  <button
+                    onClick={() => requestPay(r.id)}
+                    disabled={payingId === r.id}
+                    className="silver-btn"
+                  >
+                    <Coins className="h-3.5 w-3.5" />{" "}
+                    {payingId === r.id ? "requesting…" : "request payout"}
                   </button>
                   <button onClick={() => payManually(r.id)} className="ink-btn">
                     mark paid manually
@@ -1095,7 +1409,9 @@ function Ledger() {
           </li>
         ))}
         {rows.length === 0 ? (
-          <li className="script-note py-6 text-center text-xl text-bone-soft">No silver weighed yet.</li>
+          <li className="script-note py-6 text-center text-xl text-bone-soft">
+            No silver weighed yet.
+          </li>
         ) : null}
       </ul>
     </section>
@@ -1107,7 +1423,10 @@ function PayoutApprovalsPanel() {
   const listFn = useServerFn(listPayoutApprovals);
   const approveFn = useServerFn(approveAndSendPayout);
   const rejectFn = useServerFn(rejectPayout);
-  const { data = [], refetch } = useQuery({ queryKey: ["payoutApprovals"], queryFn: () => listFn() });
+  const { data = [], refetch } = useQuery({
+    queryKey: ["payoutApprovals"],
+    queryFn: () => listFn(),
+  });
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const pending = data.filter((a: any) => a.status === "pending");
@@ -1118,7 +1437,10 @@ function PayoutApprovalsPanel() {
   const [ask, setAsk] = useState<{ id: string; kind: "approve" | "reject"; row: any } | null>(null);
 
   const decide = async (id: string, kind: "approve" | "reject", note: string) => {
-    if (kind === "reject" && !note.trim()) { toast.error("Rejections need a reason."); return; }
+    if (kind === "reject" && !note.trim()) {
+      toast.error("Rejections need a reason.");
+      return;
+    }
     setAsk(null);
     setBusyId(id);
     try {
@@ -1148,8 +1470,12 @@ function PayoutApprovalsPanel() {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
           <h2 className="label-cap silver">Payout approvals</h2>
-          <p className="script-note text-lg text-bone-soft">Every payout requires a second approval.</p>
-          <p className="mt-1 text-xs text-bone-soft">Any staff can request. Only admins can approve; approval sends the Stripe transfer.</p>
+          <p className="script-note text-lg text-bone-soft">
+            Every payout requires a second approval.
+          </p>
+          <p className="mt-1 text-xs text-bone-soft">
+            Any staff can request. Only admins can approve; approval sends the Stripe transfer.
+          </p>
         </div>
         <div className="text-right">
           <div className="label-cap text-bone-soft">pending</div>
@@ -1159,28 +1485,48 @@ function PayoutApprovalsPanel() {
 
       <ul className="mt-4 divide-y divide-[var(--border)]">
         {pending.map((a: any) => (
-          <li key={a.id} id={`pa-${a.id}`} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+          <li
+            key={a.id}
+            id={`pa-${a.id}`}
+            className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
+          >
             <div className="min-w-0">
-              <span className="label-cap silver mr-2">No. {a.submission?.bounty?.contract_no != null ? pad(a.submission.bounty.contract_no) : "—"}</span>
+              <span className="label-cap silver mr-2">
+                No.{" "}
+                {a.submission?.bounty?.contract_no != null
+                  ? pad(a.submission.bounty.contract_no)
+                  : "—"}
+              </span>
               <span className="text-bone">{a.submission?.bounty?.title}</span>
               <span className="ml-2 text-bone-soft">@{a.submission?.tiktok_handle}</span>
               <div className="mt-1 text-xs text-bone-soft">
-                requested by {a.requested_by_name || "staff"} · {new Date(a.created_at).toLocaleString()}
+                requested by {a.requested_by_name || "staff"} ·{" "}
+                {new Date(a.created_at).toLocaleString()}
               </div>
             </div>
             <div className="flex items-center gap-3">
               <span className="font-display silver">{money(a.amount_cents, a.currency)}</span>
-              <button onClick={() => setAsk({ id: a.id, kind: "approve", row: a })} disabled={busyId === a.id} className="silver-btn">
+              <button
+                onClick={() => setAsk({ id: a.id, kind: "approve", row: a })}
+                disabled={busyId === a.id}
+                className="silver-btn"
+              >
                 <Check className="h-3.5 w-3.5" /> {busyId === a.id ? "working…" : "approve & send"}
               </button>
-              <button onClick={() => setAsk({ id: a.id, kind: "reject", row: a })} disabled={busyId === a.id} className="ink-btn">
+              <button
+                onClick={() => setAsk({ id: a.id, kind: "reject", row: a })}
+                disabled={busyId === a.id}
+                className="ink-btn"
+              >
                 <X className="h-3.5 w-3.5" /> reject
               </button>
             </div>
           </li>
         ))}
         {pending.length === 0 ? (
-          <li className="script-note py-6 text-center text-xl text-bone-soft">No payouts await a seal.</li>
+          <li className="script-note py-6 text-center text-xl text-bone-soft">
+            No payouts await a seal.
+          </li>
         ) : null}
       </ul>
 
@@ -1189,9 +1535,17 @@ function PayoutApprovalsPanel() {
           <div className="label-cap text-bone-soft mb-2">Recent decisions</div>
           <ul className="divide-y divide-[var(--border)]">
             {recent.map((a: any) => (
-              <li key={a.id} className="flex flex-wrap items-center justify-between gap-3 py-2 text-xs text-bone-soft">
+              <li
+                key={a.id}
+                className="flex flex-wrap items-center justify-between gap-3 py-2 text-xs text-bone-soft"
+              >
                 <div className="min-w-0">
-                  <span className="label-cap silver mr-2">No. {a.submission?.bounty?.contract_no != null ? pad(a.submission.bounty.contract_no) : "—"}</span>
+                  <span className="label-cap silver mr-2">
+                    No.{" "}
+                    {a.submission?.bounty?.contract_no != null
+                      ? pad(a.submission.bounty.contract_no)
+                      : "—"}
+                  </span>
                   <span className="text-bone">{a.submission?.bounty?.title}</span>
                   <span className="ml-2">@{a.submission?.tiktok_handle}</span>
                   {a.decision_note ? <div className="mt-0.5">note: {a.decision_note}</div> : null}
@@ -1199,7 +1553,11 @@ function PayoutApprovalsPanel() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="font-display silver">{money(a.amount_cents, a.currency)}</span>
-                  <span className={`label-cap border px-2 py-0.5 ${a.status === "sent" ? "silver border-[var(--gold)]/40" : "border-[var(--border)]"}`}>{a.status}</span>
+                  <span
+                    className={`label-cap border px-2 py-0.5 ${a.status === "sent" ? "silver border-[var(--gold)]/40" : "border-[var(--border)]"}`}
+                  >
+                    {a.status}
+                  </span>
                   <span>{a.decided_by_name || "—"}</span>
                 </div>
               </li>
@@ -1256,7 +1614,9 @@ function PayoutDecisionDialog({
         <dl className="mt-4 space-y-1 text-sm text-ink-soft">
           <div className="flex justify-between gap-4">
             <dt>Amount</dt>
-            <dd className="font-display text-lg text-ink">{money(row.amount_cents, row.currency)}</dd>
+            <dd className="font-display text-lg text-ink">
+              {money(row.amount_cents, row.currency)}
+            </dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt>Clipper</dt>
@@ -1284,7 +1644,9 @@ function PayoutDecisionDialog({
             rows={3}
             onChange={(e) => setNote(e.target.value)}
             className="dark-input mt-1 w-full"
-            placeholder={approving ? "verified against the live clip" : "why this payout is not going out"}
+            placeholder={
+              approving ? "verified against the live clip" : "why this payout is not going out"
+            }
           />
         </label>
         <div className="mt-5 flex justify-end gap-2">
@@ -1317,12 +1679,12 @@ function DisputesPanel() {
 
   const [drafts, setDrafts] = useState<Record<string, { note: string; corrected: string }>>({});
   const upd = (id: string, patch: Partial<{ note: string; corrected: string }>) =>
-    setDrafts((s) => ({ ...s, [id]: { note: s[id]?.note ?? "", corrected: s[id]?.corrected ?? "", ...patch } }));
+    setDrafts((s) => ({
+      ...s,
+      [id]: { note: s[id]?.note ?? "", corrected: s[id]?.corrected ?? "", ...patch },
+    }));
 
-  const act = async (
-    id: string,
-    decision: "under_review" | "resolved" | "rejected",
-  ) => {
+  const act = async (id: string, decision: "under_review" | "resolved" | "rejected") => {
     const d = drafts[id] ?? { note: "", corrected: "" };
     try {
       await resolveFn({
@@ -1366,7 +1728,13 @@ function DisputesPanel() {
       </div>
 
       {open.length === 0 ? (
-        <div className="mt-4"><BsEmpty eyebrow="disputes" title="No open disputes." body="Editor-flagged mismatches will land here." /></div>
+        <div className="mt-4">
+          <BsEmpty
+            eyebrow="disputes"
+            title="No open disputes."
+            body="Editor-flagged mismatches will land here."
+          />
+        </div>
       ) : (
         <ul className="mt-4 space-y-4">
           {open.map((d) => {
@@ -1378,12 +1746,15 @@ function DisputesPanel() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="min-w-0">
                     <div className="label-cap silver">
-                      Dispute · No. {b?.contract_no != null ? String(b.contract_no).padStart(3, "0") : "—"}
+                      Dispute · No.{" "}
+                      {b?.contract_no != null ? String(b.contract_no).padStart(3, "0") : "—"}
                     </div>
                     <div className="font-display text-lg text-bone">{b?.title ?? "—"}</div>
                     <div className="text-xs text-bone-soft">
                       by {(d as any).creator?.display_name || "—"}
-                      {(d as any).creator?.tiktok_handle ? ` · @${(d as any).creator.tiktok_handle}` : ""}
+                      {(d as any).creator?.tiktok_handle
+                        ? ` · @${(d as any).creator.tiktok_handle}`
+                        : ""}
                       {" · filed "}
                       {new Date(d.created_at).toLocaleString()}
                     </div>
@@ -1420,9 +1791,7 @@ function DisputesPanel() {
                         <span className="silver">{d.claimed_view_count.toLocaleString()}</span>
                       </div>
                     ) : null}
-                    <div className="mt-1 label-cap silver">
-                      {d.status.replace("_", " ")}
-                    </div>
+                    <div className="mt-1 label-cap silver">{d.status.replace("_", " ")}</div>
                   </div>
                 </div>
 
@@ -1446,20 +1815,14 @@ function DisputesPanel() {
                 </div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {d.status === "open" ? (
-                    <button
-                      onClick={() => act(d.id, "under_review")}
-                      className="ink-btn"
-                    >
+                    <button onClick={() => act(d.id, "under_review")} className="ink-btn">
                       mark under review
                     </button>
                   ) : null}
                   <button onClick={() => act(d.id, "resolved")} className="silver-btn">
                     <Check className="h-3.5 w-3.5" /> resolve & correct
                   </button>
-                  <button
-                    onClick={() => act(d.id, "rejected")}
-                    className="ink-btn"
-                  >
+                  <button onClick={() => act(d.id, "rejected")} className="ink-btn">
                     <X className="h-3.5 w-3.5" /> reject
                   </button>
                 </div>
@@ -1495,7 +1858,10 @@ function AccessPanel({ bountyId, mode }: { bountyId: string; mode: "invite" | "a
   const listFn = useServerFn(listBountyAccessStaff);
   const decideFn = useServerFn(decideBountyApplication);
   const inviteFn = useServerFn(inviteToBounty);
-  const { data = [], refetch } = useQuery({ queryKey: ["bountyAccessStaff"], queryFn: () => listFn() });
+  const { data = [], refetch } = useQuery({
+    queryKey: ["bountyAccessStaff"],
+    queryFn: () => listFn(),
+  });
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -1506,7 +1872,9 @@ function AccessPanel({ bountyId, mode }: { bountyId: string; mode: "invite" | "a
   const decide = async (id: string, decision: "approved" | "rejected") => {
     try {
       await decideFn({ data: { id, decision } });
-      toast.success(decision === "approved" ? "Approved — creator notified." : "Rejected — creator notified.");
+      toast.success(
+        decision === "approved" ? "Approved — creator notified." : "Rejected — creator notified.",
+      );
       refetch();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not record that decision.");
@@ -1523,7 +1891,9 @@ function AccessPanel({ bountyId, mode }: { bountyId: string; mode: "invite" | "a
       refetch();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send that invite.");
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -1533,14 +1903,17 @@ function AccessPanel({ bountyId, mode }: { bountyId: string; mode: "invite" | "a
       {mode === "apply" ? (
         <div className="mt-2">
           <div className="text-xs text-bone-soft">
-            {applications.length === 0 ? "No applications waiting." : `${applications.length} awaiting review`}
+            {applications.length === 0
+              ? "No applications waiting."
+              : `${applications.length} awaiting review`}
           </div>
           <ul className="mt-2 space-y-2">
             {applications.map((r) => (
               <li key={r.id} className="border border-[var(--border)] p-2 text-sm">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-bone">
-                    @{r.tiktok_handle ?? "—"}{r.display_name ? ` · ${r.display_name}` : ""}
+                    @{r.tiktok_handle ?? "—"}
+                    {r.display_name ? ` · ${r.display_name}` : ""}
                   </span>
                   <span className="terminal text-[10px] text-bone-soft">
                     {new Date(r.created_at).toLocaleDateString()}
@@ -1548,8 +1921,18 @@ function AccessPanel({ bountyId, mode }: { bountyId: string; mode: "invite" | "a
                 </div>
                 {r.message ? <p className="mt-1 italic text-bone-soft">“{r.message}”</p> : null}
                 <div className="mt-2 flex gap-2">
-                  <button onClick={() => decide(r.id, "approved")} className="silver-btn px-3 py-1 text-xs">approve</button>
-                  <button onClick={() => decide(r.id, "rejected")} className="ink-btn px-3 py-1 text-xs">reject</button>
+                  <button
+                    onClick={() => decide(r.id, "approved")}
+                    className="silver-btn px-3 py-1 text-xs"
+                  >
+                    approve
+                  </button>
+                  <button
+                    onClick={() => decide(r.id, "rejected")}
+                    className="ink-btn px-3 py-1 text-xs"
+                  >
+                    reject
+                  </button>
                 </div>
               </li>
             ))}
@@ -1567,7 +1950,9 @@ function AccessPanel({ bountyId, mode }: { bountyId: string; mode: "invite" | "a
           className="dark-input flex-1"
           disabled={busy}
         />
-        <button className="silver-btn px-3 py-1 text-xs" disabled={busy}>{busy ? "sending…" : "invite"}</button>
+        <button className="silver-btn px-3 py-1 text-xs" disabled={busy}>
+          {busy ? "sending…" : "invite"}
+        </button>
       </form>
 
       {decided.length > 0 ? (

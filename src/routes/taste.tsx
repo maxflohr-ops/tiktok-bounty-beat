@@ -7,7 +7,11 @@ export const Route = createFileRoute("/taste")({
   head: () => ({
     meta: [
       { title: "Tune your board · Bounty Sounds" },
-      { name: "description", content: "Thirty seconds of taste questions, then a board ranked to the sounds you'd actually clip." },
+      {
+        name: "description",
+        content:
+          "Thirty seconds of taste questions, then a board ranked to the sounds you'd actually clip.",
+      },
       { name: "robots", content: "noindex, follow" },
     ],
   }),
@@ -53,7 +57,11 @@ function TastePage() {
               </button>
             ))}
           </div>
-          <button onClick={() => setStep(1)} className="silver-btn mt-10 px-10" disabled={genres.length === 0}>
+          <button
+            onClick={() => setStep(1)}
+            className="silver-btn mt-10 px-10"
+            disabled={genres.length === 0}
+          >
             continue
           </button>
         </>
@@ -77,7 +85,11 @@ function TastePage() {
               </button>
             ))}
           </div>
-          <button onClick={() => setStep(2)} className="silver-btn mt-10 px-10" disabled={vibes.length === 0}>
+          <button
+            onClick={() => setStep(2)}
+            className="silver-btn mt-10 px-10"
+            disabled={vibes.length === 0}
+          >
             continue
           </button>
         </>
@@ -90,7 +102,11 @@ function TastePage() {
       body: (
         <div className="mx-auto mt-8 grid max-w-lg gap-3">
           {REWARDS.map((r) => (
-            <button key={r.id} onClick={() => finish(r.id)} className="contract contract-nail p-5 text-left">
+            <button
+              key={r.id}
+              onClick={() => finish(r.id)}
+              className="contract contract-nail p-5 text-left"
+            >
               <span className="font-display text-lg font-bold text-ink">{r.label}</span>
               <span className="mt-1 block text-sm text-ink-soft">{r.sub}</span>
             </button>
@@ -111,7 +127,10 @@ function TastePage() {
       <section className="container-board relative z-10 flex flex-col items-center py-14 text-center md:py-20">
         <div className="flex items-center gap-3">
           {steps.map((x, i) => (
-            <span key={x.label} className={`terminal text-[10px] ${i === step ? "text-[var(--gold)]" : "text-bone-soft opacity-50"}`}>
+            <span
+              key={x.label}
+              className={`terminal text-[10px] ${i === step ? "text-[var(--gold)]" : "text-bone-soft opacity-50"}`}
+            >
               {String(i + 1).padStart(2, "0")} {x.label}
             </span>
           ))}
@@ -123,11 +142,17 @@ function TastePage() {
 
         <div className="mt-10 flex items-center gap-6">
           {step > 0 ? (
-            <button onClick={() => setStep(step - 1)} className="terminal inline-flex min-h-[44px] items-center text-xs text-bone-soft underline hover:text-bone md:min-h-0">
+            <button
+              onClick={() => setStep(step - 1)}
+              className="terminal inline-flex min-h-[44px] items-center text-xs text-bone-soft underline hover:text-bone md:min-h-0"
+            >
               back
             </button>
           ) : null}
-          <Link to="/board" className="terminal inline-flex min-h-[44px] items-center text-xs text-bone-soft underline hover:text-bone md:min-h-0">
+          <Link
+            to="/board"
+            className="terminal inline-flex min-h-[44px] items-center text-xs text-bone-soft underline hover:text-bone md:min-h-0"
+          >
             skip — show me everything
           </Link>
         </div>

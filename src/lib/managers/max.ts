@@ -51,7 +51,7 @@ export const MAX_CREDENTIALS: {
       name: "Ridgeclub",
       status: "current",
       note: "Toronto artist who runs a saxophone through effects into something between post-minimalism and lo-fi jazz. Florra took the project from a bedroom to seven figures of monthly listeners and a label deal — the clearest proof case for how the roster is built.",
-      url: "https://open.spotify.com/artist/4MT74NV1GnOKWtwpEVRRu1",
+      url: "https://ridgeclubhouse.com",
     },
     {
       name: "Ebril",

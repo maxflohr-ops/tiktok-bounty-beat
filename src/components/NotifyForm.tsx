@@ -18,16 +18,21 @@ export function NotifyForm({ accountEmail }: { accountEmail: string | null }) {
     e.preventDefault();
     setBusy(true);
     try {
-      const r = await subscribeFn({ data: { email, source: accountEmail ? "board-authed" : "board" } });
+      const r = await subscribeFn({
+        data: { email, source: accountEmail ? "board-authed" : "board" },
+      });
       setDone(true);
-      toast.success(r.already ? "You're already on the list." : "On the list — you'll hear when a purse posts.");
+      toast.success(
+        r.already ? "You're already on the list." : "On the list — you'll hear when a purse posts.",
+      );
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not save that.");
     } finally {
       setBusy(false);
     }
   };
-  if (done) return <p className="mt-5 text-sm text-bone-soft">✓ You'll hear the moment a bounty posts.</p>;
+  if (done)
+    return <p className="mt-5 text-sm text-bone-soft">✓ You'll hear the moment a bounty posts.</p>;
   return (
     <form onSubmit={submit} className="mx-auto mt-5 flex max-w-sm items-center gap-2">
       <input
@@ -39,7 +44,11 @@ export function NotifyForm({ accountEmail }: { accountEmail: string | null }) {
         aria-label="Email for new-bounty alerts"
         className="bone-input flex-1 text-sm"
       />
-      <button type="submit" disabled={busy} className="silver-btn whitespace-nowrap text-sm disabled:opacity-60">
+      <button
+        type="submit"
+        disabled={busy}
+        className="silver-btn whitespace-nowrap text-sm disabled:opacity-60"
+      >
         {busy ? "saving…" : "notify me"}
       </button>
     </form>

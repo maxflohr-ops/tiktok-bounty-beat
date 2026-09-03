@@ -46,7 +46,10 @@ export function PurseBar({
       <div className="flex items-baseline justify-between">
         <span className="label-cap text-ink-soft">Purse remaining</span>
         <span className="[font-family:var(--font-brand)] text-lg font-semibold text-ink">
-          <Money cents={remaining} currency={currency} /> <span className="text-xs text-ink-soft">/ <Money cents={purseCents} currency={currency} /> · {pct}%</span>
+          <Money cents={remaining} currency={currency} />{" "}
+          <span className="text-xs text-ink-soft">
+            / <Money cents={purseCents} currency={currency} /> · {pct}%
+          </span>
         </span>
       </div>
       <div
@@ -57,7 +60,10 @@ export function PurseBar({
         aria-label="Purse remaining"
         className="mt-2 h-3 w-full overflow-hidden border border-[var(--paper-dark)] bg-black/10"
       >
-        <div className="h-full bg-[var(--wax-red)] transition-[width]" style={{ width: `${pct}%` }} />
+        <div
+          className="h-full bg-[var(--wax-red)] transition-[width]"
+          style={{ width: `${pct}%` }}
+        />
       </div>
       <p className="mt-1 text-xs text-ink-soft">
         First verified, first paid, until the purse is dry. Caps at 2,500,000 verified views.
@@ -79,7 +85,12 @@ export function FlagshipTopMedia() {
         className="group block border border-[var(--paper-dark)] bg-black/5 transition hover:bg-black/10"
       >
         <span className="relative block">
-          <img src={f.hero.image} alt={f.hero.alt} loading="lazy" className="block aspect-video w-full object-cover" />
+          <img
+            src={f.hero.image}
+            alt={f.hero.alt}
+            loading="lazy"
+            className="block aspect-video w-full object-cover"
+          />
           <span className="absolute inset-0 flex items-center justify-center">
             <span className="inline-flex items-center gap-2 bg-black/70 px-3 py-1.5 text-xs uppercase tracking-widest text-white">
               <Play aria-hidden className="h-3.5 w-3.5" /> watch on YouTube
@@ -106,7 +117,8 @@ export function FlagshipTopMedia() {
           open the sound page <ExternalLink className="h-3 w-3" />
         </span>
         <span className="mt-2 block text-xs text-ink-soft">
-          Pick it from TikTok's sound picker (or Reels audio) — the attribution is what gets you paid.
+          Pick it from TikTok's sound picker (or Reels audio) — the attribution is what gets you
+          paid.
         </span>
       </a>
     </div>
@@ -168,4 +180,3 @@ export function FlagshipPanels() {
     </>
   );
 }
-

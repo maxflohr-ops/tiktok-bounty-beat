@@ -40,7 +40,10 @@ export function LedgerCard() {
         value={data.last_capture ? money(data.last_capture.amount_cents) : "—"}
         sub={
           data.last_capture?.at
-            ? new Date(data.last_capture.at).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+            ? new Date(data.last_capture.at).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })
             : undefined
         }
       />
@@ -53,9 +56,13 @@ function LedgerFigure({ label, value, sub }: { label: string; value: string; sub
     <div className="bg-[var(--color-bs-paper)] px-4 py-4 text-center">
       <div className="font-[var(--font-display)] text-xl font-bold tabular-nums text-[var(--color-bs-ink)]">
         {value}
-        {sub ? <span className="ml-1 text-xs font-normal text-[var(--color-bs-ink-mute)]">{sub}</span> : null}
+        {sub ? (
+          <span className="ml-1 text-xs font-normal text-[var(--color-bs-ink-mute)]">{sub}</span>
+        ) : null}
       </div>
-      <div className="bs-mono mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--color-bs-ink-mute)]">{label}</div>
+      <div className="bs-mono mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--color-bs-ink-mute)]">
+        {label}
+      </div>
     </div>
   );
 }

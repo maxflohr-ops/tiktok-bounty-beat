@@ -33,7 +33,8 @@ const USAGE = {
       checkout_url: "complete payment here — the listing goes live after Checkout",
       listing_id: "uuid",
     },
-    pricing: "listing $200 / 30 days; featured tiers extra; the purse is posted separately at your rate",
+    pricing:
+      "listing $200 / 30 days; featured tiers extra; the purse is posted separately at your rate",
   },
   feed: "/api/public/occ/contracts",
   guide: "/llms.txt",
@@ -75,15 +76,17 @@ export const Route = createFileRoute("/api/public/occ/listings")({
           return json({ error: "invalid JSON body", usage: USAGE.post.body }, 400);
         }
 
-        const { listingInput, createListingWithCheckout } = await import(
-          "@/lib/sound-listings.functions"
-        );
+        const { listingInput, createListingWithCheckout } =
+          await import("@/lib/sound-listings.functions");
         const parsed = listingInput.safeParse(body);
         if (!parsed.success)
           return json(
             {
               error: "validation failed",
-              issues: parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+              issues: parsed.error.issues.map((i) => ({
+                path: i.path.join("."),
+                message: i.message,
+              })),
               usage: USAGE.post.body,
             },
             422,
@@ -103,7 +106,10 @@ export const Route = createFileRoute("/api/public/occ/listings")({
         } catch (err) {
           // Internals (Supabase/Stripe messages) stay in the server log.
           console.error("listings API create failed:", err instanceof Error ? err.message : err);
-          return json({ error: "listing could not be created - try again or use /list-sound" }, 500);
+          return json(
+            { error: "listing could not be created - try again or use /list-sound" },
+            500,
+          );
         }
       },
     },

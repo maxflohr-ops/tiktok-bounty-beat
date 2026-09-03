@@ -12,7 +12,10 @@ export const Route = createFileRoute("/_authenticated/start")({
   head: () => ({
     meta: [
       { title: "Get set up · Bounty Sounds" },
-      { name: "description", content: "Three quick steps: your name, your TikTok handle, and how you want to get paid." },
+      {
+        name: "description",
+        content: "Three quick steps: your name, your TikTok handle, and how you want to get paid.",
+      },
       { name: "robots", content: "noindex, follow" },
     ],
   }),
@@ -103,7 +106,9 @@ function StartPage() {
       <main className="container-board py-10 md:py-14">
         <BsWell className="text-center">
           <BsEyebrow>welcome, clipper</BsEyebrow>
-          <BsDisplay as="h1" size="md" className="mt-3">Let's get you paid</BsDisplay>
+          <BsDisplay as="h1" size="md" className="mt-3">
+            Let's get you paid
+          </BsDisplay>
           <p className="mx-auto mt-3 max-w-lg text-[var(--color-bs-ink-soft)]">
             Two quick things, then take your first contract off the Bounty Board.
           </p>
@@ -116,7 +121,9 @@ function StartPage() {
           <StepCard n="01" title="Your editor's mark" complete={done.profile}>
             <form onSubmit={saveProfile} className="space-y-3">
               <label className="block">
-                <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">Display name</span>
+                <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">
+                  Display name
+                </span>
                 <input
                   value={name}
                   maxLength={80}
@@ -126,7 +133,9 @@ function StartPage() {
                 />
               </label>
               <label className="block">
-                <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">TikTok handle</span>
+                <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">
+                  TikTok handle
+                </span>
                 <input
                   value={handle}
                   maxLength={60}
@@ -135,7 +144,9 @@ function StartPage() {
                   placeholder="@yourhandle"
                 />
               </label>
-              <BsButton type="submit" disabled={busy}>Save</BsButton>
+              <BsButton type="submit" disabled={busy}>
+                Save
+              </BsButton>
             </form>
           </StepCard>
 
@@ -160,7 +171,9 @@ function StartPage() {
               </div>
               {pref === "usdc" ? (
                 <label className="block">
-                  <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">Wallet address</span>
+                  <span className="bs-mono uppercase text-[var(--color-bs-ink-mute)]">
+                    Wallet address
+                  </span>
                   <input
                     value={wallet}
                     onChange={(e) => setWallet(e.target.value)}
@@ -170,20 +183,28 @@ function StartPage() {
                 </label>
               ) : (
                 <p className="text-sm text-[var(--color-bs-ink-soft)]">
-                  You'll enter the PayPal email on each delivery, so you can split payouts across accounts.
+                  You'll enter the PayPal email on each delivery, so you can split payouts across
+                  accounts.
                 </p>
               )}
-              <BsButton type="submit" disabled={busy}>Save</BsButton>
+              <BsButton type="submit" disabled={busy}>
+                Save
+              </BsButton>
             </form>
           </StepCard>
 
           <StepCard n="03" title="Take your first contract" complete={false}>
             <p className="text-sm text-[var(--color-bs-ink-soft)]">
-              Pick a sound, post your edit, paste the link back. Views get verified and the payout follows.
+              Pick a sound, post your edit, paste the link back. Views get verified and the payout
+              follows.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link to="/board" className="bs-btn">Open the Bounty Board</Link>
-              <Link to="/how-it-works" className="bs-btn bs-btn-ghost">How payouts work</Link>
+              <Link to="/board" className="bs-btn">
+                Open the Bounty Board
+              </Link>
+              <Link to="/how-it-works" className="bs-btn bs-btn-ghost">
+                How payouts work
+              </Link>
             </div>
           </StepCard>
         </div>

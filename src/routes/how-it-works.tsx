@@ -113,8 +113,12 @@ function HowItWorksPage() {
           </ol>
         </Reveal>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/board" className="silver-btn px-7">Open the Bounty Board</Link>
-          <Link to="/payouts" className="ink-btn px-7">How payouts work</Link>
+          <Link to="/board" className="silver-btn px-7">
+            Open the Bounty Board
+          </Link>
+          <Link to="/payouts" className="ink-btn px-7">
+            How payouts work
+          </Link>
         </div>
       </section>
 
@@ -164,13 +168,26 @@ function HowItWorksPage() {
       {/* Funders pointer */}
       <section className="container-board pb-20 text-center">
         <InkCardinal accent className="mx-auto mb-4 w-28" />
-        <p className="text-bone-soft">
-          Posting a bounty instead of clipping one?
-        </p>
+        <p className="text-bone-soft">Posting a bounty instead of clipping one?</p>
         <nav className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
-          <Link to="/for-artists" className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0">For artists</Link>
-          <Link to="/keynotes" className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0">Keynote campaigns</Link>
-          <Link to="/clipping-campaigns" className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0">Campaigns end to end</Link>
+          <Link
+            to="/for-artists"
+            className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0"
+          >
+            For artists
+          </Link>
+          <Link
+            to="/keynotes"
+            className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0"
+          >
+            Keynote campaigns
+          </Link>
+          <Link
+            to="/clipping-campaigns"
+            className="inline-flex min-h-[44px] items-center underline underline-offset-4 hover:text-bone md:min-h-0"
+          >
+            Campaigns end to end
+          </Link>
         </nav>
       </section>
 

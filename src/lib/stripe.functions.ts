@@ -27,7 +27,8 @@ export const getMyPayoutMethod = createServerFn({ method: "GET" })
 export const connectStripeAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { createConnectAccount, createConnectOnboardingLink } = await import("@/lib/stripe.server");
+    const { createConnectAccount, createConnectOnboardingLink } =
+      await import("@/lib/stripe.server");
 
     const { data: existing } = await context.supabase
       .from("payout_methods")
@@ -49,17 +50,15 @@ export const connectStripeAccount = createServerFn({ method: "POST" })
       void profile;
     }
 
-    const { error: upsertError } = await context.supabase
-      .from("payout_methods")
-      .upsert(
-        {
-          user_id: context.userId,
-          default_method: "stripe",
-          stripe_connect_account_id: accountId,
-          stripe_connect_status: "pending",
-        },
-        { onConflict: "user_id" },
-      );
+    const { error: upsertError } = await context.supabase.from("payout_methods").upsert(
+      {
+        user_id: context.userId,
+        default_method: "stripe",
+        stripe_connect_account_id: accountId,
+        stripe_connect_status: "pending",
+      },
+      { onConflict: "user_id" },
+    );
     if (upsertError) throw new Error(upsertError.message);
 
     const origin = appOrigin();
@@ -85,11 +84,12 @@ export const refreshConnectStatus = createServerFn({ method: "POST" })
 
     const { retrieveAccount } = await import("@/lib/stripe.server");
     const account = await retrieveAccount(pm.stripe_connect_account_id);
-    const status = account.charges_enabled && account.payouts_enabled
-      ? "enabled"
-      : account.details_submitted
-        ? "pending"
-        : "disabled";
+    const status =
+      account.charges_enabled && account.payouts_enabled
+        ? "enabled"
+        : account.details_submitted
+          ? "pending"
+          : "disabled";
 
     const { data: updated, error: ue } = await context.supabase
       .from("payout_methods")
@@ -123,7 +123,8 @@ export const createBountyTopUp = createServerFn({ method: "POST" })
       .single();
     if (be || !bounty) throw new Error("Bounty not found.");
 
-    const { supabaseAdmin: sbAdminForCustomer } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin: sbAdminForCustomer } =
+      await import("@/integrations/supabase/client.server");
     const { data: bountyExtraRaw } = await sbAdminForCustomer
       .from("bounties")
       .select("stripe_customer_id")
@@ -196,7 +197,19 @@ async function computePayoutAmount(_supabase: unknown, submissionId: string) {
   if (sub.status !== "approved") throw new Error("Claim must be honored before requesting payout.");
   const paidAlready = (sub as { paid_cash_cents: number | null }).paid_cash_cents ?? 0;
   if (paidAlready > 0 || sub.stripe_transfer_id) throw new Error("Already paid.");
-  const bounty = (sub as { bounties: { id: string; title?: string | null; contract_no?: number | null; currency: string; payout_type: string; reward_cash_cents: number; funded_cash_cents: number | null } }).bounties;
+  const bounty = (
+    sub as {
+      bounties: {
+        id: string;
+        title?: string | null;
+        contract_no?: number | null;
+        currency: string;
+        payout_type: string;
+        reward_cash_cents: number;
+        funded_cash_cents: number | null;
+      };
+    }
+  ).bounties;
   if (!bounty) throw new Error("Bounty not found.");
 
   let amountCents = 0;
@@ -221,7 +234,10 @@ export const requestPayout = createServerFn({ method: "POST" })
     const staff = await isStaff(context.supabase, context.userId);
     if (!staff) throw new Error("Forbidden");
 
-    const { sub, bounty, amountCents } = await computePayoutAmount(context.supabase, data.submissionId);
+    const { sub, bounty, amountCents } = await computePayoutAmount(
+      context.supabase,
+      data.submissionId,
+    );
 
     const { data: pm } = await context.supabase
       .from("payout_methods")
@@ -294,17 +310,25 @@ export const listPayoutApprovals = createServerFn({ method: "GET" })
       .limit(100);
     if (error) throw new Error(error.message);
 
-    const ids = Array.from(new Set((data ?? []).flatMap((r: any) => [r.requested_by, r.decided_by].filter(Boolean) as string[])));
+    const ids = Array.from(
+      new Set(
+        (data ?? []).flatMap(
+          (r: any) => [r.requested_by, r.decided_by].filter(Boolean) as string[],
+        ),
+      ),
+    );
     let names: Record<string, string> = {};
     if (ids.length) {
       const { data: profs } = await context.supabase
-        .from("profiles").select("id,display_name").in("id", ids);
+        .from("profiles")
+        .select("id,display_name")
+        .in("id", ids);
       names = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p.display_name ?? ""]));
     }
     return (data ?? []).map((r: any) => ({
       ...r,
       requested_by_name: names[r.requested_by] ?? null,
-      decided_by_name: r.decided_by ? names[r.decided_by] ?? null : null,
+      decided_by_name: r.decided_by ? (names[r.decided_by] ?? null) : null,
     }));
   });
 
@@ -364,17 +388,28 @@ export const approveAndSendPayout = createServerFn({ method: "POST" })
       .single();
     if (ae || !approval) throw new Error(ae?.message ?? "Approval not found or already decided.");
 
-    const { sub, bounty, amountCents } = await computePayoutAmount(context.supabase, approval.submission_id);
+    const { sub, bounty, amountCents } = await computePayoutAmount(
+      context.supabase,
+      approval.submission_id,
+    );
     if (amountCents !== approval.amount_cents) {
-      await context.supabase.from("payout_approvals").update({
-        status: "failed", error: `Amount changed since request (${approval.amount_cents} → ${amountCents}).`,
-      }).eq("id", approval.id);
+      await context.supabase
+        .from("payout_approvals")
+        .update({
+          status: "failed",
+          error: `Amount changed since request (${approval.amount_cents} → ${amountCents}).`,
+        })
+        .eq("id", approval.id);
       throw new Error("Payout amount has changed since it was requested. Please re-request.");
     }
     if ((bounty.funded_cash_cents ?? 0) < amountCents) {
-      await context.supabase.from("payout_approvals").update({
-        status: "failed", error: "Purse could not cover the payout at approval time.",
-      }).eq("id", approval.id);
+      await context.supabase
+        .from("payout_approvals")
+        .update({
+          status: "failed",
+          error: "Purse could not cover the payout at approval time.",
+        })
+        .eq("id", approval.id);
       throw new Error("The purse can't cover this payout. Top it up first.");
     }
 
@@ -385,9 +420,13 @@ export const approveAndSendPayout = createServerFn({ method: "POST" })
       .eq("default_method", "stripe")
       .maybeSingle();
     if (!pm?.stripe_connect_account_id || pm.stripe_connect_status !== "enabled") {
-      await context.supabase.from("payout_approvals").update({
-        status: "failed", error: "Editor Stripe account not enabled.",
-      }).eq("id", approval.id);
+      await context.supabase
+        .from("payout_approvals")
+        .update({
+          status: "failed",
+          error: "Editor Stripe account not enabled.",
+        })
+        .eq("id", approval.id);
       throw new Error("Editor has not connected a Stripe payout account.");
     }
 
@@ -399,28 +438,46 @@ export const approveAndSendPayout = createServerFn({ method: "POST" })
         amountCents,
         currency: bounty.currency,
         transferGroup: `bounty_${bounty.id}`,
-        metadata: { submission_id: sub.id, bounty_id: bounty.id, editor_id: sub.editor_id, approval_id: approval.id },
+        metadata: {
+          submission_id: sub.id,
+          bounty_id: bounty.id,
+          editor_id: sub.editor_id,
+          approval_id: approval.id,
+        },
       });
       transferId = r.transferId;
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Stripe transfer failed.";
-      await context.supabase.from("payout_approvals").update({ status: "failed", error: msg }).eq("id", approval.id);
+      await context.supabase
+        .from("payout_approvals")
+        .update({ status: "failed", error: msg })
+        .eq("id", approval.id);
       throw new Error(msg);
     }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    await supabaseAdmin.from("submissions").update({
-      stripe_transfer_id: transferId,
-      paid_cash_cents: amountCents,
-      status: "paid",
-      paid_at: new Date().toISOString(),
-    }).eq("id", sub.id);
-    await supabaseAdmin.from("bounties").update({
-      funded_cash_cents: (bounty.funded_cash_cents ?? 0) - amountCents,
-    }).eq("id", bounty.id);
-    await supabaseAdmin.from("payout_approvals").update({
-      status: "sent", stripe_transfer_id: transferId,
-    }).eq("id", approval.id);
+    await supabaseAdmin
+      .from("submissions")
+      .update({
+        stripe_transfer_id: transferId,
+        paid_cash_cents: amountCents,
+        status: "paid",
+        paid_at: new Date().toISOString(),
+      })
+      .eq("id", sub.id);
+    await supabaseAdmin
+      .from("bounties")
+      .update({
+        funded_cash_cents: (bounty.funded_cash_cents ?? 0) - amountCents,
+      })
+      .eq("id", bounty.id);
+    await supabaseAdmin
+      .from("payout_approvals")
+      .update({
+        status: "sent",
+        stripe_transfer_id: transferId,
+      })
+      .eq("id", approval.id);
 
     notifyAsync({
       event: "payout.sent",
