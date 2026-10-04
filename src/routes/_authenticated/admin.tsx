@@ -42,6 +42,8 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { BsEmpty, BsLoading } from "@/components/bs";
+import { EnginePanel } from "@/components/admin/EnginePanel";
+import { RecruitingPanel } from "@/components/admin/RecruitingPanel";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   validateSearch: (
@@ -86,6 +88,8 @@ const TABS = [
   { key: "payouts", label: "Payouts" },
   { key: "contracts", label: "Contracts" },
   { key: "disputes", label: "Disputes" },
+  { key: "engine", label: "Engine" },
+  { key: "recruiting", label: "Recruiting" },
 ] as const;
 type DeskTab = (typeof TABS)[number]["key"];
 
@@ -233,6 +237,8 @@ function AdminDesk() {
           ) : null}
           {active === "contracts" ? <BountiesPanel /> : null}
           {active === "disputes" ? <DisputesPanel /> : null}
+          {active === "engine" ? <EnginePanel /> : null}
+          {active === "recruiting" ? <RecruitingPanel /> : null}
         </div>
       </div>
     </div>
@@ -272,7 +278,16 @@ function useDeskCounts() {
     .filter((x) => x.status === "paid")
     .reduce((a, r) => a + ((r as any).paid_cash_cents ?? r.awarded_cash_cents ?? 0), 0);
 
-  return { deliveries, payouts, contracts: 0, disputes: openDisputes, owed, paid };
+  return {
+    deliveries,
+    payouts,
+    contracts: 0,
+    disputes: openDisputes,
+    engine: 0,
+    recruiting: 0,
+    owed,
+    paid,
+  };
 }
 
 function DeskSummary({ counts }: { counts: ReturnType<typeof useDeskCounts> }) {
