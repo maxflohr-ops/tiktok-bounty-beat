@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   coachReport,
+  hoursWaiting,
+  orderReviewQueue,
   learnPlaybook,
   scoreCampaign,
   scoreClippers,
@@ -160,5 +162,24 @@ describe("coach report", () => {
     expect(r.last_week.deliveries).toBe(1);
     expect(r.next_move).toMatch(/waiting past 48h/);
     expect(r.text).toContain("Next move:");
+  });
+});
+
+describe("review queue", () => {
+  it("puts late clips first, then fast-track, then oldest", () => {
+    const tiers = new Map([["star", "fast_track" as const]]);
+    const rows = [
+      { id: "fresh", editor_id: "anyone", submitted_at: daysAgo(0.2), claimed_at: null },
+      { id: "star", editor_id: "star", submitted_at: daysAgo(0.1), claimed_at: null },
+      { id: "late", editor_id: "anyone", submitted_at: daysAgo(3), claimed_at: null },
+      { id: "older", editor_id: "anyone", submitted_at: daysAgo(1), claimed_at: null },
+    ];
+    expect(orderReviewQueue(rows, tiers, NOW).map((r) => r.id)).toEqual([
+      "late",
+      "star",
+      "older",
+      "fresh",
+    ]);
+    expect(Math.round(hoursWaiting(rows[2], NOW))).toBe(72);
   });
 });

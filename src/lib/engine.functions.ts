@@ -89,3 +89,33 @@ export const getBountyPlaybook = createServerFn({ method: "GET" })
       },
     };
   });
+
+// A clipper's own standing: their score, tier and what moves it, plus their
+// referral link and how many sign-ups it has brought in. Views are ranked
+// against the whole board, so this reads every submission server-side but
+// returns only the caller's own row.
+export const getMyStanding = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const [subsQ, profQ, refsQ] = await Promise.all([
+      supabaseAdmin.from("submissions").select(SUB_COLS).limit(5000),
+      supabaseAdmin.from("profiles").select("tiktok_handle").eq("id", context.userId).maybeSingle(),
+      supabaseAdmin
+        .from("referrals")
+        .select("id", { count: "exact", head: true })
+        .eq("referrer_id", context.userId),
+    ]);
+    const mine = scoreClippers((subsQ.data ?? []) as EngineSub[]).find(
+      (c) => c.editor_id === context.userId,
+    );
+    const handle = profQ.data?.tiktok_handle?.replace(/^@/, "").trim() || null;
+    return {
+      score: mine
+        ? { score: mine.score, tier: mine.tier, decided: mine.decided, parts: mine.parts }
+        : null,
+      ref_code: handle,
+      // Referrals table may not exist until the recruiting migration runs.
+      referred: refsQ.error ? 0 : (refsQ.count ?? 0),
+    };
+  });

@@ -25,7 +25,7 @@ import {
 import { listAllDisputesStaff, resolveDispute } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Money } from "@/components/Money";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   Plus,
@@ -43,6 +43,8 @@ import {
 } from "lucide-react";
 import { BsEmpty, BsLoading } from "@/components/bs";
 import { EnginePanel } from "@/components/admin/EnginePanel";
+import { hoursWaiting, orderReviewQueue, REVIEW_SLA_HOURS, scoreClippers } from "@/lib/engine";
+import type { ClipperScore, EngineSub } from "@/lib/engine";
 import { RecruitingPanel } from "@/components/admin/RecruitingPanel";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -889,7 +891,21 @@ function SubmissionsPanel() {
   const { data = [], refetch } = useQuery({ queryKey: ["allSubs"], queryFn: () => listFn() });
   const [filter, setFilter] = useState<DeliveryFilter>("queue");
 
-  const pending = data.filter((s) => AWAITING.has(s.status as string));
+  // Fast-track clippers go to the front of the queue, but never ahead of a
+  // clip that's already past the 48h review promise.
+  const tiers = useMemo(
+    () =>
+      new Map(
+        scoreClippers(
+          data.map((s) => ({ ...s, like_count: null, comment_count: null }) as EngineSub),
+        ).map((c) => [c.editor_id, c.tier] as const),
+      ),
+    [data],
+  );
+  const pending = orderReviewQueue(
+    data.filter((s) => AWAITING.has(s.status as string)),
+    tiers,
+  );
   // A delivery is anything the editor actually posted a link for. Claims with
   // no URL yet are not clips and would only pad the list.
   const delivered = data.filter((s) => Boolean(s.tiktok_video_url));
@@ -989,7 +1005,13 @@ function SubmissionsPanel() {
       <ul className="mt-4 space-y-4">
         {shown.map((s) =>
           AWAITING.has(s.status as string) ? (
-            <ReviewCard key={s.id} s={s} onDecide={decide} onVerified={refetch} />
+            <ReviewCard
+              key={s.id}
+              s={s}
+              tier={tiers.get(s.editor_id)}
+              onDecide={decide}
+              onVerified={refetch}
+            />
           ) : (
             <DeliveryRow key={s.id} s={s} onReopened={refetch} />
           ),
@@ -1108,12 +1130,25 @@ function payoutForViews(views: number, ratePer100k: number) {
   return Math.floor((views * ratePer100k) / 100000);
 }
 
+// Hours since delivery, red once the 48h review promise is broken.
+function WaitingBadge({ s }: { s: Sub }) {
+  const h = Math.floor(hoursWaiting(s));
+  const late = h > REVIEW_SLA_HOURS;
+  return (
+    <span className={late ? "font-semibold text-red-700" : ""}>
+      waiting {h < 1 ? "<1" : h}h{late ? " · past 48h" : ""}
+    </span>
+  );
+}
+
 function ReviewCard({
   s,
+  tier,
   onDecide,
   onVerified,
 }: {
   s: Sub;
+  tier?: ClipperScore["tier"];
   onDecide: (
     id: string,
     decision: "approved" | "rejected",
@@ -1190,8 +1225,16 @@ function ReviewCard({
                 : `window closed ${new Date((s as any).counting_ends_at).toLocaleDateString()} — ready to verify + approve`}
             </div>
           ) : null}
-          <div className="text-xs text-bone-soft">
-            by {s.editor?.display_name || "editor"} · @{s.tiktok_handle}
+          <div className="flex flex-wrap items-center gap-2 text-xs text-bone-soft">
+            <span>
+              by {s.editor?.display_name || "editor"} · @{s.tiktok_handle}
+            </span>
+            {tier === "fast_track" ? (
+              <span className="rounded-full border border-emerald-600/40 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+                fast-track
+              </span>
+            ) : null}
+            <WaitingBadge s={s} />
           </div>
           {s.tiktok_video_url ? (
             <a

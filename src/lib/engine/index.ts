@@ -3,3 +3,4 @@ export * from "./hooks";
 export * from "./pacing";
 export * from "./curation";
 export * from "./coach";
+export * from "./queue";

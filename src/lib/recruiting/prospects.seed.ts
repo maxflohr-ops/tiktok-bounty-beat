@@ -49,7 +49,7 @@ export const PROSPECT_SEED: ProspectSeed[] = [
     followers:
       "~262k followers (source: TikTok profile page https://www.tiktok.com/@cstaggz05_, fetched 2026-10-04)",
     campaign: "ebril",
-    fit: "Calls himself 'Kenny G-Unit' and plays R&B/rap hooks on sax (Usher 'Lovers & Friends', B5, Monaleo), which reaches the R&B audience Ebril's campaign targets.",
+    fit: "[Ebril match unconfirmed: based on audience, not her sound] Calls himself 'Kenny G-Unit' and plays R&B/rap hooks on sax (Usher 'Lovers & Friends', B5, Monaleo), which reaches the R&B audience Ebril's campaign targets.",
     opener:
       "Kenny G-Unit is the best bio on TikTok. Your Usher and Monaleo sax flips are exactly the lane for Ebril's campaign on Bounty Sounds: post with her official sound and get paid per 1k verified views.",
     contact: "coreystaggzsax@gmail.com",
@@ -309,7 +309,7 @@ export const PROSPECT_SEED: ProspectSeed[] = [
     followers:
       "~111k followers (source: TikTok profile page https://www.tiktok.com/@kaseys.playlist, fetched 2026-10-04)",
     campaign: "ebril",
-    fit: "An LA indie-music discovery page built on mood playlists ('new this week', seasonal must-listens) with a largely female indie audience, the crowd Ebril's campaign is aimed at.",
+    fit: "[Ebril match unconfirmed: based on audience, not her sound] An LA indie-music discovery page built on mood playlists ('new this week', seasonal must-listens) with a largely female indie audience, the crowd Ebril's campaign is aimed at.",
     opener:
       "Your 'new this week' list is how people find their next favorite artist. Ebril's campaign on Bounty Sounds pays per 1k verified views for posts with her official sound. She'd fit next to your fall must-listens.",
     contact: "",
@@ -329,7 +329,7 @@ export const PROSPECT_SEED: ProspectSeed[] = [
     followers:
       "~206k followers (source: TikTok profile page https://www.tiktok.com/@annabelleklinee, fetched 2026-10-04)",
     campaign: "ebril",
-    fit: "Music curator and DJ (founder of That Good Sh*t) posting playlist upgrades and on-repeat picks across R&B/rap (Kaytranada, BKTheRula, Steve Lacy). A strong tastemaker fit for a female artist push.",
+    fit: "[Ebril match unconfirmed: based on audience, not her sound] Music curator and DJ (founder of That Good Sh*t) posting playlist upgrades and on-repeat picks across R&B/rap (Kaytranada, BKTheRula, Steve Lacy). A strong tastemaker fit for a female artist push.",
     opener:
       "Your playlist upgrades are the kind of co-sign that sticks. Ebril's campaign on Bounty Sounds pays per 1k verified views for posts with her official sound. Want to give her the That Good Sh*t treatment?",
     contact: "",
