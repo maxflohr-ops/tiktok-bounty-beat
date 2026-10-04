@@ -444,6 +444,96 @@ export type Database = {
         }
         Relationships: []
       }
+      recruit_prospects: {
+        Row: {
+          campaign: string | null
+          contact: string | null
+          created_at: string
+          fit: string | null
+          followers: string | null
+          founding: boolean
+          handle: string
+          id: string
+          last_touch_at: string | null
+          name: string
+          notes: string | null
+          opener: string | null
+          platform: string
+          profile_url: string
+          segment: string
+          slug: string
+          sources: string[]
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          campaign?: string | null
+          contact?: string | null
+          created_at?: string
+          fit?: string | null
+          followers?: string | null
+          founding?: boolean
+          handle: string
+          id?: string
+          last_touch_at?: string | null
+          name: string
+          notes?: string | null
+          opener?: string | null
+          platform: string
+          profile_url: string
+          segment: string
+          slug: string
+          sources?: string[]
+          stage?: string
+          updated_at?: string
+        }
+        Update: {
+          campaign?: string | null
+          contact?: string | null
+          created_at?: string
+          fit?: string | null
+          followers?: string | null
+          founding?: boolean
+          handle?: string
+          id?: string
+          last_touch_at?: string | null
+          name?: string
+          notes?: string | null
+          opener?: string | null
+          platform?: string
+          profile_url?: string
+          segment?: string
+          slug?: string
+          sources?: string[]
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          ref_code: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ref_code: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ref_code?: string
+          referred_id?: string
+          referrer_id?: string
+        }
+        Relationships: []
+      }
       sound_listings: {
         Row: {
           amount_cents: number

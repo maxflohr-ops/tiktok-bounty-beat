@@ -11,6 +11,7 @@ import {
 import { claimContract, deliverProof, listMyClaims } from "@/lib/submissions.functions";
 import { listBountyClips } from "@/lib/bounties.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { BountyPlaybook } from "@/components/BountyPlaybook";
 import { PARTNERS, partnerGoHref } from "@/lib/partners";
 import { setReturnTo } from "@/lib/return-to";
 import { Money } from "@/components/Money";
@@ -641,6 +642,8 @@ function BountyDetail() {
                 </ul>
               )}
             </div>
+
+            <BountyPlaybook bountyId={bounty.id} />
 
             <p className="script-note mt-8 text-center text-base text-ink-soft">
               Good to the bearer for verified views, payable from the posted purse.

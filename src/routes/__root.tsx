@@ -21,6 +21,8 @@ import {
 } from "@/lib/attribution";
 import { consumeReturnTo } from "@/lib/return-to";
 import { recordAttribution } from "@/lib/me.functions";
+import { claimReferral } from "@/lib/recruiting.functions";
+import { captureReferral, markReferralSent, pendingReferral } from "@/lib/referral";
 
 function NotFoundComponent() {
   return (
@@ -193,6 +195,7 @@ function RootComponent() {
 
   useEffect(() => {
     captureAttribution();
+    captureReferral();
   }, []);
 
   useEffect(() => {
@@ -215,6 +218,13 @@ function RootComponent() {
         } else {
           markAttributionSent();
         }
+      }
+      if (event === "SIGNED_IN") {
+        const ref = pendingReferral();
+        if (ref)
+          claimReferral({ data: { ref } })
+            .then(() => markReferralSent())
+            .catch(() => {});
       }
     });
     return () => sub.subscription.unsubscribe();

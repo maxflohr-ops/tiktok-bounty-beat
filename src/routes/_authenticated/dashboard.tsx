@@ -18,6 +18,7 @@ import {
 } from "@/lib/stripe.functions";
 import { fileDispute, listMyDisputes } from "@/lib/disputes.functions";
 import { SiteHeader } from "@/components/SiteHeader";
+import { MyStanding } from "@/components/MyStanding";
 import { Money } from "@/components/Money";
 import { BsEmpty, BsLoading } from "@/components/bs";
 import { useEffect, useMemo, useState } from "react";
@@ -209,6 +210,8 @@ function Dashboard() {
               <Metric label="contracts" value={String(claims.length)} />
             </div>
           </div>
+
+          <MyStanding />
         </aside>
       </div>
     </div>
